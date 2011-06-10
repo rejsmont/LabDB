@@ -1,0 +1,3 @@
+FooBarBundle_homepage:
+    pattern:  /
+    defaults: { _controller: FooBarBundle:Default:index }
