@@ -1,0 +1,7 @@
+{% extends "MpiCbgFliesBundle::layout.html.twig" %}
+
+{% block content %}
+    <h1>Edit bottle {{ "%05d" | format(bottle.id) }}</h1>
+    {% include 'MpiCbgFliesBundle:CultureBottle:_form.html.twig'
+       with {'form': form} %}
+{% endblock %}

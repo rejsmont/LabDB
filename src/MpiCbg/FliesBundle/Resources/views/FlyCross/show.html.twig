@@ -1,0 +1,42 @@
+{% extends "MpiCbgFliesBundle::layout.html.twig" %}
+
+{% block content %}
+    <h1>
+        Cross {{ cross }}
+        (<a href="{{ path('culturebottle_show', { 'id': cross.bottle.id }) }}">{{ cross.bottle }}</a>)
+    </h1>
+    <p>
+        Virgin: {{ cross.virginName }}
+        (<a href="{{ path('culturebottle_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a>)
+    </p>
+    <p>
+        Male: {{ cross.maleName }}
+        (<a href="{{ path('culturebottle_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a>)
+    </p>
+    <p>Setup date: {{ cross.bottle.setupDate | date("d.m.Y") }}</p>
+    <p>Check date: {{ cross.bottle.flipDate | date("d.m.Y") }}</p>
+    {% if cross.stocks | length > 0 %}
+        <p>The following stocks were established from this cross:</p>
+        <ul>
+        {% for stock in cross.stocks %}
+            <li>
+                <a href="{{ path('flystock_show', { 'id': stock.id }) }}">{{ stock }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% if cross.crosses | length > 0 %}
+        <p>The following crosses were established from this cross:</p>
+        <ul>
+        {% for cross in cross.crosses %}
+            <li>
+                <a href="{{ path('flycross_show', { 'id': cross.id }) }}">{{ cross }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <p><a href="{{ path('flycross_list') }}">List</a> |
+       <a href="{{ path('flycross_create') }}">New</a> |
+       <a href="{{ path('flycross_edit', { 'id': cross.id }) }}">Edit</a> |
+       <a href="{{ path('flycross_delete', { 'id': cross.id }) }}">Delete</a></p>
+{% endblock %}

@@ -1,0 +1,11 @@
+<form action="{{ app.request.requestUri }}"
+      method="post" {{ form_enctype(form) }}>
+
+    {{ form_errors(form) }}
+
+    {{ form_row(form.entity.name) }}
+
+    {{ form_rest(form) }}
+
+    <input type="submit" />
+</form>

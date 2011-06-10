@@ -1,0 +1,15 @@
+<form action="{{ app.request.requestUri }}"
+      method="post" {{ form_enctype(form) }}>
+
+    {{ form_errors(form) }}
+
+    {{ form_row(form.entity.setupDate) }}
+    {{ form_row(form.entity.flipDate) }}
+    {{ form_row(form.parentBarcode) }}
+    {{ form_row(form.entity.stock) }}
+    {{ form_row(form.entity.cross) }}
+
+    {{ form_rest(form) }}
+
+    <input type="submit" />
+</form>

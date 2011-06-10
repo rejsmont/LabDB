@@ -1,0 +1,15 @@
+default:
+    pattern:  /
+    defaults: { _controller: MpiCbgFliesBundle:FlyStock:index }
+
+fly_stock:
+    resource: "@MpiCbgFliesBundle/Controller/FlyStockController.php"
+    type:     annotation
+
+fly_cross:
+    resource: "@MpiCbgFliesBundle/Controller/FlyCrossController.php"
+    type:     annotation
+
+culture_bottle:
+    resource: "@MpiCbgFliesBundle/Controller/CultureBottleController.php"
+    type:     annotation

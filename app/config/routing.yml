@@ -1,0 +1,2 @@
+mpicbg_flies:
+    resource: "@MpiCbgFliesBundle/Resources/config/routing.yml"
