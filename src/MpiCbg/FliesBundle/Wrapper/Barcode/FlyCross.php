@@ -21,7 +21,7 @@ class FlyCross extends ManagedEntity {
         $this->maleBarcode = $id;
         
         if ($id !== null) {
-            $male = $this->em->find('MpiCbgFliesBundle:CultureBottle', $id);
+            $male = $this->em->find('MpiCbgFliesBundle:FlyVial', $id);
             if ($male != null) {
                 $this->entity->setMale($male);
             }
@@ -40,7 +40,7 @@ class FlyCross extends ManagedEntity {
         $this->virginBarcode = $id;
         
         if ($id !== null) {
-            $virgin = $this->em->find('MpiCbgFliesBundle:CultureBottle', $id);
+            $virgin = $this->em->find('MpiCbgFliesBundle:FlyVial', $id);
             if ($virgin != null) {
                 $this->entity->setVirgin($virgin);
             }

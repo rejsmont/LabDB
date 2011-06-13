@@ -74,8 +74,8 @@ class FlyStockController extends Controller
             
             if ($form->isValid()) {
                 $em->persist($stock);
-                foreach ($stock->getBottles() as $bottle) {
-                    $em->persist($bottle);
+                foreach ($stock->getBottles() as $vial) {
+                    $em->persist($vial);
                 }
                 $em->flush();
                 return $this->redirect($this->generateUrl('flystock_show',array('id' => $stock->getId())));

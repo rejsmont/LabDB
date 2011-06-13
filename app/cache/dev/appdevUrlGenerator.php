@@ -34,11 +34,11 @@ class appdevUrlGenerator extends Symfony\Component\Routing\Generator\UrlGenerato
        'flycross_create' => true,
        'flycross_edit' => true,
        'flycross_delete' => true,
-       'culturebottle_list' => true,
-       'culturebottle_show' => true,
-       'culturebottle_create' => true,
-       'culturebottle_edit' => true,
-       'culturebottle_delete' => true,
+       'flyvial_list' => true,
+       'flyvial_show' => true,
+       'flyvial_create' => true,
+       'flyvial_edit' => true,
+       'flyvial_delete' => true,
     );
 
     /**
@@ -167,28 +167,28 @@ class appdevUrlGenerator extends Symfony\Component\Routing\Generator\UrlGenerato
         return array(array (  0 => 'id',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyCrossController::deleteAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'id',  ),  1 =>   array (    0 => 'text',    1 => '/crosses/delete',  ),));
     }
 
-    private function getculturebottle_listRouteInfo()
+    private function getflyvial_listRouteInfo()
     {
-        return array(array (  0 => 'filter',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\CultureBottleController::listAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'filter',  ),  1 =>   array (    0 => 'text',    1 => '/bottles',  ),));
+        return array(array (  0 => 'filter',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::listAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'filter',  ),  1 =>   array (    0 => 'text',    1 => '/vials',  ),));
     }
 
-    private function getculturebottle_showRouteInfo()
+    private function getflyvial_showRouteInfo()
     {
-        return array(array (  0 => 'id',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\CultureBottleController::showAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'id',  ),  1 =>   array (    0 => 'text',    1 => '/bottles/show',  ),));
+        return array(array (  0 => 'id',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::showAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'id',  ),  1 =>   array (    0 => 'text',    1 => '/vials/show',  ),));
     }
 
-    private function getculturebottle_createRouteInfo()
+    private function getflyvial_createRouteInfo()
     {
-        return array(array (), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\CultureBottleController::createAction',), array (), array (  0 =>   array (    0 => 'text',    1 => '/bottles/new',  ),));
+        return array(array (), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::createAction',), array (), array (  0 =>   array (    0 => 'text',    1 => '/vials/new',  ),));
     }
 
-    private function getculturebottle_editRouteInfo()
+    private function getflyvial_editRouteInfo()
     {
-        return array(array (  0 => 'id',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\CultureBottleController::editAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'id',  ),  1 =>   array (    0 => 'text',    1 => '/bottles/edit',  ),));
+        return array(array (  0 => 'id',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::editAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'id',  ),  1 =>   array (    0 => 'text',    1 => '/vials/edit',  ),));
     }
 
-    private function getculturebottle_deleteRouteInfo()
+    private function getflyvial_deleteRouteInfo()
     {
-        return array(array (  0 => 'id',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\CultureBottleController::deleteAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'id',  ),  1 =>   array (    0 => 'text',    1 => '/bottles/delete',  ),));
+        return array(array (  0 => 'id',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::deleteAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'id',  ),  1 =>   array (    0 => 'text',    1 => '/vials/delete',  ),));
     }
 }

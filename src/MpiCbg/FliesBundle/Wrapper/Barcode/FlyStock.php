@@ -22,7 +22,7 @@ class FlyStock extends ManagedEntity {
         $this->sourceCrossBarcode = $id;
         
         if ($id !== null) {
-            $sourceCrossBottle = $this->em->find('MpiCbgFliesBundle:CultureBottle', $id);
+            $sourceCrossBottle = $this->em->find('MpiCbgFliesBundle:FlyVial', $id);
             if ($sourceCrossBottle != null) {
                 $sourceCross = $sourceCrossBottle->getCross();
                 if ($sourceCross != null)

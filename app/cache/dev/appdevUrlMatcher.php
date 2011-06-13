@@ -147,29 +147,29 @@ class appdevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
             return array_merge($this->mergeDefaults($matches, array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyCrossController::deleteAction',)), array('_route' => 'flycross_delete'));
         }
 
-        // culturebottle_list
-        if (0 === strpos($pathinfo, '/bottles') && preg_match('#^/bottles/(?P<filter>[^/]+?)$#x', $pathinfo, $matches)) {
-            return array_merge($this->mergeDefaults($matches, array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\CultureBottleController::listAction',)), array('_route' => 'culturebottle_list'));
+        // flyvial_list
+        if (0 === strpos($pathinfo, '/vials') && preg_match('#^/vials/(?P<filter>[^/]+?)$#x', $pathinfo, $matches)) {
+            return array_merge($this->mergeDefaults($matches, array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::listAction',)), array('_route' => 'flyvial_list'));
         }
 
-        // culturebottle_show
-        if (0 === strpos($pathinfo, '/bottles/show') && preg_match('#^/bottles/show/(?P<id>[^/]+?)$#x', $pathinfo, $matches)) {
-            return array_merge($this->mergeDefaults($matches, array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\CultureBottleController::showAction',)), array('_route' => 'culturebottle_show'));
+        // flyvial_show
+        if (0 === strpos($pathinfo, '/vials/show') && preg_match('#^/vials/show/(?P<id>[^/]+?)$#x', $pathinfo, $matches)) {
+            return array_merge($this->mergeDefaults($matches, array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::showAction',)), array('_route' => 'flyvial_show'));
         }
 
-        // culturebottle_create
-        if ($pathinfo === '/bottles/new') {
-            return array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\CultureBottleController::createAction',  '_route' => 'culturebottle_create',);
+        // flyvial_create
+        if ($pathinfo === '/vials/new') {
+            return array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::createAction',  '_route' => 'flyvial_create',);
         }
 
-        // culturebottle_edit
-        if (0 === strpos($pathinfo, '/bottles/edit') && preg_match('#^/bottles/edit/(?P<id>[^/]+?)$#x', $pathinfo, $matches)) {
-            return array_merge($this->mergeDefaults($matches, array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\CultureBottleController::editAction',)), array('_route' => 'culturebottle_edit'));
+        // flyvial_edit
+        if (0 === strpos($pathinfo, '/vials/edit') && preg_match('#^/vials/edit/(?P<id>[^/]+?)$#x', $pathinfo, $matches)) {
+            return array_merge($this->mergeDefaults($matches, array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::editAction',)), array('_route' => 'flyvial_edit'));
         }
 
-        // culturebottle_delete
-        if (0 === strpos($pathinfo, '/bottles/delete') && preg_match('#^/bottles/delete/(?P<id>[^/]+?)$#x', $pathinfo, $matches)) {
-            return array_merge($this->mergeDefaults($matches, array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\CultureBottleController::deleteAction',)), array('_route' => 'culturebottle_delete'));
+        // flyvial_delete
+        if (0 === strpos($pathinfo, '/vials/delete') && preg_match('#^/vials/delete/(?P<id>[^/]+?)$#x', $pathinfo, $matches)) {
+            return array_merge($this->mergeDefaults($matches, array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::deleteAction',)), array('_route' => 'flyvial_delete'));
         }
 
         throw 0 < count($allow) ? new MethodNotAllowedException(array_unique($allow)) : new ResourceNotFoundException();

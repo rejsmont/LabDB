@@ -11,7 +11,7 @@ class FlyCrossType extends AbstractType
     {
         $builder->add('maleName', 'text')
                 ->add('virginName', 'text')
-                ->add('bottle', new CultureBottleSimpleType());
+                ->add('vial', new FlyVialSimpleType());
     }
 
     public function getDefaultOptions(array $options)

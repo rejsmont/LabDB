@@ -1,0 +1,80 @@
+{% extends "MpiCbgFliesBundle::layout.html.twig" %}
+
+{% block content %}
+<h1>{{ header }}</h1>
+    
+    <label>To select vials, scan barcodes here: </label>
+    <input id="barcode" type="text" value="" onchange="
+               var parent = document.getElementById('vial_' + barcode.value);
+               var checkbox = parent.childNodes[1].childNodes[0];
+               checkbox.checked = ! checkbox.checked;
+               barcode.value = '';
+               " />
+    <br /><br />
+    
+    <form id="form" action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
+        <input type="button" 
+               value="Generate labels"
+               onclick="collectionselector_action.value = 'label'; form.submit()" />
+        <input type="button" 
+               value="Flip vials"
+               onclick="collectionselector_action.value = 'flip'; form.submit()" />
+        <input type="button" 
+               value="Trash vials"
+               onclick="collectionselector_action.value = 'trash'; form.submit()" />
+        <br /><br />
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>Stock</th>
+                    <th>Cross</th>
+                    <th>Setup date</th>
+                    <th>Flip date</th>
+                    <th>Flipped from</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for key, item in form.items %}
+                {% set vialSelector = vials.items[key] %}
+                {% set vial = vialSelector.item %}
+                <tr id="vial_{{ vial }}">
+                    <td>{{ form_widget(item.selected) }}</td>
+                    <td><a href="{{ path('flyvial_show', { 'id': vial.id }) }}">
+                        {{ vial }}</a></td>
+                    <td>{% if vial.stock is not empty %}
+                        <a href="{{ path('flystock_show', { 'id': vial.stock.id }) }}">{{ vial.stock }}</a>
+                        {% endif %}</td>
+                    <td>{% if vial.cross is not empty %}
+                        <a href="{{ path('flycross_show', { 'id': vial.cross.id }) }}">{{ vial.cross }}</a>
+                        {% endif %}</td>
+                    <td>{{ vial.setupDate | date("d.m.Y") }}</td>
+                    <td>{{ vial.flipDate | date("d.m.Y") }}</td>
+                    <td>{% if vial.parent is not empty %}
+                        <a href="{{ path('flyvial_show', { 'id': vial.parent.id }) }}">
+                        {{ vial.parent }}
+                        </a>
+                        {% endif %}</td>
+                    <td>{% if vial.trashed %}
+                        TRASHED
+                        {% endif %}
+                    
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {{ form_widget(form.action) }}
+        {{ form_rest(form) }}
+        <br />
+        <input type="button" 
+               value="Generate labels"
+               onclick="collectionselector_action.value = 'label'; form.submit()" />
+        <input type="button" 
+               value="Flip vials"
+               onclick="collectionselector_action.value = 'flip'; form.submit()" />
+        <input type="button" 
+               value="Trash vials"
+               onclick="collectionselector_action.value = 'trash'; form.submit()" />
+{% endblock %}

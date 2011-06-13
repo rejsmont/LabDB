@@ -8,13 +8,13 @@
         <a href="{{ path('flycross_show', { 'id': stock.sourceCross.id }) }}">{{ stock.sourceCross }}</a>
     </p>
     {% endif %}
-    {% if stock.bottles | length > 0 %}
-        <p>Stock is kept in the following bottles:</p>
+    {% if stock.vials | length > 0 %}
+        <p>Stock is kept in the following vials:</p>
         <ul>
-        {% for bottle in stock.bottles %}
+        {% for vial in stock.vials %}
             <li>
-                <a href="{{ path('culturebottle_show', { 'id': bottle.id }) }}">{{ bottle }}</a>
-                ({{ bottle.setupDate | date("d.m.Y") }})
+                <a href="{{ path('flyvial_show', { 'id': vial.id }) }}">{{ vial }}</a>
+                ({{ vial.setupDate | date("d.m.Y") }})
             </li>
         {% endfor %}
         </ul>

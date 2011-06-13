@@ -39,7 +39,7 @@ class CollectionSelector {
             $item = new CollectionSelectorItem($value);
             $this->items->set($key, $item);
             if (method_exists($value, 'getHasLabel')) {
-                if (! $value->getHasLabel()) {
+                if (! $value->isLabelPrinted()) {
                     $item->setSelected(true);
                 }
             }

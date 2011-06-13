@@ -23,13 +23,13 @@
                     <td>{{ form_widget(item.selected) }}</td>
                     <td><a href="{{ path('flycross_show', { 'id': cross.id }) }}">
                         {{ cross.id }}</a></td>
-                    <td><a href="{{ path('culturebottle_show', { 'id': cross.bottle.id }) }}">{{ cross.bottle }}</a></td>
+                    <td><a href="{{ path('flyvial_show', { 'id': cross.vial.id }) }}">{{ cross.vial }}</a></td>
                     <td>{{ cross.virginName }}</td>
-                    <td><a href="{{ path('culturebottle_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a></td>
+                    <td><a href="{{ path('flyvial_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a></td>
                     <td>{{ cross.maleName }}</td>
-                    <td><a href="{{ path('culturebottle_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a></td>
-                    <td>{{ cross.bottle.setupDate | date("d.m.Y") }}</td>
-                    <td>{{ cross.bottle.flipDate | date("d.m.Y") }}</td>
+                    <td><a href="{{ path('flyvial_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a></td>
+                    <td>{{ cross.vial.setupDate | date("d.m.Y") }}</td>
+                    <td>{{ cross.vial.flipDate | date("d.m.Y") }}</td>
                 </tr>
             {% endfor %}
             </tbody>

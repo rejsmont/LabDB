@@ -19,7 +19,7 @@ class FlyCross {
     protected $id; 
     
     /**
-     * @ORM\ManyToOne(targetEntity="CultureBottle", inversedBy="maleCrosses")
+     * @ORM\ManyToOne(targetEntity="FlyVial", inversedBy="maleCrosses")
      */
     protected $male;
         
@@ -29,7 +29,7 @@ class FlyCross {
     protected $maleName;
     
     /**
-     * @ORM\ManyToOne(targetEntity="CultureBottle", inversedBy="virginCrosses")
+     * @ORM\ManyToOne(targetEntity="FlyVial", inversedBy="virginCrosses")
      */
     protected $virgin;
         
@@ -39,9 +39,9 @@ class FlyCross {
     protected $virginName;
     
     /**
-     * @ORM\OneToOne(targetEntity="CultureBottle", mappedBy="cross")
+     * @ORM\OneToOne(targetEntity="FlyVial", mappedBy="cross")
      */
-    protected $bottle;
+    protected $vial;
     
     /**
      * @ORM\OneToMany(targetEntity="FlyStock", mappedBy="sourceCross")
@@ -50,7 +50,7 @@ class FlyCross {
 
     public function __construct()
     {
-        $this->bottle = new \MpiCbg\FliesBundle\Entity\CultureBottle;
+        $this->bottle = new \MpiCbg\FliesBundle\Entity\FlyVial;
         $this->bottle->setCross($this);
     }
     
@@ -75,7 +75,7 @@ class FlyCross {
      */
     public function getName()
     {
-        return $this->virginName . " ‚Äö√≤√∏ ‚Äö√∫√Ø " . $this->maleName . " ‚Äö√¥√á";
+        return $this->virginName . " ☿ ✕ " . $this->maleName . " ♂";
     }
     
     /**
@@ -91,9 +91,9 @@ class FlyCross {
     /**
      * Set male
      *
-     * @param MpiCbg\FliesBundle\Entity\CultureBottle $male
+     * @param MpiCbg\FliesBundle\Entity\FlyVial $male
      */
-    public function setMale(\MpiCbg\FliesBundle\Entity\CultureBottle $male)
+    public function setMale(\MpiCbg\FliesBundle\Entity\FlyVial $male)
     {
         $this->male = $male;
     }
@@ -101,7 +101,7 @@ class FlyCross {
     /**
      * Get male
      *
-     * @return MpiCbg\FliesBundle\Entity\CultureBottle $male
+     * @return MpiCbg\FliesBundle\Entity\FlyVial $male
      */
     public function getMale()
     {
@@ -131,9 +131,9 @@ class FlyCross {
     /**
      * Set virgin
      *
-     * @param MpiCbg\FliesBundle\Entity\CultureBottle $virgin
+     * @param MpiCbg\FliesBundle\Entity\FlyVial $virgin
      */
-    public function setVirgin(\MpiCbg\FliesBundle\Entity\CultureBottle $virgin)
+    public function setVirgin(\MpiCbg\FliesBundle\Entity\FlyVial $virgin)
     {
         $this->virgin = $virgin;
     }
@@ -141,7 +141,7 @@ class FlyCross {
     /**
      * Get virgin
      *
-     * @return MpiCbg\FliesBundle\Entity\CultureBottle $virgin
+     * @return MpiCbg\FliesBundle\Entity\FlyVial $virgin
      */
     public function getVirgin()
     {
@@ -169,24 +169,24 @@ class FlyCross {
     }
 
     /**
-     * Set bottle
+     * Set vial
      *
-     * @param MpiCbg\FliesBundle\Entity\CultureBottle $bottle
+     * @param MpiCbg\FliesBundle\Entity\FlyVial $vial
      */
-    public function setBottle(\MpiCbg\FliesBundle\Entity\CultureBottle $bottle)
+    public function setVial(\MpiCbg\FliesBundle\Entity\FlyVial $vial)
     {
         $bottle->setCross($this);
-        $this->bottle = $bottle;
+        $this->vial = $vial;
     }
 
     /**
-     * Get bottle
+     * Get vial
      *
-     * @return MpiCbg\FliesBundle\Entity\CultureBottle $bottle
+     * @return MpiCbg\FliesBundle\Entity\FlyVial $vial
      */
-    public function getBottle()
+    public function getVial()
     {
-        return $this->bottle;
+        return $this->vial;
     }
 
     /**
@@ -206,6 +206,6 @@ class FlyCross {
      */
     public function getCrosses()
     {
-        return $this->getBottle()->getCrosses();
+        return $this->getVial()->getCrosses();
     }
 }

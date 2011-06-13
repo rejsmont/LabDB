@@ -24,9 +24,9 @@ class FlyStock {
     protected $name;
     
     /**
-     * @ORM\OneToMany(targetEntity="CultureBottle", mappedBy="stock")
+     * @ORM\OneToMany(targetEntity="FlyVial", mappedBy="stock")
      */
-    protected $bottles;
+    protected $vials;
     
     /**
      * @ORM\ManyToOne(targetEntity="FlyCross")
@@ -35,10 +35,10 @@ class FlyStock {
     
     public function __construct()
     {
-        $this->bottles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->addBottles(new \MpiCbg\FliesBundle\Entity\CultureBottle());
-        foreach ($this->getBottles() as $bottle) {
-            $bottle->setStock($this);
+        $this->vials = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->addBottles(new \MpiCbg\FliesBundle\Entity\FlyVial());
+        foreach ($this->getBottles() as $vial) {
+            $vial->setStock($this);
         }
     }
     
@@ -87,23 +87,23 @@ class FlyStock {
     }
     
     /**
-     * Add bottles
+     * Add vials
      *
-     * @param MpiCbg\FliesBundle\Entity\CultureBottle $bottles
+     * @param MpiCbg\FliesBundle\Entity\FlyVial $vials
      */
-    public function addBottles(\MpiCbg\FliesBundle\Entity\CultureBottle $bottles)
+    public function addBVials(\MpiCbg\FliesBundle\Entity\FlyVial $vials)
     {
-        $this->bottles[] = $bottles;
+        $this->vials[] = $vials;
     }
 
     /**
-     * Get bottles
+     * Get vials
      *
-     * @return Doctrine\Common\Collections\Collection $bottles
+     * @return Doctrine\Common\Collections\Collection $vials
      */
-    public function getBottles()
+    public function getVials()
     {
-        return $this->bottles;
+        return $this->vials;
     }
 
     /**

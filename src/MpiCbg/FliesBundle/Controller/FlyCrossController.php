@@ -118,7 +118,7 @@ class FlyCrossController extends Controller
     }
 
     /**
-     * Delete cross (and its bottle)
+     * Delete cross (and its vial)
      * 
      * @Route("/crosses/delete/{id}", name="flycross_delete")
      * @Template()

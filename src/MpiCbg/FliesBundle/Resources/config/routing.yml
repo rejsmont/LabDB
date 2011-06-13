@@ -10,6 +10,6 @@ fly_cross:
     resource: "@MpiCbgFliesBundle/Controller/FlyCrossController.php"
     type:     annotation
 
-culture_bottle:
-    resource: "@MpiCbgFliesBundle/Controller/CultureBottleController.php"
+culture_vial:
+    resource: "@MpiCbgFliesBundle/Controller/FlyVialController.php"
     type:     annotation
