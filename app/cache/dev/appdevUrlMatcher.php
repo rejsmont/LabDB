@@ -148,7 +148,7 @@ class appdevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
         }
 
         // flyvial_list
-        if (0 === strpos($pathinfo, '/vials') && preg_match('#^/vials/(?P<filter>[^/]+?)$#x', $pathinfo, $matches)) {
+        if (0 === strpos($pathinfo, '/vials/list') && preg_match('#^/vials/list/(?P<filter>[^/]+?)$#x', $pathinfo, $matches)) {
             return array_merge($this->mergeDefaults($matches, array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::listAction',)), array('_route' => 'flyvial_list'));
         }
 

@@ -169,7 +169,7 @@ class appdevUrlGenerator extends Symfony\Component\Routing\Generator\UrlGenerato
 
     private function getflyvial_listRouteInfo()
     {
-        return array(array (  0 => 'filter',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::listAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'filter',  ),  1 =>   array (    0 => 'text',    1 => '/vials',  ),));
+        return array(array (  0 => 'filter',), array (  '_controller' => 'MpiCbg\\FliesBundle\\Controller\\FlyVialController::listAction',), array (), array (  0 =>   array (    0 => 'variable',    1 => '/',    2 => '[^/]+?',    3 => 'filter',  ),  1 =>   array (    0 => 'text',    1 => '/vials/list',  ),));
     }
 
     private function getflyvial_showRouteInfo()

@@ -9,6 +9,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 use MpiCbg\FliesBundle\Entity\FlyVial;
 use MpiCbg\FliesBundle\Wrapper\Barcode\FlyVial as FlyVialBarcode;
 use MpiCbg\FliesBundle\Wrapper\Selector\CollectionSelector;
@@ -23,7 +26,7 @@ class FlyVialController extends Controller
     /**
      * List vials
      * 
-     * @Route("/vials/{filter}", name="flyvial_list")
+     * @Route("/vials/list/{filter}", name="flyvial_list")
      * @Template()
      */
     public function listAction($filter = 'living')
@@ -41,15 +44,29 @@ class FlyVialController extends Controller
                 break;
             case 'all':
                 $vials = $em->getRepository('MpiCbgFliesBundle:FlyVial')->findAll();
-                $header = 'Bottles (including trashed)';
+                $header = 'Vials (including trashed)';
                 break;
             case 'living':
             default:
                 $vials = $em->getRepository('MpiCbgFliesBundle:FlyVial')->findAllLiving();
-                $header = 'Bottles';
+                $header = 'Vials';
         }
         
         $vialsSelector = new CollectionSelector($vials);
+
+        foreach ($vialsSelector->getItems() as $vialsSelectorItem) {
+            
+            $vial = $vialsSelectorItem->getItem();
+                        
+            if (isset($vial)) {
+                
+                if ((is_a($vial,"MpiCbg\FliesBundle\Entity\FlyVial"))||
+                    (is_subclass_of($vial,"MpiCbg\FliesBundle\Entity\FlyVial"))) {
+                    $vialsSelectorItem->setSelected(! $vial->isLabelPrinted());
+                }
+            }
+            
+        }
         
         $form = $this->get('form.factory')
                      ->create(new CollectionSelectorType(), $vialsSelector);
@@ -83,7 +100,7 @@ class FlyVialController extends Controller
                 return $this->trashBottles($vialsSelector, $filter);
                 break;
             default:
-                return $this->redirect($this->generateUrl('FlyVial_list', array('filter' => $filter)));
+                return $this->redirect($this->generateUrl('flyvial_list', array('filter' => $filter)));
                 break;
         }
     }
@@ -118,7 +135,7 @@ class FlyVialController extends Controller
     public function flipBottles($vialsSelector, $filter) {
         
         $em = $this->get('doctrine.orm.entity_manager');
-        
+
         foreach ($vialsSelector->getItems() as $item) {
             
             if($item->isSelected()) {
@@ -130,7 +147,7 @@ class FlyVialController extends Controller
         
         $em->flush();
         
-        return $this->redirect($this->generateUrl('FlyVial_list', array('filter' => $filter)));
+        return $this->redirect($this->generateUrl('flyvial_list', array('filter' => $filter)));
     }
     
     public function trashBottles($vialsSelector, $filter) {
@@ -148,7 +165,7 @@ class FlyVialController extends Controller
         
         $em->flush();
         
-        return $this->redirect($this->generateUrl('FlyVial_list', array('filter' => $filter)));
+        return $this->redirect($this->generateUrl('flyvial_list', array('filter' => $filter)));
     }
     
     /**
@@ -191,7 +208,7 @@ class FlyVialController extends Controller
             if ($form->isValid()) {
                 $em->persist($vial);
                 $em->flush();
-                return $this->redirect($this->generateUrl('FlyVial_show',array('id' => $vial->getId())));
+                return $this->redirect($this->generateUrl('flyvial_show',array('id' => $vial->getId())));
             }
         }
         
@@ -223,7 +240,7 @@ class FlyVialController extends Controller
             if ($form->isValid()) {
                 $em->persist($vial);
                 $em->flush();
-                return $this->redirect($this->generateUrl('FlyVial_show',array('id' => $vial->getId())));
+                return $this->redirect($this->generateUrl('flyvial_show',array('id' => $vial->getId())));
             }
         }
         
@@ -246,7 +263,7 @@ class FlyVialController extends Controller
 
         $em->remove($vial);
         $em->flush();
-        return $this->redirect($this->generateUrl('FlyVial_list'));
+        return $this->redirect($this->generateUrl('flyvial_list'));
     }
     
     private function addFlyLabel(TCPDF $pdf,$barcode,$date,$text) {
