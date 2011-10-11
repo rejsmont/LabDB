@@ -2,11 +2,16 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <style type="text/css">
-            body {font-family: sans-serif;}
-        </style>
+        {% stylesheets '@VIBFliesBundle/Resources/public/css/*' filter='yui_css' %}
+            <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+        {% endstylesheets %}
     </head>
     <body>
+        <nav>
+            <a href="{{ path('flyvial_list', { 'filter': 'stock' }) }}">Home</a>
+            <a href="{{ path('flyvial_list', { 'filter': 'stock' }) }}">Stocks</a>
+            <a href="{{ path('flyvial_list', { 'filter': 'cross' }) }}">Crosses</a>
+        </nav>
         {% block content %}
         {% endblock %}
     </body>
