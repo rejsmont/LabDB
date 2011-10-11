@@ -1,0 +1,38 @@
+{% extends "VIBFliesBundle::layout.html.twig" %}
+
+{% block content %}
+    <h1>Bottle {{ vial }}</h1>
+    {% if vial.stock is not empty %}
+    <p>Stock: <a href="{{ path('flystock_show', { 'id': vial.stock.id }) }}">{{ vial.stock }}</a></p>
+    {% endif %}
+    {% if vial.cross is not empty %}
+    <p>Cross: <a href="{{ path('flycross_show', { 'id': vial.cross.id }) }}">{{ vial.cross }}</a></p>
+    {% endif %}
+    {% if vial.parent is not empty %}
+    <p>Flipped from: <a href="{{ path('flyvial_show', { 'id': vial.parent.id }) }}">{{ vial.parent }}</a></p>
+    {% endif %}
+    <p>Setup date: {{ vial.setupDate | date("d.m.Y") }}</p>
+    <p>Flip date: {{ vial.flipDate | date("d.m.Y") }}</p>
+    {% if vial.children | length > 0 %}
+        <p>Bottle has been flipped into the following vials:</p>
+        <ul>
+        {% for child in vial.children %}
+            <li>
+                <a href="{{ path('flyvial_show', { 'id': child.id }) }}">{{ child }}</a>
+                ({{ child.setupDate | date("d.m.Y") }})
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <p>
+        {% if vial.stock is not empty %}
+            <a href="{{ path('flyvial_list', { 'filter': 'stock' }) }}">List</a> |
+        {% elseif vial.cross is not empty %}
+            <a href="{{ path('flyvial_list', { 'filter': 'cross' }) }}">List</a> |
+        {% else %}
+            <a href="{{ path('flyvial_list', { 'filter': 'cross' }) }}">List</a> |
+        {% endif %}
+        <a href="{{ path('flyvial_create') }}">New</a> |
+        <a href="{{ path('flyvial_edit', { 'id': vial.id }) }}">Edit</a> |
+        <a href="{{ path('flyvial_delete', { 'id': vial.id }) }}">Delete</a></p>
+{% endblock %}

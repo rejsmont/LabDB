@@ -1,0 +1,7 @@
+{% extends "VIBFliesBundle::layout.html.twig" %}
+
+{% block content %}
+    <h1>New stock</h1>
+    {% include 'VIBFliesBundle:FlyStock:_form.html.twig'
+       with {'form': form} %}
+{% endblock %}

@@ -4,4 +4,4 @@
 #   prefix:   /_internal
 
 mpicbg_flies:
-    resource: "@MpiCbgFliesBundle/Resources/config/routing.yml"
+    resource: "@VIBFliesBundle/Resources/config/routing.yml"

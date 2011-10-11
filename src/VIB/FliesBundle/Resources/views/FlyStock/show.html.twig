@@ -1,0 +1,26 @@
+{% extends "VIBFliesBundle::layout.html.twig" %}
+
+{% block content %}
+    <h1>Stock {{ stock }}</h1>
+    {% if stock.sourceCross is not empty %}
+    <p>
+        Source cross:
+        <a href="{{ path('flycross_show', { 'id': stock.sourceCross.id }) }}">{{ stock.sourceCross }}</a>
+    </p>
+    {% endif %}
+    {% if stock.vials | length > 0 %}
+        <p>Stock is kept in the following vials:</p>
+        <ul>
+        {% for vial in stock.vials %}
+            <li>
+                <a href="{{ path('flyvial_show', { 'id': vial.id }) }}">{{ vial }}</a>
+                ({{ vial.setupDate | date("d.m.Y") }})
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <p><a href="{{ path('flystock_list') }}">List</a> |
+       <a href="{{ path('flystock_create') }}">New</a> |
+       <a href="{{ path('flystock_edit', { 'id': stock.id }) }}">Edit</a> |
+       <a href="{{ path('flystock_delete', { 'id': stock.id }) }}">Delete</a></p>
+{% endblock %}

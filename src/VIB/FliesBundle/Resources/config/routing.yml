@@ -1,0 +1,15 @@
+default:
+    pattern:  /
+    defaults: { _controller: VIBFliesBundle:FlyStock:index }
+
+fly_stock:
+    resource: "@VIBFliesBundle/Controller/FlyStockController.php"
+    type:     annotation
+
+fly_cross:
+    resource: "@VIBFliesBundle/Controller/FlyCrossController.php"
+    type:     annotation
+
+culture_vial:
+    resource: "@VIBFliesBundle/Controller/FlyVialController.php"
+    type:     annotation

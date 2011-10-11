@@ -1,0 +1,33 @@
+{% extends "VIBFliesBundle::layout.html.twig" %}
+
+{% block content %}
+<h1>Verify</h1>
+    
+    <label>To select vials, scan barcodes here: </label>
+    <input id="barcode" type="text" value="" onchange="
+               var parent = document.getElementById('vial_' + barcode.value);
+               var checkbox = parent.childNodes[1].childNodes[0];
+               checkbox.checked = ! checkbox.checked;
+               barcode.value = '';
+               " />
+    <br /><br />
+    
+    <table>
+        <thead>
+            <tr>
+                <th colspan="2">Parent vial</th>
+                <th colspan="2">Flipped vial</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vial in vials %}
+            <tr id="vial">
+                <td>{{ vial.parent }}</td>
+                <td>{{ vial.parent.stock }}</td>
+                <td>{{ vial }}</td>
+                <td>{{ vial.stock }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

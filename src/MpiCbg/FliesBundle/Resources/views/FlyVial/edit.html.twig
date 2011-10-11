@@ -1,7 +1,0 @@
-{% extends "MpiCbgFliesBundle::layout.html.twig" %}
-
-{% block content %}
-    <h1>Edit vial {{ "%05d" | format(vial.id) }}</h1>
-    {% include 'MpiCbgFliesBundle:FlyVial:_form.html.twig'
-       with {'form': form} %}
-{% endblock %}

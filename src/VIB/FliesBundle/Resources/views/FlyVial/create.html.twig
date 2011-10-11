@@ -1,0 +1,7 @@
+{% extends "VIBFliesBundle::layout.html.twig" %}
+
+{% block content %}
+    <h1>New vial</h1>
+    {% include 'VIBFliesBundle:FlyVial:_form.html.twig'
+       with {'form': form} %}
+{% endblock %}
