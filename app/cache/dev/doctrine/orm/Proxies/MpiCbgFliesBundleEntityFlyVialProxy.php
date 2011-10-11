@@ -15,159 +15,168 @@ class MpiCbgFliesBundleEntityFlyVialProxy extends \MpiCbg\FliesBundle\Entity\Fly
         $this->_entityPersister = $entityPersister;
         $this->_identifier = $identifier;
     }
-    private function _load()
+    /** @private */
+    public function __load()
     {
         if (!$this->__isInitialized__ && $this->_entityPersister) {
             $this->__isInitialized__ = true;
+
+            if (method_exists($this, "__wakeup")) {
+                // call this after __isInitialized__to avoid infinite recursion
+                // but before loading to emulate what ClassMetadata::newInstance()
+                // provides.
+                $this->__wakeup();
+            }
+
             if ($this->_entityPersister->load($this->_identifier, $this) === null) {
                 throw new \Doctrine\ORM\EntityNotFoundException();
             }
             unset($this->_entityPersister, $this->_identifier);
         }
     }
-
+    
     
     public function __toString()
     {
-        $this->_load();
+        $this->__load();
         return parent::__toString();
     }
 
     public function getId()
     {
-        $this->_load();
+        $this->__load();
         return parent::getId();
     }
 
     public function getName()
     {
-        $this->_load();
+        $this->__load();
         return parent::getName();
     }
 
     public function getLabelText()
     {
-        $this->_load();
+        $this->__load();
         return parent::getLabelText();
     }
 
     public function setSetupDate($setupDate)
     {
-        $this->_load();
+        $this->__load();
         return parent::setSetupDate($setupDate);
     }
 
     public function getSetupDate()
     {
-        $this->_load();
+        $this->__load();
         return parent::getSetupDate();
     }
 
     public function setFlipDate($flipDate)
     {
-        $this->_load();
+        $this->__load();
         return parent::setFlipDate($flipDate);
     }
 
     public function getFlipDate()
     {
-        $this->_load();
+        $this->__load();
         return parent::getFlipDate();
     }
 
     public function addChildren(\MpiCbg\FliesBundle\Entity\FlyVial $children)
     {
-        $this->_load();
+        $this->__load();
         return parent::addChildren($children);
     }
 
     public function getChildren()
     {
-        $this->_load();
+        $this->__load();
         return parent::getChildren();
     }
 
     public function setParent(\MpiCbg\FliesBundle\Entity\FlyVial $parent)
     {
-        $this->_load();
+        $this->__load();
         return parent::setParent($parent);
     }
 
     public function getParent()
     {
-        $this->_load();
+        $this->__load();
         return parent::getParent();
     }
 
     public function setStock(\MpiCbg\FliesBundle\Entity\FlyStock $stock)
     {
-        $this->_load();
+        $this->__load();
         return parent::setStock($stock);
     }
 
     public function getStock()
     {
-        $this->_load();
+        $this->__load();
         return parent::getStock();
     }
 
     public function setCross($cross)
     {
-        $this->_load();
+        $this->__load();
         return parent::setCross($cross);
     }
 
     public function getCross()
     {
-        $this->_load();
+        $this->__load();
         return parent::getCross();
     }
 
     public function getMaleCrosses()
     {
-        $this->_load();
+        $this->__load();
         return parent::getMaleCrosses();
     }
 
     public function getVirginCrosses()
     {
-        $this->_load();
+        $this->__load();
         return parent::getVirginCrosses();
     }
 
     public function getCrosses()
     {
-        $this->_load();
+        $this->__load();
         return parent::getCrosses();
     }
 
     public function isLabelPrinted()
     {
-        $this->_load();
+        $this->__load();
         return parent::isLabelPrinted();
     }
 
     public function setLabelPrinted($labelPrinted)
     {
-        $this->_load();
+        $this->__load();
         return parent::setLabelPrinted($labelPrinted);
     }
 
     public function isTrashed()
     {
-        $this->_load();
+        $this->__load();
         return parent::isTrashed();
     }
 
     public function setTrashed($trashed)
     {
-        $this->_load();
+        $this->__load();
         return parent::setTrashed($trashed);
     }
 
     public function isAlive()
     {
-        $this->_load();
+        $this->__load();
         return parent::isAlive();
     }
 

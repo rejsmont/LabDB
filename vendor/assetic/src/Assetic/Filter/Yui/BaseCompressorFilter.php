@@ -24,7 +24,7 @@ abstract class BaseCompressorFilter implements FilterInterface
 {
     private $jarPath;
     private $javaPath;
-    private $charset = 'utf-8';
+    private $charset;
     private $lineBreak;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
@@ -59,7 +59,15 @@ abstract class BaseCompressorFilter implements FilterInterface
     protected function compress($content, $type, $options = array())
     {
         $pb = new ProcessBuilder();
-        $pb->add($this->javaPath)->add('-jar')->add($this->jarPath)->add('--type')->add($type);
+        $pb
+            ->inheritEnvironmentVariables()
+            ->add($this->javaPath)
+            ->add('-jar')
+            ->add($this->jarPath)
+            ->add('--type')
+            ->add($type)
+        ;
+
         foreach ($options as $option) {
             $pb->add($option);
         }
@@ -72,10 +80,13 @@ abstract class BaseCompressorFilter implements FilterInterface
             $pb->add('--line-break')->add($this->lineBreak);
         }
 
-        $pb->setInput($content);
+        $input = tempnam(sys_get_temp_dir(), 'assetic_yui_compressor');
+        file_put_contents($input, $content);
+        $pb->add($input);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
+        unlink($input);
 
         if (0 < $code) {
             throw new \RuntimeException($proc->getErrorOutput());

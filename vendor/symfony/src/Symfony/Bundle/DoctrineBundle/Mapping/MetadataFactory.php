@@ -11,16 +11,17 @@
 
 namespace Symfony\Bundle\DoctrineBundle\Mapping;
 
-use Symfony\Bundle\DoctrineBundle\Registry;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Doctrine\ORM\Tools\EntityRepositoryGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 
 /**
- *
+ * This class provides methods to access Doctrine entity class metadata for a
+ * given bundle, namespace or entity class.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
@@ -31,9 +32,9 @@ class MetadataFactory
     /**
      * Constructor.
      *
-     * @param Registry $registry A Registry instance
+     * @param RegistryInterface $registry A RegistryInterface instance
      */
-    public function __construct(Registry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         $this->registry = $registry;
     }
@@ -73,7 +74,7 @@ class MetadataFactory
     {
         $metadata = $this->getMetadataForClass($class);
         if (!$metadata->getMetadata()) {
-            throw new \RuntimeException(sprintf('Entity "%s" is not a mapped entity.', $class));
+            throw MappingException::classIsNotAValidEntityOrMappedSuperClass($class);
         }
 
         $all = $metadata->getMetadata();
@@ -151,19 +152,27 @@ class MetadataFactory
                 return new ClassMetadataCollection(array($metadata));
             }
         }
+
+        return new ClassMetadataCollection(array());
     }
 
     private function getAllMetadata()
     {
         $metadata = array();
-        foreach ($this->registry->getEntityManagerNames() as $name => $id) {
-            $cmf = new DisconnectedClassMetadataFactory();
-            $cmf->setEntityManager($this->registry->getEntityManager($name));
+        foreach ($this->registry->getEntityManagers() as $em) {
+            $class = $this->getClassMetadataFactoryClass();
+            $cmf = new $class();
+            $cmf->setEntityManager($em);
             foreach ($cmf->getAllMetadata() as $m) {
                 $metadata[] = $m;
             }
         }
 
         return $metadata;
+    }
+
+    protected function getClassMetadataFactoryClass()
+    {
+        return 'Doctrine\\ORM\\Mapping\\ClassMetadataFactory';
     }
 }

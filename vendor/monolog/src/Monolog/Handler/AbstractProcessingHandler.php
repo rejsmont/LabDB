@@ -36,21 +36,11 @@ abstract class AbstractProcessingHandler extends AbstractHandler
 
         $record = $this->processRecord($record);
 
-        $record['message'] = $this->getFormatter()->format($record);
+        $record['formatted'] = $this->getFormatter()->format($record);
 
         $this->write($record);
 
         return false === $this->bubble;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handleBatch(array $records)
-    {
-        foreach ($records as $record) {
-            $this->handle($record);
-        }
     }
 
     /**

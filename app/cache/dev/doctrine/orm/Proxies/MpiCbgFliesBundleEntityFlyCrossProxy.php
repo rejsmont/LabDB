@@ -15,111 +15,120 @@ class MpiCbgFliesBundleEntityFlyCrossProxy extends \MpiCbg\FliesBundle\Entity\Fl
         $this->_entityPersister = $entityPersister;
         $this->_identifier = $identifier;
     }
-    private function _load()
+    /** @private */
+    public function __load()
     {
         if (!$this->__isInitialized__ && $this->_entityPersister) {
             $this->__isInitialized__ = true;
+
+            if (method_exists($this, "__wakeup")) {
+                // call this after __isInitialized__to avoid infinite recursion
+                // but before loading to emulate what ClassMetadata::newInstance()
+                // provides.
+                $this->__wakeup();
+            }
+
             if ($this->_entityPersister->load($this->_identifier, $this) === null) {
                 throw new \Doctrine\ORM\EntityNotFoundException();
             }
             unset($this->_entityPersister, $this->_identifier);
         }
     }
-
+    
     
     public function __toString()
     {
-        $this->_load();
+        $this->__load();
         return parent::__toString();
     }
 
     public function getId()
     {
-        $this->_load();
+        $this->__load();
         return parent::getId();
     }
 
     public function getName()
     {
-        $this->_load();
+        $this->__load();
         return parent::getName();
     }
 
     public function getLabel()
     {
-        $this->_load();
+        $this->__load();
         return parent::getLabel();
     }
 
     public function setMale(\MpiCbg\FliesBundle\Entity\FlyVial $male)
     {
-        $this->_load();
+        $this->__load();
         return parent::setMale($male);
     }
 
     public function getMale()
     {
-        $this->_load();
+        $this->__load();
         return parent::getMale();
     }
 
     public function setMaleName($maleName)
     {
-        $this->_load();
+        $this->__load();
         return parent::setMaleName($maleName);
     }
 
     public function getMaleName()
     {
-        $this->_load();
+        $this->__load();
         return parent::getMaleName();
     }
 
     public function setVirgin(\MpiCbg\FliesBundle\Entity\FlyVial $virgin)
     {
-        $this->_load();
+        $this->__load();
         return parent::setVirgin($virgin);
     }
 
     public function getVirgin()
     {
-        $this->_load();
+        $this->__load();
         return parent::getVirgin();
     }
 
     public function setVirginName($virginName)
     {
-        $this->_load();
+        $this->__load();
         return parent::setVirginName($virginName);
     }
 
     public function getVirginName()
     {
-        $this->_load();
+        $this->__load();
         return parent::getVirginName();
     }
 
     public function setVial(\MpiCbg\FliesBundle\Entity\FlyVial $vial)
     {
-        $this->_load();
+        $this->__load();
         return parent::setVial($vial);
     }
 
     public function getVial()
     {
-        $this->_load();
+        $this->__load();
         return parent::getVial();
     }
 
     public function getStocks()
     {
-        $this->_load();
+        $this->__load();
         return parent::getStocks();
     }
 
     public function getCrosses()
     {
-        $this->_load();
+        $this->__load();
         return parent::getCrosses();
     }
 

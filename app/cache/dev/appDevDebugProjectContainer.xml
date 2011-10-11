@@ -19,12 +19,14 @@
       <parameter key="JMSSecurityExtraBundle">JMS\SecurityExtraBundle\JMSSecurityExtraBundle</parameter>
       <parameter key="MpiCbgFliesBundle">MpiCbg\FliesBundle\MpiCbgFliesBundle</parameter>
       <parameter key="WebProfilerBundle">Symfony\Bundle\WebProfilerBundle\WebProfilerBundle</parameter>
-      <parameter key="SymfonyWebConfiguratorBundle">Symfony\Bundle\WebConfiguratorBundle\SymfonyWebConfiguratorBundle</parameter>
+      <parameter key="SensioDistributionBundle">Sensio\Bundle\DistributionBundle\SensioDistributionBundle</parameter>
+      <parameter key="SensioGeneratorBundle">Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle</parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">appDevDebugProjectContainer</parameter>
     <parameter key="database_driver">pdo_pgsql</parameter>
     <parameter key="database_host">localhost</parameter>
+    <parameter key="database_port"></parameter>
     <parameter key="database_name">labdb</parameter>
     <parameter key="database_user">postgres</parameter>
     <parameter key="database_password"></parameter>
@@ -35,11 +37,9 @@
     <parameter key="locale">en</parameter>
     <parameter key="secret">6f9fb1d496e5c46ed537a4d303583a21</parameter>
     <parameter key="router_listener.class">Symfony\Bundle\FrameworkBundle\EventListener\RouterListener</parameter>
-    <parameter key="session_listener.class">Symfony\Bundle\FrameworkBundle\EventListener\SessionListener</parameter>
     <parameter key="controller_resolver.class">Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver</parameter>
     <parameter key="controller_name_converter.class">Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser</parameter>
     <parameter key="response_listener.class">Symfony\Component\HttpKernel\EventListener\ResponseListener</parameter>
-    <parameter key="exception_listener.class">Symfony\Component\HttpKernel\EventListener\ExceptionListener</parameter>
     <parameter key="event_dispatcher.class">Symfony\Bundle\FrameworkBundle\ContainerAwareEventDispatcher</parameter>
     <parameter key="http_kernel.class">Symfony\Bundle\FrameworkBundle\HttpKernel</parameter>
     <parameter key="filesystem.class">Symfony\Component\HttpKernel\Util\Filesystem</parameter>
@@ -53,21 +53,17 @@
     <parameter key="translation.loader.xliff.class">Symfony\Component\Translation\Loader\XliffFileLoader</parameter>
     <parameter key="debug.event_dispatcher.class">Symfony\Bundle\FrameworkBundle\Debug\TraceableEventDispatcher</parameter>
     <parameter key="debug.container.dump">/Users/ejsmont/NetBeansProjects/LabDB/app/cache/dev/appDevDebugProjectContainer.xml</parameter>
-    <parameter key="kernel.cache_warmup">false</parameter>
     <parameter key="kernel.secret">6f9fb1d496e5c46ed537a4d303583a21</parameter>
-    <parameter key="exception_listener.controller">Symfony\Bundle\FrameworkBundle\Controller\ExceptionController::showAction</parameter>
+    <parameter key="kernel.trust_proxy_headers">false</parameter>
     <parameter key="session.class">Symfony\Component\HttpFoundation\Session</parameter>
     <parameter key="session.storage.native.class">Symfony\Component\HttpFoundation\SessionStorage\NativeSessionStorage</parameter>
     <parameter key="session.storage.filesystem.class">Symfony\Component\HttpFoundation\SessionStorage\FilesystemSessionStorage</parameter>
+    <parameter key="session_listener.class">Symfony\Bundle\FrameworkBundle\EventListener\SessionListener</parameter>
     <parameter key="session.default_locale">en</parameter>
-    <parameter key="session.storage.options" type="collection">
-      <parameter key="lifetime">3600</parameter>
-    </parameter>
+    <parameter key="session.storage.options" type="collection"/>
     <parameter key="form.extension.class">Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension</parameter>
     <parameter key="form.factory.class">Symfony\Component\Form\FormFactory</parameter>
     <parameter key="form.type_guesser.validator.class">Symfony\Component\Form\Extension\Validator\ValidatorTypeGuesser</parameter>
-    <parameter key="file.temporary_storage.class">Symfony\Component\HttpFoundation\File\TemporaryStorage</parameter>
-    <parameter key="file.temporary_storage.session.class">Symfony\Component\HttpFoundation\File\SessionBasedTemporaryStorage</parameter>
     <parameter key="form.csrf_provider.class">Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider</parameter>
     <parameter key="form.type_extension.csrf.enabled">true</parameter>
     <parameter key="form.type_extension.csrf.field_name">_token</parameter>
@@ -100,8 +96,7 @@
     <parameter key="profiler.storage.username"></parameter>
     <parameter key="profiler.storage.password"></parameter>
     <parameter key="profiler.storage.lifetime">86400</parameter>
-    <parameter key="router.class">Symfony\Component\Routing\Router</parameter>
-    <parameter key="router.cached.class">Symfony\Bundle\FrameworkBundle\Routing\CachedRouter</parameter>
+    <parameter key="router.class">Symfony\Bundle\FrameworkBundle\Routing\Router</parameter>
     <parameter key="routing.loader.class">Symfony\Bundle\FrameworkBundle\Routing\DelegatingLoader</parameter>
     <parameter key="routing.resolver.class">Symfony\Component\Config\Loader\LoaderResolver</parameter>
     <parameter key="routing.loader.xml.class">Symfony\Component\Routing\Loader\XmlFileLoader</parameter>
@@ -123,11 +118,10 @@
     <parameter key="templating.name_parser.class">Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser</parameter>
     <parameter key="templating.cache_warmer.template_paths.class">Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplatePathsCacheWarmer</parameter>
     <parameter key="templating.locator.class">Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator</parameter>
-    <parameter key="templating.locator.cached.class">Symfony\Bundle\FrameworkBundle\Templating\Loader\CachedTemplateLocator</parameter>
     <parameter key="templating.loader.filesystem.class">Symfony\Bundle\FrameworkBundle\Templating\Loader\FilesystemLoader</parameter>
     <parameter key="templating.loader.cache.class">Symfony\Component\Templating\Loader\CacheLoader</parameter>
     <parameter key="templating.loader.chain.class">Symfony\Component\Templating\Loader\ChainLoader</parameter>
-    <parameter key="templating.finder.class">Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateFinder</parameter>
+    <parameter key="templating.finder.class">Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplateFinder</parameter>
     <parameter key="templating.engine.php.class">Symfony\Bundle\FrameworkBundle\Templating\PhpEngine</parameter>
     <parameter key="templating.helper.slots.class">Symfony\Component\Templating\Helper\SlotsHelper</parameter>
     <parameter key="templating.helper.assets.class">Symfony\Component\Templating\Helper\CoreAssetsHelper</parameter>
@@ -142,7 +136,10 @@
     <parameter key="templating.asset.path_package.class">Symfony\Bundle\FrameworkBundle\Templating\Asset\PathPackage</parameter>
     <parameter key="templating.asset.url_package.class">Symfony\Component\Templating\Asset\UrlPackage</parameter>
     <parameter key="templating.asset.package_factory.class">Symfony\Bundle\FrameworkBundle\Templating\Asset\PackageFactory</parameter>
-    <parameter key="templating.helper.code.file_link_format"></parameter>
+    <parameter key="templating.helper.code.file_link_format">null</parameter>
+    <parameter key="templating.helper.form.resources" type="collection">
+      <parameter>FrameworkBundle:Form</parameter>
+    </parameter>
     <parameter key="templating.debugger.class">Symfony\Bundle\FrameworkBundle\Templating\Debugger</parameter>
     <parameter key="templating.loader.cache.path">null</parameter>
     <parameter key="templating.engines" type="collection">
@@ -156,7 +153,7 @@
     <parameter key="security.encoder_factory.generic.class">Symfony\Component\Security\Core\Encoder\EncoderFactory</parameter>
     <parameter key="security.encoder.digest.class">Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder</parameter>
     <parameter key="security.encoder.plain.class">Symfony\Component\Security\Core\Encoder\PlaintextPasswordEncoder</parameter>
-    <parameter key="security.user.provider.entity.class">Symfony\Component\Security\Core\User\EntityUserProvider</parameter>
+    <parameter key="security.user.provider.entity.class">Symfony\Bridge\Doctrine\Security\User\EntityUserProvider</parameter>
     <parameter key="security.user.provider.in_memory.class">Symfony\Component\Security\Core\User\InMemoryUserProvider</parameter>
     <parameter key="security.user.provider.in_memory.user.class">Symfony\Component\Security\Core\User\User</parameter>
     <parameter key="security.user.provider.chain.class">Symfony\Component\Security\Core\User\ChainUserProvider</parameter>
@@ -174,6 +171,7 @@
     <parameter key="security.firewall.context.class">Symfony\Bundle\SecurityBundle\Security\FirewallContext</parameter>
     <parameter key="security.matcher.class">Symfony\Component\HttpFoundation\RequestMatcher</parameter>
     <parameter key="security.role_hierarchy.class">Symfony\Component\Security\Core\Role\RoleHierarchy</parameter>
+    <parameter key="security.http_utils.class">Symfony\Component\Security\Http\HttpUtils</parameter>
     <parameter key="security.authentication.retry_entry_point.class">Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint</parameter>
     <parameter key="security.channel_listener.class">Symfony\Component\Security\Http\Firewall\ChannelListener</parameter>
     <parameter key="security.authentication.form_entry_point.class">Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint</parameter>
@@ -228,14 +226,15 @@
     <parameter key="twig.extension.routing.class">Symfony\Bridge\Twig\Extension\RoutingExtension</parameter>
     <parameter key="twig.extension.yaml.class">Symfony\Bridge\Twig\Extension\YamlExtension</parameter>
     <parameter key="twig.extension.form.class">Symfony\Bridge\Twig\Extension\FormExtension</parameter>
-    <parameter key="twig.extension.text.class">Twig_Extensions_Extension_Text</parameter>
-    <parameter key="twig.extension.debug.class">Twig_Extensions_Extension_Debug</parameter>
+    <parameter key="twig.exception_listener.class">Symfony\Component\HttpKernel\EventListener\ExceptionListener</parameter>
+    <parameter key="twig.exception_listener.controller">Symfony\Bundle\TwigBundle\Controller\ExceptionController::showAction</parameter>
     <parameter key="twig.form.resources" type="collection">
-      <parameter>TwigBundle:Form:div_layout.html.twig</parameter>
+      <parameter>form_div_layout.html.twig</parameter>
     </parameter>
     <parameter key="twig.options" type="collection">
       <parameter key="debug">true</parameter>
       <parameter key="strict_variables">true</parameter>
+      <parameter key="exception_controller">Symfony\Bundle\TwigBundle\Controller\ExceptionController::showAction</parameter>
       <parameter key="cache">/Users/ejsmont/NetBeansProjects/LabDB/app/cache/dev/twig</parameter>
       <parameter key="charset">UTF-8</parameter>
     </parameter>
@@ -257,12 +256,13 @@
     <parameter key="swiftmailer.transport.mail.class">Swift_Transport_MailTransport</parameter>
     <parameter key="swiftmailer.transport.failover.class">Swift_Transport_FailoverTransport</parameter>
     <parameter key="swiftmailer.plugin.redirecting.class">Swift_Plugins_RedirectingPlugin</parameter>
-    <parameter key="swiftmailer.plugin.blackhole.class">Swift_Plugins_BlackholePlugin</parameter>
     <parameter key="swiftmailer.plugin.impersonate.class">Swift_Plugins_ImpersonatePlugin</parameter>
     <parameter key="swiftmailer.plugin.messagelogger.class">Symfony\Bundle\SwiftmailerBundle\Logger\MessageLogger</parameter>
+    <parameter key="swiftmailer.plugin.antiflood.class">Swift_Plugins_AntiFloodPlugin</parameter>
+    <parameter key="swiftmailer.plugin.antiflood.threshold">99</parameter>
+    <parameter key="swiftmailer.plugin.antiflood.sleep">0</parameter>
     <parameter key="swiftmailer.data_collector.class">Symfony\Bundle\SwiftmailerBundle\DataCollector\MessageDataCollector</parameter>
     <parameter key="swiftmailer.transport.smtp.class">Swift_Transport_EsmtpTransport</parameter>
-    <parameter key="swiftmailer.transport.name">smtp</parameter>
     <parameter key="swiftmailer.transport.smtp.encryption">null</parameter>
     <parameter key="swiftmailer.transport.smtp.port">25</parameter>
     <parameter key="swiftmailer.transport.smtp.host">localhost</parameter>
@@ -272,11 +272,10 @@
     <parameter key="swiftmailer.spool.enabled">false</parameter>
     <parameter key="swiftmailer.sender_address">null</parameter>
     <parameter key="swiftmailer.single_address">null</parameter>
-    <parameter key="doctrine.dbal.connection.class">Doctrine\DBAL\Connection</parameter>
     <parameter key="doctrine.dbal.logger.debug.class">Doctrine\DBAL\Logging\DebugStack</parameter>
-    <parameter key="doctrine.dbal.logger.class">Symfony\Bundle\DoctrineBundle\Logger\DbalLogger</parameter>
+    <parameter key="doctrine.dbal.logger.class">Symfony\Bridge\Doctrine\Logger\DbalLogger</parameter>
     <parameter key="doctrine.dbal.configuration.class">Doctrine\DBAL\Configuration</parameter>
-    <parameter key="doctrine.data_collector.class">Symfony\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector</parameter>
+    <parameter key="doctrine.data_collector.class">Symfony\Bridge\Doctrine\DataCollector\DoctrineDataCollector</parameter>
     <parameter key="doctrine.dbal.connection.event_manager.class">Doctrine\Common\EventManager</parameter>
     <parameter key="doctrine.dbal.connection_factory.class">Symfony\Bundle\DoctrineBundle\ConnectionFactory</parameter>
     <parameter key="doctrine.dbal.events.mysql_session_init.class">Doctrine\DBAL\Event\Listeners\MysqlSessionInit</parameter>
@@ -298,14 +297,15 @@
     <parameter key="doctrine.orm.cache.xcache.class">Doctrine\Common\Cache\XcacheCache</parameter>
     <parameter key="doctrine.orm.metadata.driver_chain.class">Doctrine\ORM\Mapping\Driver\DriverChain</parameter>
     <parameter key="doctrine.orm.metadata.annotation.class">Doctrine\ORM\Mapping\Driver\AnnotationDriver</parameter>
-    <parameter key="doctrine.orm.metadata.annotation_reader.class">Symfony\Bundle\DoctrineBundle\Annotations\IndexedReader</parameter>
-    <parameter key="doctrine.orm.metadata.xml.class">Symfony\Bundle\DoctrineBundle\Mapping\Driver\XmlDriver</parameter>
-    <parameter key="doctrine.orm.metadata.yml.class">Symfony\Bundle\DoctrineBundle\Mapping\Driver\YamlDriver</parameter>
+    <parameter key="doctrine.orm.metadata.annotation_reader.class">Symfony\Bridge\Doctrine\Annotations\IndexedReader</parameter>
+    <parameter key="doctrine.orm.metadata.xml.class">Symfony\Bridge\Doctrine\Mapping\Driver\XmlDriver</parameter>
+    <parameter key="doctrine.orm.metadata.yml.class">Symfony\Bridge\Doctrine\Mapping\Driver\YamlDriver</parameter>
     <parameter key="doctrine.orm.metadata.php.class">Doctrine\ORM\Mapping\Driver\PHPDriver</parameter>
     <parameter key="doctrine.orm.metadata.staticphp.class">Doctrine\ORM\Mapping\Driver\StaticPHPDriver</parameter>
-    <parameter key="doctrine.orm.proxy_cache_warmer.class">Symfony\Bundle\DoctrineBundle\CacheWarmer\ProxyCacheWarmer</parameter>
+    <parameter key="doctrine.orm.proxy_cache_warmer.class">Symfony\Bridge\Doctrine\CacheWarmer\ProxyCacheWarmer</parameter>
     <parameter key="form.type_guesser.doctrine.class">Symfony\Bridge\Doctrine\Form\DoctrineOrmTypeGuesser</parameter>
     <parameter key="doctrine.orm.validator.unique.class">Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator</parameter>
+    <parameter key="doctrine.orm.validator_initializer.class">Symfony\Bridge\Doctrine\Validator\EntityInitializer</parameter>
     <parameter key="doctrine.entity_managers" type="collection">
       <parameter key="default">doctrine.orm.default_entity_manager</parameter>
     </parameter>
@@ -346,7 +346,6 @@
     <parameter key="assetic.use_controller_worker.class">Symfony\Bundle\AsseticBundle\Factory\Worker\UseControllerWorker</parameter>
     <parameter key="assetic.request_listener.class">Symfony\Bundle\AsseticBundle\EventListener\RequestListener</parameter>
     <parameter key="sensio_framework_extra.controller.listener.class">Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener</parameter>
-    <parameter key="sensio_framework_extra.routing.loader.annot_glob.class">Symfony\Component\Routing\Loader\AnnotationGlobLoader</parameter>
     <parameter key="sensio_framework_extra.routing.loader.annot_dir.class">Symfony\Component\Routing\Loader\AnnotationDirectoryLoader</parameter>
     <parameter key="sensio_framework_extra.routing.loader.annot_file.class">Symfony\Component\Routing\Loader\AnnotationFileLoader</parameter>
     <parameter key="sensio_framework_extra.routing.loader.annot_class.class">Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader</parameter>
@@ -367,8 +366,8 @@
     <parameter key="security.extra.secure_all_services">false</parameter>
     <parameter key="web_profiler.debug_toolbar.class">Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener</parameter>
     <parameter key="web_profiler.debug_toolbar.intercept_redirects">false</parameter>
-    <parameter key="web_profiler.debug_toolbar.verbose">true</parameter>
-    <parameter key="symfony.webconfigurator.class">Symfony\Bundle\WebConfiguratorBundle\Configurator</parameter>
+    <parameter key="web_profiler.debug_toolbar.mode">2</parameter>
+    <parameter key="sensio.distribution.webconfigurator.class">Sensio\Bundle\DistributionBundle\Configurator\Configurator</parameter>
     <parameter key="data_collector.templates" type="collection">
       <parameter key="data_collector.config" type="collection">
         <parameter>config</parameter>
@@ -411,262 +410,159 @@
         <parameter>DoctrineBundle:Collector:db</parameter>
       </parameter>
     </parameter>
-    <parameter key="kernel.compiled_classes" type="collection">
-      <parameter>Symfony\Bundle\FrameworkBundle\EventListener\SessionListener</parameter>
-      <parameter>Symfony\Component\HttpFoundation\SessionStorage\SessionStorageInterface</parameter>
-      <parameter>Symfony\Component\HttpFoundation\Session</parameter>
-      <parameter>Symfony\Component\HttpFoundation\SessionStorage\NativeSessionStorage</parameter>
-      <parameter>Symfony\Component\Routing\RouterInterface</parameter>
-      <parameter>Symfony\Component\Routing\Matcher\UrlMatcherInterface</parameter>
-      <parameter>Symfony\Component\Routing\Matcher\UrlMatcher</parameter>
-      <parameter>Symfony\Component\Routing\Generator\UrlGeneratorInterface</parameter>
-      <parameter>Symfony\Component\Routing\Generator\UrlGenerator</parameter>
-      <parameter>Symfony\Component\Routing\Router</parameter>
-      <parameter>Symfony\Bundle\FrameworkBundle\Templating\EngineInterface</parameter>
-      <parameter>Symfony\Component\Templating\TemplateNameParserInterface</parameter>
-      <parameter>Symfony\Component\Templating\TemplateNameParser</parameter>
-      <parameter>Symfony\Component\Templating\EngineInterface</parameter>
-      <parameter>Symfony\Component\Config\FileLocatorInterface</parameter>
-      <parameter>Symfony\Component\Templating\TemplateReferenceInterface</parameter>
-      <parameter>Symfony\Component\Templating\TemplateReference</parameter>
-      <parameter>Symfony\Bundle\FrameworkBundle\Templating\TemplateReference</parameter>
-      <parameter>Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser</parameter>
-      <parameter>Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator</parameter>
-      <parameter>Symfony\Component\HttpFoundation\ParameterBag</parameter>
-      <parameter>Symfony\Component\HttpFoundation\HeaderBag</parameter>
-      <parameter>Symfony\Component\HttpFoundation\Request</parameter>
-      <parameter>Symfony\Component\HttpFoundation\Response</parameter>
-      <parameter>Symfony\Component\HttpFoundation\ResponseHeaderBag</parameter>
-      <parameter>Symfony\Component\EventDispatcher\EventDispatcherInterface</parameter>
-      <parameter>Symfony\Component\EventDispatcher\EventDispatcher</parameter>
-      <parameter>Symfony\Component\EventDispatcher\Event</parameter>
-      <parameter>Symfony\Component\EventDispatcher\EventSubscriberInterface</parameter>
-      <parameter>Symfony\Component\HttpKernel\HttpKernel</parameter>
-      <parameter>Symfony\Component\HttpKernel\EventListener\ResponseListener</parameter>
-      <parameter>Symfony\Component\HttpKernel\Controller\ControllerResolver</parameter>
-      <parameter>Symfony\Component\HttpKernel\Controller\ControllerResolverInterface</parameter>
-      <parameter>Symfony\Component\HttpKernel\Event\KernelEvent</parameter>
-      <parameter>Symfony\Component\HttpKernel\Event\FilterControllerEvent</parameter>
-      <parameter>Symfony\Component\HttpKernel\Event\FilterResponseEvent</parameter>
-      <parameter>Symfony\Component\HttpKernel\Event\GetResponseEvent</parameter>
-      <parameter>Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent</parameter>
-      <parameter>Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent</parameter>
-      <parameter>Symfony\Component\HttpKernel\CoreEvents</parameter>
-      <parameter>Symfony\Bundle\FrameworkBundle\EventListener\RouterListener</parameter>
-      <parameter>Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser</parameter>
-      <parameter>Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver</parameter>
-      <parameter>Symfony\Bundle\FrameworkBundle\Controller\Controller</parameter>
-      <parameter>Symfony\Bundle\FrameworkBundle\ContainerAwareEventDispatcher</parameter>
-      <parameter>Symfony\Component\Security\Http\Firewall</parameter>
-      <parameter>Symfony\Component\Security\Http\FirewallMapInterface</parameter>
-      <parameter>Symfony\Component\Security\Core\SecurityContext</parameter>
-      <parameter>Symfony\Component\Security\Core\SecurityContextInterface</parameter>
-      <parameter>Symfony\Component\Security\Core\User\UserProviderInterface</parameter>
-      <parameter>Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager</parameter>
-      <parameter>Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface</parameter>
-      <parameter>Symfony\Component\Security\Core\Authorization\AccessDecisionManager</parameter>
-      <parameter>Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface</parameter>
-      <parameter>Symfony\Component\Security\Core\Authorization\Voter\VoterInterface</parameter>
-      <parameter>Symfony\Bundle\SecurityBundle\Security\FirewallMap</parameter>
-      <parameter>Symfony\Bundle\SecurityBundle\Security\FirewallContext</parameter>
-      <parameter>Symfony\Component\HttpFoundation\RequestMatcher</parameter>
-      <parameter>Symfony\Component\HttpFoundation\RequestMatcherInterface</parameter>
-      <parameter>Twig_Environment</parameter>
-      <parameter>Twig_ExtensionInterface</parameter>
-      <parameter>Twig_Extension</parameter>
-      <parameter>Twig_Extension_Core</parameter>
-      <parameter>Twig_Extension_Escaper</parameter>
-      <parameter>Twig_Extension_Optimizer</parameter>
-      <parameter>Twig_LoaderInterface</parameter>
-      <parameter>Twig_Markup</parameter>
-      <parameter>Twig_TemplateInterface</parameter>
-      <parameter>Twig_Template</parameter>
-      <parameter>Monolog\Formatter\FormatterInterface</parameter>
-      <parameter>Monolog\Formatter\LineFormatter</parameter>
-      <parameter>Monolog\Handler\HandlerInterface</parameter>
-      <parameter>Monolog\Handler\AbstractHandler</parameter>
-      <parameter>Monolog\Handler\AbstractProcessingHandler</parameter>
-      <parameter>Monolog\Handler\StreamHandler</parameter>
-      <parameter>Monolog\Handler\FingersCrossedHandler</parameter>
-      <parameter>Monolog\Logger</parameter>
-      <parameter>Symfony\Bridge\Monolog\Logger</parameter>
-      <parameter>Symfony\Bridge\Monolog\Handler\DebugHandler</parameter>
-      <parameter>JMS\SecurityExtraBundle\Controller\ControllerListener</parameter>
-      <parameter>JMS\SecurityExtraBundle\Metadata\Driver\AnnotationConverter</parameter>
-      <parameter>JMS\SecurityExtraBundle\Security\Authorization\Interception\MethodInvocation</parameter>
-    </parameter>
   </parameters>
   <services>
     <service id="controller_name_converter" class="Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser" public="false">
       <tag name="monolog.logger" channel="request"/>
       <argument type="service" id="kernel"/>
-      <argument type="service" id="monolog.logger.request"/>
     </service>
     <service id="router_listener" class="Symfony\Bundle\FrameworkBundle\EventListener\RouterListener">
-      <tag name="kernel.listener" event="core.request" method="onEarlyCoreRequest" priority="255"/>
-      <tag name="kernel.listener" event="core.request" method="onCoreRequest"/>
+      <tag name="kernel.event_listener" event="kernel.request" method="onEarlyKernelRequest" priority="255"/>
+      <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"/>
       <tag name="monolog.logger" channel="request"/>
-      <argument type="service" id="router.real"/>
+      <argument type="service" id="router"/>
       <argument>80</argument>
       <argument>443</argument>
       <argument type="service" id="monolog.logger.request"/>
     </service>
-    <service id="session_listener" class="Symfony\Bundle\FrameworkBundle\EventListener\SessionListener">
-      <tag name="kernel.listener" event="core.request" method="onCoreRequest" priority="128"/>
-      <argument type="service" id="service_container"/>
-    </service>
     <service id="response_listener" class="Symfony\Component\HttpKernel\EventListener\ResponseListener">
-      <tag name="kernel.listener" event="core.response" method="onCoreResponse"/>
+      <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
       <argument>UTF-8</argument>
-    </service>
-    <service id="exception_listener" class="Symfony\Component\HttpKernel\EventListener\ExceptionListener">
-      <tag name="kernel.listener" event="core.exception" method="onCoreException" priority="-128"/>
-      <tag name="monolog.logger" channel="request"/>
-      <argument>Symfony\Bundle\FrameworkBundle\Controller\ExceptionController::showAction</argument>
-      <argument type="service" id="monolog.logger.request"/>
     </service>
     <service id="event_dispatcher" class="Symfony\Bundle\FrameworkBundle\Debug\TraceableEventDispatcher">
       <tag name="monolog.logger" channel="event"/>
       <argument type="service" id="service_container"/>
       <argument type="service" id="monolog.logger.event"/>
       <call method="addListenerService">
-        <argument>core.request</argument>
+        <argument>kernel.request</argument>
         <argument type="collection">
           <argument>router_listener</argument>
-          <argument>onEarlyCoreRequest</argument>
+          <argument>onEarlyKernelRequest</argument>
         </argument>
         <argument>255</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.request</argument>
+        <argument>kernel.request</argument>
         <argument type="collection">
           <argument>router_listener</argument>
-          <argument>onCoreRequest</argument>
+          <argument>onKernelRequest</argument>
         </argument>
         <argument>0</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.request</argument>
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument>response_listener</argument>
+          <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListenerService">
+        <argument>kernel.request</argument>
         <argument type="collection">
           <argument>session_listener</argument>
-          <argument>onCoreRequest</argument>
+          <argument>onKernelRequest</argument>
         </argument>
         <argument>128</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.response</argument>
-        <argument type="collection">
-          <argument>response_listener</argument>
-          <argument>onCoreResponse</argument>
-        </argument>
-        <argument>0</argument>
-      </call>
-      <call method="addListenerService">
-        <argument>core.exception</argument>
-        <argument type="collection">
-          <argument>exception_listener</argument>
-          <argument>onCoreException</argument>
-        </argument>
-        <argument>-128</argument>
-      </call>
-      <call method="addListenerService">
-        <argument>core.response</argument>
+        <argument>kernel.response</argument>
         <argument type="collection">
           <argument>profiler_listener</argument>
-          <argument>onCoreResponse</argument>
+          <argument>onKernelResponse</argument>
         </argument>
         <argument>-100</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.exception</argument>
+        <argument>kernel.exception</argument>
         <argument type="collection">
           <argument>profiler_listener</argument>
-          <argument>onCoreException</argument>
+          <argument>onKernelException</argument>
         </argument>
         <argument>0</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.controller</argument>
+        <argument>kernel.controller</argument>
         <argument type="collection">
           <argument>data_collector.request</argument>
-          <argument>onCoreController</argument>
+          <argument>onKernelController</argument>
         </argument>
         <argument>0</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.request</argument>
+        <argument>kernel.request</argument>
         <argument type="collection">
           <argument>security.firewall</argument>
-          <argument>onCoreRequest</argument>
+          <argument>onKernelRequest</argument>
         </argument>
         <argument>64</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.response</argument>
+        <argument>kernel.response</argument>
         <argument type="collection">
           <argument>security.rememberme.response_listener</argument>
-          <argument>onCoreResponse</argument>
+          <argument>onKernelResponse</argument>
         </argument>
         <argument>0</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.response</argument>
+        <argument>kernel.exception</argument>
+        <argument type="collection">
+          <argument>twig.exception_listener</argument>
+          <argument>onKernelException</argument>
+        </argument>
+        <argument>-128</argument>
+      </call>
+      <call method="addListenerService">
+        <argument>kernel.response</argument>
         <argument type="collection">
           <argument>monolog.handler.firephp</argument>
-          <argument>onCoreResponse</argument>
+          <argument>onKernelResponse</argument>
         </argument>
         <argument>0</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.request</argument>
-        <argument type="collection">
-          <argument>assetic.request_listener</argument>
-          <argument>onCoreRequest</argument>
-        </argument>
-        <argument>0</argument>
-      </call>
-      <call method="addListenerService">
-        <argument>core.controller</argument>
+        <argument>kernel.controller</argument>
         <argument type="collection">
           <argument>sensio_framework_extra.controller.listener</argument>
-          <argument>onCoreController</argument>
+          <argument>onKernelController</argument>
         </argument>
         <argument>0</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.controller</argument>
+        <argument>kernel.controller</argument>
         <argument type="collection">
           <argument>sensio_framework_extra.converter.listener</argument>
-          <argument>onCoreController</argument>
+          <argument>onKernelController</argument>
         </argument>
         <argument>0</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.controller</argument>
+        <argument>kernel.controller</argument>
         <argument type="collection">
           <argument>sensio_framework_extra.view.listener</argument>
-          <argument>onCoreController</argument>
+          <argument>onKernelController</argument>
         </argument>
         <argument>0</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.view</argument>
+        <argument>kernel.view</argument>
         <argument type="collection">
           <argument>sensio_framework_extra.view.listener</argument>
-          <argument>onCoreView</argument>
+          <argument>onKernelView</argument>
         </argument>
         <argument>0</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.response</argument>
+        <argument>kernel.response</argument>
         <argument type="collection">
           <argument>sensio_framework_extra.cache.listener</argument>
-          <argument>onCoreResponse</argument>
+          <argument>onKernelResponse</argument>
         </argument>
         <argument>0</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.controller</argument>
+        <argument>kernel.controller</argument>
         <argument type="collection">
           <argument>security.extra.controller_listener</argument>
           <argument>onCoreController</argument>
@@ -674,10 +570,10 @@
         <argument>-255</argument>
       </call>
       <call method="addListenerService">
-        <argument>core.response</argument>
+        <argument>kernel.response</argument>
         <argument type="collection">
           <argument>web_profiler.debug_toolbar</argument>
-          <argument>onCoreResponse</argument>
+          <argument>onKernelResponse</argument>
         </argument>
         <argument>-128</argument>
       </call>
@@ -697,6 +593,19 @@
     <service id="cache_warmer" class="Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate">
       <argument type="collection">
         <argument type="service">
+          <service class="Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplatePathsCacheWarmer" public="false">
+            <tag name="kernel.cache_warmer" priority="20"/>
+            <argument type="service">
+              <service class="Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplateFinder" public="false">
+                <argument type="service" id="kernel"/>
+                <argument type="service" id="templating.name_parser"/>
+                <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/Resources</argument>
+              </service>
+            </argument>
+            <argument type="service" id="templating.locator"/>
+          </service>
+        </argument>
+        <argument type="service">
           <service class="Symfony\Bundle\AsseticBundle\CacheWarmer\AssetManagerCacheWarmer" public="false">
             <tag name="kernel.cache_warmer" priority="10"/>
             <argument type="service" id="service_container"/>
@@ -705,13 +614,26 @@
         <argument type="service">
           <service class="Symfony\Bundle\FrameworkBundle\CacheWarmer\RouterCacheWarmer" public="false">
             <tag name="kernel.cache_warmer"/>
-            <argument type="service" id="router.real"/>
+            <argument type="service" id="router"/>
           </service>
         </argument>
         <argument type="service">
-          <service class="Symfony\Bundle\DoctrineBundle\CacheWarmer\ProxyCacheWarmer" public="false">
+          <service class="Symfony\Bundle\TwigBundle\CacheWarmer\TemplateCacheCacheWarmer" public="false">
             <tag name="kernel.cache_warmer"/>
             <argument type="service" id="service_container"/>
+            <argument type="service">
+              <service class="Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplateFinder" public="false">
+                <argument type="service" id="kernel"/>
+                <argument type="service" id="templating.name_parser"/>
+                <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/Resources</argument>
+              </service>
+            </argument>
+          </service>
+        </argument>
+        <argument type="service">
+          <service class="Symfony\Bridge\Doctrine\CacheWarmer\ProxyCacheWarmer" public="false">
+            <tag name="kernel.cache_warmer"/>
+            <argument type="service" id="doctrine"/>
           </service>
         </argument>
       </argument>
@@ -724,7 +646,7 @@
       <argument type="service" id="kernel"/>
       <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/Resources</argument>
     </service>
-    <service id="translator.real" class="Symfony\Bundle\FrameworkBundle\Translation\Translator">
+    <service id="translator.default" class="Symfony\Bundle\FrameworkBundle\Translation\Translator">
       <argument type="service" id="service_container"/>
       <argument type="service" id="translator.selector"/>
       <argument type="collection">
@@ -754,7 +676,11 @@
     <service id="session" class="Symfony\Component\HttpFoundation\Session">
       <argument type="service" id="session.storage"/>
       <argument>en</argument>
-      <call method="start"/>
+    </service>
+    <service id="session_listener" class="Symfony\Bundle\FrameworkBundle\EventListener\SessionListener">
+      <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="128"/>
+      <argument type="service" id="service_container"/>
+      <argument>true</argument>
     </service>
     <service id="form.factory" class="Symfony\Component\Form\FormFactory">
       <argument type="collection">
@@ -845,7 +771,6 @@
     </service>
     <service id="form.type.file" class="Symfony\Component\Form\Extension\Core\Type\FileType">
       <tag name="form.type" alias="file"/>
-      <argument type="service" id="file.temporary_storage"/>
     </service>
     <service id="form.type.hidden" class="Symfony\Component\Form\Extension\Core\Type\HiddenType">
       <tag name="form.type" alias="hidden"/>
@@ -912,11 +837,6 @@
       <argument>true</argument>
       <argument>_token</argument>
     </service>
-    <service id="file.temporary_storage" class="Symfony\Component\HttpFoundation\File\SessionBasedTemporaryStorage">
-      <argument type="service" id="session"/>
-      <argument>6f9fb1d496e5c46ed537a4d303583a21</argument>
-      <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/cache/dev/upload</argument>
-    </service>
     <service id="validator" class="Symfony\Component\Validator\Validator">
       <argument type="service" id="validator.mapping.class_metadata_factory"/>
       <argument type="service">
@@ -926,6 +846,9 @@
             <argument key="doctrine.orm.validator.unique">doctrine.orm.validator.unique</argument>
           </argument>
         </service>
+      </argument>
+      <argument type="collection">
+        <argument type="service" id="doctrine.orm.validator_initializer"/>
       </argument>
     </service>
     <service id="validator.mapping.class_metadata_factory" class="Symfony\Component\Validator\Mapping\ClassMetadataFactory" public="false">
@@ -1039,7 +962,7 @@
       </call>
       <call method="add">
         <argument type="service">
-          <service class="Symfony\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector" public="false">
+          <service class="Symfony\Bridge\Doctrine\DataCollector\DoctrineDataCollector" public="false">
             <tag name="data_collector" template="DoctrineBundle:Collector:db" id="db"/>
             <argument type="service" id="doctrine"/>
             <argument type="service" id="doctrine.dbal.logger"/>
@@ -1048,18 +971,18 @@
       </call>
     </service>
     <service id="profiler_listener" class="Symfony\Component\HttpKernel\EventListener\ProfilerListener">
-      <tag name="kernel.listener" event="core.response" method="onCoreResponse" priority="-100"/>
-      <tag name="kernel.listener" event="core.exception" method="onCoreException"/>
+      <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" priority="-100"/>
+      <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException"/>
       <argument type="service" id="profiler"/>
       <argument>null</argument>
       <argument>false</argument>
       <argument>false</argument>
     </service>
     <service id="data_collector.request" class="Symfony\Bundle\FrameworkBundle\DataCollector\RequestDataCollector">
-      <tag name="kernel.listener" event="core.controller" method="onCoreController"/>
+      <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
       <tag name="data_collector" template="WebProfilerBundle:Collector:request" id="request" priority="255"/>
     </service>
-    <service id="routing.loader.real" class="Symfony\Bundle\FrameworkBundle\Routing\DelegatingLoader">
+    <service id="routing.loader" class="Symfony\Bundle\FrameworkBundle\Routing\DelegatingLoader">
       <tag name="monolog.logger" channel="router"/>
       <argument type="service" id="controller_name_converter"/>
       <argument type="service" id="monolog.logger.router"/>
@@ -1094,20 +1017,6 @@
               <service class="Symfony\Bundle\AsseticBundle\Routing\AsseticLoader" public="false">
                 <tag name="routing.loader"/>
                 <argument type="service" id="assetic.asset_manager"/>
-              </service>
-            </argument>
-          </call>
-          <call method="addLoader">
-            <argument type="service">
-              <service class="Symfony\Component\Routing\Loader\AnnotationGlobLoader" public="false">
-                <tag name="routing.loader"/>
-                <argument type="service" id="file_locator"/>
-                <argument type="service">
-                  <service class="Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader" public="false">
-                    <tag name="routing.loader"/>
-                    <argument type="service" id="annotation_reader"/>
-                  </service>
-                </argument>
               </service>
             </argument>
           </call>
@@ -1150,34 +1059,12 @@
         </service>
       </argument>
     </service>
-    <service id="router.real" class="Symfony\Component\Routing\Router">
-      <argument type="service">
-        <service class="Symfony\Bundle\FrameworkBundle\Routing\LazyLoader" public="false">
-          <argument type="service" id="service_container"/>
-          <argument>routing.loader.real</argument>
-        </service>
-      </argument>
-      <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/config/routing_dev.yml</argument>
-      <argument type="collection">
-        <argument key="cache_dir">/Users/ejsmont/NetBeansProjects/LabDB/app/cache/dev</argument>
-        <argument key="debug">true</argument>
-        <argument key="generator_class">Symfony\Component\Routing\Generator\UrlGenerator</argument>
-        <argument key="generator_base_class">Symfony\Component\Routing\Generator\UrlGenerator</argument>
-        <argument key="generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper</argument>
-        <argument key="generator_cache_class">app%kernel.environment%UrlGenerator</argument>
-        <argument key="matcher_class">Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher</argument>
-        <argument key="matcher_base_class">Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher</argument>
-        <argument key="matcher_dumper_class">Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper</argument>
-        <argument key="matcher_cache_class">app%kernel.environment%UrlMatcher</argument>
-      </argument>
-    </service>
-    <service id="router.cached" class="Symfony\Bundle\FrameworkBundle\Routing\CachedRouter">
-      <argument key="0">/Users/ejsmont/NetBeansProjects/LabDB/app/cache/dev</argument>
-      <argument key="matcher_cache_class">app%kernel.environment%UrlMatcher</argument>
-      <argument key="generator_cache_class">app%kernel.environment%UrlGenerator</argument>
-    </service>
     <service id="templating.name_parser" class="Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser">
       <argument type="service" id="kernel"/>
+    </service>
+    <service id="templating.locator" class="Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator" public="false">
+      <argument type="service" id="file_locator"/>
+      <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/cache/dev</argument>
     </service>
     <service id="templating.helper.slots" class="Symfony\Component\Templating\Helper\SlotsHelper">
       <tag name="templating.helper" alias="slots"/>
@@ -1206,7 +1093,7 @@
     </service>
     <service id="templating.helper.router" class="Symfony\Bundle\FrameworkBundle\Templating\Helper\RouterHelper">
       <tag name="templating.helper" alias="router"/>
-      <argument type="service" id="router.real"/>
+      <argument type="service" id="router"/>
     </service>
     <service id="templating.helper.actions" class="Symfony\Bundle\FrameworkBundle\Templating\Helper\ActionsHelper">
       <tag name="templating.helper" alias="actions"/>
@@ -1214,7 +1101,7 @@
     </service>
     <service id="templating.helper.code" class="Symfony\Bundle\FrameworkBundle\Templating\Helper\CodeHelper">
       <tag name="templating.helper" alias="code"/>
-      <argument></argument>
+      <argument>null</argument>
       <argument>/Users/ejsmont/NetBeansProjects/LabDB/app</argument>
     </service>
     <service id="templating.helper.translator" class="Symfony\Bundle\FrameworkBundle\Templating\Helper\TranslatorHelper">
@@ -1248,6 +1135,9 @@
             </argument>
           </call>
         </service>
+      </argument>
+      <argument type="collection">
+        <argument>FrameworkBundle:Form</argument>
       </argument>
     </service>
     <service id="templating.globals" class="Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables">
@@ -1310,19 +1200,14 @@
       <argument>true</argument>
     </service>
     <service id="security.firewall" class="Symfony\Component\Security\Http\Firewall">
-      <tag name="kernel.listener" event="core.request" method="onCoreRequest" priority="64"/>
+      <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="64"/>
       <argument type="service">
         <service class="Symfony\Bundle\SecurityBundle\Security\FirewallMap" public="false">
           <argument type="service" id="service_container"/>
           <argument type="collection">
-            <argument key="security.firewall.map.context.profiler" type="service">
+            <argument key="security.firewall.map.context.dev" type="service">
               <service class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
-                <argument>^/_profiler</argument>
-              </service>
-            </argument>
-            <argument key="security.firewall.map.context.wdt" type="service">
-              <service class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
-                <argument>^/_wdt</argument>
+                <argument>^/(_(profiler|wdt)|css|images|js)/</argument>
               </service>
             </argument>
             <argument key="security.firewall.map.context.login" type="service">
@@ -1341,7 +1226,7 @@
       <argument type="service" id="event_dispatcher"/>
     </service>
     <service id="security.rememberme.response_listener" class="Symfony\Bundle\SecurityBundle\EventListener\ResponseListener">
-      <tag name="kernel.listener" event="core.response" method="onCoreResponse"/>
+      <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
     </service>
     <service id="templating.helper.security" class="Symfony\Bundle\SecurityBundle\Templating\Helper\SecurityHelper">
       <tag name="templating.helper" alias="security"/>
@@ -1371,11 +1256,7 @@
         </argument>
       </call>
     </service>
-    <service id="security.firewall.map.context.profiler" class="Symfony\Bundle\SecurityBundle\Security\FirewallContext">
-      <argument type="collection"/>
-      <argument>null</argument>
-    </service>
-    <service id="security.firewall.map.context.wdt" class="Symfony\Bundle\SecurityBundle\Security\FirewallContext">
+    <service id="security.firewall.map.context.dev" class="Symfony\Bundle\SecurityBundle\Security\FirewallContext">
       <argument type="collection"/>
       <argument>null</argument>
     </service>
@@ -1411,6 +1292,11 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\LogoutListener" public="false">
             <argument type="service" id="security.context"/>
+            <argument type="service">
+              <service class="Symfony\Component\Security\Http\HttpUtils" public="false">
+                <argument type="service" id="router"/>
+              </service>
+            </argument>
             <argument>/demo/secured/logout</argument>
             <argument>/demo/</argument>
             <argument>null</argument>
@@ -1429,6 +1315,11 @@
             <argument type="service">
               <service class="Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy" public="false">
                 <argument>migrate</argument>
+              </service>
+            </argument>
+            <argument type="service">
+              <service class="Symfony\Component\Security\Http\HttpUtils" public="false">
+                <argument type="service" id="router"/>
               </service>
             </argument>
             <argument>secured_area</argument>
@@ -1472,8 +1363,18 @@
           <argument type="service" id="security.context"/>
           <argument type="service" id="security.authentication.trust_resolver"/>
           <argument type="service">
+            <service class="Symfony\Component\Security\Http\HttpUtils" public="false">
+              <argument type="service" id="router"/>
+            </service>
+          </argument>
+          <argument type="service">
             <service class="Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint" public="false">
               <argument type="service" id="http_kernel"/>
+              <argument type="service">
+                <service class="Symfony\Component\Security\Http\HttpUtils" public="false">
+                  <argument type="service" id="router"/>
+                </service>
+              </argument>
               <argument>/demo/secured/login</argument>
               <argument>false</argument>
             </service>
@@ -1489,6 +1390,7 @@
       <argument type="collection">
         <argument key="debug">true</argument>
         <argument key="strict_variables">true</argument>
+        <argument key="exception_controller">Symfony\Bundle\TwigBundle\Controller\ExceptionController::showAction</argument>
         <argument key="cache">/Users/ejsmont/NetBeansProjects/LabDB/app/cache/dev/twig</argument>
         <argument key="charset">UTF-8</argument>
       </argument>
@@ -1536,7 +1438,7 @@
         <argument type="service">
           <service class="Symfony\Bridge\Twig\Extension\RoutingExtension" public="false">
             <tag name="twig.extension"/>
-            <argument type="service" id="router.real"/>
+            <argument type="service" id="router"/>
           </service>
         </argument>
       </call>
@@ -1552,7 +1454,7 @@
           <service class="Symfony\Bridge\Twig\Extension\FormExtension" public="false">
             <tag name="twig.extension"/>
             <argument type="collection">
-              <argument>TwigBundle:Form:div_layout.html.twig</argument>
+              <argument>form_div_layout.html.twig</argument>
             </argument>
           </service>
         </argument>
@@ -1572,19 +1474,30 @@
     <service id="twig.loader" class="Symfony\Bundle\TwigBundle\Loader\FilesystemLoader">
       <argument type="service" id="templating.locator"/>
       <argument type="service" id="templating.name_parser"/>
+      <call method="addPath">
+        <argument>/Users/ejsmont/NetBeansProjects/LabDB/vendor/symfony/src/Symfony/Bundle/TwigBundle/DependencyInjection/../../../Bridge/Twig/Resources/views/Form</argument>
+      </call>
+    </service>
+    <service id="twig.exception_listener" class="Symfony\Component\HttpKernel\EventListener\ExceptionListener">
+      <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" priority="-128"/>
+      <tag name="monolog.logger" channel="request"/>
+      <argument>Symfony\Bundle\TwigBundle\Controller\ExceptionController::showAction</argument>
+      <argument type="service" id="monolog.logger.request"/>
     </service>
     <service id="monolog.handler.main" class="Monolog\Handler\StreamHandler">
       <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/logs/dev.log</argument>
       <argument>100</argument>
-      <argument>false</argument>
+      <argument>true</argument>
     </service>
     <service id="monolog.handler.firephp" class="Symfony\Bridge\Monolog\Handler\FirePHPHandler">
-      <tag name="kernel.listener" event="core.response" method="onCoreResponse"/>
+      <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
       <argument>200</argument>
-      <argument>false</argument>
+      <argument>true</argument>
     </service>
-    <service id="swiftmailer.plugin.messagelogger" class="Symfony\Bundle\SwiftmailerBundle\Logger\MessageLogger"/>
-    <service id="doctrine.dbal.logger" class="Symfony\Bundle\DoctrineBundle\Logger\DbalLogger" public="false">
+    <service id="swiftmailer.plugin.messagelogger" class="Symfony\Bundle\SwiftmailerBundle\Logger\MessageLogger">
+      <tag name="swiftmailer.plugin"/>
+    </service>
+    <service id="doctrine.dbal.logger" class="Symfony\Bridge\Doctrine\Logger\DbalLogger" public="false">
       <tag name="monolog.logger" channel="doctrine"/>
       <argument type="service" id="monolog.logger.doctrine"/>
     </service>
@@ -1602,14 +1515,15 @@
       <argument>default</argument>
       <argument>default</argument>
     </service>
-    <service id="doctrine.dbal.default_connection" class="Doctrine\DBAL\Connection" factory-method="createConnection" factory-service="doctrine.dbal.connection_factory">
+    <service id="doctrine.dbal.default_connection" class="stdClass" factory-method="createConnection" factory-service="doctrine.dbal.connection_factory">
       <argument type="collection">
         <argument key="dbname">labdb</argument>
         <argument key="host">localhost</argument>
+        <argument key="port"></argument>
         <argument key="user">postgres</argument>
         <argument key="password"></argument>
         <argument key="driver">pdo_pgsql</argument>
-        <argument key="port">null</argument>
+        <argument key="charset">UTF8</argument>
         <argument key="driverOptions" type="collection"/>
       </argument>
       <argument type="service">
@@ -1622,17 +1536,22 @@
       <argument type="service">
         <service class="Doctrine\Common\EventManager" public="false"/>
       </argument>
+      <argument type="collection"/>
     </service>
     <service id="form.type_guesser.doctrine" class="Symfony\Bridge\Doctrine\Form\DoctrineOrmTypeGuesser">
       <tag name="form.type_guesser"/>
-      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="doctrine"/>
     </service>
     <service id="form.type.entity" class="Symfony\Bridge\Doctrine\Form\Type\EntityType">
       <tag name="form.type" alias="entity"/>
-      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="doctrine"/>
     </service>
     <service id="doctrine.orm.validator.unique" class="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator">
       <tag name="validator.constraint_validator" alias="doctrine.orm.validator.unique"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="doctrine.orm.validator_initializer" class="Symfony\Bridge\Doctrine\Validator\EntityInitializer">
+      <tag name="validator.initializer"/>
       <argument type="service" id="doctrine"/>
     </service>
     <service id="doctrine.orm.default_entity_manager" class="Doctrine\ORM\EntityManager" factory-method="create">
@@ -1648,7 +1567,7 @@
             <argument type="service">
               <service class="Doctrine\Common\Cache\ArrayCache" public="false">
                 <call method="setNamespace">
-                  <argument>sf2orm_default_09d761de3f9b1d0b6426d403e26c0a34</argument>
+                  <argument>sf2orm_default_cac85611039016c5cb4136425185eaa3</argument>
                 </call>
               </service>
             </argument>
@@ -1657,7 +1576,7 @@
             <argument type="service">
               <service class="Doctrine\Common\Cache\ArrayCache" public="false">
                 <call method="setNamespace">
-                  <argument>sf2orm_default_09d761de3f9b1d0b6426d403e26c0a34</argument>
+                  <argument>sf2orm_default_cac85611039016c5cb4136425185eaa3</argument>
                 </call>
               </service>
             </argument>
@@ -1666,7 +1585,7 @@
             <argument type="service">
               <service class="Doctrine\Common\Cache\ArrayCache" public="false">
                 <call method="setNamespace">
-                  <argument>sf2orm_default_09d761de3f9b1d0b6426d403e26c0a34</argument>
+                  <argument>sf2orm_default_cac85611039016c5cb4136425185eaa3</argument>
                 </call>
               </service>
             </argument>
@@ -1678,7 +1597,7 @@
                   <argument type="service">
                     <service class="Doctrine\ORM\Mapping\Driver\AnnotationDriver" public="false">
                       <argument type="service">
-                        <service class="Symfony\Bundle\DoctrineBundle\Annotations\IndexedReader" public="false">
+                        <service class="Symfony\Bridge\Doctrine\Annotations\IndexedReader" public="false">
                           <argument type="service" id="annotation_reader"/>
                         </service>
                       </argument>
@@ -2041,16 +1960,43 @@
               <argument type="service">
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
-                  <argument>SymfonyWebConfiguratorBundle</argument>
-                  <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/Resources/SymfonyWebConfiguratorBundle/views</argument>
+                  <argument>SensioDistributionBundle</argument>
+                  <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/Resources/SensioDistributionBundle/views</argument>
                   <argument>/^[^.]+\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
               <argument type="service">
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
-                  <argument>SymfonyWebConfiguratorBundle</argument>
-                  <argument>/Users/ejsmont/NetBeansProjects/LabDB/vendor/bundles/Symfony/Bundle/WebConfiguratorBundle/Resources/views</argument>
+                  <argument>SensioDistributionBundle</argument>
+                  <argument>/Users/ejsmont/NetBeansProjects/LabDB/vendor/bundles/Sensio/Bundle/DistributionBundle/Resources/views</argument>
+                  <argument>/^[^.]+\.[^.]+\.twig$/</argument>
+                </service>
+              </argument>
+            </argument>
+          </service>
+        </argument>
+        <argument>twig</argument>
+      </call>
+      <call method="addResource">
+        <argument type="service">
+          <service class="Assetic\Factory\Resource\CoalescingDirectoryResource" public="false">
+            <tag name="assetic.templating.twig"/>
+            <tag name="assetic.formula_resource" loader="twig"/>
+            <argument type="collection">
+              <argument type="service">
+                <service class="%assetic.directory_resource.class%" public="false">
+                  <argument type="service" id="templating.loader"/>
+                  <argument>SensioGeneratorBundle</argument>
+                  <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/Resources/SensioGeneratorBundle/views</argument>
+                  <argument>/^[^.]+\.[^.]+\.twig$/</argument>
+                </service>
+              </argument>
+              <argument type="service">
+                <service class="%assetic.directory_resource.class%" public="false">
+                  <argument type="service" id="templating.loader"/>
+                  <argument>SensioGeneratorBundle</argument>
+                  <argument>/Users/ejsmont/NetBeansProjects/LabDB/vendor/bundles/Sensio/Bundle/GeneratorBundle/Resources/views</argument>
                   <argument>/^[^.]+\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2108,11 +2054,11 @@
       <tag name="kernel.listener" event="core.request" method="onCoreRequest"/>
     </service>
     <service id="sensio_framework_extra.controller.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener">
-      <tag name="kernel.listener" event="core.controller" method="onCoreController"/>
+      <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
       <argument type="service" id="annotation_reader"/>
     </service>
     <service id="sensio_framework_extra.converter.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener">
-      <tag name="kernel.listener" event="core.controller" method="onCoreController"/>
+      <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
       <argument type="service" id="sensio_framework_extra.converter.manager"/>
     </service>
     <service id="sensio_framework_extra.converter.manager" class="Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterManager">
@@ -2127,12 +2073,12 @@
       <argument type="service" id="doctrine"/>
     </service>
     <service id="sensio_framework_extra.view.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener">
-      <tag name="kernel.listener" event="core.controller" method="onCoreController"/>
-      <tag name="kernel.listener" event="core.view" method="onCoreView"/>
+      <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+      <tag name="kernel.event_listener" event="kernel.view" method="onKernelView"/>
       <argument type="service" id="service_container"/>
     </service>
     <service id="sensio_framework_extra.cache.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\CacheListener">
-      <tag name="kernel.listener" event="core.response" method="onCoreResponse"/>
+      <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
     </service>
     <service id="security.access.method_interceptor" class="JMS\SecurityExtraBundle\Security\Authorization\Interception\MethodSecurityInterceptor">
       <argument type="service" id="security.context"/>
@@ -2152,17 +2098,17 @@
       <argument type="service" id="logger"/>
     </service>
     <service id="security.extra.controller_listener" class="JMS\SecurityExtraBundle\Controller\ControllerListener">
-      <tag name="kernel.listener" event="core.controller" method="onCoreController" priority="-255"/>
+      <tag name="kernel.event_listener" event="kernel.controller" method="onCoreController" priority="-255"/>
       <argument type="service" id="service_container"/>
       <argument type="service" id="annotation_reader"/>
     </service>
     <service id="web_profiler.debug_toolbar" class="Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener">
-      <tag name="kernel.listener" event="core.response" method="onCoreResponse" priority="-128"/>
+      <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" priority="-128"/>
       <argument type="service" id="templating"/>
       <argument>false</argument>
-      <argument>true</argument>
+      <argument>2</argument>
     </service>
-    <service id="symfony.webconfigurator" class="Symfony\Bundle\WebConfiguratorBundle\Configurator">
+    <service id="sensio.distribution.webconfigurator" class="Sensio\Bundle\DistributionBundle\Configurator\Configurator">
       <argument>/Users/ejsmont/NetBeansProjects/LabDB/app</argument>
     </service>
     <service id="monolog.logger.request" class="Symfony\Bridge\Monolog\Logger">
@@ -2254,15 +2200,26 @@
       <argument>true</argument>
     </service>
     <service id="session.storage" class="Symfony\Component\HttpFoundation\SessionStorage\NativeSessionStorage">
+      <argument type="collection"/>
+    </service>
+    <service id="router" class="Symfony\Bundle\FrameworkBundle\Routing\Router">
+      <argument type="service" id="service_container"/>
+      <argument>/Users/ejsmont/NetBeansProjects/LabDB/app/config/routing_dev.yml</argument>
       <argument type="collection">
-        <argument key="lifetime">3600</argument>
+        <argument key="cache_dir">/Users/ejsmont/NetBeansProjects/LabDB/app/cache/dev</argument>
+        <argument key="debug">true</argument>
+        <argument key="generator_class">Symfony\Component\Routing\Generator\UrlGenerator</argument>
+        <argument key="generator_base_class">Symfony\Component\Routing\Generator\UrlGenerator</argument>
+        <argument key="generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper</argument>
+        <argument key="generator_cache_class">app%kernel.environment%UrlGenerator</argument>
+        <argument key="matcher_class">Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher</argument>
+        <argument key="matcher_base_class">Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher</argument>
+        <argument key="matcher_dumper_class">Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper</argument>
+        <argument key="matcher_cache_class">app%kernel.environment%UrlMatcher</argument>
       </argument>
     </service>
     <service id="templating.loader" class="Symfony\Bundle\FrameworkBundle\Templating\Loader\FilesystemLoader">
       <argument type="service" id="templating.locator"/>
-    </service>
-    <service id="templating.locator" class="Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator">
-      <argument type="service" id="file_locator"/>
     </service>
     <service id="templating" class="Symfony\Bundle\TwigBundle\TwigEngine">
       <argument type="service" id="twig"/>
@@ -2352,7 +2309,6 @@
       <argument type="service" id="swiftmailer.transport"/>
     </service>
     <service id="debug.event_dispatcher" alias="event_dispatcher"/>
-    <service id="router" alias="router.real"/>
     <service id="database_connection" alias="doctrine.dbal.default_connection"/>
     <service id="doctrine.orm.entity_manager" alias="doctrine.orm.default_entity_manager"/>
   </services>

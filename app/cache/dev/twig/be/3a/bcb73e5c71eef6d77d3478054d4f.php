@@ -34,7 +34,7 @@ class __TwigTemplate_be3abcb73e5c71eef6d77d3478054d4f extends Twig_Template
         echo "
 ";
         // line 11
-        if (($this->getAttribute($this->getContext($context, 'trace'), "file", array(), "any", true) && $this->getAttribute($this->getContext($context, 'trace'), "line", array(), "any", true))) {
+        if (($this->getAttribute(((array_key_exists("trace", $context)) ? (twig_default_filter($this->getContext($context, 'trace'))) : ("")), "file", array(), "any", true) && $this->getAttribute(((array_key_exists("trace", $context)) ? (twig_default_filter($this->getContext($context, 'trace'))) : ("")), "line", array(), "any", true))) {
             // line 12
             echo "    in ";
             echo $this->env->getExtension('code')->formatFile($this->getAttribute($this->getContext($context, 'trace'), "file", array(), "any", false), $this->getAttribute($this->getContext($context, 'trace'), "line", array(), "any", false));

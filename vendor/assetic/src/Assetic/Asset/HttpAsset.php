@@ -63,14 +63,12 @@ class HttpAsset extends BaseAsset
 
     public function getLastModified()
     {
-        $context = stream_context_create(array('http' => array('method' => 'HEAD')));
-
-        if (false !== @file_get_contents($this->sourceUrl, false, $context)) {
+        if (false !== @file_get_contents($this->sourceUrl, false, stream_context_create(array('http' => array('method' => 'HEAD'))))) {
             foreach ($http_response_header as $header) {
                 if (0 === stripos($header, 'Last-Modified: ')) {
-                    list($name, $value) = explode(':', $header, 2);
+                    list(, $mtime) = explode(':', $header, 2);
 
-                    return strtotime(trim($value));
+                    return strtotime(trim($mtime));
                 }
             }
         }

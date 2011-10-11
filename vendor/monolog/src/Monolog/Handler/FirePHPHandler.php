@@ -79,10 +79,13 @@ class FirePHPHandler extends AbstractProcessingHandler
         // but we're not taking advantage of that (yet), so we're using "1" for simplicity's sake.
         return $this->createHeader(
             array(1, 1, 1, self::$messageIndex++),
-            $record['message']
+            $record['formatted']
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getDefaultFormatter()
     {
         return new WildfireFormatter();

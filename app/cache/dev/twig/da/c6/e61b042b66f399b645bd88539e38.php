@@ -7,6 +7,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
     {
         parent::__construct($env);
 
+        $this->parent = array();
         $this->blocks = array(
             'field_rows' => array($this, 'block_field_rows'),
             'field_enctype' => array($this, 'block_field_enctype'),
@@ -408,12 +409,12 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 60
         echo "    ";
-        $context['type'] = ((twig_test_defined("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "text")) : ("text"));
+        $context['type'] = ((array_key_exists("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "text")) : ("text"));
         // line 61
         echo "    <input type=\"";
         echo twig_escape_filter($this->env, $this->getContext($context, 'type'), "html");
         echo "\" ";
-        echo $this->renderBlock("attributes", $context, $blocks);
+        $this->displayBlock("attributes", $context, $blocks);
         echo " value=\"";
         echo twig_escape_filter($this->env, $this->getContext($context, 'value'), "html");
         echo "\" />
@@ -428,10 +429,10 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 67
         echo "    ";
-        $context['type'] = ((twig_test_defined("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "text")) : ("text"));
+        $context['type'] = ((array_key_exists("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "text")) : ("text"));
         // line 68
         echo "    ";
-        echo $this->renderBlock("field_widget", $context, $blocks);
+        $this->displayBlock("field_widget", $context, $blocks);
         echo "
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
@@ -444,10 +445,10 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 74
         echo "    ";
-        $context['type'] = ((twig_test_defined("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "password")) : ("password"));
+        $context['type'] = ((array_key_exists("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "password")) : ("password"));
         // line 75
         echo "    ";
-        echo $this->renderBlock("field_widget", $context, $blocks);
+        $this->displayBlock("field_widget", $context, $blocks);
         echo "
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
@@ -458,10 +459,10 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
     {
         // line 80
         echo "    ";
-        $context['type'] = ((twig_test_defined("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "hidden")) : ("hidden"));
+        $context['type'] = ((array_key_exists("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "hidden")) : ("hidden"));
         // line 81
         echo "    ";
-        echo $this->renderBlock("field_widget", $context, $blocks);
+        $this->displayBlock("field_widget", $context, $blocks);
         echo "
 ";
     }
@@ -483,7 +484,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 90
         echo "    <textarea ";
-        echo $this->renderBlock("attributes", $context, $blocks);
+        $this->displayBlock("attributes", $context, $blocks);
         echo ">";
         echo twig_escape_filter($this->env, $this->getContext($context, 'value'), "html");
         echo "</textarea>
@@ -563,7 +564,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         if ($this->getContext($context, 'expanded')) {
             // line 113
             echo "        <div ";
-            echo $this->renderBlock("container_attributes", $context, $blocks);
+            $this->displayBlock("container_attributes", $context, $blocks);
             echo ">
         ";
             // line 114
@@ -589,7 +590,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         } else {
             // line 120
             echo "    <select ";
-            echo $this->renderBlock("attributes", $context, $blocks);
+            $this->displayBlock("attributes", $context, $blocks);
             if ($this->getContext($context, 'multiple')) {
                 echo " multiple=\"multiple\"";
             }
@@ -611,7 +612,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
                 $context['options'] = $this->getContext($context, 'preferred_choices');
                 // line 126
                 echo "            ";
-                echo $this->renderBlock("options", $context, $blocks);
+                $this->displayBlock("options", $context, $blocks);
                 echo "
             <option disabled=\"disabled\">";
                 // line 127
@@ -624,7 +625,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
             $context['options'] = $this->getContext($context, 'choices');
             // line 130
             echo "        ";
-            echo $this->renderBlock("options", $context, $blocks);
+            $this->displayBlock("options", $context, $blocks);
             echo "
     </select>
     ";
@@ -639,8 +640,8 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 138
         echo "    <input type=\"checkbox\" ";
-        echo $this->renderBlock("attributes", $context, $blocks);
-        if (twig_test_defined("value", $context)) {
+        $this->displayBlock("attributes", $context, $blocks);
+        if (array_key_exists("value", $context)) {
             echo " value=\"";
             echo twig_escape_filter($this->env, $this->getContext($context, 'value'), "html");
             echo "\"";
@@ -660,8 +661,8 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 144
         echo "    <input type=\"radio\" ";
-        echo $this->renderBlock("attributes", $context, $blocks);
-        if (twig_test_defined("value", $context)) {
+        $this->displayBlock("attributes", $context, $blocks);
+        if (array_key_exists("value", $context)) {
             echo " value=\"";
             echo twig_escape_filter($this->env, $this->getContext($context, 'value'), "html");
             echo "\"";
@@ -681,7 +682,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 150
         echo "    <div ";
-        echo $this->renderBlock("container_attributes", $context, $blocks);
+        $this->displayBlock("container_attributes", $context, $blocks);
         echo ">
         ";
         // line 151
@@ -714,13 +715,13 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         if (($this->getContext($context, 'widget') == "single_text")) {
             // line 162
             echo "        ";
-            echo $this->renderBlock("text_widget", $context, $blocks);
+            $this->displayBlock("text_widget", $context, $blocks);
             echo "
     ";
         } else {
             // line 164
             echo "        <div ";
-            echo $this->renderBlock("container_attributes", $context, $blocks);
+            $this->displayBlock("container_attributes", $context, $blocks);
             echo ">
             ";
             // line 165
@@ -740,7 +741,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 177
         echo "    <div ";
-        echo $this->renderBlock("container_attributes", $context, $blocks);
+        $this->displayBlock("container_attributes", $context, $blocks);
         echo ">
         ";
         // line 178
@@ -766,10 +767,10 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         echo "    ";
         // line 186
         echo "    ";
-        $context['type'] = ((twig_test_defined("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "text")) : ("text"));
+        $context['type'] = ((array_key_exists("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "text")) : ("text"));
         // line 187
         echo "    ";
-        echo $this->renderBlock("field_widget", $context, $blocks);
+        $this->displayBlock("field_widget", $context, $blocks);
         echo "
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
@@ -782,10 +783,10 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 193
         echo "    ";
-        $context['type'] = ((twig_test_defined("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "number")) : ("number"));
+        $context['type'] = ((array_key_exists("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "number")) : ("number"));
         // line 194
         echo "    ";
-        echo $this->renderBlock("field_widget", $context, $blocks);
+        $this->displayBlock("field_widget", $context, $blocks);
         echo "
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
@@ -811,10 +812,10 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 206
         echo "    ";
-        $context['type'] = ((twig_test_defined("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "url")) : ("url"));
+        $context['type'] = ((array_key_exists("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "url")) : ("url"));
         // line 207
         echo "    ";
-        echo $this->renderBlock("field_widget", $context, $blocks);
+        $this->displayBlock("field_widget", $context, $blocks);
         echo "
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
@@ -827,10 +828,10 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 213
         echo "    ";
-        $context['type'] = ((twig_test_defined("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "search")) : ("search"));
+        $context['type'] = ((array_key_exists("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "search")) : ("search"));
         // line 214
         echo "    ";
-        echo $this->renderBlock("field_widget", $context, $blocks);
+        $this->displayBlock("field_widget", $context, $blocks);
         echo "
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
@@ -843,10 +844,10 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 220
         echo "    ";
-        $context['type'] = ((twig_test_defined("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "text")) : ("text"));
+        $context['type'] = ((array_key_exists("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "text")) : ("text"));
         // line 221
         echo "    ";
-        echo $this->renderBlock("field_widget", $context, $blocks);
+        $this->displayBlock("field_widget", $context, $blocks);
         echo " %
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
@@ -859,7 +860,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 227
         echo "    <div ";
-        echo $this->renderBlock("container_attributes", $context, $blocks);
+        $this->displayBlock("container_attributes", $context, $blocks);
         echo ">
         ";
         // line 228
@@ -889,7 +890,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 238
         echo "    ";
-        echo $this->renderBlock("form_widget", $context, $blocks);
+        $this->displayBlock("form_widget", $context, $blocks);
         echo "
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
@@ -902,7 +903,7 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 244
         echo "    ";
-        echo $this->renderBlock("field_rows", $context, $blocks);
+        $this->displayBlock("field_rows", $context, $blocks);
         echo "
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
@@ -939,11 +940,11 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 261
         echo "    <div ";
-        echo $this->renderBlock("container_attributes", $context, $blocks);
+        $this->displayBlock("container_attributes", $context, $blocks);
         echo ">
         ";
         // line 262
-        echo $this->renderBlock("field_rows", $context, $blocks);
+        $this->displayBlock("field_rows", $context, $blocks);
         echo "
         ";
         // line 263
@@ -961,10 +962,10 @@ class __TwigTemplate_dac6e61b042b66f399b645bd88539e38 extends Twig_Template
         ob_start();
         // line 270
         echo "    ";
-        $context['type'] = ((twig_test_defined("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "email")) : ("email"));
+        $context['type'] = ((array_key_exists("type", $context)) ? (twig_default_filter($this->getContext($context, 'type'), "email")) : ("email"));
         // line 271
         echo "    ";
-        echo $this->renderBlock("field_widget", $context, $blocks);
+        $this->displayBlock("field_widget", $context, $blocks);
         echo "
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));

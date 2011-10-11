@@ -25,11 +25,11 @@ class __TwigTemplate_5aeaab71d615dd89f38ae44a9b2f0aab extends Twig_Template
         echo "<span style=\"white-space:nowrap; color:#2f2f2f; display:inline-block; min-height:24px; border-right:1px solid #cdcdcd; padding:5px 7px 5px 4px; \">
      ";
         // line 7
-        echo twig_escape_filter($this->env, ((twig_test_defined("icon", $context)) ? (twig_default_filter($this->getContext($context, 'icon'), "")) : ("")), "html");
+        echo twig_escape_filter($this->env, ((array_key_exists("icon", $context)) ? (twig_default_filter($this->getContext($context, 'icon'), "")) : ("")), "html");
         echo "
      ";
         // line 8
-        echo twig_escape_filter($this->env, ((twig_test_defined("text", $context)) ? (twig_default_filter($this->getContext($context, 'text'), "")) : ("")), "html");
+        echo twig_escape_filter($this->env, ((array_key_exists("text", $context)) ? (twig_default_filter($this->getContext($context, 'text'), "")) : ("")), "html");
         echo "
 </span>
 ";

@@ -7,6 +7,7 @@ class __TwigTemplate_c5569cb706e5e69385603dbae0a0197f extends Twig_Template
     {
         parent::__construct($env);
 
+        $this->parent = array();
         $this->blocks = array(
             'content' => array($this, 'block_content'),
         );

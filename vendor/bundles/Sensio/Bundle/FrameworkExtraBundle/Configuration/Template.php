@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
  * The Template class handles the @Template annotation parts.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ * @Annotation
  */
 class Template extends ConfigurationAnnotation
 {
@@ -26,6 +27,14 @@ class Template extends ConfigurationAnnotation
      * @var TemplateReference
      */
     protected $template;
+
+    /**
+     * The template engine used when a specific template isnt specified
+     *
+     * @var string
+     */
+    protected $engine = 'twig';
+
     /**
      * The associative array of template variables.
      *
@@ -51,6 +60,26 @@ class Template extends ConfigurationAnnotation
     public function setVars($vars)
     {
         $this->vars = $vars;
+    }
+
+    /**
+     * Returns the engine used when guessing template names
+     *
+     * @return string
+     */
+    public function getEngine()
+    {
+        return $this->engine;
+    }
+
+    /**
+     * Sets the engine used when guessing template names
+     *
+     * @param string
+     */
+    public function setEngine($engine)
+    {
+        $this->engine = $engine;
     }
 
     /**

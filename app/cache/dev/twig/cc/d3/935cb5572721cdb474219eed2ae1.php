@@ -38,7 +38,8 @@ class __TwigTemplate_ccd3935cb5572721cdb474219eed2ae1 extends Twig_Template
             </div>
         </form>
     </div>
-</div>";
+</div>
+";
     }
 
     public function getTemplateName()

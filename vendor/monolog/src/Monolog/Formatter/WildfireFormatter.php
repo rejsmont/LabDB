@@ -17,14 +17,11 @@ use Monolog\Logger;
  * Serializes a log message according to Wildfire's header requirements
  *
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
+ * @author Christophe Coevoet <stof@notk.org>
+ * @author Kirill chEbba Chebunin <iam@chebba.org>
  */
-class WildfireFormatter extends LineFormatter
+class WildfireFormatter implements FormatterInterface
 {
-    /**
-     * Similar to LineFormatter::SIMPLE_FORMAT, except without the "[%datetime%]"
-     */
-    const SIMPLE_FORMAT = "%channel%: %message% %extra%";
-
     /**
      * Translates Monolog log levels to Wildfire levels.
      */
@@ -42,15 +39,35 @@ class WildfireFormatter extends LineFormatter
      */
     public function format(array $record)
     {
-        // Format record according with LineFormatter
-        $message = parent::format($record);
+        // Retrieve the line and file if set and remove them from the formatted extra
+        $file = $line = '';
+        if (isset($record['extra']['file'])) {
+            $file = $record['extra']['file'];
+            unset($record['extra']['file']);
+        }
+        if (isset($record['extra']['line'])) {
+            $line = $record['extra']['line'];
+            unset($record['extra']['line']);
+        }
+
+        $message = array('message' => $record['message']);
+        if ($record['context']) {
+            $message['context'] = $record['context'];
+        }
+        if ($record['extra']) {
+            $message['extra'] = $record['extra'];
+        }
+        if (count($message) === 1) {
+            $message = reset($message);
+        }
 
         // Create JSON object describing the appearance of the message in the console
         $json = json_encode(array(
             array(
-                'Type'  =>  $this->logLevels[$record['level']],
-                'File'  =>  '',
-                'Line'  =>  '',
+                'Type'  => $this->logLevels[$record['level']],
+                'File'  => $file,
+                'Line'  => $line,
+                'Label' => $record['channel'],
             ),
             $message,
         ));

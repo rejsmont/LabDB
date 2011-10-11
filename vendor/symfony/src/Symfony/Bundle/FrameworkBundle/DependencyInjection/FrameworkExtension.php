@@ -22,7 +22,6 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Definition\Processor;
 
 /**
  * FrameworkExtension.
@@ -56,16 +55,15 @@ class FrameworkExtension extends Extension
             $container->setAlias('debug.event_dispatcher', 'event_dispatcher');
         }
 
-        $processor = new Processor();
         $configuration = new Configuration($container->getParameter('kernel.debug'));
-        $config = $processor->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('kernel.cache_warmup', $config['cache_warmer']);
         if (isset($config['charset'])) {
             $container->setParameter('kernel.charset', $config['charset']);
         }
         $container->setParameter('kernel.secret', $config['secret']);
-        $container->setParameter('exception_listener.controller', $config['exception_controller']);
+
+        $container->setParameter('kernel.trust_proxy_headers', $config['trust_proxy_headers']);
 
         if (!empty($config['test'])) {
             $loader->load('test.xml');
@@ -75,7 +73,7 @@ class FrameworkExtension extends Extension
             $this->registerSessionConfiguration($config['session'], $container, $loader);
         }
 
-        if ($hasForm = isset($config['form']) && !empty($config['form']['enabled'])) {
+        if (isset($config['form']) && !empty($config['form']['enabled'])) {
             $this->registerFormConfiguration($config, $container, $loader);
             $config['validation']['enabled'] = true;
         }
@@ -109,9 +107,13 @@ class FrameworkExtension extends Extension
         $this->addClassesToCompile(array(
             'Symfony\\Component\\HttpFoundation\\ParameterBag',
             'Symfony\\Component\\HttpFoundation\\HeaderBag',
+            'Symfony\\Component\\HttpFoundation\\FileBag',
+            'Symfony\\Component\\HttpFoundation\\ServerBag',
             'Symfony\\Component\\HttpFoundation\\Request',
             'Symfony\\Component\\HttpFoundation\\Response',
             'Symfony\\Component\\HttpFoundation\\ResponseHeaderBag',
+
+            'Symfony\\Component\\Config\\FileLocator',
 
             'Symfony\\Component\\EventDispatcher\\EventDispatcherInterface',
             'Symfony\\Component\\EventDispatcher\\EventDispatcher',
@@ -128,13 +130,16 @@ class FrameworkExtension extends Extension
             'Symfony\\Component\\HttpKernel\\Event\\GetResponseEvent',
             'Symfony\\Component\\HttpKernel\\Event\\GetResponseForControllerResultEvent',
             'Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent',
-            'Symfony\\Component\\HttpKernel\\CoreEvents',
+            'Symfony\\Component\\HttpKernel\\KernelEvents',
+            'Symfony\\Component\\HttpKernel\\Config\\FileLocator',
 
             'Symfony\\Bundle\\FrameworkBundle\\EventListener\\RouterListener',
             'Symfony\\Bundle\\FrameworkBundle\\Controller\\ControllerNameParser',
             'Symfony\\Bundle\\FrameworkBundle\\Controller\\ControllerResolver',
-            'Symfony\\Bundle\\FrameworkBundle\\Controller\\Controller',
+            // Cannot be included because annotations will parse the big compiled class file
+            // 'Symfony\\Bundle\\FrameworkBundle\\Controller\\Controller',
             'Symfony\\Bundle\\FrameworkBundle\\ContainerAwareEventDispatcher',
+            'Symfony\\Bundle\\FrameworkBundle\\HttpKernel',
         ));
     }
 
@@ -156,14 +161,6 @@ class FrameworkExtension extends Extension
 
             $container->setParameter('form.type_extension.csrf.enabled', $config['csrf_protection']['enabled']);
             $container->setParameter('form.type_extension.csrf.field_name', $config['csrf_protection']['field_name']);
-        }
-
-        if ($container->hasDefinition('session')) {
-            $container->removeDefinition('file.temporary_storage');
-            $container->setDefinition('file.temporary_storage', $container->getDefinition('file.temporary_storage.session'));
-            $container->removeDefinition('file.temporary_storage.session');
-        } else {
-            $container->removeDefinition('file.temporary_storage.session');
         }
     }
 
@@ -242,7 +239,7 @@ class FrameworkExtension extends Extension
         $loader->load('routing.xml');
 
         $container->setParameter('router.resource', $config['resource']);
-        $router = $container->findDefinition('router.real');
+        $router = $container->findDefinition('router.default');
 
         if (isset($config['type'])) {
             $argument = $router->getArgument(2);
@@ -250,21 +247,21 @@ class FrameworkExtension extends Extension
             $router->replaceArgument(2, $argument);
         }
 
-        if ($config['cache_warmer']) {
-            $container->getDefinition('router.cache_warmer')->addTag('kernel.cache_warmer');
-            $container->setAlias('router', 'router.cached');
-        }
-
         $container->setParameter('request_listener.http_port', $config['http_port']);
         $container->setParameter('request_listener.https_port', $config['https_port']);
 
         $this->addClassesToCompile(array(
-            'Symfony\\Component\\Routing\\RouterInterface',
             'Symfony\\Component\\Routing\\Matcher\\UrlMatcherInterface',
-            'Symfony\\Component\\Routing\\Matcher\\UrlMatcher',
             'Symfony\\Component\\Routing\\Generator\\UrlGeneratorInterface',
+            'Symfony\\Component\\Routing\\RouterInterface',
+            'Symfony\\Component\\Routing\\Matcher\\UrlMatcher',
             'Symfony\\Component\\Routing\\Generator\\UrlGenerator',
-            $container->findDefinition('router')->getClass(),
+            'Symfony\\Component\\Routing\\Matcher\\RedirectableUrlMatcherInterface',
+            'Symfony\\Component\\Routing\\RequestContextAwareInterface',
+            'Symfony\\Component\\Routing\\RequestContext',
+            'Symfony\\Component\\Routing\\Router',
+            'Symfony\\Bundle\\FrameworkBundle\\Routing\\RedirectableUrlMatcher',
+            $container->findDefinition('router.default')->getClass(),
         ));
     }
 
@@ -280,10 +277,7 @@ class FrameworkExtension extends Extension
         $loader->load('session.xml');
 
         // session
-        $session = $container->getDefinition('session');
-        if (!empty($config['auto_start'])) {
-            $session->addMethodCall('start');
-        }
+        $container->getDefinition('session_listener')->addArgument($config['auto_start']);
         $container->setParameter('session.default_locale', $config['default_locale']);
 
         // session storage
@@ -323,11 +317,12 @@ class FrameworkExtension extends Extension
         $loader->load('templating_php.xml');
 
         $links = array(
-            'textmate' => 'txmt://open?url=file://%f&line=%l',
-            'macvim'   => 'mvim://open?url=file://%f&line=%l',
+            'textmate' => 'txmt://open?url=file://%%f&line=%%l',
+            'macvim'   => 'mvim://open?url=file://%%f&line=%%l',
         );
 
-        $container->setParameter('templating.helper.code.file_link_format', str_replace('%', '%%', isset($links[$ide]) ? $links[$ide] : $ide));
+        $container->setParameter('templating.helper.code.file_link_format', isset($links[$ide]) ? $links[$ide] : $ide);
+        $container->setParameter('templating.helper.form.resources', $config['form']['resources']);
 
         if ($container->getParameter('kernel.debug')) {
             $loader->load('templating_debug.xml');
@@ -369,17 +364,8 @@ class FrameworkExtension extends Extension
             $container->setDefinition('templating.loader', $loaderCache);
         }
 
-        if ($config['cache_warmer']) {
-            $container
-                ->getDefinition('templating.cache_warmer.template_paths')
-                ->addTag('kernel.cache_warmer', array('priority' => 20))
-            ;
-            $container->setAlias('templating.locator', 'templating.locator.cached');
-        } else {
-            $container->setAlias('templating.locator', 'templating.locator.uncached');
-        }
-
         $this->addClassesToCompile(array(
+            'Symfony\\Bundle\\FrameworkBundle\\Templating\\GlobalVariables',
             'Symfony\\Bundle\\FrameworkBundle\\Templating\\EngineInterface',
             'Symfony\\Component\\Templating\\TemplateNameParserInterface',
             'Symfony\\Component\\Templating\\TemplateNameParser',
@@ -492,8 +478,8 @@ class FrameworkExtension extends Extension
     {
         if (!empty($config['enabled'])) {
             // Use the "real" translator instead of the identity default
-            $container->setAlias('translator', 'translator.real');
-            $translator = $container->findDefinition('translator.real');
+            $container->setAlias('translator', 'translator.default');
+            $translator = $container->findDefinition('translator.default');
             $translator->addMethodCall('setFallbackLocale', array($config['fallback']));
 
             // Discover translation directories
@@ -511,7 +497,9 @@ class FrameworkExtension extends Extension
             // Register translation resources
             if ($dirs) {
                 $finder = new Finder();
-                $finder->files()->filter(function (\SplFileInfo $file) { return 2 === substr_count($file->getBasename(), '.'); })->in($dirs);
+                $finder->files()->filter(function (\SplFileInfo $file) {
+                    return 2 === substr_count($file->getBasename(), '.') && preg_match('/\.\w+$/', $file->getBasename());
+                })->in($dirs);
                 foreach ($finder as $file) {
                     // filename is domain.locale.format
                     list($domain, $locale, $format) = explode('.', $file->getBasename());
@@ -536,7 +524,7 @@ class FrameworkExtension extends Extension
         $container->setParameter('validator.mapping.loader.xml_files_loader.mapping_files', $this->getValidatorXmlMappingFiles($container));
         $container->setParameter('validator.mapping.loader.yaml_files_loader.mapping_files', $this->getValidatorYamlMappingFiles($container));
 
-        if ($config['enable_annotations']) {
+        if (array_key_exists('enable_annotations', $config) && $config['enable_annotations']) {
             $loaderChain = $container->getDefinition('validator.mapping.loader.loader_chain');
             $arguments = $loaderChain->getArguments();
             array_unshift($arguments[0], new Reference('validator.mapping.loader.annotation_loader'));

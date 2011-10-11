@@ -9,6 +9,7 @@ class __TwigTemplate_1e7c59f9768e6533a7edb0bc360b13d8 extends Twig_Template
     {
         parent::__construct($env);
 
+        $this->parent = array();
         $this->blocks = array(
             'toolbar' => array($this, 'block_toolbar'),
             'menu' => array($this, 'block_menu'),
@@ -18,11 +19,16 @@ class __TwigTemplate_1e7c59f9768e6533a7edb0bc360b13d8 extends Twig_Template
 
     public function getParent(array $context)
     {
-        if (null === $this->parent) {
-            $this->parent = $this->env->loadTemplate("WebProfilerBundle:Profiler:layout.html.twig");
+        $parent = "WebProfilerBundle:Profiler:layout.html.twig";
+        if ($parent instanceof Twig_Template) {
+            $name = $parent->getTemplateName();
+            $this->parent[$name] = $parent;
+            $parent = $name;
+        } elseif (!isset($this->parent[$parent])) {
+            $this->parent[$parent] = $this->env->loadTemplate($parent);
         }
 
-        return $this->parent;
+        return $this->parent[$parent];
     }
 
     protected function doDisplay(array $context, array $blocks = array())
@@ -120,7 +126,7 @@ class __TwigTemplate_1e7c59f9768e6533a7edb0bc360b13d8 extends Twig_Template
             foreach ($context['_seq'] as $context['_key'] => $context['log']) {
                 // line 33
                 echo "                <li class=\"";
-                echo twig_escape_filter($this->env, $this->env->getExtension('core')->getCycle(array(0 => "odd", 1 => "even"), $this->getAttribute($this->getContext($context, 'loop'), "index", array(), "any", false)), "html");
+                echo twig_escape_filter($this->env, twig_cycle(array(0 => "odd", 1 => "even"), $this->getAttribute($this->getContext($context, 'loop'), "index", array(), "any", false)), "html");
                 if ((("ERR" == $this->getAttribute($this->getContext($context, 'log'), "priorityName", array(), "any", false)) || ("ERROR" == $this->getAttribute($this->getContext($context, 'log'), "priorityName", array(), "any", false)))) {
                     echo " error";
                 }
@@ -129,7 +135,21 @@ class __TwigTemplate_1e7c59f9768e6533a7edb0bc360b13d8 extends Twig_Template
                 // line 34
                 echo twig_escape_filter($this->env, $this->getAttribute($this->getContext($context, 'log'), "message", array(), "any", false), "html");
                 echo "
-                </li>
+                    ";
+                // line 35
+                if (($this->getAttribute(((array_key_exists("log", $context)) ? (twig_default_filter($this->getContext($context, 'log'))) : ("")), "context", array(), "any", true) && (!twig_test_empty($this->getAttribute($this->getContext($context, 'log'), "context", array(), "any", false))))) {
+                    // line 36
+                    echo "                        <br />
+                        <small>
+                            <strong>Context</strong>: ";
+                    // line 38
+                    echo twig_escape_filter($this->env, $this->env->getExtension('yaml')->encode($this->getAttribute($this->getContext($context, 'log'), "context", array(), "any", false)), "html");
+                    echo "
+                        </small>
+                    ";
+                }
+                // line 41
+                echo "                </li>
             ";
                 ++$context['loop']['index0'];
                 ++$context['loop']['index'];
@@ -143,11 +163,11 @@ class __TwigTemplate_1e7c59f9768e6533a7edb0bc360b13d8 extends Twig_Template
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['_key'], $context['log'], $context['_parent'], $context['loop']);
             $context = array_merge($_parent, array_intersect_key($context, $_parent));
-            // line 37
+            // line 43
             echo "        </ul>
     ";
         } else {
-            // line 39
+            // line 45
             echo "        <p>
             <em>No logs available.</em>
         </p>

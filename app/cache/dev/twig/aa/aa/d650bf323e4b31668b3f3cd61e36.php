@@ -9,6 +9,7 @@ class __TwigTemplate_aaaad650bf323e4b31668b3f3cd61e36 extends Twig_Template
     {
         parent::__construct($env);
 
+        $this->parent = array();
         $this->blocks = array(
             'panel' => array($this, 'block_panel'),
             'body' => array($this, 'block_body'),
@@ -17,11 +18,16 @@ class __TwigTemplate_aaaad650bf323e4b31668b3f3cd61e36 extends Twig_Template
 
     public function getParent(array $context)
     {
-        if (null === $this->parent) {
-            $this->parent = $this->env->loadTemplate("WebProfilerBundle:Profiler:base.html.twig");
+        $parent = "WebProfilerBundle:Profiler:base.html.twig";
+        if ($parent instanceof Twig_Template) {
+            $name = $parent->getTemplateName();
+            $this->parent[$name] = $parent;
+            $parent = $name;
+        } elseif (!isset($this->parent[$parent])) {
+            $this->parent[$parent] = $this->env->loadTemplate($parent);
         }
 
-        return $this->parent;
+        return $this->parent[$parent];
     }
 
     protected function doDisplay(array $context, array $blocks = array())
@@ -80,7 +86,7 @@ class __TwigTemplate_aaaad650bf323e4b31668b3f3cd61e36 extends Twig_Template
         // line 20
         echo "
         <div id=\"main\">
-    
+
             <div class=\"clear_fix\">
                 <div id=\"collector_wrapper\">
                     <div id=\"collector_content\">
@@ -93,7 +99,7 @@ class __TwigTemplate_aaaad650bf323e4b31668b3f3cd61e36 extends Twig_Template
                 <div id=\"navigation\">
                     ";
         // line 30
-        if (twig_test_defined("templates", $context)) {
+        if (array_key_exists("templates", $context)) {
             // line 31
             echo "                        <ul id=\"menu_profiler\">
                             ";

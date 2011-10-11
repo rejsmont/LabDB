@@ -9,6 +9,7 @@ class __TwigTemplate_e18584c8b99e95eeaaec5f5ee30f05a4 extends Twig_Template
     {
         parent::__construct($env);
 
+        $this->parent = array();
         $this->blocks = array(
             'toolbar' => array($this, 'block_toolbar'),
             'menu' => array($this, 'block_menu'),
@@ -18,11 +19,16 @@ class __TwigTemplate_e18584c8b99e95eeaaec5f5ee30f05a4 extends Twig_Template
 
     public function getParent(array $context)
     {
-        if (null === $this->parent) {
-            $this->parent = $this->env->loadTemplate("WebProfilerBundle:Profiler:layout.html.twig");
+        $parent = "WebProfilerBundle:Profiler:layout.html.twig";
+        if ($parent instanceof Twig_Template) {
+            $name = $parent->getTemplateName();
+            $this->parent[$name] = $parent;
+            $parent = $name;
+        } elseif (!isset($this->parent[$parent])) {
+            $this->parent[$parent] = $this->env->loadTemplate($parent);
         }
 
-        return $this->parent;
+        return $this->parent[$parent];
     }
 
     protected function doDisplay(array $context, array $blocks = array())
@@ -50,7 +56,7 @@ class __TwigTemplate_e18584c8b99e95eeaaec5f5ee30f05a4 extends Twig_Template
         ob_start();
         // line 9
         echo "            ";
-        if ($this->getAttribute($this->getAttribute($this->getContext($context, 'collector'), "controller", array(), "any", false), "class", array(), "any", true)) {
+        if ($this->getAttribute((($this->getAttribute(((array_key_exists("collector", $context)) ? (twig_default_filter($this->getContext($context, 'collector'))) : ("")), "controller", array(), "any", true)) ? (twig_default_filter($this->getAttribute($this->getContext($context, 'collector'), "controller", array(), "any", false))) : ("")), "class", array(), "any", true)) {
             // line 10
             echo "                <span>";
             echo $this->env->getExtension('code')->abbrClass($this->getAttribute($this->getAttribute($this->getContext($context, 'collector'), "controller", array(), "any", false), "class", array(), "any", false));

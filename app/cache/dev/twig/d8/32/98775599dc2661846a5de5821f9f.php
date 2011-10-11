@@ -26,11 +26,15 @@ class __TwigTemplate_d83298775599dc2661846a5de5821f9f extends Twig_Template
         xhr.open('GET', '";
         // line 11
         echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("_wdt", array("token" => $this->getContext($context, 'token'))), "html");
-        echo "', false);
+        echo "', true);
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.onreadystatechange = function(state) {
+            if (4 === xhr.readyState && 200 === xhr.status && -1 !== xhr.responseText.indexOf('sf-toolbarreset')) {
+                wdt.innerHTML = xhr.responseText;
+                wdt.style.display = 'block';
+            }
+        };
         xhr.send('');
-        wdt.innerHTML = xhr.responseText;
-        wdt.style.display = 'block';
     })();
 /*]]>*/</script>
 ";

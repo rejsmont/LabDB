@@ -3,6 +3,8 @@ imports:
     - { resource: security.yml }
 
 framework:
+    #esi:             ~
+    #translator:      { fallback: %locale% }
     secret:          %secret%
     charset:         UTF-8
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
@@ -12,7 +14,6 @@ framework:
     templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
     session:
         default_locale: %locale%
-        lifetime:       3600
         auto_start:     true
 
 # Twig Configuration
@@ -36,9 +37,11 @@ doctrine:
     dbal:
         driver:   %database_driver%
         host:     %database_host%
+        port:     %database_port%
         dbname:   %database_name%
         user:     %database_user%
         password: %database_password%
+        charset:  UTF8
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%

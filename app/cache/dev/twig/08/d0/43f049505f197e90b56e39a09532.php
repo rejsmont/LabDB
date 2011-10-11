@@ -9,6 +9,7 @@ class __TwigTemplate_08d043f049505f197e90b56e39a09532 extends Twig_Template
     {
         parent::__construct($env);
 
+        $this->parent = array();
         $this->blocks = array(
             'title' => array($this, 'block_title'),
             'body' => array($this, 'block_body'),
@@ -17,11 +18,16 @@ class __TwigTemplate_08d043f049505f197e90b56e39a09532 extends Twig_Template
 
     public function getParent(array $context)
     {
-        if (null === $this->parent) {
-            $this->parent = $this->env->loadTemplate("FrameworkBundle::layout.html.twig");
+        $parent = "FrameworkBundle::layout.html.twig";
+        if ($parent instanceof Twig_Template) {
+            $name = $parent->getTemplateName();
+            $this->parent[$name] = $parent;
+            $parent = $name;
+        } elseif (!isset($this->parent[$parent])) {
+            $this->parent[$parent] = $this->env->loadTemplate($parent);
         }
 
-        return $this->parent;
+        return $this->parent[$parent];
     }
 
     protected function doDisplay(array $context, array $blocks = array())

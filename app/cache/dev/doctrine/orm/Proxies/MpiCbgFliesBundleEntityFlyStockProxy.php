@@ -15,69 +15,78 @@ class MpiCbgFliesBundleEntityFlyStockProxy extends \MpiCbg\FliesBundle\Entity\Fl
         $this->_entityPersister = $entityPersister;
         $this->_identifier = $identifier;
     }
-    private function _load()
+    /** @private */
+    public function __load()
     {
         if (!$this->__isInitialized__ && $this->_entityPersister) {
             $this->__isInitialized__ = true;
+
+            if (method_exists($this, "__wakeup")) {
+                // call this after __isInitialized__to avoid infinite recursion
+                // but before loading to emulate what ClassMetadata::newInstance()
+                // provides.
+                $this->__wakeup();
+            }
+
             if ($this->_entityPersister->load($this->_identifier, $this) === null) {
                 throw new \Doctrine\ORM\EntityNotFoundException();
             }
             unset($this->_entityPersister, $this->_identifier);
         }
     }
-
+    
     
     public function __toString()
     {
-        $this->_load();
+        $this->__load();
         return parent::__toString();
     }
 
     public function getId()
     {
-        $this->_load();
+        $this->__load();
         return parent::getId();
     }
 
     public function setName($name)
     {
-        $this->_load();
+        $this->__load();
         return parent::setName($name);
     }
 
     public function getName()
     {
-        $this->_load();
+        $this->__load();
         return parent::getName();
     }
 
     public function getLabel()
     {
-        $this->_load();
+        $this->__load();
         return parent::getLabel();
     }
 
     public function addBVials(\MpiCbg\FliesBundle\Entity\FlyVial $vials)
     {
-        $this->_load();
+        $this->__load();
         return parent::addBVials($vials);
     }
 
     public function getVials()
     {
-        $this->_load();
+        $this->__load();
         return parent::getVials();
     }
 
     public function setSourceCross(\MpiCbg\FliesBundle\Entity\FlyCross $sourceCross)
     {
-        $this->_load();
+        $this->__load();
         return parent::setSourceCross($sourceCross);
     }
 
     public function getSourceCross()
     {
-        $this->_load();
+        $this->__load();
         return parent::getSourceCross();
     }
 

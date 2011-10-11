@@ -145,15 +145,7 @@ class Twig_Lexer implements Twig_LexerInterface
 
         switch ($token) {
             case $this->options['tag_comment'][0]:
-                $commentEndRegex = '/.*?(?:'.preg_quote($this->options['whitespace_trim'], '/')
-                                   .preg_quote($this->options['tag_comment'][1], '/').'\s*|'
-                                   .preg_quote($this->options['tag_comment'][1], '/').')\n?/As';
-
-                if (!preg_match($commentEndRegex, $this->code, $match, null, $this->cursor)) {
-                    throw new Twig_Error_Syntax('Unclosed comment', $this->lineno, $this->filename);
-                }
-
-                $this->moveCursor($match[0]);
+                $this->lexComment();
                 break;
 
             case $this->options['tag_block'][0]:
@@ -161,6 +153,11 @@ class Twig_Lexer implements Twig_LexerInterface
                 if (preg_match('/\s*raw\s*'.preg_quote($this->options['tag_block'][1], '/').'/As', $this->code, $match, null, $this->cursor)) {
                     $this->moveCursor($match[0]);
                     $this->lexRawData();
+                    $this->state = self::STATE_DATA;
+                // {% line \d+ %}
+                } else if (preg_match('/\s*line\s+(\d+)\s*'.preg_quote($this->options['tag_block'][1], '/').'/As', $this->code, $match, null, $this->cursor)) {
+                    $this->moveCursor($match[0]);
+                    $this->lineno = (int) $match[1];
                     $this->state = self::STATE_DATA;
                 } else {
                     $this->pushToken(Twig_Token::BLOCK_START_TYPE);
@@ -269,6 +266,19 @@ class Twig_Lexer implements Twig_LexerInterface
         $text = substr($this->code, $this->cursor, $match[0][1] - $this->cursor);
         $this->pushToken(Twig_Token::TEXT_TYPE, $text);
         $this->moveCursor($text.$match[0][0]);
+    }
+
+    protected function lexComment()
+    {
+        $commentEndRegex = '/(?:'.preg_quote($this->options['whitespace_trim'], '/')
+                           .preg_quote($this->options['tag_comment'][1], '/').'\s*|'
+                           .preg_quote($this->options['tag_comment'][1], '/').')\n?/s';
+
+        if (!preg_match($commentEndRegex, $this->code, $match, PREG_OFFSET_CAPTURE, $this->cursor)) {
+            throw new Twig_Error_Syntax('Unclosed comment', $this->lineno, $this->filename);
+        }
+
+        $this->moveCursor(substr($this->code, $this->cursor, $match[0][1] - $this->cursor).$match[0][0]);
     }
 
     protected function pushToken($type, $value = '')

@@ -44,6 +44,11 @@ abstract class BaseAsset implements AssetInterface
         $this->loaded = false;
     }
 
+    public function __clone()
+    {
+        $this->filters = clone $this->filters;
+    }
+
     public function ensureFilter(FilterInterface $filter)
     {
         $this->filters->ensure($filter);
@@ -52,6 +57,11 @@ abstract class BaseAsset implements AssetInterface
     public function getFilters()
     {
         return $this->filters->all();
+    }
+
+    public function clearFilters()
+    {
+        $this->filters->clear();
     }
 
     /**

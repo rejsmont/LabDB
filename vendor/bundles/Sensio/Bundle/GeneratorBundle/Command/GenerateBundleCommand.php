@@ -15,21 +15,21 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
-use Symfony\Component\Console\Helper\DialogHelper;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Sensio\Bundle\GeneratorBundle\Generator\BundleGenerator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\KernelManipulator;
 use Sensio\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
+use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 
 /**
  * Generates bundles.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class GenerateBundleCommand extends Command
+class GenerateBundleCommand extends ContainerAwareCommand
 {
-    private $container;
+    private $generator;
 
     /**
      * @see Command
@@ -38,11 +38,11 @@ class GenerateBundleCommand extends Command
     {
         $this
             ->setDefinition(array(
-                new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create', null),
-                new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle', null),
-                new InputOption('bundleName', '', InputOption::VALUE_REQUIRED, 'The optional bundle name', null),
-                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or , annotation)', null),
-                new InputOption('structure', '', InputOption::VALUE_NONE, 'Whether to generate the whole directory structure', null),
+                new InputOption('namespace', '', InputOption::VALUE_REQUIRED, 'The namespace of the bundle to create'),
+                new InputOption('dir', '', InputOption::VALUE_REQUIRED, 'The directory where to create the bundle'),
+                new InputOption('bundle-name', '', InputOption::VALUE_REQUIRED, 'The optional bundle name'),
+                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
+                new InputOption('structure', '', InputOption::VALUE_NONE, 'Whether to generate the whole directory structure'),
             ))
             ->setDescription('Generates a bundle')
             ->setHelp(<<<EOT
@@ -53,15 +53,14 @@ Any passed option will be used as a default value for the interaction
 (<comment>--namespace</comment> is the only one needed if you follow the
 conventions):
 
-<info>./app/console generate:bundle --namespace='Acme/BlogBundle'</info>
+<info>php app/console generate:bundle --namespace=Acme/BlogBundle</info>
 
 Note that you can use <comment>/</comment> instead of <comment>\\</comment> for the namespace delimiter to avoid any
 problem.
 
-If you want to disable any user interaction, use `--no-interaction` but don't
-forget to pass all needed options:
+If you want to disable any user interaction, use <comment>--no-interaction</comment> but don't forget to pass all needed options:
 
-<info>./app/console generate:bundle "Acme/BlogBundle" src [bundleName]</info>
+<info>php app/console generate:bundle --namespace=Acme/BlogBundle --dir=src [--bundle-name=...] --no-interaction</info>
 
 Note that the bundle namespace must end with "Bundle".
 EOT
@@ -78,104 +77,61 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->container = $this->getApplication()->getKernel()->getContainer();
-
-        $filesystem = $this->container->get('filesystem');
-        $generator = new BundleGenerator($filesystem, __DIR__.'/../Resources/skeleton/bundle');
-        $dialog = $this->getHelper('dialog');
+        $dialog = $this->getDialogHelper();
 
         if ($input->isInteractive()) {
-            if (false === $elements = $this->getInteractiveParameters($generator, $input, $output)) {
+            if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
+                $output->writeln('<error>Command aborted</error>');
+
                 return 1;
             }
-            list($namespace, $bundle, $dir, $format, $structure) = $elements;
-        } else {
-            list($namespace, $bundle, $dir, $format, $structure) = $this->getParameters($generator, $input, $output);
         }
 
-        $output->writeln(array(
-            '',
-            $this->getHelper('formatter')->formatBlock('Bundle generation', 'bg=blue;fg=white', true),
-            '',
-        ));
-
-        if (!$filesystem->isAbsolutePath($dir)) {
-            $dir = getcwd().'/'.$dir;
-        }
-
-        $generator->generate($namespace, $bundle, $dir, $format, $structure);
-
-        $output->writeln('Generating the bundle code: <info>OK</info>');
-
-        $errors = array();
-        $runner = function ($err) use ($output, &$errors) {
-            if ($err) {
-                $output->writeln('<fg=red>FAILED</>');
-                $errors = array_merge($errors, $err);
-            } else {
-                $output->writeln('<info>OK</info>');
-            }
-        };
-
-        // check that the namespace is already autoloaded
-        $runner($this->checkAutoloader($output, $namespace, $bundle, $dir));
-
-        // register the bundle in the Kernel class
-        $runner($this->updateKernel($dialog, $input, $output, $this->getApplication()->getKernel(), $namespace, $bundle));
-
-        // routing
-        $runner($this->updateRouting($dialog, $input, $output, $namespace, $bundle, $format));
-
-        // errors?
-        if (!$errors) {
-            $output->writeln(array(
-                '',
-                $this->getHelper('formatter')->formatBlock('Start building your bundle!', 'bg=blue;fg=white', true),
-                '',
-            ));
-        } else {
-            $output->writeln(array(
-                '',
-                $this->getHelper('formatter')->formatBlock(array(
-                    'The command was not able to configure your bundle automatically.',
-                    'You must do the following changes manually.',
-                ), 'error', true),
-                '',
-            ));
-
-            $output->writeln($errors);
-        }
-    }
-
-    private function getParameters(BundleGenerator $generator, InputInterface $input, OutputInterface $output)
-    {
         foreach (array('namespace', 'dir') as $option) {
             if (null === $input->getOption($option)) {
                 throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
             }
         }
 
-        $namespace = $generator->validateNamespace($input->getOption('namespace'));
-
-        if (!$bundle = $input->getOption('bundleName')) {
+        $namespace = Validators::validateBundleNamespace($input->getOption('namespace'));
+        if (!$bundle = $input->getOption('bundle-name')) {
             $bundle = strtr($namespace, array('\\' => ''));
         }
-        $bundle = $generator->validateBundleName($bundle);
-
-        $dir = $generator->validateTargetDir($input->getOption('dir'), $bundle, $namespace);
-
-        $format = $input->getOption('format') ?: 'annotation';
+        $bundle = Validators::validateBundleName($bundle);
+        $dir = Validators::validateTargetDir($input->getOption('dir'), $bundle, $namespace);
+        $format = Validators::validateFormat($input->getOption('format'));
         $structure = $input->getOption('structure');
 
-        return array($namespace, $bundle, $dir, $format, $structure);
+        $dialog->writeSection($output, 'Bundle generation');
+
+        if (!$this->getContainer()->get('filesystem')->isAbsolutePath($dir)) {
+            $dir = getcwd().'/'.$dir;
+        }
+
+        $generator = $this->getGenerator();
+        $generator->generate($namespace, $bundle, $dir, $format, $structure);
+
+        $output->writeln('Generating the bundle code: <info>OK</info>');
+
+        $errors = array();
+        $runner = $dialog->getRunner($output, $errors);
+
+        // check that the namespace is already autoloaded
+        $runner($this->checkAutoloader($output, $namespace, $bundle, $dir));
+
+        // register the bundle in the Kernel class
+        $runner($this->updateKernel($dialog, $input, $output, $this->getContainer()->get('kernel'), $namespace, $bundle));
+
+        // routing
+        $runner($this->updateRouting($dialog, $input, $output, $bundle, $format));
+
+        $dialog->writeGeneratorSummary($output, $errors);
     }
 
-    private function getInteractiveParameters(BundleGenerator $generator, InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $dialog = $this->getHelper('dialog');
-        $formatter = $this->getHelper('formatter');
-
-        $output->writeln($formatter->formatBlock('Welcome to the Symfony2 bundle generator', 'bg=blue;fg=white', true));
+        $dialog = $this->getDialogHelper();
+        $dialog->writeSection($output, 'Welcome to the Symfony2 bundle generator');
 
         // namespace
         $output->writeln(array(
@@ -192,11 +148,12 @@ EOT
             'Use <comment>/</comment> instead of <comment>\\</comment> for the namespace delimiter to avoid any problem.',
             '',
         ));
-        $namespace = $dialog->askAndValidate($output, $this->getQuestion('Bundle namespace', $input->getOption('namespace')), array($generator, 'validateNamespace'), false, $input->getOption('namespace'));
-        $namespace = $generator->validateNamespace($namespace);
+
+        $namespace = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle namespace', $input->getOption('namespace')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleNamespace'), false, $input->getOption('namespace'));
+        $input->setOption('namespace', $namespace);
 
         // bundle name
-        $bundle = $input->getOption('bundleName') ?: strtr($namespace, array('\\' => ''));
+        $bundle = $input->getOption('bundle-name') ?: strtr($namespace, array('\\Bundle\\' => '', '\\' => ''));
         $output->writeln(array(
             '',
             'In your code, a bundle is often referenced by its name. It can be the',
@@ -205,29 +162,28 @@ EOT
             'Based on the namespace, we suggest <comment>'.$bundle.'</comment>.',
             '',
         ));
-        $bundle = $dialog->askAndValidate($output, $this->getQuestion('Bundle name', $bundle), array($generator, 'validateBundleName'), false, $bundle);
-        $bundle = $generator->validateBundleName($bundle);
+        $bundle = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle name', $bundle), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateBundleName'), false, $bundle);
+        $input->setOption('bundle-name', $bundle);
 
         // target dir
-        $dir = $input->getOption('dir') ?: dirname($this->container->getParameter('kernel.root_dir')).'/src';
+        $dir = $input->getOption('dir') ?: dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src';
         $output->writeln(array(
             '',
             'The bundle can be generated anywhere. The suggested default directory uses',
             'the standard conventions.',
             '',
         ));
-        $dir = $dialog->askAndValidate($output, $this->getQuestion('Target directory', $dir), function ($dir) use ($generator, $bundle, $namespace) { return $generator->validateTargetDir($dir, $bundle, $namespace); }, false, $dir);
-        $dir = $generator->validateTargetDir($dir, $bundle, $namespace);
+        $dir = $dialog->askAndValidate($output, $dialog->getQuestion('Target directory', $dir), function ($dir) use ($bundle, $namespace) { return Validators::validateTargetDir($dir, $bundle, $namespace); }, false, $dir);
+        $input->setOption('dir', $dir);
 
         // format
-        $format = $input->getOption('format') ?: 'annotation';
         $output->writeln(array(
             '',
             'Determine the format to use for the generated configuration.',
             '',
         ));
-        $format = $dialog->askAndValidate($output, $this->getQuestion('Configuration format (yml, xml, php, or annotation)', $format), array($generator, 'validateFormat'), false, $format);
-        $format = $generator->validateFormat($format);
+        $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $input->getOption('format')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $input->getOption('format'));
+        $input->setOption('format', $format);
 
         // optional files to generate
         $output->writeln(array(
@@ -238,34 +194,22 @@ EOT
         ));
 
         $structure = $input->getOption('structure');
-        if (!$structure && $dialog->askConfirmation($output, $this->getQuestion('Do you want to generate the whole directory structure', 'yes', '?'), true)) {
+        if (!$structure && $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to generate the whole directory structure', 'no', '?'), false)) {
             $structure = true;
         }
+        $input->setOption('structure', $structure);
 
         // summary
         $output->writeln(array(
             '',
-            $formatter->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
+            $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
             '',
             sprintf("You are going to generate a \"<info>%s\\%s</info>\" bundle\nin \"<info>%s</info>\" using the \"<info>%s</info>\" format.", $namespace, $bundle, $dir, $format),
             '',
         ));
-
-        if (!$dialog->askConfirmation($output, $this->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
-            $output->writeln('<error>Command aborted</error>');
-
-            return false;
-        }
-
-        return array($namespace, $bundle, $dir, $format, $structure);
     }
 
-    private function getQuestion($question, $default, $sep = ':')
-    {
-        return $default ? sprintf('<info>%s</info> [<comment>%s</comment>]%s ', $question, $default, $sep) : sprintf('%s%s ', $question, $sep);
-    }
-
-    private function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)
+    protected function checkAutoloader(OutputInterface $output, $namespace, $bundle, $dir)
     {
         $output->write('Checking that the bundle is autoloaded: ');
         if (!class_exists($namespace.'\\'.$bundle)) {
@@ -279,54 +223,93 @@ EOT
         }
     }
 
-    private function updateKernel($dialog, InputInterface $input, OutputInterface $output, KernelInterface $kernel, $namespace, $bundle)
+    protected function updateKernel($dialog, InputInterface $input, OutputInterface $output, KernelInterface $kernel, $namespace, $bundle)
     {
         $auto = true;
         if ($input->isInteractive()) {
-            $auto = $dialog->askConfirmation($output, $this->getQuestion('Confirm automatic update of your Kernel', 'yes', '?'), true);
+            $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of your Kernel', 'yes', '?'), true);
         }
 
         $output->write('Enabling the bundle inside the Kernel: ');
         $manip = new KernelManipulator($kernel);
-        $ret = $auto ? $manip->addBundle($namespace.'\\'.$bundle) : false;
-        if (!$ret) {
-            $reflected = new \ReflectionObject($kernel);
+        try {
+            $ret = $auto ? $manip->addBundle($namespace.'\\'.$bundle) : false;
 
+            if (!$ret) {
+                $reflected = new \ReflectionObject($kernel);
+
+                return array(
+                    sprintf('- Edit <comment>%s</comment>', $reflected->getFilename()),
+                    '  and add the following bundle in the <comment>AppKernel::registerBundles()</comment> method:',
+                    '',
+                    sprintf('    <comment>new %s(),</comment>', $namespace.'\\'.$bundle),
+                    '',
+                );
+            }
+        } catch (\RuntimeException $e) {
             return array(
-                sprintf('- Edit <comment>%s</comment>', $reflected->getFilename()),
-                '  and add the following bundle in the <comment>AppKernel::registerBundles()</comment> method:',
-                '',
-                sprintf('    <comment>new %s(),</comment>', $namespace.'\\'.$bundle),
+                sprintf('Bundle <comment>%s</comment> is already defined in <comment>AppKernel::registerBundles()</comment>.', $namespace.'\\'.$bundle),
                 '',
             );
         }
     }
 
-    private function updateRouting($dialog, InputInterface $input, OutputInterface $output, $namespace, $bundle, $format)
+    protected function updateRouting($dialog, InputInterface $input, OutputInterface $output, $bundle, $format)
     {
         $auto = true;
         if ($input->isInteractive()) {
-            $auto = $dialog->askConfirmation($output, $this->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
+            $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
         }
 
         $output->write('Importing the bundle routing resource: ');
-        $routing = new RoutingManipulator($this->container->getParameter('kernel.root_dir').'/config/routing.yml');
-        $ret = $auto ? $routing->addResource($namespace, $bundle, $format) : false;
-        if (!$ret) {
-            if ('annotation' === $format) {
-                $help = sprintf("        <comment>resource: \"@%s/Resources/Controller/\"</comment>\n        <comment>type:     annotation</comment>", $bundle);
-            } else {
-                $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing.%s\"</comment>\n", $bundle, $format);
-            }
-            $help .= "        <comment>prefix:   /</comment>\n";
+        $routing = new RoutingManipulator($this->getContainer()->getParameter('kernel.root_dir').'/config/routing.yml');
+        try {
+            $ret = $auto ? $routing->addResource($bundle, $format) : false;
+            if (!$ret) {
+                if ('annotation' === $format) {
+                    $help = sprintf("        <comment>resource: \"@%s/Resources/Controller/\"</comment>\n        <comment>type:     annotation</comment>", $bundle);
+                } else {
+                    $help = sprintf("        <comment>resource: \"@%s/Resources/config/routing.%s\"</comment>\n", $bundle, $format);
+                }
+                $help .= "        <comment>prefix:   /</comment>\n";
 
+                return array(
+                    '- Import the bundle\'s routing resource in the app main routing file:',
+                    '',
+                    sprintf('    <comment>%s:</comment>', $bundle),
+                    $help,
+                    '',
+                );
+            }
+        } catch (\RuntimeException $e) {
             return array(
-                '- Import the bundle\'s routing resource in the app main routing file:',
-                '',
-                sprintf('    <comment>%s:</comment>', $bundle),
-                $help,
+                sprintf('Bundle <comment>%s</comment> is already imported.', $bundle),
                 '',
             );
         }
+    }
+
+    protected function getGenerator()
+    {
+        if (null === $this->generator) {
+            $this->generator = new BundleGenerator($this->getContainer()->get('filesystem'), __DIR__.'/../Resources/skeleton/bundle');
+        }
+
+        return $this->generator;
+    }
+
+    public function setGenerator(BundleGenerator $generator)
+    {
+        $this->generator = $generator;
+    }
+
+    protected function getDialogHelper()
+    {
+        $dialog = $this->getHelperSet()->get('dialog');
+        if (!$dialog || get_class($dialog) !== 'Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper') {
+            $this->getHelperSet()->set($dialog = new DialogHelper());
+        }
+
+        return $dialog;
     }
 }

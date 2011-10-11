@@ -9,6 +9,7 @@ class __TwigTemplate_9a0d63a14e3cd15558b64af83113f142 extends Twig_Template
     {
         parent::__construct($env);
 
+        $this->parent = array();
         $this->blocks = array(
             'menu' => array($this, 'block_menu'),
             'panel' => array($this, 'block_panel'),
@@ -17,11 +18,16 @@ class __TwigTemplate_9a0d63a14e3cd15558b64af83113f142 extends Twig_Template
 
     public function getParent(array $context)
     {
-        if (null === $this->parent) {
-            $this->parent = $this->env->loadTemplate("WebProfilerBundle:Profiler:layout.html.twig");
+        $parent = "WebProfilerBundle:Profiler:layout.html.twig";
+        if ($parent instanceof Twig_Template) {
+            $name = $parent->getTemplateName();
+            $this->parent[$name] = $parent;
+            $parent = $name;
+        } elseif (!isset($this->parent[$parent])) {
+            $this->parent[$parent] = $this->env->loadTemplate($parent);
         }
 
-        return $this->parent;
+        return $this->parent[$parent];
     }
 
     protected function doDisplay(array $context, array $blocks = array())
@@ -131,48 +137,54 @@ class __TwigTemplate_9a0d63a14e3cd15558b64af83113f142 extends Twig_Template
         ));
 
         ob_start();
-        // line 48
-        echo "    ";
-        if (($this->getAttribute($this->getContext($context, 'listener'), "type", array(), "any", false) == "Closure")) {
-            // line 49
-            echo "        Closure
+        try {
+            // line 48
+            echo "    ";
+            if (($this->getAttribute($this->getContext($context, 'listener'), "type", array(), "any", false) == "Closure")) {
+                // line 49
+                echo "        Closure
     ";
-        } elseif (($this->getAttribute($this->getContext($context, 'listener'), "type", array(), "any", false) == "Function")) {
-            // line 51
-            echo "        ";
-            $context['link'] = $this->env->getExtension('code')->getFileLink($this->getAttribute($this->getContext($context, 'listener'), "file", array(), "any", false), $this->getAttribute($this->getContext($context, 'listener'), "line", array(), "any", false));
-            // line 52
-            echo "        ";
-            if ($this->getContext($context, 'link')) {
-                echo "<a href=\"";
-                echo twig_escape_filter($this->env, $this->getContext($context, 'link'), "html");
-                echo "\">";
-                echo twig_escape_filter($this->env, $this->getAttribute($this->getContext($context, 'listener'), "function", array(), "any", false), "html");
-                echo "</a>";
-            } else {
-                echo twig_escape_filter($this->env, $this->getAttribute($this->getContext($context, 'listener'), "function", array(), "any", false), "html");
+            } elseif (($this->getAttribute($this->getContext($context, 'listener'), "type", array(), "any", false) == "Function")) {
+                // line 51
+                echo "        ";
+                $context['link'] = $this->env->getExtension('code')->getFileLink($this->getAttribute($this->getContext($context, 'listener'), "file", array(), "any", false), $this->getAttribute($this->getContext($context, 'listener'), "line", array(), "any", false));
+                // line 52
+                echo "        ";
+                if ($this->getContext($context, 'link')) {
+                    echo "<a href=\"";
+                    echo twig_escape_filter($this->env, $this->getContext($context, 'link'), "html");
+                    echo "\">";
+                    echo twig_escape_filter($this->env, $this->getAttribute($this->getContext($context, 'listener'), "function", array(), "any", false), "html");
+                    echo "</a>";
+                } else {
+                    echo twig_escape_filter($this->env, $this->getAttribute($this->getContext($context, 'listener'), "function", array(), "any", false), "html");
+                }
+                // line 53
+                echo "    ";
+            } elseif (($this->getAttribute($this->getContext($context, 'listener'), "type", array(), "any", false) == "Method")) {
+                // line 54
+                echo "        ";
+                $context['link'] = $this->env->getExtension('code')->getFileLink($this->getAttribute($this->getContext($context, 'listener'), "file", array(), "any", false), $this->getAttribute($this->getContext($context, 'listener'), "line", array(), "any", false));
+                // line 55
+                echo "        ";
+                echo $this->env->getExtension('code')->abbrClass($this->getAttribute($this->getContext($context, 'listener'), "class", array(), "any", false));
+                echo "::";
+                if ($this->getContext($context, 'link')) {
+                    echo "<a href=\"";
+                    echo twig_escape_filter($this->env, $this->getContext($context, 'link'), "html");
+                    echo "\">";
+                    echo twig_escape_filter($this->env, $this->getAttribute($this->getContext($context, 'listener'), "method", array(), "any", false), "html");
+                    echo "</a>";
+                } else {
+                    echo twig_escape_filter($this->env, $this->getAttribute($this->getContext($context, 'listener'), "method", array(), "any", false), "html");
+                }
+                // line 56
+                echo "    ";
             }
-            // line 53
-            echo "    ";
-        } elseif (($this->getAttribute($this->getContext($context, 'listener'), "type", array(), "any", false) == "Method")) {
-            // line 54
-            echo "        ";
-            $context['link'] = $this->env->getExtension('code')->getFileLink($this->getAttribute($this->getContext($context, 'listener'), "file", array(), "any", false), $this->getAttribute($this->getContext($context, 'listener'), "line", array(), "any", false));
-            // line 55
-            echo "        ";
-            echo $this->env->getExtension('code')->abbrClass($this->getAttribute($this->getContext($context, 'listener'), "class", array(), "any", false));
-            echo "::";
-            if ($this->getContext($context, 'link')) {
-                echo "<a href=\"";
-                echo twig_escape_filter($this->env, $this->getContext($context, 'link'), "html");
-                echo "\">";
-                echo twig_escape_filter($this->env, $this->getAttribute($this->getContext($context, 'listener'), "method", array(), "any", false), "html");
-                echo "</a>";
-            } else {
-                echo twig_escape_filter($this->env, $this->getAttribute($this->getContext($context, 'listener'), "method", array(), "any", false), "html");
-            }
-            // line 56
-            echo "    ";
+        } catch(Exception $e) {
+            ob_end_clean();
+
+            throw $e;
         }
 
         return ob_get_clean();

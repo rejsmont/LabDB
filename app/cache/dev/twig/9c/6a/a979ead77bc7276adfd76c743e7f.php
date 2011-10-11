@@ -9,6 +9,7 @@ class __TwigTemplate_9c6aa979ead77bc7276adfd76c743e7f extends Twig_Template
     {
         parent::__construct($env);
 
+        $this->parent = array();
         $this->blocks = array(
             'content' => array($this, 'block_content'),
         );
@@ -16,11 +17,16 @@ class __TwigTemplate_9c6aa979ead77bc7276adfd76c743e7f extends Twig_Template
 
     public function getParent(array $context)
     {
-        if (null === $this->parent) {
-            $this->parent = $this->env->loadTemplate("MpiCbgFliesBundle::layout.html.twig");
+        $parent = "MpiCbgFliesBundle::layout.html.twig";
+        if ($parent instanceof Twig_Template) {
+            $name = $parent->getTemplateName();
+            $this->parent[$name] = $parent;
+            $parent = $name;
+        } elseif (!isset($this->parent[$parent])) {
+            $this->parent[$parent] = $this->env->loadTemplate($parent);
         }
 
-        return $this->parent;
+        return $this->parent[$parent];
     }
 
     protected function doDisplay(array $context, array $blocks = array())
@@ -55,13 +61,13 @@ class __TwigTemplate_9c6aa979ead77bc7276adfd76c743e7f extends Twig_Template
         echo ">
         <input type=\"button\" 
                value=\"Generate labels\"
-               onclick=\"collectionselector_action.value = 'label'; form.submit()\" />
+               onclick=\"CollectionSelector_action.value = 'label'; form.submit()\" />
         <input type=\"button\" 
                value=\"Flip vials\"
-               onclick=\"collectionselector_action.value = 'flip'; form.submit()\" />
+               onclick=\"CollectionSelector_action.value = 'flip'; form.submit()\" />
         <input type=\"button\" 
                value=\"Trash vials\"
-               onclick=\"collectionselector_action.value = 'trash'; form.submit()\" />
+               onclick=\"CollectionSelector_action.value = 'trash'; form.submit()\" />
         <br /><br />
         <table>
             <thead>
@@ -183,13 +189,13 @@ class __TwigTemplate_9c6aa979ead77bc7276adfd76c743e7f extends Twig_Template
         <br />
         <input type=\"button\" 
                value=\"Generate labels\"
-               onclick=\"collectionselector_action.value = 'label'; form.submit()\" />
+               onclick=\"CollectionSelector_action.value = 'label'; form.submit()\" />
         <input type=\"button\" 
                value=\"Flip vials\"
-               onclick=\"collectionselector_action.value = 'flip'; form.submit()\" />
+               onclick=\"CollectionSelector_action.value = 'flip'; form.submit()\" />
         <input type=\"button\" 
                value=\"Trash vials\"
-               onclick=\"collectionselector_action.value = 'trash'; form.submit()\" />
+               onclick=\"CollectionSelector_action.value = 'trash'; form.submit()\" />
 ";
     }
 

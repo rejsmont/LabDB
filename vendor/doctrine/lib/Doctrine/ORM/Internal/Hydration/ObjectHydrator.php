@@ -59,7 +59,10 @@ class ObjectHydrator extends AbstractHydrator
         $this->_resultPointers =
         $this->_idTemplate = array();
         $this->_resultCounter = 0;
-
+        if (!isset($this->_hints['deferEagerLoad'])) {
+            $this->_hints['deferEagerLoad'] = true;
+        }
+        
         foreach ($this->_rsm->aliasMap as $dqlAlias => $className) {
             $this->_identifierMap[$dqlAlias] = array();
             $this->_idTemplate[$dqlAlias] = '';
@@ -112,11 +115,17 @@ class ObjectHydrator extends AbstractHydrator
      */
     protected function _cleanup()
     {
+        $eagerLoad = (isset($this->_hints['deferEagerLoad'])) && $this->_hints['deferEagerLoad'] == true;
+        
         parent::_cleanup();
         $this->_identifierMap =
         $this->_initializedCollections =
         $this->_existingCollections =
         $this->_resultPointers = array();
+        
+        if ($eagerLoad) {
+            $this->_em->getUnitOfWork()->triggerEagerLoads();
+        }
     }
 
     /**
@@ -196,18 +205,32 @@ class ObjectHydrator extends AbstractHydrator
             $className = $this->_ce[$className]->discriminatorMap[$data[$discrColumn]];
             unset($data[$discrColumn]);
         }
+        
+        if (isset($this->_hints[Query::HINT_REFRESH_ENTITY]) && isset($this->_rootAliases[$dqlAlias])) {
+            $class = $this->_ce[$className];
+            $this->registerManaged($class, $this->_hints[Query::HINT_REFRESH_ENTITY], $data);
+        }
+        
         return $this->_uow->createEntity($className, $data, $this->_hints);
     }
 
     private function _getEntityFromIdentityMap($className, array $data)
     {
+        // TODO: Abstract this code and UnitOfWork::createEntity() equivalent?
         $class = $this->_ce[$className];
+        /* @var $class ClassMetadata */
         if ($class->isIdentifierComposite) {
             $idHash = '';
             foreach ($class->identifier as $fieldName) {
-                $idHash .= $data[$fieldName] . ' ';
+                if (isset($class->associationMappings[$fieldName])) {
+                    $idHash .= $data[$class->associationMappings[$fieldName]['joinColumns'][0]['name']] . ' ';
+                } else {
+                    $idHash .= $data[$fieldName] . ' ';
+                }
             }
             return $this->_uow->tryGetByIdHash(rtrim($idHash), $class->rootEntityName);
+        } else if (isset($class->associationMappings[$class->identifier[0]])) {
+            return $this->_uow->tryGetByIdHash($data[$class->associationMappings[$class->identifier[0]]['joinColumns'][0]['name']], $class->rootEntityName);
         } else {
             return $this->_uow->tryGetByIdHash($data[$class->identifier[0]], $class->rootEntityName);
         }
@@ -399,6 +422,10 @@ class ObjectHydrator extends AbstractHydrator
                             $result[$key] = $element;
                             $this->_identifierMap[$dqlAlias][$id[$dqlAlias]] = $key;
                         }
+
+                        if (isset($this->_hints['collection'])) {
+                            $this->_hints['collection']->hydrateSet($key, $element);
+                        }
                     } else {
                         if ($this->_rsm->isMixed) {
                             $element = array(0 => $element);
@@ -406,6 +433,10 @@ class ObjectHydrator extends AbstractHydrator
                         $result[] = $element;
                         $this->_identifierMap[$dqlAlias][$id[$dqlAlias]] = $this->_resultCounter;
                         ++$this->_resultCounter;
+
+                        if (isset($this->_hints['collection'])) {
+                            $this->_hints['collection']->hydrateAdd($element);
+                        }
                     }
 
                     // Update result pointer

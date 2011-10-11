@@ -60,7 +60,10 @@ Formatters
 Processors
 ----------
 
+- _IntrospectionProcessor_: Adds the line/file/class/method from which the log call originated.
 - _WebProcessor_: Adds the current request URI, request method and client IP to a log record.
+- _MemoryUsageProcessor_: Adds the current memory usage to a log record.
+- _MemoryPeakUsageProcessor_: Adds the peak memory usage to a log record.
 
 About
 =====
@@ -68,7 +71,8 @@ About
 Requirements
 ------------
 
-Any flavor of PHP 5.3 should do
+- Any flavor of PHP 5.3 should do
+- [optional] PHPUnit 3.5+ to execute the test suite (phpunit --version)
 
 Submitting bugs and feature requests
 ------------------------------------

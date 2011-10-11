@@ -18,8 +18,6 @@ use Monolog\Formatter\LineFormatter;
 /**
  * Base Handler class providing the Handler structure
  *
- * Classes extending it should (in most cases) only implement write($record)
- *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 abstract class AbstractHandler implements HandlerInterface
@@ -37,7 +35,7 @@ abstract class AbstractHandler implements HandlerInterface
      * @param integer $level The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($level = Logger::DEBUG, $bubble = false)
+    public function __construct($level = Logger::DEBUG, $bubble = true)
     {
         $this->level = $level;
         $this->bubble = $bubble;
@@ -75,6 +73,9 @@ abstract class AbstractHandler implements HandlerInterface
      */
     public function pushProcessor($callback)
     {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), '.var_export($callback, true).' given');
+        }
         array_unshift($this->processors, $callback);
     }
 
@@ -83,6 +84,9 @@ abstract class AbstractHandler implements HandlerInterface
      */
     public function popProcessor()
     {
+        if (!$this->processors) {
+            throw new \LogicException('You tried to pop from an empty processor stack.');
+        }
         return array_shift($this->processors);
     }
 

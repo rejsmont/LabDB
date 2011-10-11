@@ -1,2 +1,7 @@
+# Internal routing configuration to handle ESI
+#_internal:
+#   resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
+#   prefix:   /_internal
+
 mpicbg_flies:
     resource: "@MpiCbgFliesBundle/Resources/config/routing.yml"

@@ -10,7 +10,7 @@ class __TwigTemplate_ca8871e96c67ef56afa5497e08472bfd extends Twig_Template
         // line 1
         echo "<div class=\"search clearfix\">
     <h3>
-        <img style=\"margin: 0 5px 0 0; vertical-align: middle; height: 16px\" width=\"16\" height=\"16\" alt=\"Search\" src=\"";
+        <img style=\"margin: 0 5px 0 0; vertical-align: middle;\" width=\"16\" height=\"16\" alt=\"Search\" src=\"";
         // line 3
         echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("bundles/webprofiler/images/search.png"), "html");
         echo "\" />
@@ -62,7 +62,7 @@ class __TwigTemplate_ca8871e96c67ef56afa5497e08472bfd extends Twig_Template
         <button type=\"submit\">
             <span class=\"border_l\">
                 <span class=\"border_r\">
-                    <span class=\"btn_bg\">UPDATE</span>
+                    <span class=\"btn_bg\">SEARCH</span>
                 </span>
             </span>
         </button>

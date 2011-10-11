@@ -169,6 +169,10 @@ class EntityChoiceList extends ArrayChoiceList
                 $value = $this->propertyPath->getValue($entity);
             } else {
                 // Otherwise expect a __toString() method in the entity
+                if (!method_exists($entity, '__toString')) {
+                    throw new FormException('Entities passed to the choice field must have a "__toString()" method defined (or you can also override the "property" option).');
+                }
+
                 $value = (string)$entity;
             }
 
@@ -181,7 +185,7 @@ class EntityChoiceList extends ArrayChoiceList
                 // entity ID for performance reasons
                 $id = current($this->getIdentifierValues($entity));
             }
-            
+
             if (null === $group) {
                 // Flat list of choices
                 $this->choices[$id] = $value;
@@ -189,7 +193,7 @@ class EntityChoiceList extends ArrayChoiceList
                 // Nested choices
                 $this->choices[$group][$id] = $value;
             }
-            
+
             $this->entities[$id] = $entity;
         }
     }
@@ -242,6 +246,7 @@ class EntityChoiceList extends ArrayChoiceList
             if (count($this->identifier) > 1) {
                 // $key is a collection index
                 $entities = $this->getEntities();
+
                 return isset($entities[$key]) ? $entities[$key] : null;
             } else if ($this->entities) {
                 return isset($this->entities[$key]) ? $this->entities[$key] : null;

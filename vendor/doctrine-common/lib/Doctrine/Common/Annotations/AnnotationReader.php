@@ -25,6 +25,8 @@ use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
 
+require_once __DIR__ . '/Annotation/IgnoreAnnotation.php';
+
 /**
  * A reader for docblock annotations.
  *
@@ -62,6 +64,8 @@ final class AnnotationReader implements Reader
         'inheritDoc'=> true, 'license'=> true, 'todo'=> true, 'deprecated'=> true,
         'deprec'=> true, 'author'=> true, 'property' => true, 'method' => true,
         'abstract'=> true, 'exception'=> true, 'magic' => true, 'api' => true,
+        'final'=> true, 'filesource'=> true, 'throw' => true, 'uses' => true,
+        'usedby'=> true, 'private' => true, 'Annotation' => true,
     );
 
     /**
@@ -110,12 +114,24 @@ final class AnnotationReader implements Reader
     private $ignoredAnnotationNames = array();
 
     /**
+     * @var string
+     */
+    private $defaultAnnotationNamespace = false;
+
+    /**
+     * @var bool
+     */
+    private $enablePhpImports = true;
+
+    /**
      * Constructor. Initializes a new AnnotationReader that uses the given Cache provider.
      *
      * @param DocParser $parser The parser to use. If none is provided, the default parser is used.
      */
     public function __construct()
     {
+        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/IgnoreAnnotation.php');
+        
         $this->parser = new DocParser;
 
         $this->preParser = new DocParser;
@@ -126,28 +142,74 @@ final class AnnotationReader implements Reader
     }
 
     /**
-     * Sets a flag whether to auto-load annotation classes or not.
+     * Ignore not imported annotations and not throw an exception.
      *
-     * NOTE: It is recommended to turn auto-loading on if your auto-loader
-     *       supports silent failing. For this reason, setting this to TRUE
-     *       renders the parser incompatible with {@link ClassLoader}.
-     *
-     * @param boolean $bool Boolean flag.
+     * @param bool $bool
      */
-    public function setAutoloadAnnotations($bool)
+    public function setIgnoreNotImportedAnnotations($bool)
     {
-        $this->parser->setAutoloadAnnotations($bool);
+        $this->parser->setIgnoreNotImportedAnnotations($bool);
     }
 
     /**
-     * Gets a flag whether to try to autoload annotation classes.
+     * Detect imports by parsing the use statements of affected files.
      *
-     * @see setAutoloadAnnotations
-     * @return boolean
+     * @deprecated Will be removed in 3.0, imports will always be enabled.
+     * @param bool $flag
      */
-    public function isAutoloadAnnotations()
+    public function setEnableParsePhpImports($flag)
     {
-        return $this->parser->isAutoloadAnnotations();
+        $this->enablePhpImports = $flag;
+    }
+
+    /**
+     * @deprecated Will be removed in 3.0, imports will always be enabled.
+     * @return bool
+     */
+    public function isParsePhpImportsEnabled()
+    {
+        return $this->enablePhpImports;
+    }
+
+    /**
+     * Sets the default namespace that the AnnotationReader should assume for annotations
+     * with not fully qualified names.
+     *
+     * @deprecated This method will be removed in Doctrine Common 3.0
+     * @param string $defaultNamespace
+     */
+    public function setDefaultAnnotationNamespace($defaultNamespace)
+    {
+        $this->defaultAnnotationNamespace = $defaultNamespace;
+    }
+
+    /**
+     * Sets the custom function to use for creating new annotations on the
+     * underlying parser.
+     *
+     * The function is supplied two arguments. The first argument is the name
+     * of the annotation and the second argument an array of values for this
+     * annotation. The function is assumed to return an object or NULL.
+     * Whenever the function returns NULL for an annotation, the implementation falls
+     * back to the default annotation creation process of the underlying parser.
+     *
+     * @deprecated This method will be removed in Doctrine Common 3.0
+     * @param Closure $func
+     */
+    public function setAnnotationCreationFunction(Closure $func)
+    {
+        $this->parser->setAnnotationCreationFunction($func);
+    }
+
+    /**
+     * Sets an alias for an annotation namespace.
+     *
+     * @param string $namespace
+     * @param string $alias
+     */
+    public function setAnnotationNamespaceAlias($namespace, $alias)
+    {
+        $this->parser->setAnnotationNamespaceAlias($namespace, $alias);
     }
 
     /**
@@ -296,11 +358,13 @@ final class AnnotationReader implements Reader
         $imports = self::$globalImports;
         $ignoredAnnotationNames = self::$globalIgnoredNames;
 
-        $annotations = $this->preParser->parse($class->getDocComment());
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof IgnoreAnnotation) {
-                foreach ($annotation->names AS $annot) {
-                    $ignoredAnnotationNames[$annot] = true;
+        if ($this->enablePhpImports) {
+            $annotations = $this->preParser->parse($class->getDocComment());
+            foreach ($annotations as $annotation) {
+                if ($annotation instanceof IgnoreAnnotation) {
+                    foreach ($annotation->names AS $annot) {
+                        $ignoredAnnotationNames[$annot] = true;
+                    }
                 }
             }
         }
@@ -308,9 +372,12 @@ final class AnnotationReader implements Reader
         $name = $class->getName();
         $this->imports[$name] = array_merge(
             self::$globalImports,
-            $this->phpParser->parseClass($class),
-            array('__NAMESPACE__' => $class->getNamespaceName())
+            ($this->enablePhpImports) ? $this->phpParser->parseClass($class) : array(),
+            ($this->enablePhpImports) ? array('__NAMESPACE__' => $class->getNamespaceName()) : array()
         );
+        if ($this->defaultAnnotationNamespace) {
+            $this->imports[$name]['__DEFAULT__'] = $this->defaultAnnotationNamespace;
+        }
         $this->ignoredAnnotationNames[$name] = $ignoredAnnotationNames;
     }
 }

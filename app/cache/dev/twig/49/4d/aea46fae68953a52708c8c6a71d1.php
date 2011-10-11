@@ -9,6 +9,7 @@ class __TwigTemplate_494daea46fae68953a52708c8c6a71d1 extends Twig_Template
     {
         parent::__construct($env);
 
+        $this->parent = array();
         $this->blocks = array(
             'content' => array($this, 'block_content'),
         );
@@ -16,11 +17,16 @@ class __TwigTemplate_494daea46fae68953a52708c8c6a71d1 extends Twig_Template
 
     public function getParent(array $context)
     {
-        if (null === $this->parent) {
-            $this->parent = $this->env->loadTemplate("MpiCbgFliesBundle::layout.html.twig");
+        $parent = "MpiCbgFliesBundle::layout.html.twig";
+        if ($parent instanceof Twig_Template) {
+            $name = $parent->getTemplateName();
+            $this->parent[$name] = $parent;
+            $parent = $name;
+        } elseif (!isset($this->parent[$parent])) {
+            $this->parent[$parent] = $this->env->loadTemplate($parent);
         }
 
-        return $this->parent;
+        return $this->parent[$parent];
     }
 
     protected function doDisplay(array $context, array $blocks = array())

@@ -71,6 +71,14 @@ final class DocParser
      * @var array
      */
     private $classExists = array();
+    
+    /**
+     *
+     * @var This hashmap is used internally to cache if a class is an annotation or not.
+     * 
+     * @var array
+     */
+    private $isAnnotation = array();
 
     /**
      * Whether annotations that have not been imported should be ignored.
@@ -90,14 +98,19 @@ final class DocParser
     private $ignoredAnnotationNames = array();
 
     /**
+     * @var array
+     */
+    private $namespaceAliases = array();
+
+    /**
      * @var string
      */
     private $context = '';
-
+    
     /**
-     * @var boolean
+     * @var Closure
      */
-    private $autoloadAnnotations = true;
+    private $creationFn = null;
 
     /**
      * Constructs a new DocParser.
@@ -119,29 +132,14 @@ final class DocParser
     {
         $this->ignoredAnnotationNames = $names;
     }
-
+    
     /**
-     * Sets a flag whether to auto-load annotation classes or not.
-     *
-     * NOTE: It is recommend to turn auto-loading on if your auto-loader supports
-     *       silent failing.
-     *
-     * @param boolean $bool Boolean flag.
+     * @deprecated Will be removed in 3.0
+     * @param \Closure $func
      */
-    public function setAutoloadAnnotations($bool)
+    public function setAnnotationCreationFunction(\Closure $func)
     {
-        $this->autoloadAnnotations = $bool;
-    }
-
-    /**
-     * Gets a flag whether to try to autoload annotation classes.
-     *
-     * @see setAutoloadAnnotations
-     * @return boolean
-     */
-    public function isAutoloadAnnotations()
-    {
-        return $this->autoloadAnnotations;
+        $this->creationFn = $func;
     }
 
     public function setImports(array $imports)
@@ -152,6 +150,11 @@ final class DocParser
     public function setIgnoreNotImportedAnnotations($bool)
     {
         $this->ignoreNotImportedAnnotations = (Boolean) $bool;
+    }
+
+    public function setAnnotationNamespaceAlias($namespace, $alias)
+    {
+        $this->namespaceAliases[$alias] = $namespace;
     }
 
     /**
@@ -244,8 +247,8 @@ final class DocParser
     }
 
     /**
-     * This will prevent going through the auto-loader on each occurence of the
-     * annotation.
+     * Attempt to check if a class exists or not. This never goes through the PHP autoloading mechanism
+     * but uses the {@link AnnotationRegistry} to load classes.
      *
      * @param string $fqcn
      * @return boolean
@@ -255,8 +258,14 @@ final class DocParser
         if (isset($this->classExists[$fqcn])) {
             return $this->classExists[$fqcn];
         }
+        
+        // first check if the class already exists, maybe loaded through another AnnotationReader
+        if (class_exists($fqcn, false)) {
+            return $this->classExists[$fqcn] = true;
+        }
 
-        return $this->classExists[$fqcn] = class_exists($fqcn, $this->autoloadAnnotations);
+        // final check, does this class exist?
+        return $this->classExists[$fqcn] = AnnotationRegistry::loadAnnotationClass($fqcn);
     }
 
     /**
@@ -327,6 +336,16 @@ final class DocParser
             $name .= '\\'.$this->lexer->token['value'];
         }
 
+        if (strpos($name, ":") !== false) {
+            list ($alias, $name) = explode(':', $name);
+            // If the namespace alias doesnt exist, skip until next annotation
+            if ( ! isset($this->namespaceAliases[$alias])) {
+                $this->lexer->skipUntil(DocLexer::T_AT);
+                return false;
+            }
+            $name = $this->namespaceAliases[$alias] . $name;
+        }
+
         // only process names which are not fully qualified, yet
         if ('\\' !== $name[0] && !$this->classExists($name)) {
             $alias = (false === $pos = strpos($name, '\\'))? $name : substr($name, 0, $pos);
@@ -337,6 +356,8 @@ final class DocParser
                 } else {
                     $name = $this->imports[$loweredAlias];
                 }
+            } elseif (isset($this->imports['__DEFAULT__']) && $this->classExists($this->imports['__DEFAULT__'].$name)) {
+                 $name = $this->imports['__DEFAULT__'].$name;
             } elseif (isset($this->imports['__NAMESPACE__']) && $this->classExists($this->imports['__NAMESPACE__'].'\\'.$name)) {
                  $name = $this->imports['__NAMESPACE__'].'\\'.$name;
             } else {
@@ -351,6 +372,14 @@ final class DocParser
         if (!$this->classExists($name)) {
             throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context));
         }
+        
+        if (!$this->isAnnotation($name)) {
+            return false;
+        }
+
+        // Verifies that the annotation class extends any class that contains "Annotation".
+        // This is done to avoid coupling of Doctrine Annotations against other libraries.
+        
 
         // at this point, $name contains the fully qualified class name of the
         // annotation, and it is also guaranteed that this class exists, and
@@ -369,7 +398,40 @@ final class DocParser
 
             $this->match(DocLexer::T_CLOSE_PARENTHESIS);
         }
-
+        
+        return $this->newAnnotation($name, $values);
+    }
+    
+    /**
+     * Verify that the found class is actually an annotation.
+     * 
+     * This can be detected through two mechanisms:
+     * 1. Class extends Doctrine\Common\Annotations\Annotation
+     * 2. The class level docblock contains the string "@Annotation"
+     * 
+     * @param string $name
+     * @return bool
+     */
+    private function isAnnotation($name)
+    {
+        if (!isset($this->isAnnotation[$name])) {
+            if (is_subclass_of($name, 'Doctrine\Common\Annotations\Annotation')) {
+                $this->isAnnotation[$name] = true;
+            } else {
+                $reflClass = new \ReflectionClass($name);
+                $this->isAnnotation[$name] = strpos($reflClass->getDocComment(), "@Annotation") !== false;
+            }
+        }
+        return $this->isAnnotation[$name];
+    }
+    
+    private function newAnnotation($name, $values)
+    {
+        if ($this->creationFn !== null) {
+            $fn = $this->creationFn;
+            return $fn($name, $values);
+        }
+        
         return new $name($values);
     }
 

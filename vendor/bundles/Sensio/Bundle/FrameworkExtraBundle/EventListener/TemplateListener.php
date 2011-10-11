@@ -42,12 +42,12 @@ class TemplateListener
     }
 
     /**
-     * Guesses the template name to render and its variables and adds them to 
+     * Guesses the template name to render and its variables and adds them to
      * the request object.
      *
      * @param FilterControllerEvent $event A FilterControllerEvent instance
      */
-    public function onCoreController(FilterControllerEvent $event)
+    public function onKernelController(FilterControllerEvent $event)
     {
         if (!is_array($controller = $event->getController())) {
             return;
@@ -60,7 +60,7 @@ class TemplateListener
         }
 
         if (!$configuration->getTemplate()) {
-            $configuration->setTemplate($this->guessTemplateName($controller, $request));
+            $configuration->setTemplate($this->guessTemplateName($controller, $request, $configuration->getEngine()));
         }
 
         $request->attributes->set('_template', $configuration->getTemplate());
@@ -80,12 +80,12 @@ class TemplateListener
     }
 
     /**
-     * Renders the template and initializes a new response object with the 
+     * Renders the template and initializes a new response object with the
      * rendered template content.
      *
      * @param GetResponseForControllerResultEvent $event A GetResponseForControllerResultEvent instance
      */
-    public function onCoreView(GetResponseForControllerResultEvent $event)
+    public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request = $event->getRequest();
         $parameters = $event->getControllerResult();
@@ -115,15 +115,16 @@ class TemplateListener
     }
 
     /**
-     * Guesses and returns the template name to render based on the controller 
+     * Guesses and returns the template name to render based on the controller
      * and action names.
      *
      * @param array $controller An array storing the controller object and action method
      * @param Request $request A Request instance
+     * @param string $engine
      * @return TemplateReference template reference
      * @throws \InvalidArgumentException
      */
-    protected function guessTemplateName($controller, Request $request)
+    protected function guessTemplateName($controller, Request $request, $engine = 'twig')
     {
         if (!preg_match('/Controller\\\(.+)Controller$/', get_class($controller[0]), $matchController)) {
             throw new \InvalidArgumentException(sprintf('The "%s" class does not look like a controller class (it must be in a "Controller" sub-namespace and the class name must end with "Controller")', get_class($controller[0])));
@@ -136,7 +137,7 @@ class TemplateListener
 
         $bundle = $this->getBundleForClass(get_class($controller[0]));
 
-        return new TemplateReference($bundle->getName(), $matchController[1], $matchAction[1], $request->getRequestFormat(), 'twig');
+        return new TemplateReference($bundle->getName(), $matchController[1], $matchAction[1], $request->getRequestFormat(), $engine);
     }
 
     /**
