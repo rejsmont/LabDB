@@ -4,10 +4,14 @@ namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use JMS\SerializerBundle\Annotation\ExclusionPolicy;
+use JMS\SerializerBundle\Annotation\Expose;
+
 /**
  * @author ejsmont
  * @ORM\Entity(repositoryClass=
  *             "VIB\FliesBundle\Repository\FlyCrossRepository")
+ * @ExclusionPolicy("all")
  */
 class FlyCross {
     
@@ -15,6 +19,7 @@ class FlyCross {
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Expose
      */
     protected $id; 
     
@@ -25,6 +30,7 @@ class FlyCross {
         
     /**
      * @ORM\Column(type="string", length="255", nullable="true")
+     * @Expose
      */
     protected $maleName;
     
@@ -35,6 +41,7 @@ class FlyCross {
         
     /**
      * @ORM\Column(type="string", length="255", nullable="true")
+     * @Expose
      */
     protected $virginName;
     
@@ -50,8 +57,8 @@ class FlyCross {
 
     public function __construct()
     {
-        $this->bottle = new \VIB\FliesBundle\Entity\FlyVial;
-        $this->bottle->setCross($this);
+        $this->vial = new \VIB\FliesBundle\Entity\FlyVial;
+        $this->vial->setCross($this);
     }
     
     public function __toString() {

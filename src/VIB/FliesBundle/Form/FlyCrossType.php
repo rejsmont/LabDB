@@ -7,6 +7,11 @@ use Symfony\Component\Form\FormBuilder;
 
 class FlyCrossType extends AbstractType
 {
+    public function getName()
+    {
+        return "FlyCrossType";
+    }
+    
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('maleName', 'text')

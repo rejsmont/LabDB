@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 /**
  * FlyCrossRepository
+ * @ExclusionPolicy("all")
  */
 class FlyCrossRepository extends EntityRepository
 {

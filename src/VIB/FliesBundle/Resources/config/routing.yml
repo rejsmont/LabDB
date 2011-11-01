@@ -1,6 +1,6 @@
 default:
     pattern:  /
-    defaults: { _controller: VIBFliesBundle:FlyStock:index }
+    defaults: { _controller: VIBFliesBundle:FlyVial:list }
 
 fly_stock:
     resource: "@VIBFliesBundle/Controller/FlyStockController.php"

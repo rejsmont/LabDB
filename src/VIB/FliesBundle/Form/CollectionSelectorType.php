@@ -9,7 +9,7 @@ class CollectionSelectorType extends AbstractType
 {
     public function getName()
     {
-        return "CollectionSelector";
+        return "CollectionSelectorType";
     }
     
     public function buildForm(FormBuilder $builder, array $options)

@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-namespace VIB\FliesBundle;
+namespace VIB\FormsBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Description of VIBFliesBundle
+ * Description of VIBFormsBundle
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VIBFliesBundle extends Bundle
+class VIBFormsBundle extends Bundle
 {
 }

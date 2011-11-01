@@ -1,0 +1,67 @@
+{% extends "VIBFliesBundle::layout.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+function pad (str, max) {
+  return str.length < max ? pad("0" + str, max) : str;
+}
+
+function parseDate(date) {
+  var year = date.slice(0,4);
+  var month = date.slice(5,7);
+  var day = date.slice(8,10);
+
+  return day + '.' + month + '.' + year;
+}
+
+function getVial()
+{
+  $.getJSON('http://labdb.localhost/app_dev.php/vials/getJSON/' + barcode.value, function(data) {
+  
+  $("<tr/>", {
+    id: 'vial_' + pad(data.id.toString(), 6),
+    html: '<td></td>' +
+          '<td>' + pad(data.id.toString(), 6) + '</td>' + 
+          '<td>' + data.stock.name + '</td>' +
+          '<td></td>' +
+          '<td>' + parseDate(data.setup_date) + '</td>' +
+          '<td>' + parseDate(data.flip_date) + '</td>' +
+          '<td>' + '</td>' +
+          '<td>' + '</td>'
+  }).appendTo("#vials");
+  
+  });
+  barcode.value = '';
+}
+
+    </script>
+
+{% endblock %}
+
+{% block content %}
+<h1>{{ header }}</h1>
+    
+    <label>To select vials, scan barcodes here: </label>
+    <input id="barcode" type="text" value="" onchange="getVial()" />
+    <br /><br />
+    <form>
+        <table id="vials">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>Stock</th>
+                    <th>Cross</th>
+                    <th>Setup date</th>
+                    <th>Flip date</th>
+                    <th>Flipped from</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </form>
+{% endblock %}

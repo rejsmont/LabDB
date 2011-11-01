@@ -1,7 +1,22 @@
 <?php
 
-namespace VIB\FliesBundle\Controller;
+/*
+ * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
+namespace VIB\FliesBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -9,24 +24,36 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use VIB\FliesBundle\Entity\FlyVial;
-use VIB\FliesBundle\Wrapper\Barcode\FlyVial as FlyVialBarcode;
-use VIB\FliesBundle\Wrapper\Selector\CollectionSelector;
-use VIB\FliesBundle\Wrapper\Selector\CollectionSelectorItem;
-use VIB\FliesBundle\Form\FlyVialBarcodeType;
-use VIB\FliesBundle\Form\CollectionSelectorType;
-
 use Tecnick\TCPDF\TCPDF;
 
+use VIB\FliesBundle\Entity\FlyVial;
+use VIB\FliesBundle\Form\FlyVialType;
+
+
+/**
+ * FlyVialController class
+ *
+ * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ */
 class FlyVialController extends Controller
 {
     /**
      * List vials
      * 
-     * @Route("/vials/list/{filter}", name="flyvial_list")
+     * @param string $filter
+     * @return mixed $response
+     * 
+     * @Route("/vials", name="flyvial_list")
+     * @Route("/vials/list/{filter}", name="flyvial_listfilter", defaults={"filter" = "living"})
      * @Template()
      */
     public function listAction($filter = 'living')
@@ -52,152 +79,180 @@ class FlyVialController extends Controller
                 $header = 'Vials';
         }
         
-        $vialsSelector = new CollectionSelector($vials);
-
-        foreach ($vialsSelector->getItems() as $vialsSelectorItem) {
-            
-            $vial = $vialsSelectorItem->getItem();
-                        
-            if (isset($vial)) {
-                
-                if ((is_a($vial,"VIB\FliesBundle\Entity\FlyVial"))||
-                    (is_subclass_of($vial,"VIB\FliesBundle\Entity\FlyVial"))) {
-                    $vialsSelectorItem->setSelected(! $vial->isLabelPrinted());
-                }
-            }
-            
-        }
-        
-        $form = $this->get('form.factory')
-                     ->create(new CollectionSelectorType(), $vialsSelector);
-        
-        $request = $this->get('request');
-        
-        if ($request->getMethod() == 'POST') {    
-            
-            $form->bindRequest($request);
-            
-            if ($form->isValid()) {
-                return $this->handleBatchAction($vialsSelector, $filter);
-            }
-        }
-        
-        return array('vials' => $vialsSelector,
-                     'form' => $form->createView(),
-                     'header' => $header);
+        return array(
+            'vials' => $vials,
+            'header' => $header);
     }
     
-    public function handleBatchAction($vialsSelector, $filter) {
+    /**
+     * Handle batch action
+     * 
+     * @param Doctrine\Common\Collections\Collection $vials
+     * @return mixed $response
+     */
+    public function handleBatchAction($vials) {
 
         switch($vialsSelector->getAction()) {
             case 'label':
-                return $this->generateLabels($vialsSelector, $filter);
+                return $this->generateLabels($vials);
                 break;
             case 'flip':
-                return $this->flipBottles($vialsSelector, $filter);
+                return $this->flipVials($vials);
                 break;
             case 'trash':
-                return $this->trashBottles($vialsSelector, $filter);
+                return $this->trashVials($vials);
                 break;
             default:
-                return $this->redirect($this->generateUrl('flyvial_list', array('filter' => $filter)));
+                return $this->redirect($this->generateUrl('flyvial_list'));
                 break;
         }
     }
     
-    public function generateLabels($vialsSelector, $filter) {
+    /**
+     * Generate vial labels
+     * 
+     * @param Doctrine\Common\Collections\Collection $vials
+     * @return mixed $response
+     */    
+    public function generateLabels($vials) {
         
         $em = $this->get('doctrine.orm.entity_manager');
         $pdf = $this->prepareLabelPDF();
         
-        foreach ($vialsSelector->getItems() as $item) {
-            
-            if($item->isSelected()) {
-                $vial = $item->getItem();
-                $vial->setLabelPrinted(true);
-                $em->persist($vial);
-                $pdf = $this->addFlyLabel($pdf, $vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
-            }
+        foreach ($vials as $vial) {
+            $vial = $item->getItem();
+            $vial->setLabelPrinted(true);
+            $em->persist($vial);
+            $pdf = $this->addFlyLabel($pdf, $vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
         }
         
         $em->flush();
 
-        return new Response(
-            $pdf->Output('', 'S'),
-            200,
-            array(
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="labels.pdf',
-            )
-        );
+        return new Response($pdf->Output('', 'S'),200,
+                array(
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="labels.pdf'));
     }
     
-    public function flipBottles($vialsSelector, $filter) {
+    /**
+     * Flip vials
+     * 
+     * @param Doctrine\Common\Collections\Collection $vials
+     * @return mixed $response
+     */     
+    public function flipVials($vials) {
         
         $em = $this->get('doctrine.orm.entity_manager');
 
-        foreach ($vialsSelector->getItems() as $item) {
-            
-            if($item->isSelected()) {
-                $vial = $item->getItem();
-                $newvial = new FlyVial($vial);
-                $em->persist($newvial);
-            }
+        $newvials = new ArrayCollection();
+        
+        foreach ($vials as $vial) {       
+            $vial = $item->getItem();
+            $newvial = new FlyVial($vial);
+            $newvials->add($newvial);
+            $em->persist($newvial);
         }
         
         $em->flush();
+
+        $securityContext = $this->get('security.context');
+        $user = $securityContext->getToken()->getUser();
+        $securityIdentity = UserSecurityIdentity::fromAccount($user);
         
-        return $this->redirect($this->generateUrl('flyvial_list', array('filter' => $filter)));
+        $aclProvider = $this->get('security.acl.provider');
+        
+        foreach ($newvials as $vial) {
+            $objectIdentity = ObjectIdentity::fromDomainObject($vial);
+            $acl = $aclProvider->createAcl($objectIdentity);
+            $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+            $aclProvider->updateAcl($acl);
+        }
+        
+        return $this->redirect($this->generateUrl('flyvial_list'));
     }
     
-    public function trashBottles($vialsSelector, $filter) {
+    /**
+     * Trash vials
+     * 
+     * @param Doctrine\Common\Collections\Collection $vials
+     * @return mixed $response
+     */  
+    public function trashVials($vials) {
         
         $em = $this->get('doctrine.orm.entity_manager');
         
-        foreach ($vialsSelector->getItems() as $item) {
-            
-            if($item->isSelected()) {
-                $vial = $item->getItem();
-                $vial->setTrashed(true);
-                $em->persist($vial);
-            }
+        foreach ($vials as $vial) {
+            $vial = $item->getItem();
+            $vial->setTrashed(true);
+            $em->persist($vial);
         }
         
         $em->flush();
         
-        return $this->redirect($this->generateUrl('flyvial_list', array('filter' => $filter)));
+        return $this->redirect($this->generateUrl('flyvial_list'));
+    }
+
+    /**
+     * Select vials
+     * 
+     * @Route("/vials/select", name="flyvial_select")
+     * @Template()
+     */
+    public function selectAction() {
+        return array('header' => 'Select vials');
     }
     
     /**
      * Show vial
      * 
+     * @param integer $id
+     * @return mixed $response
+     * 
      * @Route("/vials/show/{id}", name="flyvial_show")
      * @Template()
      * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
      */
-    public function showAction($id)
-    {
+    public function showAction($id) {
         $em = $this->get('doctrine.orm.entity_manager');
         $vial = $em->find('VIBFliesBundle:FlyVial', $id);
         
         return array('vial' => $vial);
     }
     
+    /**
+     * Return vial as JSON
+     * 
+     * @param integer $id
+     * @return mixed $response
+     * 
+     * @Route("/vials/getJSON/{id}", name="flyvial_showJSON")
+     * @Template()
+     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
+     */    
+    public function getJSONAction($id) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $vial = $em->find('VIBFliesBundle:FlyVial', $id);
+        $stock = $vial->setStock($vial->getStock());
+        
+        $serializer = $this->get('serializer');
+        
+        return new Response($serializer->serialize($vial, 'json'));
+    }
+    
     
     /**
      * Create new vial
      * 
+     * @return mixed $response
+     * 
      * @Route("/vials/new", name="flyvial_create")
      * @Template()
      */
-    public function createAction()
-    {
+    public function createAction() {
         $em = $this->get('doctrine.orm.entity_manager');
         $vial = new FlyVial();
-        $vialBarcode = new FlyVialBarcode($em, $vial);
         
-        $form = $this->get('form.factory')
-                ->create(new FlyVialBarcodeType(), $vialBarcode);
+        $form = $this->get('form.factory')->create(new FlyVialType(), $vial);
         
         $request = $this->get('request');
         
@@ -208,6 +263,17 @@ class FlyVialController extends Controller
             if ($form->isValid()) {
                 $em->persist($vial);
                 $em->flush();
+                
+                $securityContext = $this->get('security.context');
+                $user = $securityContext->getToken()->getUser();
+                $securityIdentity = UserSecurityIdentity::fromAccount($user);
+                
+                $aclProvider = $this->get('security.acl.provider');
+                $objectIdentity = ObjectIdentity::fromDomainObject($vial);
+                $acl = $aclProvider->createAcl($objectIdentity);
+                $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+                $aclProvider->updateAcl($acl);
+                
                 return $this->redirect($this->generateUrl('flyvial_show',array('id' => $vial->getId())));
             }
         }
@@ -218,18 +284,18 @@ class FlyVialController extends Controller
     /**
      * Edit vial
      * 
+     * @param integer $id
+     * @return mixed $response
+     * 
      * @Route("/vials/edit/{id}", name="flyvial_edit")
      * @Template()
      * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         $em = $this->get('doctrine.orm.entity_manager');
         $vial = $em->find('VIBFliesBundle:FlyVial', $id);
-        $vialBarcodes = new FlyVialBarcode($em, $vial);
         
-        $form = $this->get('form.factory')
-                ->create(new FlyVialBarcodeType(), $vialBarcodes);
+        $form = $this->get('form.factory')->create(new FlyVialType(), $vial);
         
         $request = $this->get('request');
         
@@ -252,28 +318,45 @@ class FlyVialController extends Controller
     /**
      * Delete vial
      * 
+     * @param integer $id
+     * @return mixed $response
+     * 
      * @Route("/vials/delete/{id}", name="flyvial_delete")
      * @Template()
      * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
      */
-    public function deleteAction($id)
-    {
+    public function deleteAction($id) {
         $em = $this->get('doctrine.orm.entity_manager');
         $vial = $em->find('VIBFliesBundle:FlyVial', $id);
 
         $em->remove($vial);
         $em->flush();
-        return $this->redirect($this->generateUrl('flyvial_list'));
+        return $this->redirect($this->generateUrl('flyvial_listfilter'));
     }
     
+    /**
+     * Add vial label to PDF
+     * 
+     * @param Tecnick\TCPDF\TCPDF $pdf
+     * @param integer $barcode
+     * @param datetime $date
+     * @param string $text
+     * @return Tecnick\TCPDF\TCPDF $pdf
+     */    
     private function addFlyLabel(TCPDF $pdf,$barcode,$date,$text) {
         $pdf->AddPage();
-        $pdf->write2DBarcode(sprintf("%06d",$barcode), 'QRCODE,H', 6, 2, 12.5, 12.5, $this->get2DBarcodeStyle());
+        $pdf->write2DBarcode(
+                sprintf("%06d",$barcode),
+                'QRCODE,H',
+                6,2,12.5,12.5,
+                $this->get2DBarcodeStyle());
         $pdf->StartTransform();
         $pdf->Rotate(270,39.8,19.1);
-        $pdf->write1DBarcode(sprintf("%06d",$barcode), 'C128C',
-                             22.7, 13.1, 15.1, 4, '',
-                             $this->get1DBarcodeStyle(), 'N');
+        $pdf->write1DBarcode(
+                sprintf("%06d",$barcode),
+                'C128C',
+                22.7,13.1,15.1,4,'',
+                $this->get1DBarcodeStyle(),'N');
         $pdf->StopTransform();
         $pdf->setCellPaddings(0, 0, 0, 0);
         $pdf->setCellMargins(0, 0, 0, 0);
@@ -286,6 +369,11 @@ class FlyVialController extends Controller
         return $pdf;
     }
     
+    /**
+     * Generate label PDF
+     * 
+     * @return Tecnick\TCPDF\TCPDF $pdf
+     */ 
     private function prepareLabelPDF() {
         
         $pdf = new TCPDF('L', 'mm', array(50.8,19.1), true, 'UTF-8', false);
@@ -305,6 +393,11 @@ class FlyVialController extends Controller
         return $pdf;
     }
     
+    /**
+     * Generate style for 1D barcode
+     * 
+     * @return array $style
+     */ 
     private function get1DBarcodeStyle() {
         
         $style = array(
@@ -318,12 +411,16 @@ class FlyVialController extends Controller
             'vpadding' => '0',
             'fgcolor' => array(0,0,0),
             'bgcolor' => false,
-            'text' => false,
-        );
+            'text' => false);
         
         return $style;
     }
     
+    /**
+     * Generate style for 2D barcode
+     * 
+     * @return array $style
+     */     
     private function get2DBarcodeStyle() {
         
         $style = array(
@@ -331,10 +428,9 @@ class FlyVialController extends Controller
             'vpadding' => '0',
             'hpadding' => '0',
             'fgcolor' => array(0,0,0),
-            'bgcolor' => false, //array(255,255,255)
-            'module_width' => 1, // width of a single module in points
-            'module_height' => 1 // height of a single module in points
-        );
+            'bgcolor' => false,
+            'module_width' => 1,
+            'module_height' => 1);
         
         return $style;
     }

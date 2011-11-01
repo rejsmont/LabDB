@@ -7,6 +7,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+
 use VIB\FliesBundle\Entity\FlyStock;
 use VIB\FliesBundle\Wrapper\Barcode\FlyStock as FlyStockBarcode;
 use VIB\FliesBundle\Wrapper\Selector\CollectionSelector;
@@ -74,10 +80,29 @@ class FlyStockController extends Controller
             
             if ($form->isValid()) {
                 $em->persist($stock);
-                foreach ($stock->getBottles() as $vial) {
+                foreach ($stock->getVials() as $vial) {
                     $em->persist($vial);
                 }
                 $em->flush();
+                
+                $securityContext = $this->get('security.context');
+                $user = $securityContext->getToken()->getUser();
+                $securityIdentity = UserSecurityIdentity::fromAccount($user);
+                
+                $aclProvider = $this->get('security.acl.provider');
+                
+                $objectIdentity = ObjectIdentity::fromDomainObject($stock);
+                $acl = $aclProvider->createAcl($objectIdentity);
+                $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+                $aclProvider->updateAcl($acl);
+                
+                foreach ($stock->getVials() as $vial) {
+                    $objectIdentity = ObjectIdentity::fromDomainObject($vial);
+                    $acl = $aclProvider->createAcl($objectIdentity);
+                    $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+                    $aclProvider->updateAcl($acl);
+                }
+                
                 return $this->redirect($this->generateUrl('flystock_show',array('id' => $stock->getId())));
             }
         }

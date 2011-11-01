@@ -74,8 +74,25 @@ class FlyCrossController extends Controller
             
             if ($form->isValid()) {
                 $em->persist($cross);
-                $em->persist($cross->getBottle());
+                $em->persist($cross->getVial());
                 $em->flush();
+                
+                $securityContext = $this->get('security.context');
+                $user = $securityContext->getToken()->getUser();
+                $securityIdentity = UserSecurityIdentity::fromAccount($user);
+                
+                $aclProvider = $this->get('security.acl.provider');
+                
+                $objectIdentity = ObjectIdentity::fromDomainObject($cross);
+                $acl = $aclProvider->createAcl($objectIdentity);
+                $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+                $aclProvider->updateAcl($acl);
+                
+                $objectIdentity = ObjectIdentity::fromDomainObject($cross->getVial());
+                $acl = $aclProvider->createAcl($objectIdentity);
+                $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+                $aclProvider->updateAcl($acl);
+                
                 return $this->redirect($this->generateUrl('flycross_show',array('id' => $cross->getId())));
             }
         }
@@ -107,7 +124,7 @@ class FlyCrossController extends Controller
             
             if ($form->isValid()) {
                 $em->persist($cross);
-                $em->persist($cross->getBottle());
+                $em->persist($cross->getVial());
                 $em->flush();
                 return $this->redirect($this->generateUrl('flycross_show',array('id' => $cross->getId())));
             }
@@ -129,7 +146,7 @@ class FlyCrossController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $cross = $em->find('VIBFliesBundle:FlyCross', $id);
 
-        $em->remove($cross->getBottle());
+        $em->remove($cross->getVial());
         $em->remove($cross);
         $em->flush();
         return $this->redirect($this->generateUrl('flycross_list'));

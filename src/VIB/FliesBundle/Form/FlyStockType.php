@@ -7,6 +7,11 @@ use Symfony\Component\Form\FormBuilder;
 
 class FlyStockType extends AbstractType
 {
+    public function getName()
+    {
+        return "FlyStockType";
+    }
+    
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'text');

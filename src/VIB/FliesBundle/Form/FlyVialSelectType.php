@@ -22,11 +22,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
 /**
- * FlyVialType class
+ * FlyVialSelectType class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class FlyVialType extends AbstractType
+class FlyVialSelectType extends AbstractType
 {  
     /**
      * Get name
@@ -35,7 +35,7 @@ class FlyVialType extends AbstractType
      */
     public function getName()
     {
-        return "FlyVialType";
+        return "FlyVialSelectType";
     }
     
     /**

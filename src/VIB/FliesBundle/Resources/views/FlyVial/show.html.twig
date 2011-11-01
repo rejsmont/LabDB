@@ -26,11 +26,11 @@
     {% endif %}
     <p>
         {% if vial.stock is not empty %}
-            <a href="{{ path('flyvial_list', { 'filter': 'stock' }) }}">List</a> |
+            <a href="{{ path('flyvial_listfilter', { 'filter': 'stock' }) }}">List</a> |
         {% elseif vial.cross is not empty %}
-            <a href="{{ path('flyvial_list', { 'filter': 'cross' }) }}">List</a> |
+            <a href="{{ path('flyvial_listfilter', { 'filter': 'cross' }) }}">List</a> |
         {% else %}
-            <a href="{{ path('flyvial_list', { 'filter': 'cross' }) }}">List</a> |
+            <a href="{{ path('flyvial_listfilter', { 'filter': 'cross' }) }}">List</a> |
         {% endif %}
         <a href="{{ path('flyvial_create') }}">New</a> |
         <a href="{{ path('flyvial_edit', { 'id': vial.id }) }}">Edit</a> |

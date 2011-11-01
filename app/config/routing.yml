@@ -5,3 +5,12 @@
 
 mpicbg_flies:
     resource: "@VIBFliesBundle/Resources/config/routing.yml"
+    
+login:
+    pattern:   /login
+    defaults:  { _controller: VIBSecurityBundle:Security:login }
+login_check:
+    pattern:   /login_check
+logout:
+    pattern:   /logout
+    

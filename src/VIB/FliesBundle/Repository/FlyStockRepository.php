@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 /**
  * FlyStockRepository
+ * @ExclusionPolicy("all")
  */
 class FlyStockRepository extends EntityRepository
 {

@@ -1,19 +1,44 @@
 <?php
 
+/*
+ * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+
+use JMS\SerializerBundle\Annotation\ExclusionPolicy;
+use JMS\SerializerBundle\Annotation\Expose;
 
 use \DateTime;
 use \DateInterval;
 
-use \VIB\FliesBundle\Entity\FlyStock;
+use VIB\FliesBundle\Entity\FlyStock;
+use VIB\FliesBundle\Entity\FlyCross;
+
 
 /**
- * @author ejsmont
- * @ORM\Entity(repositoryClass=
- *             "VIB\FliesBundle\Repository\FlyVialRepository")
+ * FlyVial class
+ * 
+ * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\FlyVialRepository")
+ * @ExclusionPolicy("all")
  */
 class FlyVial {
     
@@ -22,16 +47,19 @@ class FlyVial {
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="SEQUENCE")
      * @ORM\SequenceGenerator(sequenceName="barcode_sequence")
+     * @Expose
      */
     protected $id; 
     
     /**
      * @ORM\Column(type="datetime", name="setup_date")
+     * @Expose
      */
     protected $setupDate;
     
     /**
      * @ORM\Column(type="datetime", name="flip_date")
+     * @Expose
      */
     protected $flipDate;
     
@@ -46,12 +74,14 @@ class FlyVial {
     protected $parent;
     
     /**
-     * @ORM\ManyToOne(targetEntity="FlyStock", inversedBy="vial")
+     * @ORM\ManyToOne(targetEntity="FlyStock", inversedBy="vials", fetch="EAGER")
+     * @Expose
      */
     protected $stock;
     
     /**
-     * @ORM\OneToOne(targetEntity="FlyCross", inversedBy="vial")
+     * @ORM\OneToOne(targetEntity="FlyCross", inversedBy="vial", fetch="EAGER")
+     * @Expose
      */
     protected $cross;
     
@@ -67,23 +97,22 @@ class FlyVial {
     
     /**
      * @ORM\Column(type="boolean", name="has_label", nullable="true")
+     * @Expose
      */
     protected $labelPrinted;
     
     /**
      * @ORM\Column(type="boolean", name="trashed", nullable="true")
+     * @Expose
      */
     protected $trashed;
     
-    
-    
     /**
-     * Construct the FlyVial
+     * Construct FlyVial
      *
      * @param VIB\FliesBundle\Entity\FlyVial $parent
      */
-    public function __construct($parent = null)
-    {
+    public function __construct($parent = null) {
         $this->children = new ArrayCollection();
         $this->maleCrosses = new ArrayCollection();
         $this->virginCrosses = new ArrayCollection();
@@ -99,7 +128,7 @@ class FlyVial {
     }
     
     /**
-     * Return string representation of this object
+     * Return string representation of FlyVial
      * 
      * @return string $string
      */
@@ -112,8 +141,7 @@ class FlyVial {
      *
      * @return integer $id
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -122,18 +150,16 @@ class FlyVial {
      *
      * @return string $name
      */
-    public function getName()
-    {
+    public function getName() {
         return sprintf("%06d",$this->id);
     }
     
     /**
-     * Get name
+     * Get labelText
      *
-     * @return string $name
+     * @return string $labelText
      */
-    public function getLabelText()
-    {
+    public function getLabelText() {
         if (isset($this->stock)) {
             return $this->stock->getLabel();
         } else if (isset($this->cross)) {
@@ -141,7 +167,6 @@ class FlyVial {
         } else {
             return null;
         }
-            
     }
     
     /**
@@ -149,8 +174,7 @@ class FlyVial {
      *
      * @param datetime $setupDate
      */
-    public function setSetupDate($setupDate)
-    {
+    public function setSetupDate($setupDate) {
         $this->setupDate = $setupDate;
     }
 
@@ -159,8 +183,7 @@ class FlyVial {
      *
      * @return datetime $setupDate
      */
-    public function getSetupDate()
-    {
+    public function getSetupDate() {
         return $this->setupDate;
     }
 
@@ -169,8 +192,7 @@ class FlyVial {
      *
      * @param datetime $flipDate
      */
-    public function setFlipDate($flipDate)
-    {
+    public function setFlipDate($flipDate) {
         $this->flipDate = $flipDate;
     }
 
@@ -179,19 +201,26 @@ class FlyVial {
      *
      * @return datetime $flipDate
      */
-    public function getFlipDate()
-    {
+    public function getFlipDate() {
         return $this->flipDate;
     }
 
     /**
-     * Add children
+     * Add child
      *
-     * @param VIB\FliesBundle\Entity\FlyVial $children
+     * @param VIB\FliesBundle\Entity\FlyVial $child
      */
-    public function addChildren(FlyVial $children)
-    {
+    public function addChildren(FlyVial $child) {
         $this->children[] = $children;
+    }
+    
+    /**
+     * Set children
+     *
+     * @param Doctrine\Common\Collections\Collection $children
+     */
+    public function setChildren(Collection $children) {
+        $this->children = $children;
     }
 
     /**
@@ -199,8 +228,7 @@ class FlyVial {
      *
      * @return Doctrine\Common\Collections\Collection $children
      */
-    public function getChildren()
-    {
+    public function getChildren() {
         return $this->children;
     }
 
@@ -209,8 +237,7 @@ class FlyVial {
      *
      * @param VIB\FliesBundle\Entity\FlyVial $parent
      */
-    public function setParent(FlyVial $parent)
-    {
+    public function setParent(FlyVial $parent) {
         $this->parent = $parent;
     }
     
@@ -219,8 +246,7 @@ class FlyVial {
      *
      * @return VIB\FliesBundle\Entity\FlyVial $parent
      */
-    public function getParent()
-    {
+    public function getParent() {
         return $this->parent;
     }
     
@@ -252,7 +278,7 @@ class FlyVial {
      *
      * @param VIB\FliesBundle\Entity\FlyCross $cross
      */
-    public function setCross($cross)
+    public function setCross(FlyCross $cross)
     {
         $this->cross = $cross;
         if($cross != null) {
@@ -329,7 +355,7 @@ class FlyVial {
     }
     
     /**
-     * Is the vial trashed
+     * Is vial trashed
      * 
      * @return boolean $trashed
      */
