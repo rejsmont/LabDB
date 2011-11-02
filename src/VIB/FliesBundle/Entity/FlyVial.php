@@ -40,7 +40,7 @@ use VIB\FliesBundle\Entity\FlyCross;
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\FlyVialRepository")
  * @ExclusionPolicy("all")
  */
-class FlyVial {
+class FlyVial implements Selectable {
     
     /**
      * @ORM\Id
@@ -108,6 +108,12 @@ class FlyVial {
     protected $trashed;
     
     /**
+     *
+     * @var boolean 
+     */
+    protected $selected;
+    
+    /**
      * Construct FlyVial
      *
      * @param VIB\FliesBundle\Entity\FlyVial $parent
@@ -121,6 +127,7 @@ class FlyVial {
         $this->flipDate->add(new DateInterval('P14D'));
         $this->labelPrinted = false;
         $this->trashed = false;
+        $this->selected = false;
         if ($parent != null) {
             $this->parent = $parent;
             $this->stock = $parent->getStock();
@@ -130,7 +137,7 @@ class FlyVial {
     /**
      * Return string representation of FlyVial
      * 
-     * @return string $string
+     * @return string
      */
     public function __toString() {
         return $this->getName();
@@ -139,7 +146,7 @@ class FlyVial {
     /**
      * Get id
      *
-     * @return integer $id
+     * @return integer
      */
     public function getId() {
         return $this->id;
@@ -148,7 +155,7 @@ class FlyVial {
     /**
      * Get name
      *
-     * @return string $name
+     * @return string
      */
     public function getName() {
         return sprintf("%06d",$this->id);
@@ -157,7 +164,7 @@ class FlyVial {
     /**
      * Get labelText
      *
-     * @return string $labelText
+     * @return string
      */
     public function getLabelText() {
         if (isset($this->stock)) {
@@ -181,7 +188,7 @@ class FlyVial {
     /**
      * Get setupDate
      *
-     * @return datetime $setupDate
+     * @return datetime
      */
     public function getSetupDate() {
         return $this->setupDate;
@@ -199,7 +206,7 @@ class FlyVial {
     /**
      * Get flipDate
      *
-     * @return datetime $flipDate
+     * @return datetime
      */
     public function getFlipDate() {
         return $this->flipDate;
@@ -226,7 +233,7 @@ class FlyVial {
     /**
      * Get children
      *
-     * @return Doctrine\Common\Collections\Collection $children
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getChildren() {
         return $this->children;
@@ -244,7 +251,7 @@ class FlyVial {
     /**
      * Get parent
      *
-     * @return VIB\FliesBundle\Entity\FlyVial $parent
+     * @return VIB\FliesBundle\Entity\FlyVial
      */
     public function getParent() {
         return $this->parent;
@@ -266,7 +273,7 @@ class FlyVial {
     /**
      * Get stock
      *
-     * @return VIB\FliesBundle\Entity\FlyStock $stock
+     * @return VIB\FliesBundle\Entity\FlyStock
      */
     public function getStock()
     {
@@ -289,7 +296,7 @@ class FlyVial {
     /**
      * Get cross
      *
-     * @return VIB\FliesBundle\Entity\FlyCross $cross
+     * @return VIB\FliesBundle\Entity\FlyCross
      */
     public function getCross()
     {
@@ -299,7 +306,7 @@ class FlyVial {
     /**
      * Get maleCrosses
      *
-     * @return Doctrine\Common\Collections\Collection $maleCrosses
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getMaleCrosses()
     {
@@ -309,7 +316,7 @@ class FlyVial {
     /**
      * Get virginCrosses
      *
-     * @return Doctrine\Common\Collections\Collection $virginCrosses
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getVirginCrosses()
     {
@@ -319,7 +326,7 @@ class FlyVial {
     /**
      * Get crosses
      *
-     * @return Doctrine\Common\Collections\Collection $crosses
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getCrosses()
     {
@@ -339,7 +346,7 @@ class FlyVial {
     /**
      * Is labelPrinted
      * 
-     * @return boolean $labelPrinted 
+     * @return boolean
      */
     public function isLabelPrinted() {
         return $this->labelPrinted;
@@ -357,7 +364,7 @@ class FlyVial {
     /**
      * Is vial trashed
      * 
-     * @return boolean $trashed
+     * @return boolean
      */
     public function isTrashed() {
         return $this->trashed;
@@ -375,7 +382,7 @@ class FlyVial {
     /**
      * Is alive
      *
-     * @return boolean $alive
+     * @return boolean
      */
     public function isAlive()
     {
@@ -383,4 +390,25 @@ class FlyVial {
         $date->sub(new \DateInterval('P2M'));
         return $this->setupDate > $date ? true : false;
     }
+
+    /**
+     * Is selected
+     * 
+     * @return boolean
+     */
+    public function isSelected() {
+        return $this->selected;
+    }
+
+    /**
+     * Set selected
+     * 
+     * @param boolean $selected 
+     */
+    public function setSelected($selected) {
+        $this->selected = $selected;
+    }
+
+
+    
 }

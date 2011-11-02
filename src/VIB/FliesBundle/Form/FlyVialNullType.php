@@ -22,11 +22,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
 /**
- * FlyVialSelectType class
+ * FlyVialNullType class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class FlyVialSelectType extends AbstractType
+class FlyVialNullType extends AbstractType
 {  
     /**
      * Get name
@@ -35,7 +35,7 @@ class FlyVialSelectType extends AbstractType
      */
     public function getName()
     {
-        return "FlyVialSelectType";
+        return "FlyVialNullType";
     }
     
     /**
@@ -46,16 +46,8 @@ class FlyVialSelectType extends AbstractType
      */
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('items', 'entity', array(
-                        'multiple' => true,
-                        'expanded' => true,
-                        'required' => false,
-                        'class' => 'VIBFliesBundle:FlyVial'));
-//        $builder->add('items', 'collection', array(
-//                        'type' => new FlyVialNullType(), 
-//                        'allow_add' => true,
-//                        'prototype' => false,
-//                        'by_reference' => false));
+       $builder->add('id', 'hidden')
+               ->add('selected', 'checkbox', array('required' => false));
     }
     
     /**
@@ -66,7 +58,7 @@ class FlyVialSelectType extends AbstractType
      */
     public function getDefaultOptions(array $options)
     {
-        return array('data_class' => 'VIB\FliesBundle\Entity\ListCollection');
+        return array('data_class' => 'VIB\FliesBundle\Entity\FlyVial');
     }
 }
 

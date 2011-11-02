@@ -26,19 +26,38 @@ use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
- * Description of TextToIdTransformer
+ * Description of EntityToTextTransformer
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class TextToIdTransformer implements DataTransformerInterface
+class EntityToTextTransformer implements DataTransformerInterface
 {
- 
+    /**
+     *
+     * @var Doctrine\ORM\EntityManager
+     */
     protected $em;
+    
+    /**
+     * 
+     * @var Doctrine\ORM\Mapping\ClassMetadata
+     */
     protected $class;
+    
+    /**
+     *
+     * @var Symfony\Component\Form\Util\PropertyPath
+     */
     protected $propertyPath;
  
-    public function __construct(EntityManager $em, $class, $property = null)
-    {
+    /**
+     * Construct EntityToTextTransformer
+     * 
+     * @param Doctrine\ORM\EntityManager $em
+     * @param Doctrine\ORM\Mapping\ClassMetadata $class
+     * @param string $property 
+     */
+    public function __construct(EntityManager $em, $class, $property = null) {
         $this->em = $em;
         $this->class = $class;
  
@@ -47,8 +66,14 @@ class TextToIdTransformer implements DataTransformerInterface
         }
     }
  
-    public function transform($entity)
-    {
+    /**
+     * Transform entity into string value
+     * 
+     * @param object $entity
+     * @return string 
+     */
+    public function transform($entity) {
+        
         if (null === $entity || '' === $entity) {
             return 'null';
         }
@@ -57,38 +82,41 @@ class TextToIdTransformer implements DataTransformerInterface
             throw new UnexpectedTypeException($entity, 'object');
         }
  
-       if ($this->propertyPath) {
-       // If the property option was given, use it
+        if ($this->propertyPath) {
             $value = $this->propertyPath->getValue($entity);
-       } else {
-           // Otherwise expect a __toString() method in the entity
+        } else {
            $value = (string)$entity;
-       }
-       return $value;
+        }
+        
+        return $value;
     }
  
+    /**
+     * Transform numeric key into entity
+     * 
+     * @param mixed $key
+     * @return object 
+     */
     public function reverseTransform($key)
     {
-          if ('' === $key || null === $key) {
-          return null;
-          }
+        if ('' === $key || null === $key) {
+            return null;
+        }
  
-         if (!is_string($key))
-         {
-             return null;
-         }
+        if (!is_string($key)) {
+            return null;
+        }
  
-         if (!is_numeric($key))
-         {
-             throw new UnexpectedTypeException($key, 'numeric');
-         }
+        if (!is_numeric($key)) {
+            throw new UnexpectedTypeException($key, 'numeric');
+        }
  
-         $entity = $this->em->getRepository($this->class)->findOneById($key);
+        $entity = $this->em->getRepository($this->class)->findOneById($key);
  
-         if ($entity === null) {
-             throw new TransformationFailedException(sprintf('The entity with key "%s" could not be found', $key));
-         }
- 
+        if ($entity === null) {
+            throw new TransformationFailedException(sprintf('The entity with key "%s" could not be found', $key));
+        }
+
         return $entity;
     }
 }

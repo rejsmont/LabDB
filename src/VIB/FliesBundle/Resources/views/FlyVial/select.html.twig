@@ -18,12 +18,18 @@ function parseDate(date) {
 
 function getVial()
 {
-  $.getJSON('http://labdb.localhost/app_dev.php/vials/getJSON/' + barcode.value, function(data) {
+  var id = $('#items').children().length;
   
+  $.getJSON('http://labdb.localhost/app_dev.php/vials/getJSON/' + barcode.value, function(data) {
+
   $("<tr/>", {
-    id: 'vial_' + pad(data.id.toString(), 6),
-    html: '<td></td>' +
-          '<td>' + pad(data.id.toString(), 6) + '</td>' + 
+    html: '<td><input type="checkbox" id="FlyVialSelectType_items_' +
+                id +'_selected" name="FlyVialSelectType[items][' +
+                id + '][selected]" value="1" /></td>' +
+          '<td><input type="hidden" id="FlyVialSelectType_items_' +
+                id + '_id" name="FlyVialSelectType[items][' +
+                id + '][id]" value="' + data.id + '" />'+
+                pad(data.id.toString(), 6) + '</td>' + 
           '<td>' + data.stock.name + '</td>' +
           '<td></td>' +
           '<td>' + parseDate(data.setup_date) + '</td>' +
@@ -39,14 +45,15 @@ function getVial()
     </script>
 
 {% endblock %}
-
+    
 {% block content %}
 <h1>{{ header }}</h1>
     
     <label>To select vials, scan barcodes here: </label>
     <input id="barcode" type="text" value="" onchange="getVial()" />
     <br /><br />
-    <form>
+    <form action="{{ app.request.requestUri }}"
+          method="post" {{ form_enctype(form) }}>
         <table id="vials">
             <thead>
                 <tr>
@@ -60,8 +67,24 @@ function getVial()
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="items">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
+
+        {{ form_errors(form) }}
+        {{ form_rest(form) }}
+        
+        <input type="submit" />
+        
     </form>
 {% endblock %}

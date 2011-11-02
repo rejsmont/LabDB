@@ -36,7 +36,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Tecnick\TCPDF\TCPDF;
 
 use VIB\FliesBundle\Entity\FlyVial;
+use VIB\FliesBundle\Entity\ListCollection;
 use VIB\FliesBundle\Form\FlyVialType;
+use VIB\FliesBundle\Form\FlyVialSelectType;
 
 
 /**
@@ -147,7 +149,6 @@ class FlyVialController extends Controller
         $newvials = new ArrayCollection();
         
         foreach ($vials as $vial) {       
-            $vial = $item->getItem();
             $newvial = new FlyVial($vial);
             $newvials->add($newvial);
             $em->persist($newvial);
@@ -199,7 +200,27 @@ class FlyVialController extends Controller
      * @Template()
      */
     public function selectAction() {
-        return array('header' => 'Select vials');
+                
+        $list = new ListCollection();
+        
+        $form = $this->createForm(new FlyVialSelectType(), $list);
+
+        $request = $this->get('request');
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+
+            }
+        }
+        
+        
+        return array(
+            'header' => 'Select vials',
+            'list' => $list,
+            'form' => $form->createView()
+        );
     }
     
     /**

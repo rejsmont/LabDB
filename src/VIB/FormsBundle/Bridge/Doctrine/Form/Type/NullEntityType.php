@@ -21,13 +21,12 @@ namespace VIB\FormsBundle\Bridge\Doctrine\Form\Type;
 use Doctrine\ORM\EntityManager;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Bridge\Doctrine\Form\EventListener\MergeCollectionListener;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormFactoryInterface;
 
-use VIB\FormsBundle\Bridge\Doctrine\Form\DataTransformer\TextToIdTransformer;
-
-
+use VIB\FormsBundle\Bridge\Doctrine\Form\DataTransformer\EntityToTextTransformer;
 
 /**
  * Description of NullEntityType
@@ -36,37 +35,44 @@ use VIB\FormsBundle\Bridge\Doctrine\Form\DataTransformer\TextToIdTransformer;
  */
 class NullEntityType extends AbstractType
 {
-    public function __construct(RegistryInterface $registry)
-    {
+    public function __construct(RegistryInterface $registry) {
         $this->registry = $registry;
     }
  
-    public function buildForm(FormBuilder $builder, array $options)
-    {
-        $builder->prependClientTransformer(new TextToIdTransformer(
-            $this->registry->getEntityManager($options['em']),
-            $options['class'],
-            $options['property']
-        ));
+    public function buildForm(FormBuilder $builder, array $options) {
+        
+        if ($options['multiple']) {
+            $builder
+                ->addEventSubscriber(new MergeCollectionListener())
+                ->prependClientTransformer(new EntityToTextTransformer(
+                        $this->registry->getEntityManager($options['em']),
+                        $options['class'],
+                        $options['property']));
+        } else {
+            $builder->prependClientTransformer(new EntityToTextTransformer(
+                    $this->registry->getEntityManager($options['em']),
+                    $options['class'],
+                    $options['property']));
+        }
     }
  
-    public function getDefaultOptions(array $options)
-    {
+    public function getDefaultOptions(array $options) {
+        
         $defaultOptions = array(
-            'em'                => null,
-            'class'             => null,
-            'property'          => null,
-            'text'              => false,
-            'hidden'            => false,
-        );
+            'em'        => null,
+            'class'     => null,
+            'property'  => null,
+            'multiple'  => false,
+            'text'      => false,
+            'hidden'    => false);
  
         $options = array_replace($defaultOptions, $options);
  
         return $options;
     }
  
-    public function getParent(array $options)
-    {
+    public function getParent(array $options) {
+        
          if ($options['hidden']) {
             return 'hidden';
          }
@@ -76,8 +82,7 @@ class NullEntityType extends AbstractType
          return 'choice';
     }
  
-    public function getName()
-    {
+    public function getName() {
         return 'null_entity';
     }
 }
