@@ -1,5 +1,21 @@
 <?php
 
+/*
+ * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -8,9 +24,11 @@ use JMS\SerializerBundle\Annotation\ExclusionPolicy;
 use JMS\SerializerBundle\Annotation\Expose;
 
 /**
- * @author ejsmont
- * @ORM\Entity(repositoryClass=
- *             "VIB\FliesBundle\Repository\FlyCrossRepository")
+ * FlyStock class
+ * 
+ * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\FlyCrossRepository")
  * @ExclusionPolicy("all")
  */
 class FlyCross {
@@ -55,12 +73,22 @@ class FlyCross {
      */
     protected $stocks;
 
+    /**
+     * Construct FlyCross
+     *
+     * @param VIB\FliesBundle\Entity\FlyVial $parent
+     */ 
     public function __construct()
     {
         $this->vial = new \VIB\FliesBundle\Entity\FlyVial;
         $this->vial->setCross($this);
     }
     
+    /**
+     * Return string representation of FlyCross
+     *
+     * @return string
+     */
     public function __toString() {
         return $this->getName();
     }
@@ -68,7 +96,7 @@ class FlyCross {
     /**
      * Get id
      *
-     * @return integer $id
+     * @return integer
      */
     public function getId()
     {
@@ -78,7 +106,7 @@ class FlyCross {
     /**
      * Get name
      *
-     * @return string $name
+     * @return string
      */
     public function getName()
     {
@@ -86,9 +114,9 @@ class FlyCross {
     }
     
     /**
-     * Get name
+     * Get label
      *
-     * @return string $name
+     * @return string
      */
     public function getLabel()
     {
@@ -108,7 +136,7 @@ class FlyCross {
     /**
      * Get male
      *
-     * @return VIB\FliesBundle\Entity\FlyVial $male
+     * @return VIB\FliesBundle\Entity\FlyVial
      */
     public function getMale()
     {
@@ -128,7 +156,7 @@ class FlyCross {
     /**
      * Get maleName
      *
-     * @return string $maleName
+     * @return string
      */
     public function getMaleName()
     {
@@ -148,7 +176,7 @@ class FlyCross {
     /**
      * Get virgin
      *
-     * @return VIB\FliesBundle\Entity\FlyVial $virgin
+     * @return VIB\FliesBundle\Entity\FlyVial
      */
     public function getVirgin()
     {
@@ -168,7 +196,7 @@ class FlyCross {
     /**
      * Get maleName
      *
-     * @return string $virginName
+     * @return string
      */
     public function getVirginName()
     {
@@ -189,7 +217,7 @@ class FlyCross {
     /**
      * Get vial
      *
-     * @return VIB\FliesBundle\Entity\FlyVial $vial
+     * @return VIB\FliesBundle\Entity\FlyVial
      */
     public function getVial()
     {
@@ -199,7 +227,7 @@ class FlyCross {
     /**
      * Get stocks
      *
-     * @return Doctrine\Common\Collections\Collection $stocks
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getStocks()
     {
@@ -209,7 +237,7 @@ class FlyCross {
     /**
      * Get crosses
      *
-     * @return Doctrine\Common\Collections\Collection $crosses
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getCrosses()
     {

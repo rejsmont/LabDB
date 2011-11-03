@@ -1,39 +1,30 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
 
 {% block content %}
-    <form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
-        <h1>Stocks</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Source cross</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for key, item in form.items %}
-                {% set stockSelector = stocks.items[key] %}
-                {% set stock = stockSelector.item %}
-                <tr>
-                    <td>{{ form_widget(item.selected) }}</td>
-                    <td><a href="{{ path('flystock_show', { 'id': stock.id }) }}">
-                        {{ stock.id }}</a>
-                    </td>
-                    <td>{{ stock.name }}</td>
-                    <td>{% if stock.sourceCross is not empty %}
-                        <a href="{{ path('flycross_show', { 'id': stock.sourceCross.id }) }}">
-                            {{ stock.sourceCross }}
-                        </a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {{ form_rest(form) }}
-        <!-- <input type="submit" /> -->
-    </form>
-    
+<h1>Stocks</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Source cross</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for stock in stocks %}
+        <tr>
+            <td><a href="{{ path('flystock_show', { 'id': stock.id }) }}">
+                {{ stock.id }}</a>
+            </td>
+            <td>{{ stock.name }}</td>
+            <td>{% if stock.sourceCross is not empty %}
+                <a href="{{ path('flycross_show', { 'id': stock.sourceCross.id }) }}">
+                    {{ stock.sourceCross }}
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>    
 {% endblock %}

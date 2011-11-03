@@ -80,7 +80,7 @@ class FlyStock {
     /**
      * Return string representation of FlyStock
      *
-     * @return string $name
+     * @return string
      */
     public function __toString() {
         return $this->name;
@@ -89,7 +89,7 @@ class FlyStock {
     /**
      * Get id
      *
-     * @return integer $id
+     * @return integer
      */
     public function getId() {
         return $this->id;
@@ -107,7 +107,7 @@ class FlyStock {
     /**
      * Get name
      *
-     * @return string $name
+     * @return string
      */
     public function getName() {
         return $this->name;
@@ -116,7 +116,7 @@ class FlyStock {
     /**
      * Get label
      *
-     * @return string $name
+     * @return string
      */
     public function getLabel() {
         return $this->name;
@@ -134,7 +134,7 @@ class FlyStock {
     /**
      * Get vials
      *
-     * @return Doctrine\Common\Collections\Collection $vials
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getVials() {
         return $this->vials;
@@ -152,7 +152,7 @@ class FlyStock {
     /**
      * Get sourceCross
      *
-     * @return VIB\FliesBundle\Entity\FlyCross $sourceCross
+     * @return VIB\FliesBundle\Entity\FlyCross
      */
     public function getSourceCross() {
         return $this->sourceCross;

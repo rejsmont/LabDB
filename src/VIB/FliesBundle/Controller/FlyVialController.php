@@ -242,26 +242,6 @@ class FlyVialController extends Controller
     }
     
     /**
-     * Return vial as JSON
-     * 
-     * @param integer $id
-     * @return mixed
-     * 
-     * @Route("/vials/getJSON/{id}", name="flyvial_showJSON")
-     * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
-     */    
-    public function getJSONAction($id) {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $vial = $em->find('VIBFliesBundle:FlyVial', $id);
-        $stock = $vial->setStock($vial->getStock());
-        
-        $serializer = $this->get('serializer');
-        
-        return new Response($serializer->serialize($vial, 'json'));
-    }
-    
-    /**
      * Return vial as form row
      * 
      * @param integer $id
@@ -276,8 +256,7 @@ class FlyVialController extends Controller
         $vial = $em->find('VIBFliesBundle:FlyVial', $id);
         
         return array('vial' => $vial);;
-    }
-    
+    }    
     
     /**
      * Create new vial
