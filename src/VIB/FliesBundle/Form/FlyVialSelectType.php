@@ -18,8 +18,14 @@
 
 namespace VIB\FliesBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\Event\DataEvent;
+
+use VIB\FliesBundle\Entity\ListCollection;
 
 /**
  * FlyVialSelectType class
@@ -46,16 +52,64 @@ class FlyVialSelectType extends AbstractType
      */
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('items', 'entity', array(
-                        'multiple' => true,
-                        'expanded' => true,
-                        'required' => false,
-                        'class' => 'VIBFliesBundle:FlyVial'));
-//        $builder->add('items', 'collection', array(
-//                        'type' => new FlyVialNullType(), 
-//                        'allow_add' => true,
-//                        'prototype' => false,
-//                        'by_reference' => false));
+        $factory = $builder->getFormFactory();
+        
+        $refreshEntities = function ($form, $selections) use ($factory) {
+            
+            $queryBuilder = function (EntityRepository $repository) use ($selections) {
+                if (count($selections) < 1)
+                    $selections = array(0);
+                $qb = $repository->createQueryBuilder('vial')
+                        ->where('vial.id in (:values)')
+                        ->setParameter('values', $selections);
+                return $qb;
+            };
+            
+            $form->add($factory->createNamed('entity','items',null, array(
+                'class'         =>  'VIB\FliesBundle\Entity\FlyVial',
+                'multiple'      =>  true,
+                'expanded'      =>  true,
+                'required'      =>  false,
+                'query_builder' =>  $queryBuilder
+            )));
+        };
+ 
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (DataEvent $event) use ($refreshEntities) {
+            
+            $form = $event->getForm();
+            $data = $event->getData();
+ 
+            if($data == null)
+                $refreshEntities($form, array());
+ 
+            if($data instanceof ListCollection) {
+                $values = array();
+                foreach ($data->getItems() as $item) {
+                    $values[] = $item->getId();
+                }
+                                
+                $refreshEntities($form, $values);
+            }
+        });
+ 
+        $builder->addEventListener(FormEvents::PRE_BIND, function (DataEvent $event) use ($refreshEntities) {
+            
+            $form = $event->getForm();
+            $data = $event->getData();
+                
+            if (is_array($data)) {
+                if (isset($data['items'])) {
+                    
+                    $values = array();
+                    
+                    foreach ($data['items'] as $item) {
+                        $values[] = $item;
+                    }
+                    
+                    $refreshEntities($form, $values);
+                }
+            }
+        });
     }
     
     /**

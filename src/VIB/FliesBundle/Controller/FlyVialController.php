@@ -52,7 +52,7 @@ class FlyVialController extends Controller
      * List vials
      * 
      * @param string $filter
-     * @return mixed $response
+     * @return mixed
      * 
      * @Route("/vials", name="flyvial_list")
      * @Route("/vials/list/{filter}", name="flyvial_listfilter", defaults={"filter" = "living"})
@@ -90,7 +90,7 @@ class FlyVialController extends Controller
      * Handle batch action
      * 
      * @param Doctrine\Common\Collections\Collection $vials
-     * @return mixed $response
+     * @return mixed
      */
     public function handleBatchAction($vials) {
 
@@ -114,7 +114,7 @@ class FlyVialController extends Controller
      * Generate vial labels
      * 
      * @param Doctrine\Common\Collections\Collection $vials
-     * @return mixed $response
+     * @return mixed
      */    
     public function generateLabels($vials) {
         
@@ -140,7 +140,7 @@ class FlyVialController extends Controller
      * Flip vials
      * 
      * @param Doctrine\Common\Collections\Collection $vials
-     * @return mixed $response
+     * @return mixed
      */     
     public function flipVials($vials) {
         
@@ -176,7 +176,7 @@ class FlyVialController extends Controller
      * Trash vials
      * 
      * @param Doctrine\Common\Collections\Collection $vials
-     * @return mixed $response
+     * @return mixed
      */  
     public function trashVials($vials) {
         
@@ -196,13 +196,14 @@ class FlyVialController extends Controller
     /**
      * Select vials
      * 
+     * @return mixed
+     * 
      * @Route("/vials/select", name="flyvial_select")
      * @Template()
      */
     public function selectAction() {
-                
-        $list = new ListCollection();
         
+        $list = new ListCollection();
         $form = $this->createForm(new FlyVialSelectType(), $list);
 
         $request = $this->get('request');
@@ -210,11 +211,11 @@ class FlyVialController extends Controller
         if ($request->getMethod() == 'POST') {
             
             $form->bindRequest($request);
+            
             if ($form->isValid()) {
 
             }
         }
-        
         
         return array(
             'header' => 'Select vials',
@@ -227,7 +228,7 @@ class FlyVialController extends Controller
      * Show vial
      * 
      * @param integer $id
-     * @return mixed $response
+     * @return mixed
      * 
      * @Route("/vials/show/{id}", name="flyvial_show")
      * @Template()
@@ -244,7 +245,7 @@ class FlyVialController extends Controller
      * Return vial as JSON
      * 
      * @param integer $id
-     * @return mixed $response
+     * @return mixed
      * 
      * @Route("/vials/getJSON/{id}", name="flyvial_showJSON")
      * @Template()
@@ -260,11 +261,28 @@ class FlyVialController extends Controller
         return new Response($serializer->serialize($vial, 'json'));
     }
     
+    /**
+     * Return vial as form row
+     * 
+     * @param integer $id
+     * @return mixed
+     * 
+     * @Route("/vials/getFormRow/{id}", name="flyvial_getFormRow")
+     * @Template()
+     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
+     */    
+    public function getFormRowAction($id) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $vial = $em->find('VIBFliesBundle:FlyVial', $id);
+        
+        return array('vial' => $vial);;
+    }
+    
     
     /**
      * Create new vial
      * 
-     * @return mixed $response
+     * @return mixed
      * 
      * @Route("/vials/new", name="flyvial_create")
      * @Template()
@@ -306,7 +324,7 @@ class FlyVialController extends Controller
      * Edit vial
      * 
      * @param integer $id
-     * @return mixed $response
+     * @return mixed
      * 
      * @Route("/vials/edit/{id}", name="flyvial_edit")
      * @Template()
@@ -340,7 +358,7 @@ class FlyVialController extends Controller
      * Delete vial
      * 
      * @param integer $id
-     * @return mixed $response
+     * @return mixed
      * 
      * @Route("/vials/delete/{id}", name="flyvial_delete")
      * @Template()
@@ -362,7 +380,7 @@ class FlyVialController extends Controller
      * @param integer $barcode
      * @param datetime $date
      * @param string $text
-     * @return Tecnick\TCPDF\TCPDF $pdf
+     * @return Tecnick\TCPDF\TCPDF
      */    
     private function addFlyLabel(TCPDF $pdf,$barcode,$date,$text) {
         $pdf->AddPage();
@@ -393,7 +411,7 @@ class FlyVialController extends Controller
     /**
      * Generate label PDF
      * 
-     * @return Tecnick\TCPDF\TCPDF $pdf
+     * @return Tecnick\TCPDF\TCPDF
      */ 
     private function prepareLabelPDF() {
         
@@ -417,7 +435,7 @@ class FlyVialController extends Controller
     /**
      * Generate style for 1D barcode
      * 
-     * @return array $style
+     * @return array
      */ 
     private function get1DBarcodeStyle() {
         
@@ -440,7 +458,7 @@ class FlyVialController extends Controller
     /**
      * Generate style for 2D barcode
      * 
-     * @return array $style
+     * @return array
      */     
     private function get2DBarcodeStyle() {
         

@@ -47,6 +47,15 @@ class ListCollection {
     protected $items;
     
     /**
+     * Construct ListCollection
+     *
+     * @param VIB\FliesBundle\Entity\FlyVial $parent
+     */
+    public function __construct($parent = null) {
+        $this->items = new ArrayCollection();
+    }
+    
+    /**
      *
      * @return Doctrine\Common\Collections\Collection 
      */
@@ -59,6 +68,9 @@ class ListCollection {
      * @param Doctrine\Common\Collections\Collection $items 
      */
     public function setItems($items) {
-        $this->items = $items;
+        if ($items instanceof Collection)
+            $this->items = $items;
+        else
+            $this->items = new ArrayCollection($items);
     }
 }

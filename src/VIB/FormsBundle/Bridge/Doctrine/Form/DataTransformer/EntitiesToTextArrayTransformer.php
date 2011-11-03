@@ -94,8 +94,8 @@ class EntitiesToTextArrayTransformer implements DataTransformerInterface
             }
             $array[] = is_numeric($value) ? (int) $value : $value;
         }
-        
-        return $value;
+                
+        return $array;
     }
     
     /**

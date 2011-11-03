@@ -7,8 +7,12 @@
             <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
         {% endstylesheets %}
         {% block javascripts %}
-            <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+            <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
         {% endblock %}
+        {% javascripts '@VIBFliesBundle/Resources/public/js/*' filter='yui_js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
         <title>{% block title %}VIB/KULeuven LabDB{% endblock %}</title>
     </head>
     <body>

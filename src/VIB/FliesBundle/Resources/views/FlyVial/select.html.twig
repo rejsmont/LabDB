@@ -1,59 +1,16 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-
-function pad (str, max) {
-  return str.length < max ? pad("0" + str, max) : str;
-}
-
-function parseDate(date) {
-  var year = date.slice(0,4);
-  var month = date.slice(5,7);
-  var day = date.slice(8,10);
-
-  return day + '.' + month + '.' + year;
-}
-
-function getVial()
-{
-  var id = $('#items').children().length;
-  
-  $.getJSON('http://labdb.localhost/app_dev.php/vials/getJSON/' + barcode.value, function(data) {
-
-  $("<tr/>", {
-    html: '<td><input type="checkbox" id="FlyVialSelectType_items_' +
-                id +'_selected" name="FlyVialSelectType[items][' +
-                id + '][selected]" value="1" /></td>' +
-          '<td><input type="hidden" id="FlyVialSelectType_items_' +
-                id + '_id" name="FlyVialSelectType[items][' +
-                id + '][id]" value="' + data.id + '" />'+
-                pad(data.id.toString(), 6) + '</td>' + 
-          '<td>' + data.stock.name + '</td>' +
-          '<td></td>' +
-          '<td>' + parseDate(data.setup_date) + '</td>' +
-          '<td>' + parseDate(data.flip_date) + '</td>' +
-          '<td>' + '</td>' +
-          '<td>' + '</td>'
-  }).appendTo("#vials");
-  
-  });
-  barcode.value = '';
-}
-
-    </script>
-
-{% endblock %}
-    
 {% block content %}
 <h1>{{ header }}</h1>
-    
+
     <label>To select vials, scan barcodes here: </label>
-    <input id="barcode" type="text" value="" onchange="getVial()" />
+    <input id="barcode" type="text" value="" onchange="checkVial()" />
     <br /><br />
     <form action="{{ app.request.requestUri }}"
           method="post" {{ form_enctype(form) }}>
+        {% if form.items | length < 1 %}
+            {{ form_widget(form.items) }}
+        {% endif %}
         <table id="vials">
             <thead>
                 <tr>
@@ -63,28 +20,30 @@ function getVial()
                     <th>Cross</th>
                     <th>Setup date</th>
                     <th>Flip date</th>
-                    <th>Flipped from</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody id="items">
+            {% set index = 0 %}
+            {% for item in form.items %}
+                {% set vial = list.items[index] %}
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ form_widget(item) }}</td>
+                    <td>{{ vial.name }}</td>
+                    <td>{{ vial.stock }}</td>
+                    <td>{{ vial.cross }}</td>
+                    <td>{{ vial.setupDate | date("d.m.Y") }}</td>
+                    <td>{{ vial.flipDate | date("d.m.Y") }}</td>
                 </tr>
+                {% set index = index + 1 %}
+            {% endfor %}
             </tbody>
         </table>
-
+        
         {{ form_errors(form) }}
         {{ form_rest(form) }}
         
         <input type="submit" />
         
     </form>
+    
 {% endblock %}
