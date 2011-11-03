@@ -40,7 +40,7 @@ use VIB\FliesBundle\Entity\FlyCross;
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\FlyVialRepository")
  * @ExclusionPolicy("all")
  */
-class FlyVial implements Selectable {
+class FlyVial {
     
     /**
      * @ORM\Id
@@ -106,12 +106,6 @@ class FlyVial implements Selectable {
      * @Expose
      */
     protected $trashed;
-    
-    /**
-     *
-     * @var boolean 
-     */
-    protected $selected;
     
     /**
      * Construct FlyVial
@@ -390,25 +384,4 @@ class FlyVial implements Selectable {
         $date->sub(new \DateInterval('P2M'));
         return $this->setupDate > $date ? true : false;
     }
-
-    /**
-     * Is selected
-     * 
-     * @return boolean
-     */
-    public function isSelected() {
-        return $this->selected;
-    }
-
-    /**
-     * Set selected
-     * 
-     * @param boolean $selected 
-     */
-    public function setSelected($selected) {
-        $this->selected = $selected;
-    }
-
-
-    
 }
