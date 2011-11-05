@@ -3,14 +3,38 @@
 
     {{ form_errors(form) }}
 
-    {{ form_row(form.virginBarcode) }}
-    {{ form_row(form.entity.virginName) }}
+    {{ form_row(form.virgin) }}
+    <label for="c_virgin">Virgin</label>
+    <input id="c_virgin" type="text" value="" onchange="getVial(this)" />
+    <span id="c_virgin_data">
+        {% if cross.virgin is not empty %}
+            {% if cross.virgin.stock is not empty %}
+                {{ cross.virgin.stock.name }}
+            {% elseif cross.virgin.cross is not empty %}
+                {{ cross.virgin.cross.name }}
+            {% endif %}
+            ({{ cross.virgin.name }})
+        {% endif %}
+    </span><br />
+    {{ form_row(form.virginName) }}
     
-    {{ form_row(form.maleBarcode) }}
-    {{ form_row(form.entity.maleName) }}
+    {{ form_row(form.male) }}
+    <label for="c_male">Male</label>
+    <input id="c_male" type="text" value="" onchange="getVial(this)" />
+    <span id="c_male_data">
+        {% if cross.male is not empty %}
+            {% if cross.male.stock is not empty %}
+                {{ cross.male.stock.name }}
+            {% elseif cross.male.cross is not empty %}
+                {{ cross.male.cross.name }}
+            {% endif %}
+            ({{ cross.male.name }})
+        {% endif %}
+    </span><br />
+    {{ form_row(form.maleName) }}
 
-    {{ form_row(form.entity.vial.setupDate) }}
-    {{ form_row(form.entity.vial.flipDate) }}
+    {{ form_row(form.vial.setupDate) }}
+    {{ form_row(form.vial.flipDate) }}
 
     {{ form_rest(form) }}
 

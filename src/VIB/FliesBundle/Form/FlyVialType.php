@@ -49,15 +49,20 @@ class FlyVialType extends AbstractType
         $builder->add('setupDate', 'date')
                 ->add('flipDate', 'date')
                 ->add('parent', 'null_entity', array(
-                        'required' => false,
-                        'class' => 'VIBFliesBundle:FlyVial',
-                        'text' => true))
-                ->add('stock', 'entity', array(
-                        'required' => false,
-                        'class' => 'VIBFliesBundle:FlyStock'))
-                ->add('cross', 'entity', array(
-                        'required' => false,
-                        'class' => 'VIBFliesBundle:FlyCross'));
+                        'property'     => 'id',
+                        'class'     => 'VIBFliesBundle:FlyVial',
+                        'required'  => false,
+                        'hidden'    => true))
+                ->add('stock', 'null_entity', array(
+                        'property'     => 'id',
+                        'class'     => 'VIBFliesBundle:FlyStock',
+                        'required'  => false,
+                        'hidden'    => true))
+                ->add('cross', 'null_entity', array(
+                        'property'     => 'id',
+                        'class'     => 'VIBFliesBundle:FlyCross',
+                        'required'  => false,
+                        'hidden'    => true));
     }
     
     /**

@@ -11,7 +11,7 @@
     {% if stock.vials | length > 0 %}
         <p>Stock is kept in the following vials:</p>
         <ul>
-        {% for vial in stock.vials %}
+        {% for vial in stock.livingVials %}
             <li>
                 <a href="{{ path('flyvial_show', { 'id': vial.id }) }}">{{ vial }}</a>
                 ({{ vial.setupDate | date("d.m.Y") }})

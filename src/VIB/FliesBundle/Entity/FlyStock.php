@@ -132,6 +132,23 @@ class FlyStock {
     }
 
     /**
+     * Get living vials
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getLivingVials() {
+        
+        $livingVials = new ArrayCollection();
+        
+        foreach ($this->vials as $vial) {
+            if ($vial->isAlive())
+                $livingVials->add($vial);
+        }
+        
+        return $livingVials;
+    }
+
+    /**
      * Get vials
      *
      * @return Doctrine\Common\Collections\Collection
@@ -139,7 +156,7 @@ class FlyStock {
     public function getVials() {
         return $this->vials;
     }
-
+    
     /**
      * Set sourceCross
      *

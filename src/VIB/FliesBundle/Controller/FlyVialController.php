@@ -46,8 +46,7 @@ use VIB\FliesBundle\Form\FlyVialSelectType;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class FlyVialController extends Controller
-{
+class FlyVialController extends Controller {
     /**
      * List vials
      * 
@@ -239,23 +238,6 @@ class FlyVialController extends Controller
         $vial = $em->find('VIBFliesBundle:FlyVial', $id);
         
         return array('vial' => $vial);
-    }
-    
-    /**
-     * Return vial as form row
-     * 
-     * @param integer $id
-     * @return mixed
-     * 
-     * @Route("/vials/getFormRow/{id}", name="flyvial_getFormRow")
-     * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
-     */    
-    public function getFormRowAction($id) {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $vial = $em->find('VIBFliesBundle:FlyVial', $id);
-        
-        return array('vial' => $vial);;
     }    
     
     /**
@@ -296,7 +278,8 @@ class FlyVialController extends Controller
             }
         }
         
-        return array('form' => $form->createView());
+        return array('form' => $form->createView(),
+                     'vial' => $vial);
     }
 
     /**
@@ -328,9 +311,8 @@ class FlyVialController extends Controller
             }
         }
         
-        return array(
-            'vial' => $vial,
-            'form' => $form->createView());
+        return array('form' => $form->createView(),
+                     'vial' => $vial);
     }
 
     /**

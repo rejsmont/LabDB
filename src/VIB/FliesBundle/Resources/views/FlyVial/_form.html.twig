@@ -6,9 +6,18 @@
     {{ form_row(form.setupDate) }}
     {{ form_row(form.flipDate) }}
     {{ form_row(form.parent) }}
+    <label for="v_parent">Flipped from</label>
+    <input id="v_parent" type="text" value="" onchange="getVial(this)" />
+    <span id="v_parent_data">{% if vial.parent is not empty %}{{ vial.parent.name }}{% endif %}</span><br />
     {{ form_row(form.stock) }}
+    <label for="v_stock">Stock</label>
+    <input id="v_stock" type="text" value="" onchange="getVial(this)" />
+    <span id="v_stock_data">{% if vial.stock is not empty %}{{ vial.stock.name }}{% endif %}</span><br />
     {{ form_row(form.cross) }}
-
+    <label for="v_cross">Cross</label>
+    <input id="v_cross" type="text" value="" onchange="getVial(this)" />
+    <span id="v_cross_data">{% if vial.cross is not empty %}{{ vial.cross.name }}{% endif %}</span><br />
+    
     {{ form_rest(form) }}
 
     <input type="submit" />

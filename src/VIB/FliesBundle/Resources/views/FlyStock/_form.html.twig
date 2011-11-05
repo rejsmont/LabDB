@@ -3,8 +3,13 @@
 
     {{ form_errors(form) }}
 
-    {{ form_row(form.entity.name) }}
-
+    {{ form_row(form.name) }}
+    {{ form_row(form.source_cross) }}
+    <label for="s_source_cross">Source cross</label>
+    <input id="s_source_cross" type="text" value="" onchange="getVial(this)" />
+    <span id="s_source_cross_data">
+        {% if stock.sourceCross is not empty %}{{ stock.sourceCross.name }}{% endif %}
+    </span><br />
     {{ form_rest(form) }}
 
     <input type="submit" />

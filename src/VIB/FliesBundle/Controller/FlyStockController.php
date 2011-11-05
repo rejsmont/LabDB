@@ -30,11 +30,7 @@ use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\FliesBundle\Entity\FlyStock;
-use VIB\FliesBundle\Wrapper\Barcode\FlyStock as FlyStockBarcode;
-use VIB\FliesBundle\Wrapper\Selector\CollectionSelector;
-use VIB\FliesBundle\Wrapper\Selector\CollectionSelectorItem;
-use VIB\FliesBundle\Form\FlyStockBarcodeType;
-use VIB\FliesBundle\Form\CollectionSelectorType;
+use VIB\FliesBundle\Form\FlyStockType;
 
 /**
  * FlyStockController class
@@ -83,10 +79,9 @@ class FlyStockController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $stock = new FlyStock();
-        $stockBarcode = new FlyStockBarcode($em, $stock);
 
         $form = $this->get('form.factory')
-                ->create(new FlyStockBarcodeType(), $stockBarcode);
+                ->create(new FlyStockType(), $stock);
 
         $request = $this->get('request');
         
@@ -123,7 +118,9 @@ class FlyStockController extends Controller
             }
         }
         
-        return array('form' => $form->createView());
+        return array(
+            'stock' => $stock,
+            'form' => $form->createView());
     }
 
     /**
@@ -137,10 +134,9 @@ class FlyStockController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $stock = $em->find('VIBFliesBundle:FlyStock', $id);
-        $stockBarcode = new FlyStockBarcode($em, $stock);
 
         $form = $this->get('form.factory')
-                ->create(new FlyStockBarcodeType(), $stockBarcode);
+                ->create(new FlyStockType(), $stock);
 
         $request = $this->get('request');
         

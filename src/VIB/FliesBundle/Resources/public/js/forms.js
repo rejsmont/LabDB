@@ -39,7 +39,7 @@ function checkVial()
   
         $.ajax({
             type: "GET",
-            url:"http://labdb.localhost/app_dev.php/vials/getFormRow/" + id,
+            url:"/app_dev.php/ajax/vials/" + id,
             success: 
                 function(response) {
                     $("#vials").append(response);
@@ -53,3 +53,88 @@ function checkVial()
 
     barcode.value = '';
 }
+
+function getVial(caller)
+{
+    var caller_id = caller.id;
+    var filter = caller_id.substring(2);
+    var vial_id = parseInt(caller.value,10);
+    
+    if (caller.value == 0) {
+        $('[id$="Type_' + filter + '"]').val('null');
+        $('#' + caller.id + '_data').html('');
+    } else {    
+        $.getJSON('/app_dev.php/ajax/vials/' + vial_id + '.json', function(vial) {
+            
+            var html = '';
+
+            if (vial) {           
+                switch(filter) {
+                    case 'parent':
+                        if (vial.stock) {
+                            html = pad(vial.id + '',6);
+                            $('[id$="Type_' + filter + '"]').val(vial.id);
+                            $('#' + caller.id + '_data').html(html);
+                        }
+                        break;
+                    case 'stock':
+                        if (vial.stock) {
+                            html = vial.stock.name;
+                            $('[id$="Type_' + filter + '"]').val(vial.stock.id);
+                            $('#' + caller.id + '_data').html(html);
+                        }
+                        break;
+                    case 'source_cross':
+                    case 'cross':
+                        if (vial.cross) {
+                            html = vial.cross.virgin_name + " \u263f ✕ " + vial.cross.male_name + " \u2642";
+                            $('[id$="Type_' + filter + '"]').val(vial.cross.id);
+                            $('#' + caller.id + '_data').html(html);
+                        }
+                        break;
+                    case 'virgin':
+                    case 'male':
+                        if (vial.stock) {
+                            html = vial.stock.name + ' (' + pad(vial.id + '',6) + ')';
+                            $('[id$="Type_' + filter + '"]').val(vial.id);
+                            $('#' + caller.id + '_data').html(html);
+                        } else if (vial.cross) {
+                            html = vial.cross.virgin_name + " \u263f ✕ " + vial.cross.male_name + " \u2642"
+                                 + ' (' + pad(vial.id + '',6) + ')';
+                            $('[id$="Type_' + filter + '"]').val(vial.cross.id);
+                            $('#' + caller.id + '_data').html(html);
+                        }
+                        break;
+                }
+            }
+        });
+    
+    }
+    caller.value = '';
+}
+
+function pad (str, max) {
+  return str.length < max ? pad("0" + str, max) : str;
+}
+
+function preventEnterSubmit(e) {
+    if (e.which == 13) {
+        
+        var $targ = $(e.target);
+        
+        if (!$targ.is("textarea") && !$targ.is(":button,:submit")) {
+            
+            var inputs = $targ.closest('form').find(':input').not(":hidden");
+            inputs.eq( inputs.index(e.target) + 1 ).focus();
+            
+            return false;
+        }
+        return true;
+    }
+}
+
+$(document).ready(function() {
+    $("form").bind("keypress", function(e) {
+        return preventEnterSubmit(e);
+    });
+}); 

@@ -1,38 +1,35 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
 
 {% block content %}
-    <form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
-        <h1>Crosses</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>ID</th>
-                    <th>Bottle</th>
-                    <th colspan="2">Virgin</th>
-                    <th colspan="2">Male</th>
-                    <th>Setup date</th>
-                    <th>Check date</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for key, item in form.items %}
-                {% set crossSelector = crosses.items[key] %}
-                {% set cross = crossSelector.item %}
-                <tr>
-                    <td>{{ form_widget(item.selected) }}</td>
-                    <td><a href="{{ path('flycross_show', { 'id': cross.id }) }}">
-                        {{ cross.id }}</a></td>
-                    <td><a href="{{ path('flyvial_show', { 'id': cross.vial.id }) }}">{{ cross.vial }}</a></td>
-                    <td>{{ cross.virginName }}</td>
-                    <td><a href="{{ path('flyvial_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a></td>
-                    <td>{{ cross.maleName }}</td>
-                    <td><a href="{{ path('flyvial_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a></td>
-                    <td>{{ cross.vial.setupDate | date("d.m.Y") }}</td>
-                    <td>{{ cross.vial.flipDate | date("d.m.Y") }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </form>
+<h1>Crosses</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Bottle</th>
+            <th colspan="2">Virgin</th>
+            <th colspan="2">Male</th>
+            <th>Setup date</th>
+            <th>Check date</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for cross in crosses %}
+        <tr>
+            <td><a href="{{ path('flycross_show', { 'id': cross.id }) }}">
+                {{ cross.id }}</a></td>
+            <td>{% if cross.vial is not empty %}
+                <a href="{{ path('flyvial_show', { 'id': cross.vial.id }) }}">{{ cross.vial }}</a>
+                {% endif %}
+            </td>
+            <td>{{ cross.virginName }}</td>
+            <td><a href="{{ path('flyvial_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a></td>
+            <td>{{ cross.maleName }}</td>
+            <td><a href="{{ path('flyvial_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a></td>
+            <td>{% if cross.vial is not empty %}{{ cross.vial.setupDate | date("d.m.Y") }}{% endif %}</td>
+            <td>{% if cross.vial is not empty %}{{ cross.vial.flipDate | date("d.m.Y") }}{% endif %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

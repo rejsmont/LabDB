@@ -382,6 +382,6 @@ class FlyVial {
     {
         $date = new \DateTime;
         $date->sub(new \DateInterval('P2M'));
-        return $this->setupDate > $date ? true : false;
+        return (($this->setupDate > $date ? true : false) && (!$this->trashed));
     }
 }

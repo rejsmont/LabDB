@@ -10,6 +10,10 @@ fly_cross:
     resource: "@VIBFliesBundle/Controller/FlyCrossController.php"
     type:     annotation
 
-culture_vial:
+fly_vial:
     resource: "@VIBFliesBundle/Controller/FlyVialController.php"
+    type:     annotation
+
+ajax:
+    resource: "@VIBFliesBundle/Controller/AJAXController.php"
     type:     annotation

@@ -7,12 +7,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+
 use VIB\FliesBundle\Entity\FlyCross;
-use VIB\FliesBundle\Wrapper\Barcode\FlyCross as FlyCrossBarcode;
-use VIB\FliesBundle\Wrapper\Selector\CollectionSelector;
-use VIB\FliesBundle\Wrapper\Selector\CollectionSelectorItem;
-use VIB\FliesBundle\Form\FlyCrossBarcodeType;
-use VIB\FliesBundle\Form\CollectionSelectorType;
+use VIB\FliesBundle\Form\FlyCrossType;
 
 class FlyCrossController extends Controller
 {
@@ -26,13 +28,8 @@ class FlyCrossController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $crosses = $em->getRepository('VIBFliesBundle:FlyCross')->findAll();
-        $crossesSelector = new CollectionSelector($crosses);
         
-        $form = $this->get('form.factory')
-                     ->create(new CollectionSelectorType(), $crossesSelector);
-        
-        return array('crosses' => $crossesSelector,
-                     'form' => $form->createView());
+        return array('crosses' => $crosses);
     }
     
     /**
@@ -61,10 +58,9 @@ class FlyCrossController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $cross = new FlyCross();
-        $crossBarcode = new FlyCrossBarcode($em, $cross);
         
         $form = $this->get('form.factory')
-                ->create(new FlyCrossBarcodeType(), $crossBarcode);
+                ->create(new FlyCrossType(), $cross);
         
         $request = $this->get('request');
         
@@ -97,7 +93,9 @@ class FlyCrossController extends Controller
             }
         }
         
-        return array('form' => $form->createView());
+        return array(
+            'cross' => $cross,
+            'form' => $form->createView());
     }
 
     /**
@@ -111,10 +109,9 @@ class FlyCrossController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $cross = $em->find('VIBFliesBundle:FlyCross', $id);
-        $crossBarcode = new FlyCrossBarcode($em, $cross);
         
         $form = $this->get('form.factory')
-                ->create(new FlyCrossBarcodeType(), $crossBarcode);
+                ->create(new FlyCrossType(), $cross);
         
         $request = $this->get('request');
         
@@ -147,6 +144,7 @@ class FlyCrossController extends Controller
         $cross = $em->find('VIBFliesBundle:FlyCross', $id);
 
         $em->remove($cross->getVial());
+        $em->flush();       
         $em->remove($cross);
         $em->flush();
         return $this->redirect($this->generateUrl('flycross_list'));

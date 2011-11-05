@@ -99,7 +99,7 @@ class EntityToTextTransformer implements DataTransformerInterface
      */
     public function reverseTransform($key)
     {
-        if ('' === $key || null === $key) {
+        if ('' === $key || null === $key || 'null' === $key) {
             return null;
         }
  
