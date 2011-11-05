@@ -95,14 +95,26 @@ function getVial(caller)
                     case 'virgin':
                     case 'male':
                         if (vial.stock) {
+                            $('#' + caller.id + '_name').attr('hidden','true');
+                            
                             html = vial.stock.name + ' (' + pad(vial.id + '',6) + ')';
                             $('[id$="Type_' + filter + '"]').val(vial.id);
                             $('#' + caller.id + '_data').html(html);
+                            $('[id$="Type_' + filter + 'Name"]').val(vial.stock.name);
+                            
+                            var inputs = $(caller).closest('form').find(':input').not(":hidden");
+                            inputs.eq( inputs.index(caller) + 1 ).focus();
+                        
                         } else if (vial.cross) {
+                            $('#' + caller.id + '_name').removeAttr('hidden');
+                            
                             html = vial.cross.virgin_name + " \u263f ✕ " + vial.cross.male_name + " \u2642"
                                  + ' (' + pad(vial.id + '',6) + ')';
-                            $('[id$="Type_' + filter + '"]').val(vial.cross.id);
+                            $('[id$="Type_' + filter + '"]').val(vial.id);
                             $('#' + caller.id + '_data').html(html);
+                            $('[id$="Type_' + filter + 'Name"]').val('');
+                            
+                            $('[id$="Type_' + filter + 'Name"]').focus();
                         }
                         break;
                 }
@@ -133,8 +145,8 @@ function preventEnterSubmit(e) {
     }
 }
 
-$(document).ready(function() {
-    $("form").bind("keypress", function(e) {
-        return preventEnterSubmit(e);
-    });
-}); 
+//$(document).ready(function() {
+//    $("form").bind("keypress", function(e) {
+//        return preventEnterSubmit(e);
+//    });
+//}); 

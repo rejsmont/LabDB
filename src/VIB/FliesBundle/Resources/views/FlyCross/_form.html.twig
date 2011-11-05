@@ -3,6 +3,7 @@
 
     {{ form_errors(form) }}
 
+    {% set hidden = "hidden=\"hidden\"" %}
     {{ form_row(form.virgin) }}
     <label for="c_virgin">Virgin</label>
     <input id="c_virgin" type="text" value="" onchange="getVial(this)" />
@@ -12,12 +13,14 @@
                 {{ cross.virgin.stock.name }}
             {% elseif cross.virgin.cross is not empty %}
                 {{ cross.virgin.cross.name }}
+                {% set hidden = "" %}
             {% endif %}
             ({{ cross.virgin.name }})
         {% endif %}
     </span><br />
-    {{ form_row(form.virginName) }}
+    <div id="c_virgin_name" {{ hidden }}>{{ form_row(form.virginName) }}</div>
     
+    {% set hidden = "true" %}
     {{ form_row(form.male) }}
     <label for="c_male">Male</label>
     <input id="c_male" type="text" value="" onchange="getVial(this)" />
@@ -27,11 +30,12 @@
                 {{ cross.male.stock.name }}
             {% elseif cross.male.cross is not empty %}
                 {{ cross.male.cross.name }}
+                {% set hidden = "" %}
             {% endif %}
             ({{ cross.male.name }})
         {% endif %}
     </span><br />
-    {{ form_row(form.maleName) }}
+    <div id="c_male_name" {{ hidden }}>{{ form_row(form.maleName) }}</div>
 
     {{ form_row(form.vial.setupDate) }}
     {{ form_row(form.vial.flipDate) }}

@@ -110,7 +110,7 @@ class FlyCross {
      */
     public function getName()
     {
-        return $this->virginName . " ☿ ✕ " . $this->maleName . " ♂";
+        return $this->getVirginName() . " ☿ ✕ " . $this->getMaleName() . " ♂";
     }
     
     /**
@@ -120,7 +120,7 @@ class FlyCross {
      */
     public function getLabel()
     {
-        return $this->virginName . "\nX\n" . $this->maleName;
+        return $this->getVirginName() . "\nX\n" . $this->getMaleName();
     }
     
     /**
@@ -131,6 +131,9 @@ class FlyCross {
     public function setMale(\VIB\FliesBundle\Entity\FlyVial $male)
     {
         $this->male = $male;
+        if ($this->male != null)
+            if ($this->male->getStock() != null)
+                $this->maleName = $this->male->getStock()->getName();
     }
 
     /**
@@ -150,6 +153,9 @@ class FlyCross {
      */
     public function setMaleName($maleName)
     {
+        if ($this->male != null)
+            if ($this->male->getStock() != null)
+                $maleName = $this->male->getStock()->getName();
         $this->maleName = $maleName;
     }
 
@@ -171,6 +177,9 @@ class FlyCross {
     public function setVirgin(\VIB\FliesBundle\Entity\FlyVial $virgin)
     {
         $this->virgin = $virgin;
+        if ($this->virgin != null)
+            if ($this->virgin->getStock() != null)
+                $this->virginName = $this->virgin->getStock()->getName();
     }
 
     /**
@@ -190,6 +199,9 @@ class FlyCross {
      */
     public function setVirginName($virginName)
     {
+        if ($this->virgin != null)
+            if ($this->virgin->getStock() != null)
+                $virginName = $this->virgin->getStock()->getName();
         $this->virginName = $virginName;
     }
 
@@ -200,7 +212,7 @@ class FlyCross {
      */
     public function getVirginName()
     {
-        return $this->virginName;
+                return $this->virginName;
     }
 
     /**
