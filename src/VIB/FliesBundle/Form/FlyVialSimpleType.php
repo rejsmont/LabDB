@@ -30,8 +30,14 @@ class FlyVialSimpleType extends AbstractType
     
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('setupDate', 'date')
-                ->add('flipDate', 'date');
+        $builder->add('setupDate', 'date', array(
+                        'attr' => array('class' => 'date'),
+                        'widget' => 'single_text',
+                        'format' => 'dd MMM yyyy'))
+                ->add('flipDate', 'date', array(
+                        'attr' => array('class' => 'date'),
+                        'widget' => 'single_text',
+                        'format' => 'dd MMM yyyy'));
     }
 
     public function getDefaultOptions(array $options)

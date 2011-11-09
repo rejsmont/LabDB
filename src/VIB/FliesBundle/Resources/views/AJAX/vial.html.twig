@@ -1,12 +1,12 @@
 <tr>
-    <td>
+    <td class="ui-state-default">
         <input type="checkbox" id="FlyVialSelectType_items_{{ vial.id }}" 
                name="FlyVialSelectType[items][{{ vial.id }}]" 
                value="{{ vial.id }}" checked="checked" />
     </td>
-    <td>{{ vial.name }}</td>
-    <td>{% if vial.stock is not empty %}{{ vial.stock.name }}{% endif %}</td>
-    <td>{% if vial.cross is not empty %}{{ vial.cross.name }}{% endif %}</td>
-    <td>{{ vial.setupDate | date("d.m.Y") }}</td>
-    <td>{{ vial.flipDate | date("d.m.Y") }}</td>
+    <td class="ui-state-default">{{ vial.name }}</td>
+    <td class="ui-state-default">{% if vial.stock is not empty %}{{ vial.stock.name }}{% endif %}</td>
+    <td class="ui-state-default">{% if vial.cross is not empty %}{{ vial.cross.name }}{% endif %}</td>
+    <td class="ui-state-default">{{ vial.setupDate | date("d.m.Y") }}</td>
+    <td class="ui-state-default">{{ vial.flipDate | date("d.m.Y") }}</td>
 </tr>

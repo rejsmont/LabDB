@@ -52,6 +52,8 @@ class FlyVialSelectType extends AbstractType
      */
     public function buildForm(FormBuilder $builder, array $options)
     {
+        $builder->add('action', 'hidden');
+        
         $factory = $builder->getFormFactory();
         
         $refreshEntities = function ($form, $selections) use ($factory) {

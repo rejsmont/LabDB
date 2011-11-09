@@ -1,24 +1,22 @@
+{% import 'VIBFliesBundle:Macros:form.html.twig' as f %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+
 <form action="{{ app.request.requestUri }}"
       method="post" {{ form_enctype(form) }}>
 
     {{ form_errors(form) }}
 
-    {{ form_row(form.setupDate) }}
-    {{ form_row(form.flipDate) }}
-    {{ form_row(form.parent) }}
-    <label for="v_parent">Flipped from</label>
-    <input id="v_parent" type="text" value="" onchange="getVial(this)" />
-    <span id="v_parent_data">{% if vial.parent is not empty %}{{ vial.parent.name }}{% endif %}</span><br />
-    {{ form_row(form.stock) }}
-    <label for="v_stock">Stock</label>
-    <input id="v_stock" type="text" value="" onchange="getVial(this)" />
-    <span id="v_stock_data">{% if vial.stock is not empty %}{{ vial.stock.name }}{% endif %}</span><br />
-    {{ form_row(form.cross) }}
-    <label for="v_cross">Cross</label>
-    <input id="v_cross" type="text" value="" onchange="getVial(this)" />
-    <span id="v_cross_data">{% if vial.cross is not empty %}{{ vial.cross.name }}{% endif %}</span><br />
+    <table class="data">
+        {{ f.tr_row(form.setupDate) }}
+        {{ f.tr_row(form.flipDate) }}
+        {{ f.tr_vrow(form.parent, vial.parent, 'getVial(this)') }}
+        {{ f.tr_vrow(form.stock, vial.stock, 'getVial(this)') }}
+        {{ f.tr_vrow(form.cross, vial.cross, 'getVial(this)') }}
+    </table>
     
     {{ form_rest(form) }}
 
-    <input type="submit" />
+    {{ jq.button('Cancel',path('flyvial_show', { 'id': vial.id }),'ui-icon-closethick') }}
+    {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
+    {{ jq.submit_button('Save','ui-icon-disk') }}
 </form>

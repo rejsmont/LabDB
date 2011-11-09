@@ -88,12 +88,13 @@ class FlyVialController extends Controller {
     /**
      * Handle batch action
      * 
+     * @param string $action
      * @param Doctrine\Common\Collections\Collection $vials
      * @return mixed
      */
-    public function handleBatchAction($vials) {
+    public function handleBatchAction($action, $vials) {
 
-        switch($vialsSelector->getAction()) {
+        switch($action) {
             case 'label':
                 return $this->generateLabels($vials);
                 break;
@@ -121,7 +122,6 @@ class FlyVialController extends Controller {
         $pdf = $this->prepareLabelPDF();
         
         foreach ($vials as $vial) {
-            $vial = $item->getItem();
             $vial->setLabelPrinted(true);
             $em->persist($vial);
             $pdf = $this->addFlyLabel($pdf, $vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
@@ -132,7 +132,7 @@ class FlyVialController extends Controller {
         return new Response($pdf->Output('', 'S'),200,
                 array(
                     'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'attachment; filename="labels.pdf'));
+                    'Content-Disposition' => 'attachment; filename="labels.pdf"'));
     }
     
     /**
@@ -212,10 +212,10 @@ class FlyVialController extends Controller {
             $form->bindRequest($request);
             
             if ($form->isValid()) {
-
+                return $this->handleBatchAction($list->getAction(), $list->getItems());
             }
         }
-        
+                
         return array(
             'header' => 'Select vials',
             'list' => $list,

@@ -1,26 +1,31 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
 
 {% block content %}
     <h1>Stock {{ stock }}</h1>
-    {% if stock.sourceCross is not empty %}
-    <p>
-        Source cross:
-        <a href="{{ path('flycross_show', { 'id': stock.sourceCross.id }) }}">{{ stock.sourceCross }}</a>
-    </p>
-    {% endif %}
-    {% if stock.vials | length > 0 %}
-        <p>Stock is kept in the following vials:</p>
-        <ul>
-        {% for vial in stock.livingVials %}
-            <li>
-                <a href="{{ path('flyvial_show', { 'id': vial.id }) }}">{{ vial }}</a>
-                ({{ vial.setupDate | date("d.m.Y") }})
-            </li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    <p><a href="{{ path('flystock_list') }}">List</a> |
-       <a href="{{ path('flystock_create') }}">New</a> |
-       <a href="{{ path('flystock_edit', { 'id': stock.id }) }}">Edit</a> |
-       <a href="{{ path('flystock_delete', { 'id': stock.id }) }}">Delete</a></p>
+    
+    <table class="data">
+        {% if stock.sourceCross is not empty %}
+        <tr>
+            <th>Source cross:</th>
+            <td><a href="{{ path('flycross_show', { 'id': stock.sourceCross.id }) }}">{{ stock.sourceCross }}</a></td>
+        </tr>
+        {% endif %}
+        {% if stock.vials | length > 0 %}
+        <tr>
+            <th>Vials:</th>
+            <td><ul>
+            {% for vial in stock.livingVials %}
+                <li><a href="{{ path('flyvial_show', { 'id': vial.id }) }}">{{ vial }}</a>
+                ({{ vial.setupDate | date("d M Y") }})<br /></li>
+            {% endfor %}
+            </ul></td>
+        </tr>
+        {% endif %}
+    </table>
+
+    {{ jq.button('List',path('flystock_list'),'ui-icon-folder-collapsed') }}    
+    {{ jq.button('New',path('flystock_create'),'ui-icon-document') }}
+    {{ jq.button('Edit',path('flystock_edit', { 'id': stock.id }),'ui-icon-pencil') }}
+    {{ jq.button('Delete',path('flystock_delete', { 'id': stock.id }),'ui-icon-trash') }}
 {% endblock %}

@@ -5,8 +5,7 @@
 <table>
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Bottle</th>
+            <th>Vial</th>
             <th colspan="2">Virgin</th>
             <th colspan="2">Male</th>
             <th>Setup date</th>
@@ -16,18 +15,16 @@
     <tbody>
     {% for cross in crosses %}
         <tr>
-            <td><a href="{{ path('flycross_show', { 'id': cross.id }) }}">
-                {{ cross.id }}</a></td>
             <td>{% if cross.vial is not empty %}
-                <a href="{{ path('flyvial_show', { 'id': cross.vial.id }) }}">{{ cross.vial }}</a>
+                <a href="{{ path('flycross_show', { 'id': cross.id }) }}">{{ cross.vial }}</a>
                 {% endif %}
             </td>
             <td>{{ cross.virginName }}</td>
             <td><a href="{{ path('flyvial_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a></td>
             <td>{{ cross.maleName }}</td>
             <td><a href="{{ path('flyvial_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a></td>
-            <td>{% if cross.vial is not empty %}{{ cross.vial.setupDate | date("d.m.Y") }}{% endif %}</td>
-            <td>{% if cross.vial is not empty %}{{ cross.vial.flipDate | date("d.m.Y") }}{% endif %}</td>
+            <td>{% if cross.vial is not empty %}{{ cross.vial.setupDate | date("d M Y") }}{% endif %}</td>
+            <td>{% if cross.vial is not empty %}{{ cross.vial.flipDate | date("d M Y") }}{% endif %}</td>
         </tr>
     {% endfor %}
     </tbody>

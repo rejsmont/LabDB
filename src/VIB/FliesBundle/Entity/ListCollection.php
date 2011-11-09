@@ -47,6 +47,11 @@ class ListCollection {
     protected $items;
     
     /**
+     * @var string
+     */
+    protected $action;
+    
+    /**
      * Construct ListCollection
      *
      * @param VIB\FliesBundle\Entity\FlyVial $parent
@@ -73,4 +78,14 @@ class ListCollection {
         else
             $this->items = new ArrayCollection($items);
     }
+    
+    public function getAction() {
+        return $this->action;
+    }
+
+    public function setAction($action) {
+        $this->action = $action;
+    }
+
+
 }

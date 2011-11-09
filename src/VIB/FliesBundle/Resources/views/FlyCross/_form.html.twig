@@ -1,46 +1,21 @@
+{% import 'VIBFliesBundle:Macros:form.html.twig' as f %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+
 <form action="{{ app.request.requestUri }}"
       method="post" {{ form_enctype(form) }}>
 
     {{ form_errors(form) }}
-
-    {% set hidden = "hidden=\"hidden\"" %}
-    {{ form_row(form.virgin) }}
-    <label for="c_virgin">Virgin</label>
-    <input id="c_virgin" type="text" value="" onchange="getVial(this)" />
-    <span id="c_virgin_data">
-        {% if cross.virgin is not empty %}
-            {% if cross.virgin.stock is not empty %}
-                {{ cross.virgin.stock.name }}
-            {% elseif cross.virgin.cross is not empty %}
-                {{ cross.virgin.cross.name }}
-                {% set hidden = "" %}
-            {% endif %}
-            ({{ cross.virgin.name }})
-        {% endif %}
-    </span><br />
-    <div id="c_virgin_name" {{ hidden }}>{{ form_row(form.virginName) }}</div>
     
-    {% set hidden = "true" %}
-    {{ form_row(form.male) }}
-    <label for="c_male">Male</label>
-    <input id="c_male" type="text" value="" onchange="getVial(this)" />
-    <span id="c_male_data">
-        {% if cross.male is not empty %}
-            {% if cross.male.stock is not empty %}
-                {{ cross.male.stock.name }}
-            {% elseif cross.male.cross is not empty %}
-                {{ cross.male.cross.name }}
-                {% set hidden = "" %}
-            {% endif %}
-            ({{ cross.male.name }})
-        {% endif %}
-    </span><br />
-    <div id="c_male_name" {{ hidden }}>{{ form_row(form.maleName) }}</div>
-
-    {{ form_row(form.vial.setupDate) }}
-    {{ form_row(form.vial.flipDate) }}
-
+    <table class="data">
+        {{ f.tr_crow(form.virgin, form.virginName, cross.virgin, 'getVial(this)') }}
+        {{ f.tr_crow(form.male, form.maleName, cross.male, 'getVial(this)') }}
+        {{ f.tr_row(form.vial.setupDate) }}
+        {{ f.tr_row(form.vial.flipDate) }}
+    </table>
+    
     {{ form_rest(form) }}
 
-    <input type="submit" />
+    {{ jq.button('Cancel',path('flycross_show', { 'id': cross.id }),'ui-icon-closethick') }}
+    {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
+    {{ jq.submit_button('Save','ui-icon-disk') }}
 </form>

@@ -20,7 +20,7 @@
  */
 function checkVial()
 {
-    var id = parseInt(barcode.value,10);
+    var id = parseInt($('#barcode').val(),10);
     var checkbox = $("#FlyVialSelectType_items_" + id);
     
     if(checkbox.length) {
@@ -51,13 +51,14 @@ function checkVial()
         });
     }
 
-    barcode.value = '';
+    $('#barcode').val('');
+    $('#barcode').focus();
 }
 
 function getVial(caller)
 {
     var caller_id = caller.id;
-    var filter = caller_id.substring(2);
+    var filter = caller_id.substring(7);
     var vial_id = parseInt(caller.value,10);
     
     if (caller.value == 0) {
@@ -94,27 +95,17 @@ function getVial(caller)
                         break;
                     case 'virgin':
                     case 'male':
-                        if (vial.stock) {
-                            $('#' + caller.id + '_name').attr('hidden','true');
-                            
+                        if (vial.stock) {                            
                             html = vial.stock.name + ' (' + pad(vial.id + '',6) + ')';
                             $('[id$="Type_' + filter + '"]').val(vial.id);
                             $('#' + caller.id + '_data').html(html);
                             $('[id$="Type_' + filter + 'Name"]').val(vial.stock.name);
-                            
-                            var inputs = $(caller).closest('form').find(':input').not(":hidden");
-                            inputs.eq( inputs.index(caller) + 1 ).focus();
-                        
-                        } else if (vial.cross) {
-                            $('#' + caller.id + '_name').removeAttr('hidden');
-                            
+                        } else if (vial.cross) {                            
                             html = vial.cross.virgin_name + " \u263f ✕ " + vial.cross.male_name + " \u2642"
                                  + ' (' + pad(vial.id + '',6) + ')';
                             $('[id$="Type_' + filter + '"]').val(vial.id);
                             $('#' + caller.id + '_data').html(html);
                             $('[id$="Type_' + filter + 'Name"]').val('');
-                            
-                            $('[id$="Type_' + filter + 'Name"]').focus();
                         }
                         break;
                 }
@@ -145,8 +136,39 @@ function preventEnterSubmit(e) {
     }
 }
 
-//$(document).ready(function() {
-//    $("form").bind("keypress", function(e) {
-//        return preventEnterSubmit(e);
-//    });
-//}); 
+$(document).ready(function() {
+    $('form').bind("keypress", function(e) {
+        return preventEnterSubmit(e);
+    });
+    
+    $('.date').datepicker({
+        dateFormat: 'dd M yy'
+    });
+
+    $('nav a').button();
+    
+    $('select').selectmenu({
+        style:'dropdown',
+        wrapperElement: "<div class='ui-selectmenu-wrap' />"
+    });
+    
+    $('td').addClass('ui-state-default');
+    $('input').addClass('ui-state-default');
+    $('input').hover(
+        function(){$(this).addClass("ui-state-hover");},
+        function(){$(this).removeClass("ui-state-hover");}
+    );
+    $('input').focus(
+        function(){$(this).addClass("ui-state-active");}
+    );
+    $('input').blur(
+        function(){$(this).removeClass("ui-state-active");}
+    );
+    $('th').addClass('ui-widget-header');
+    $('table').attr('cellspacing','0');
+    
+    $('#checkall').click(function () {
+        $(this).parents('table').find(':checkbox').attr('checked', this.checked);
+    });
+}); 
+

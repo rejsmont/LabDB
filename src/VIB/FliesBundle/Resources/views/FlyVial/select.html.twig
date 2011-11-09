@@ -1,20 +1,24 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
 
 {% block content %}
 <h1>{{ header }}</h1>
-
-    <label>To select vials, scan barcodes here: </label>
-    <input id="barcode" type="text" value="" onchange="checkVial()" />
-    <br /><br />
     <form action="{{ app.request.requestUri }}"
           method="post" {{ form_enctype(form) }}>
+        <table id="barcode_select">
+            <tr>
+                <th><label for="barcode">To select vials, scan barcodes here:</label></th>
+                <td><input id="barcode" type="text" value="" onchange="checkVial()" /></td>
+            </tr>
+        </table>
+        {{ form_errors(form) }}
         {% if form.items | length < 1 %}
             {{ form_widget(form.items) }}
         {% endif %}
         <table id="vials">
             <thead>
                 <tr>
-                    <th></th>
+                    <th><input type="checkbox" id="checkall"></th>
                     <th>ID</th>
                     <th>Stock</th>
                     <th>Cross</th>
@@ -38,12 +42,24 @@
             {% endfor %}
             </tbody>
         </table>
-        
+
         {{ form_errors(form) }}
         {{ form_rest(form) }}
-        
-        <input type="submit" />
-        
+
+        {{ jq.button('Cancel',path('flyvial_list'),'ui-icon-closethick') }}
+        {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
+        {{ jq.submit_action_button(
+                'Flip',
+                "$('#FlyVialSelectType_action').val('flip'); $('form').submit();",
+                'ui-icon-copy') }}
+        {{ jq.submit_action_button(
+                'Trash',
+                "$('#FlyVialSelectType_action').val('trash'); $('form').submit();",
+                'ui-icon-trash') }}
+        {{ jq.submit_action_button(
+                'Print labels',
+                "$('#FlyVialSelectType_action').val('label'); $('form').submit();",
+                'ui-icon-print') }}
     </form>
     
 {% endblock %}

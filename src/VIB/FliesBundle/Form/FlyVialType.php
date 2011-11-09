@@ -46,23 +46,34 @@ class FlyVialType extends AbstractType
      */
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('setupDate', 'date')
-                ->add('flipDate', 'date')
+        $builder->add('setupDate', 'date', array(
+                        'attr' => array('class' => 'date'),
+                        'widget' => 'single_text',
+                        'format' => 'dd MMM yyyy',
+                        'label' => 'Setup date:'))
+                ->add('flipDate', 'date', array(
+                        'attr' => array('class' => 'date'),
+                        'widget' => 'single_text',
+                        'format' => 'dd MMM yyyy',
+                        'label' => 'Flip date:'))
                 ->add('parent', 'null_entity', array(
                         'property'     => 'id',
                         'class'     => 'VIBFliesBundle:FlyVial',
                         'required'  => false,
-                        'hidden'    => true))
+                        'hidden'    => true,
+                        'label' => 'Flipped from:'))
                 ->add('stock', 'null_entity', array(
                         'property'     => 'id',
                         'class'     => 'VIBFliesBundle:FlyStock',
                         'required'  => false,
-                        'hidden'    => true))
+                        'hidden'    => true,
+                        'label' => 'Stock:'))
                 ->add('cross', 'null_entity', array(
                         'property'     => 'id',
                         'class'     => 'VIBFliesBundle:FlyCross',
                         'required'  => false,
-                        'hidden'    => true));
+                        'hidden'    => true,
+                        'label' => 'Cross:'));
     }
     
     /**

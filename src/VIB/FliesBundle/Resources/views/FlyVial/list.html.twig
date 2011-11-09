@@ -1,4 +1,5 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
 
 {% block content %}
 <h1>{{ header }}</h1>
@@ -11,7 +12,7 @@
             <th>Setup date</th>
             <th>Flip date</th>
             <th>Flipped from</th>
-            <th></th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody>
@@ -25,15 +26,19 @@
             <td>{% if vial.cross is not empty %}
                 <a href="{{ path('flycross_show', { 'id': vial.cross.id }) }}">{{ vial.cross }}</a>
                 {% endif %}</td>
-            <td>{{ vial.setupDate | date("d.m.Y") }}</td>
-            <td>{{ vial.flipDate | date("d.m.Y") }}</td>
+            <td>{{ vial.setupDate | date("d M Y") }}</td>
+            <td>{{ vial.flipDate | date("d M Y") }}</td>
             <td>{% if vial.parent is not empty %}
                 <a href="{{ path('flyvial_show', { 'id': vial.parent.id }) }}">
                 {{ vial.parent }}
                 </a>
                 {% endif %}</td>
             <td>{% if vial.trashed %}
-                TRASHED
+                <span style="color: black;">TRASHED</span>
+                {% elseif vial.alive %}
+                <span style="color: green;">ALIVE</span>
+                {% else %}
+                <span style="color: red;">DEAD</span>
                 {% endif %}
 
             </td>
@@ -41,4 +46,5 @@
     {% endfor %}
     </tbody>
 </table>
+{{ jq.button('Select vials',path('flyvial_select'),'ui-icon-tag') }}
 {% endblock %}

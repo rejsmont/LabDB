@@ -1,16 +1,19 @@
+{% import 'VIBFliesBundle:Macros:form.html.twig' as f %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+
 <form action="{{ app.request.requestUri }}"
       method="post" {{ form_enctype(form) }}>
 
     {{ form_errors(form) }}
 
-    {{ form_row(form.name) }}
-    {{ form_row(form.source_cross) }}
-    <label for="s_source_cross">Source cross</label>
-    <input id="s_source_cross" type="text" value="" onchange="getVial(this)" />
-    <span id="s_source_cross_data">
-        {% if stock.sourceCross is not empty %}{{ stock.sourceCross.name }}{% endif %}
-    </span><br />
+    <table class="data">
+        {{ f.tr_row(form.name) }}
+        {{ f.tr_vrow(form.source_cross, stock.sourceCross, 'getVial(this)') }}
+    </table>
+    
     {{ form_rest(form) }}
-
-    <input type="submit" />
+    
+    {{ jq.button('Cancel',path('flystock_show', { 'id': stock.id }),'ui-icon-closethick') }}
+    {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
+    {{ jq.submit_button('Save','ui-icon-disk') }}
 </form>

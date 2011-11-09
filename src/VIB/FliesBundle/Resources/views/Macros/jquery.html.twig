@@ -1,0 +1,44 @@
+{% macro button_script(label,primary_icon,secondary_icon) %}
+<script>
+$(function() {
+  $('#jq_button_{{ label }}').button(
+  {% if (primary_icon is not null) or (secondary_icon is not null) %}
+    {icons:
+    {% if primary_icon is not null %}
+      {primary:'{{ primary_icon }}'}
+    {% endif %}
+    {% if secondary_icon is not null %}
+      {secondary:'{{ secondary_icon }}'}
+    {% endif %}
+    }
+  {% endif %}
+  );    
+});
+</script>
+{% endmacro %}
+
+{% macro button(label,route,primary_icon,secondary_icon) %}
+{% spaceless %}
+    <a id="jq_button_{{ label|replace({' ': '_'}) }}" href="{{ route }}">{{ label }}</a>
+    {{ _self.button_script(label|replace({' ': '_'}),primary_icon,secondary_icon) }}
+{% endspaceless %}
+{% endmacro %}
+    
+{% macro submit_button(label,action,primary_icon,secondary_icon) %}
+{% spaceless %}
+    <button id="jq_button_{{ label|replace({' ': '_'}) }}" type="submit">{{ label }}</button>
+    {{ _self.button_script(label|replace({' ': '_'}),primary_icon,secondary_icon) }}
+{% endspaceless %}
+{% endmacro %}
+    
+{% macro submit_action_button(label,action,primary_icon,secondary_icon) %}
+{% spaceless %}
+    <button id="jq_button_{{ label|replace({' ': '_'}) }}"
+            type="submit"
+        {% if action is not empty %}
+            onclick="{{ action }}"
+        {% endif %}
+    >{{ label }}</button>
+    {{ _self.button_script(label|replace({' ': '_'}),primary_icon,secondary_icon) }}
+{% endspaceless %}
+{% endmacro %}

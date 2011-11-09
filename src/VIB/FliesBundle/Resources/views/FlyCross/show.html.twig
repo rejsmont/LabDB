@@ -1,4 +1,5 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
 
 {% block content %}
     <h1>
@@ -7,40 +8,56 @@
             (<a href="{{ path('flyvial_show', { 'id': cross.vial.id }) }}">{{ cross.vial }}</a>)
         {% endif %}
     </h1>
-    <p>
-        Virgin: {{ cross.virginName }}
-        (<a href="{{ path('flyvial_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a>)
-    </p>
-    <p>
-        Male: {{ cross.maleName }}
-        (<a href="{{ path('flyvial_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a>)
-    </p>
-    {% if cross.vial is not empty %}
-    <p>Setup date: {{ cross.vial.setupDate | date("d.m.Y") }}</p>
-    <p>Check date: {{ cross.vial.flipDate | date("d.m.Y") }}</p>
-    {% endif %}
-    {% if cross.stocks | length > 0 %}
-        <p>The following stocks were established from this cross:</p>
-        <ul>
-        {% for stock in cross.stocks %}
-            <li>
-                <a href="{{ path('flystock_show', { 'id': stock.id }) }}">{{ stock }}</a>
-            </li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    {% if cross.crosses | length > 0 %}
-        <p>The following crosses were established from this cross:</p>
-        <ul>
-        {% for cross in cross.crosses %}
-            <li>
-                <a href="{{ path('flycross_show', { 'id': cross.id }) }}">{{ cross }}</a>
-            </li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    <p><a href="{{ path('flycross_list') }}">List</a> |
-       <a href="{{ path('flycross_create') }}">New</a> |
-       <a href="{{ path('flycross_edit', { 'id': cross.id }) }}">Edit</a> |
-       <a href="{{ path('flycross_delete', { 'id': cross.id }) }}">Delete</a></p>
+
+    <table class="data">
+        <tr>
+            <th>Virgin:</th>
+            <td>
+                {{ cross.virginName }}
+                (<a href="{{ path('flyvial_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a>)
+            </td>
+        </tr>
+        <tr>
+            <th>Male:</th>
+            <td>
+                {{ cross.maleName }}
+                (<a href="{{ path('flyvial_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a>)
+            </td>
+        </tr>  
+        {% if cross.vial is not empty %}
+        <tr>
+            <th>Setup date:</th>
+            <td>{{ cross.vial.setupDate | date("d M Y") }}</td>
+        </tr>
+        <tr>
+            <th>Check date:</th>
+            <td>{{ cross.vial.flipDate | date("d M Y") }}</td>
+        </tr>
+        {% endif %}
+        {% if cross.stocks | length > 0 %}
+        <tr>
+            <th>Stocks:</th>
+            <td><ul>
+            {% for stock in cross.stocks %}
+                <li><a href="{{ path('flystock_show', { 'id': stock.id }) }}">{{ stock }}</a></li>
+            {% endfor %}
+            </ul></td>
+        </tr>
+        {% endif %}
+        {% if cross.crosses | length > 0 %}
+        <tr>
+            <th>Crosses:</th>
+            <td><ul>
+            {% for cross in cross.crosses %}
+                <li><a href="{{ path('flycross_show', { 'id': cross.id }) }}">{{ cross }}</a></li>
+            {% endfor %}
+            </ul></td>
+        </tr>
+        {% endif %}
+    </table>
+
+    {{ jq.button('List',path('flycross_list'),'ui-icon-folder-collapsed') }}    
+    {{ jq.button('New',path('flycross_create'),'ui-icon-document') }}
+    {{ jq.button('Edit',path('flycross_edit', { 'id': cross.id }),'ui-icon-pencil') }}
+    {{ jq.button('Delete',path('flycross_delete', { 'id': cross.id }),'ui-icon-trash') }}
 {% endblock %}
