@@ -1,5 +1,6 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
 {% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
 
 {% block content %}
     <h1>
@@ -10,50 +11,15 @@
     </h1>
 
     <table class="data">
-        <tr>
-            <th>Virgin:</th>
-            <td>
-                {{ cross.virginName }}
-                (<a href="{{ path('flyvial_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a>)
-            </td>
-        </tr>
-        <tr>
-            <th>Male:</th>
-            <td>
-                {{ cross.maleName }}
-                (<a href="{{ path('flyvial_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a>)
-            </td>
-        </tr>  
+        {{ s.tr_crow("Virgin:", cross.virgin, cross.virginName, 'flyvial_show') }}
+        {{ s.tr_crow("Male:", cross.male, cross.maleName, 'flyvial_show') }}
+ 
         {% if cross.vial is not empty %}
-        <tr>
-            <th>Setup date:</th>
-            <td>{{ cross.vial.setupDate | date("d M Y") }}</td>
-        </tr>
-        <tr>
-            <th>Check date:</th>
-            <td>{{ cross.vial.flipDate | date("d M Y") }}</td>
-        </tr>
+            {{ s.tr_row("Setup date:", cross.vial.setupDate | date("d M Y")) }}
+            {{ s.tr_row("Check date:", cross.vial.flipDate | date("d M Y")) }}
         {% endif %}
-        {% if cross.stocks | length > 0 %}
-        <tr>
-            <th>Stocks:</th>
-            <td><ul>
-            {% for stock in cross.stocks %}
-                <li><a href="{{ path('flystock_show', { 'id': stock.id }) }}">{{ stock }}</a></li>
-            {% endfor %}
-            </ul></td>
-        </tr>
-        {% endif %}
-        {% if cross.crosses | length > 0 %}
-        <tr>
-            <th>Crosses:</th>
-            <td><ul>
-            {% for cross in cross.crosses %}
-                <li><a href="{{ path('flycross_show', { 'id': cross.id }) }}">{{ cross }}</a></li>
-            {% endfor %}
-            </ul></td>
-        </tr>
-        {% endif %}
+        {{ s.tr_lrow("Stocks:", cross.stocks, 'flystock_show') }}
+        {{ s.tr_lrow("Crosses:", cross.crosses, 'flycross_show') }}
     </table>
 
     {{ jq.button('List',path('flycross_list'),'ui-icon-folder-collapsed') }}    

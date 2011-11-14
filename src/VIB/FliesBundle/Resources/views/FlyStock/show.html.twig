@@ -1,27 +1,13 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
 {% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
 
 {% block content %}
     <h1>Stock {{ stock }}</h1>
     
     <table class="data">
-        {% if stock.sourceCross is not empty %}
-        <tr>
-            <th>Source cross:</th>
-            <td><a href="{{ path('flycross_show', { 'id': stock.sourceCross.id }) }}">{{ stock.sourceCross }}</a></td>
-        </tr>
-        {% endif %}
-        {% if stock.vials | length > 0 %}
-        <tr>
-            <th>Vials:</th>
-            <td><ul>
-            {% for vial in stock.livingVials %}
-                <li><a href="{{ path('flyvial_show', { 'id': vial.id }) }}">{{ vial }}</a>
-                ({{ vial.setupDate | date("d M Y") }})<br /></li>
-            {% endfor %}
-            </ul></td>
-        </tr>
-        {% endif %}
+        {{ s.tr_arow("Source cross:", stock.sourceCross, 'flycross_show') }}
+        {{ s.tr_ldrow("Vials:", stock.livingVials, 'flyvial_show') }}
     </table>
 
     {{ jq.button('List',path('flystock_list'),'ui-icon-folder-collapsed') }}    

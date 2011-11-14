@@ -1,47 +1,60 @@
-{% macro tr_row(field) %}
+{% macro tr_row(label,value) %}
 <tr>
-    <th>{{ form_label(field) }}</th>
-    <td>{{ form_widget(field) }}</td>
-    <td colspan="2">{{ form_errors(field) }}</td>
+    <th>{{ label }}</th>
+    <td>{{ value }}</td>
 </tr>
 {% endmacro %}
 
-{% macro tr_vrow(field, value, javascript) %}
+{% macro tr_arow(label, value, ctrl) %}
+{% if value is not empty %}
 <tr>
-    <th>{{ form_label(field) }}</th>
+    <th>{{ label }}</th>
     <td>
-        {{ form_widget(field) }}
-        <input id="v_ajax_{{field.vars.name}}" type="text" value="" onchange="{{ javascript }}" />
+        <a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>
     </td>
-    <td id="v_ajax_{{field.vars.name}}_data">
-        {% if value is not empty %}{{ value.name }}{% endif %}
-    </td>
-    <td>{{ form_errors(field) }}</td>
 </tr>
+{% endif %}
 {% endmacro %}
 
-{% macro tr_crow(field, name_field, value, javascript) %}
+{% macro tr_crow(label, value, name, ctrl) %}
+{% if value is not empty %}
 <tr>
-    <th>{{ form_label(field) }}</th>
+    <th>{{ label }}</th>
     <td>
-        {{ form_widget(field) }}
-        <input id="v_ajax_{{field.vars.name}}" type="text" value="" onchange="{{ javascript }}" />
+        {{ name }}
+        (<a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>)
     </td>
-    <td id="v_ajax_{{field.vars.name}}_data">
-    {% if value is not empty %}
-        {% if value.stock is not empty %}
-            {{ value.stock.name }}
-        {% elseif value.cross is not empty %}
-            {{ value.cross.name }}
-        {% endif %}
-        ({{ value.name }})
-    {% endif %}
-    </td>
-    <td>{{ form_errors(field) }}</td>
 </tr>
-<tr id="v_ajax_{{field.vars.name}}_name">
-    <th>{{ form_label(name_field) }}</th>
-    <td>{{ form_widget(name_field) }}</td>
-    <td colspan="2">{{ form_errors(name_field) }}</td>
+{% endif %}
+{% endmacro %}
+
+{% macro tr_lrow(label, value, ctrl) %}
+{% if value | length > 0 %}
+<tr>
+    <th>{{ label }}</th>
+    <td><ul>
+    {% for item in value %}
+        <li>
+            <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
+        </li>
+    {% endfor %}
+    </ul></td>
 </tr>
+{% endif %}
+{% endmacro %}
+
+{% macro tr_ldrow(label, value, ctrl) %}
+{% if value | length > 0 %}
+<tr>
+    <th>{{ label }}</th>
+    <td><ul>
+    {% for item in value %}
+        <li>
+            <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
+            ({{ item.setupDate | date("d M Y") }})
+        </li>
+    {% endfor %}
+    </ul></td>
+</tr>
+{% endif %}
 {% endmacro %}

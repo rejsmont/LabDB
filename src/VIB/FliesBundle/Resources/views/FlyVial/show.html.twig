@@ -1,55 +1,17 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
 {% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
 
 {% block content %}
     <h1>Vial {{ vial }}</h1>
 
     <table class="data">
-        <tr>
-            <th>Setup date:</th>
-            <td>{{ vial.setupDate | date("d M Y") }}</td>
-        </tr>
-        <tr>
-            <th>Flip date:</th>
-            <td>{{ vial.flipDate | date("d M Y") }}</td>
-        </tr>
-        {% if vial.parent is not empty %}
-        <tr>
-            <th>Flipped from:</th>
-            <td>
-                <a href="{{ path('flyvial_show', { 'id': vial.parent.id }) }}">{{ vial.parent }}</a>
-            </td>
-        </tr>
-        {% endif %}
-        {% if vial.stock is not empty %}
-        <tr>
-            <th>Stock:</th>
-            <td>
-                <a href="{{ path('flystock_show', { 'id': vial.stock.id }) }}">{{ vial.stock }}</a>
-            </td>
-        </tr>
-        {% endif %}
-        {% if vial.cross is not empty %}
-        <tr>
-            <th>Cross:</th>
-            <td>
-                <a href="{{ path('flycross_show', { 'id': vial.cross.id }) }}">{{ vial.cross }}</a>
-            </td>
-        </tr>
-        {% endif %}
-        {% if vial.children | length > 0 %}
-        <tr>
-            <th>Flipped to:</th>
-            <td><ul>
-            {% for child in vial.children %}
-                <li>
-                    <a href="{{ path('flyvial_show', { 'id': child.id }) }}">{{ child }}</a>
-                    ({{ child.setupDate | date("d M Y") }})
-                </li>
-            {% endfor %}
-            </ul></td>
-        </tr>
-        {% endif %}
+        {{ s.tr_row("Setup date:", vial.setupDate | date("d M Y")) }}
+        {{ s.tr_row("Flip date:", vial.flipDate | date("d M Y")) }}
+        {{ s.tr_arow("Flipped from:", vial.parent, 'flyvial_show') }}
+        {{ s.tr_arow("Stock:", vial.stock, 'flystock_show') }}
+        {{ s.tr_arow("Cross:", vial.cross, 'flycross_show') }}
+        {{ s.tr_lrow("Flipped to:", vial.children, 'flyvial_show')}}
     </table>
 
     {% if vial.stock is not empty %}
