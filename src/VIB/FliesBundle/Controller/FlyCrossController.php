@@ -13,8 +13,13 @@ use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+
 use VIB\FliesBundle\Entity\FlyCross;
+use VIB\FliesBundle\Entity\ListCollection;
 use VIB\FliesBundle\Form\FlyCrossType;
+use VIB\FliesBundle\Form\FlyCrossSelectType;
 
 class FlyCrossController extends Controller
 {
@@ -22,14 +27,39 @@ class FlyCrossController extends Controller
      * List crosses
      * 
      * @Route("/crosses/", name="flycross_list")
+     * @Route("/crosses/page/{page}", name="flycross_listpage")
      * @Template()
      */
-    public function listAction()
+    public function listAction($page = 1)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $crosses = $em->getRepository('VIBFliesBundle:FlyCross')->findAll();
+
+        $query = $em->getRepository('VIBFliesBundle:FlyCross')->findAllLivingQuery();
         
-        return array('crosses' => $crosses);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(15);
+        $pager->setCurrentPage($page);
+        $crosses = $pager->getCurrentPageResults();
+        
+        $list = new ListCollection($crosses);
+        $form = $this->createForm(new FlyCrossSelectType(), $list);
+
+        $request = $this->get('request');
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                return null;
+            }
+        }
+                
+        
+        return array('form' => $form->createView(),
+                     'list' => $list,
+                     'pager' => $pager);
     }
     
     /**

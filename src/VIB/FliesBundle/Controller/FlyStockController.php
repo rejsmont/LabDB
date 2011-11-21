@@ -29,6 +29,9 @@ use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+
 use VIB\FliesBundle\Entity\FlyStock;
 use VIB\FliesBundle\Form\FlyStockType;
 
@@ -43,14 +46,23 @@ class FlyStockController extends Controller
      * List stocks
      * 
      * @Route("/stocks/", name="flystock_list")
+     * @Route("/stocks/page/{page}", name="flystock_listpage")
      * @Template()
      */
-    public function listAction()
+    public function listAction($page = 1)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $stocks = $em->getRepository('VIBFliesBundle:FlyStock')->findAll();
+
+        $query = $em->getRepository('VIBFliesBundle:FlyStock')->createQueryBuilder('s');
         
-        return array('stocks' => $stocks);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(15);
+        $pager->setCurrentPage($page);
+        $stocks = $pager->getCurrentPageResults();
+        
+        return array('stocks' => $stocks,
+                     'pager' => $pager);
     }
     
     /**

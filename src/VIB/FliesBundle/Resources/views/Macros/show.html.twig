@@ -5,6 +5,13 @@
 </tr>
 {% endmacro %}
 
+{% macro tr_rrow(label,value) %}
+<tr>
+    <th>{{ label|raw }}</th>
+    <td>{{ value|raw }}</td>
+</tr>
+{% endmacro %}
+
 {% macro tr_arow(label, value, ctrl) %}
 {% if value is not empty %}
 <tr>
@@ -57,4 +64,43 @@
     </ul></td>
 </tr>
 {% endif %}
+{% endmacro %}
+
+{% macro pager(pager, route, options) %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+
+{% set options = options == null ? {} : options %}
+
+<nav class="pager">
+    <span>
+    {{ jq.button('First',
+                 path(route, options|merge({ 'page': 1 })),
+                 'ui-icon-arrowstop-1-w',null,pager.currentPage <= 1,true) }}
+    {{ jq.button('Previous',
+                 path(route, options|merge({ 'page': pager.currentPage-1 })),
+                 'ui-icon-arrow-1-w',null,pager.currentPage <= 1,true) }}
+
+    </span>
+    <span>
+    {% set min = pager.currentPage-3 < 1 ? 1 : pager.currentPage-3 %}
+    {% set max = pager.currentPage+3 > pager.nbPages ? pager.nbPages : pager.currentPage+3 %}
+    {% for page in min..max %}
+    {% if page != pager.currentPage %}
+    {{ jq.button(page,
+                 path(route, options|merge({ 'page': page }))) }}
+    {% else %}
+    {{ jq.button(page,
+                 path(route, options|merge({ 'page': page })),null,null,true) }}
+    {% endif %}
+    {% endfor %}
+    </span>
+    <span>
+    {{ jq.button('Next',
+                 path(route, options|merge({ 'page': pager.currentPage+1 })),
+                 null,'ui-icon-arrow-1-e',pager.currentPage >= pager.nbPages,true) }}
+    {{ jq.button('Last',
+                 path(route, options|merge({ 'page': pager.nbPages })),
+                 null,'ui-icon-arrowstop-1-e',pager.currentPage >= pager.nbPages,true) }}
+    </span>
+</nav>
 {% endmacro %}

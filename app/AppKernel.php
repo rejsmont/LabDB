@@ -18,6 +18,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle($this),
+            new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new VIB\SecurityBundle\VIBSecurityBundle(),
             new VIB\FormsBundle\VIBFormsBundle(),
             new VIB\FliesBundle\VIBFliesBundle(),

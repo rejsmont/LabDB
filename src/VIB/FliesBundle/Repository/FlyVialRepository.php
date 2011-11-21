@@ -33,7 +33,7 @@ class FlyVialRepository extends EntityRepository
      * 
      * @return Doctrine\ORM\QueryBuilder
      */
-    private function findAllLivingQuery() {
+    public function findAllLivingQuery() {
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
         
@@ -48,30 +48,30 @@ class FlyVialRepository extends EntityRepository
     }
     
     /**
-     * Return all living vials
+     * Return QueryBuilder object finding all vials
      * 
-     * @return mixed 
+     * @return Doctrine\ORM\QueryBuilder
      */
-    public function findAllLiving() {
+    public function findAllQuery() {
         
-        $query = $this->findAllLivingQuery()
-            ->getQuery();               
-        
-        return $query->getResult();
+        $query = $this->createQueryBuilder('b')
+            ->orderBy('b.setupDate', 'DESC')
+            ->addOrderBy('b.id', 'DESC');
+                
+        return $query;
     }
-    
+        
     /**
      * Return living stock vials
      * 
      * @return mixed 
      */
-    public function findAllLivingStocks() {
+    public function findAllLivingStocksQuery() {
 
         $query = $this->findAllLivingQuery()
-            ->andWhere('b.stock is not null')
-            ->getQuery();
+            ->andWhere('b.stock is not null');
                 
-        return $query->getResult();
+        return $query;
     }
     
     /**
@@ -79,13 +79,12 @@ class FlyVialRepository extends EntityRepository
      * 
      * @return mixed 
      */
-    public function findAllLivingCrosses() {
+    public function findAllLivingCrossesQuery() {
 
         $query = $this->findAllLivingQuery()
-            ->andWhere('b.cross is not null')
-            ->getQuery();
+            ->andWhere('b.cross is not null');
                 
-        return $query->getResult();
+        return $query;
     }
     
 }

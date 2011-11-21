@@ -28,5 +28,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class FlyCrossRepository extends EntityRepository
 {
-
+    /**
+     * Return QueryBuilder object finding all living crosses
+     * 
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    public function findAllLivingQuery() {
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P2M'));
+        
+        $query = $this->createQueryBuilder('c')
+            ->join('c.vial','v')
+            ->where('v.setupDate > :date')
+            ->andWhere('v.trashed = false')
+            ->setParameter('date', $date->format('d.m.y'))
+            ->orderBy('v.setupDate', 'DESC')
+            ->addOrderBy('c.id', 'DESC');
+                
+        return $query;
+    }
 }

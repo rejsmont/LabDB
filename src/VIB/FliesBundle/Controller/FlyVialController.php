@@ -33,6 +33,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+
 use Tecnick\TCPDF\TCPDF;
 
 use VIB\FliesBundle\Entity\FlyVial;
@@ -50,146 +53,46 @@ class FlyVialController extends Controller {
     /**
      * List vials
      * 
-     * @param string $filter
+     * @param integer $page
      * @return mixed
      * 
      * @Route("/vials", name="flyvial_list")
-     * @Route("/vials/list/{filter}", name="flyvial_listfilter", defaults={"filter" = "living"})
+     * @Route("/vials/page/{page}", name="flyvial_listpage")
      * @Template()
      */
-    public function listAction($filter = 'living')
+    public function listAction($page = 1)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         
-        switch($filter) {
-            case 'stock':
-                $vials = $em->getRepository('VIBFliesBundle:FlyVial')->findAllLivingStocks();
-                $header = 'Stock vials';
-                break;
-            case 'cross':
-                $vials = $em->getRepository('VIBFliesBundle:FlyVial')->findAllLivingCrosses();
-                $header = 'Cross vials';
-                break;
-            case 'all':
-                $vials = $em->getRepository('VIBFliesBundle:FlyVial')->findAll();
-                $header = 'Vials (including trashed)';
-                break;
-            case 'living':
-            default:
-                $vials = $em->getRepository('VIBFliesBundle:FlyVial')->findAllLiving();
-                $header = 'Vials';
-        }
+        $query = $em->getRepository('VIBFliesBundle:FlyVial')->findAllLivingStocksQuery();
+        $header = 'Stock vials';
         
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(15);
+        $pager->setCurrentPage($page);
+        $vials = $pager->getCurrentPageResults();
+        
+        $list = new ListCollection($vials);
+        $form = $this->createForm(new FlyVialSelectType(), $list);
+
+        $request = $this->get('request');
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                return $this->handleBatchAction($list->getAction(), $list->getItems());
+            }
+        }
+                
         return array(
-            'vials' => $vials,
-            'header' => $header);
-    }
-    
-    /**
-     * Handle batch action
-     * 
-     * @param string $action
-     * @param Doctrine\Common\Collections\Collection $vials
-     * @return mixed
-     */
-    public function handleBatchAction($action, $vials) {
-
-        switch($action) {
-            case 'label':
-                return $this->generateLabels($vials);
-                break;
-            case 'flip':
-                return $this->flipVials($vials);
-                break;
-            case 'trash':
-                return $this->trashVials($vials);
-                break;
-            default:
-                return $this->redirect($this->generateUrl('flyvial_list'));
-                break;
-        }
-    }
-    
-    /**
-     * Generate vial labels
-     * 
-     * @param Doctrine\Common\Collections\Collection $vials
-     * @return mixed
-     */    
-    public function generateLabels($vials) {
-        
-        $em = $this->get('doctrine.orm.entity_manager');
-        $pdf = $this->prepareLabelPDF();
-        
-        foreach ($vials as $vial) {
-            $vial->setLabelPrinted(true);
-            $em->persist($vial);
-            $pdf = $this->addFlyLabel($pdf, $vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
-        }
-        
-        $em->flush();
-
-        return new Response($pdf->Output('', 'S'),200,
-                array(
-                    'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'attachment; filename="labels.pdf"'));
-    }
-    
-    /**
-     * Flip vials
-     * 
-     * @param Doctrine\Common\Collections\Collection $vials
-     * @return mixed
-     */     
-    public function flipVials($vials) {
-        
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        $newvials = new ArrayCollection();
-        
-        foreach ($vials as $vial) {       
-            $newvial = new FlyVial($vial);
-            $newvials->add($newvial);
-            $em->persist($newvial);
-        }
-        
-        $em->flush();
-
-        $securityContext = $this->get('security.context');
-        $user = $securityContext->getToken()->getUser();
-        $securityIdentity = UserSecurityIdentity::fromAccount($user);
-        
-        $aclProvider = $this->get('security.acl.provider');
-        
-        foreach ($newvials as $vial) {
-            $objectIdentity = ObjectIdentity::fromDomainObject($vial);
-            $acl = $aclProvider->createAcl($objectIdentity);
-            $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
-            $aclProvider->updateAcl($acl);
-        }
-        
-        return $this->redirect($this->generateUrl('flyvial_list'));
-    }
-    
-    /**
-     * Trash vials
-     * 
-     * @param Doctrine\Common\Collections\Collection $vials
-     * @return mixed
-     */  
-    public function trashVials($vials) {
-        
-        $em = $this->get('doctrine.orm.entity_manager');
-        
-        foreach ($vials as $vial) {
-            $vial = $item->getItem();
-            $vial->setTrashed(true);
-            $em->persist($vial);
-        }
-        
-        $em->flush();
-        
-        return $this->redirect($this->generateUrl('flyvial_list'));
+            'header' => $header,
+            'list' => $list,
+            'form' => $form->createView(),
+            'pager' => $pager
+        );
     }
 
     /**
@@ -333,6 +236,114 @@ class FlyVialController extends Controller {
         $em->flush();
         return $this->redirect($this->generateUrl('flyvial_listfilter'));
     }
+    
+    /**
+     * Handle batch action
+     * 
+     * @param string $action
+     * @param Doctrine\Common\Collections\Collection $vials
+     * @return mixed
+     */
+    public function handleBatchAction($action, $vials) {
+
+        switch($action) {
+            case 'label':
+                return $this->generateLabels($vials);
+                break;
+            case 'flip':
+                return $this->flipVials($vials);
+                break;
+            case 'trash':
+                return $this->trashVials($vials);
+                break;
+            default:
+                return $this->redirect($this->generateUrl('flyvial_list'));
+                break;
+        }
+    }
+    
+    /**
+     * Generate vial labels
+     * 
+     * @param Doctrine\Common\Collections\Collection $vials
+     * @return mixed
+     */    
+    public function generateLabels($vials) {
+        
+        $em = $this->get('doctrine.orm.entity_manager');
+        $pdf = $this->prepareLabelPDF();
+        
+        foreach ($vials as $vial) {
+            $vial->setLabelPrinted(true);
+            $em->persist($vial);
+            $pdf = $this->addFlyLabel($pdf, $vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+        }
+        
+        $em->flush();
+
+        return new Response($pdf->Output('', 'S'),200,
+                array(
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="labels.pdf"'));
+    }
+    
+    /**
+     * Flip vials
+     * 
+     * @param Doctrine\Common\Collections\Collection $vials
+     * @return mixed
+     */     
+    public function flipVials($vials) {
+        
+        $em = $this->get('doctrine.orm.entity_manager');
+
+        $newvials = new ArrayCollection();
+        
+        foreach ($vials as $vial) {       
+            $newvial = new FlyVial($vial);
+            $newvials->add($newvial);
+            $em->persist($newvial);
+        }
+        
+        $em->flush();
+
+        $securityContext = $this->get('security.context');
+        $user = $securityContext->getToken()->getUser();
+        $securityIdentity = UserSecurityIdentity::fromAccount($user);
+        
+        $aclProvider = $this->get('security.acl.provider');
+        
+        foreach ($newvials as $vial) {
+            $objectIdentity = ObjectIdentity::fromDomainObject($vial);
+            $acl = $aclProvider->createAcl($objectIdentity);
+            $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+            $aclProvider->updateAcl($acl);
+        }
+        
+        return $this->redirect($this->generateUrl('flyvial_list'));
+    }
+    
+    /**
+     * Trash vials
+     * 
+     * @param Doctrine\Common\Collections\Collection $vials
+     * @return mixed
+     */  
+    public function trashVials($vials) {
+        
+        $em = $this->get('doctrine.orm.entity_manager');
+        
+        foreach ($vials as $vial) {
+            $vial = $item->getItem();
+            $vial->setTrashed(true);
+            $em->persist($vial);
+        }
+        
+        $em->flush();
+        
+        return $this->redirect($this->generateUrl('flyvial_list'));
+    }
+
     
     /**
      * Add vial label to PDF

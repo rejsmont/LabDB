@@ -1,32 +1,81 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
 
 {% block content %}
 <h1>Crosses</h1>
-<table>
-    <thead>
+
+<form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
+
+    {{ form_errors(form) }}
+    {% if form.items | length < 1 %}
+        {{ form_widget(form.items) }}
+    {% endif %}
+
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="checkall"></th>
+                <th>Vial</th>
+                <th colspan="2">Virgin</th>
+                <th colspan="2">Male</th>
+                <th>Setup date</th>
+                <th>Check date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% set index = 0 %}
+        {% for item in form.items %}
+            {% set cross = list.items[index] %}
+            <tr>
+                <td>{{ form_widget(item) }}</td>
+                <td>{% if cross.vial is not empty %}
+                    <a href="{{ path('flycross_show', { 'id': cross.id }) }}">{{ cross.vial }}</a>
+                    {% endif %}
+                </td>
+                <td>{{ cross.virginName }}</td>
+                <td><a href="{{ path('flyvial_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a></td>
+                <td>{{ cross.maleName }}</td>
+                <td><a href="{{ path('flyvial_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a></td>
+                <td>{% if cross.vial is not empty %}{{ cross.vial.setupDate | date("d M Y") }}{% endif %}</td>
+                <td>{% if cross.vial is not empty %}{{ cross.vial.flipDate | date("d M Y") }}{% endif %}</td>
+                <td>{% if cross.vial is not empty %}
+                    {% if cross.vial.trashed %}
+                        <span style="color: black;">TRASHED</span>
+                        {% elseif cross.vial.alive %}
+                        <span style="color: green;">ALIVE</span>
+                        {% else %}
+                        <span style="color: red;">DEAD</span>
+                    {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% set index = index + 1 %}
+        {% endfor %}
+        </tbody>
+    {% if pager.nbPages > 1 %}
+    <tfoot>
         <tr>
-            <th>Vial</th>
-            <th colspan="2">Virgin</th>
-            <th colspan="2">Male</th>
-            <th>Setup date</th>
-            <th>Check date</th>
+            <td colspan="8">{{ s.pager(pager,'flyvial_listpage') }}</td>
         </tr>
-    </thead>
-    <tbody>
-    {% for cross in crosses %}
-        <tr>
-            <td>{% if cross.vial is not empty %}
-                <a href="{{ path('flycross_show', { 'id': cross.id }) }}">{{ cross.vial }}</a>
-                {% endif %}
-            </td>
-            <td>{{ cross.virginName }}</td>
-            <td><a href="{{ path('flyvial_show', { 'id': cross.virgin.id }) }}">{{ cross.virgin }}</a></td>
-            <td>{{ cross.maleName }}</td>
-            <td><a href="{{ path('flyvial_show', { 'id': cross.male.id }) }}">{{ cross.male }}</a></td>
-            <td>{% if cross.vial is not empty %}{{ cross.vial.setupDate | date("d M Y") }}{% endif %}</td>
-            <td>{% if cross.vial is not empty %}{{ cross.vial.flipDate | date("d M Y") }}{% endif %}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+    </tfoot>
+    {% endif %}
+    </table>
+        
+    {{ form_errors(form) }}
+    {{ form_rest(form) }}
+    
+    {{ jq.button('Select vials',path('flyvial_select'),'ui-icon-tag') }}
+    {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
+    {{ jq.submit_action_button(
+            'Trash',
+            "$('#FlyVialSelectType_action').val('trash'); $('form').submit();",
+            'ui-icon-trash') }}
+    {{ jq.submit_action_button(
+            'Print labels',
+            "$('#FlyVialSelectType_action').val('label'); $('form').submit();",
+            'ui-icon-print') }}
+
+</form>
 {% endblock %}

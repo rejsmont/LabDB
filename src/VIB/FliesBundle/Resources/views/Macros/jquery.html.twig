@@ -1,37 +1,43 @@
-{% macro button_script(label,primary_icon,secondary_icon) %}
+{% macro button_script(label,primary_icon,secondary_icon,disabled,notext) %}
 <script>
 $(function() {
-  $('#jq_button_{{ label }}').button(
+  $('#jq_button_{{ label }}').button();
   {% if (primary_icon is not null) or (secondary_icon is not null) %}
-    {icons:
+  $('#jq_button_{{ label }}').button(
+    "option", "icons",
     {% if primary_icon is not null %}
       {primary:'{{ primary_icon }}'}
     {% endif %}
     {% if secondary_icon is not null %}
       {secondary:'{{ secondary_icon }}'}
     {% endif %}
-    }
+  );
   {% endif %}
-  );    
+  {% if notext == true %}
+  $('#jq_button_{{ label }}').button("option", "text", false);
+  {% endif %}
+  {% if disabled == true %}
+  $('#jq_button_{{ label }}').button("option", "disabled", true);
+  {% endif %}
 });
 </script>
 {% endmacro %}
 
-{% macro button(label,route,primary_icon,secondary_icon) %}
+{% macro button(label,route,primary_icon,secondary_icon,disabled,notext) %}
 {% spaceless %}
     <a id="jq_button_{{ label|replace({' ': '_'}) }}" href="{{ route }}">{{ label }}</a>
-    {{ _self.button_script(label|replace({' ': '_'}),primary_icon,secondary_icon) }}
+    {{ _self.button_script(label|replace({' ': '_'}),primary_icon,secondary_icon,disabled,notext) }}
 {% endspaceless %}
 {% endmacro %}
     
-{% macro submit_button(label,action,primary_icon,secondary_icon) %}
+{% macro submit_button(label,primary_icon,secondary_icon,disabled) %}
 {% spaceless %}
     <button id="jq_button_{{ label|replace({' ': '_'}) }}" type="submit">{{ label }}</button>
-    {{ _self.button_script(label|replace({' ': '_'}),primary_icon,secondary_icon) }}
+    {{ _self.button_script(label|replace({' ': '_'}),primary_icon,secondary_icon,disabled) }}
 {% endspaceless %}
 {% endmacro %}
     
-{% macro submit_action_button(label,action,primary_icon,secondary_icon) %}
+{% macro submit_action_button(label,action,primary_icon,secondary_icon,disabled) %}
 {% spaceless %}
     <button id="jq_button_{{ label|replace({' ': '_'}) }}"
             type="submit"
@@ -39,6 +45,6 @@ $(function() {
             onclick="{{ action }}"
         {% endif %}
     >{{ label }}</button>
-    {{ _self.button_script(label|replace({' ': '_'}),primary_icon,secondary_icon) }}
+    {{ _self.button_script(label|replace({' ': '_'}),primary_icon,secondary_icon,disabled) }}
 {% endspaceless %}
 {% endmacro %}

@@ -10,16 +10,15 @@
         {{ s.tr_row("Flip date:", vial.flipDate | date("d M Y")) }}
         {{ s.tr_arow("Flipped from:", vial.parent, 'flyvial_show') }}
         {{ s.tr_arow("Stock:", vial.stock, 'flystock_show') }}
-        {{ s.tr_arow("Cross:", vial.cross, 'flycross_show') }}
         {{ s.tr_lrow("Flipped to:", vial.children, 'flyvial_show')}}
     </table>
 
     {% if vial.stock is not empty %}
-        {{ jq.button('List',path('flyvial_listfilter', { 'filter': 'stock' }),'ui-icon-folder-collapsed') }}
+        {{ jq.button('List',path('flyvial_list'),'ui-icon-folder-collapsed') }}
     {% elseif vial.cross is not empty %}
-        {{ jq.button('List',path('flyvial_listfilter', { 'filter': 'cross' }),'ui-icon-folder-collapsed') }}
+        {{ jq.button('List',path('flyvial_list'),'ui-icon-folder-collapsed') }}
     {% else %}
-        {{ jq.button('List',path('flyvial_listfilter', { 'filter': 'all' }),'ui-icon-folder-collapsed') }}
+        {{ jq.button('List',path('flyvial_list'),'ui-icon-folder-collapsed') }}
     {% endif %}
     
     {{ jq.button('New',path('flyvial_create'),'ui-icon-document') }}

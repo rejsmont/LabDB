@@ -24,51 +24,51 @@ a:visited:not(.ui-widget) {
     color: black;
 }
 
-nav {
+nav.top {
     margin: -8px;
     padding: 0px;
     border-width: 0px 0px 1px 0px;
 }
 
 
-nav a,
-nav a:link,
-nav a:visited {
+nav.top a,
+nav.top a:link,
+nav.top a:visited {
     display: inline-block;
     margin: 0px;
     padding: 5px 8px 5px 8px;
     border-radius: 0px;
 }
 
-nav a.ui-state-default {
+nav.top a.ui-state-default {
     border-width: 0px;
     padding: 0px 1px 0px 1px;
 }
 
-nav a.ui-state-hover,
-nav a.ui-state-active {
+nav.top a.ui-state-hover,
+nav.top a.ui-state-active {
     border-width: 0px 1px 1px 1px;
     margin-bottom: -1px;
     padding: 0px;
 
 }
 
-nav a:first-child {
+nav.top a:first-child {
     padding-left: 0px;
 }
 
-nav a.ui-state-hover:first-child,
-nav a.ui-state-active:first-child {
+nav.top a.ui-state-hover:first-child,
+nav.top a.ui-state-active:first-child {
     border-left: 0px;
 }
 
-nav a#logout {
+nav.top a#logout {
     float: right;
     padding-right: 0px;
 }
 
-nav a#logout.ui-state-hover,
-nav a#logout.ui-state-active {
+nav.top a#logout.ui-state-hover,
+nav.top a#logout.ui-state-active {
     border-right: 0px;
 }
 
@@ -76,106 +76,106 @@ nav a#logout.ui-state-active {
     font-size: 1em;
 }
 
-#content table {
+table.ui-table {
     padding: 0px;
     margin: 0px;
 }
 
-#content table th,
-#content table td {
+table.ui-table th,
+table.ui-table td {
     padding: 4px;
     border-width: 0px 0px 1px 1px;
 }
 
-#content table td {
+table.ui-table td {
     font-weight: normal;
     background: none;
     color: black;
 }
 
-#content table tr:first-child th {
+table.ui-table tr:first-child th {
     border-width: 1px 0px 1px 1px;
 }
 
-#content table tr:first-child th:last-child {
+table.ui-table tr:first-child th:last-child {
     border-width: 1px;
 }
 
-#content table tr td:last-child {
+table.ui-table tr td:last-child {
     border-width: 0px 1px 1px 1px;
 }
 
-#content table tr:first-child th:first-child {
+table.ui-table tr:first-child th:first-child {
     border-top-left-radius:4px
 }
 	
-#content table tr:first-child th:last-child {
+table.ui-table tr:first-child th:last-child {
     border-top-right-radius:4px
 }
 
-#content table tr:last-child td:first-child {
+table.ui-table tr:last-child td:first-child {
     border-bottom-left-radius:4px
 }
 	
-#content table tr:last-child td:last-child {
+table.ui-table tr:last-child td:last-child {
     border-bottom-right-radius:4px
 }
 
-#content table tr:nth-child(3n+0) {
+table.ui-table tr:nth-child(3n+0) {
     background-color: #F8F8F8;
 }
 
-#content table tr:hover {
+table.ui-table tr:hover {
     background-color: #EEEEEE;
 }
 
-#content table,
-#content table.data,
-#content table#vials,
-#content table#barcode_select
+table.ui-table,
+table.data,
+table.ui-table#vials,
+table.ui-table#barcode_select
 {
     margin-bottom: 24px;
 }
 
-#content table.data td,
-#content table.data th {
+table.data td,
+table.data th {
     color: black;
     padding: 2px;
     border: none;
     background: none;
 }
 
-#content table.data th {
+table.data th {
     vertical-align: top;
     text-align: right;
     padding: 8px 12px 8px 0px;
 }
 
-#content table.data td {
+table.data td {
     vertical-align: middle;
     text-align: left;
 }
 
-#content table.data tr {
+table.data tr {
     background: transparent;
 }
 
-#content table.data tbody tr:nth-child(3n+0) {
+table.data tbody tr:nth-child(3n+0) {
     background: transparent;
 }
 
-#content table.data tr:hover {
+table.data tr:hover {
     background: transparent;
 }
 
-#content table.data td ul {
+table.data td ul {
     margin: 0px;
     padding: 0px;
     min-height: 18px;
     list-style: none;
 }
 
-#content table.data td li {
+table.data td li {
     margin-top: 6px;
 }
 
@@ -198,27 +198,63 @@ nav a#logout.ui-state-active {
     outline-style: none;
 }
 
-#content table#barcode_select {
+table.ui-table#barcode_select {
     border: none;
 }
 
-#content table#barcode_select td,
-#content table#barcode_select th {
+table.ui-table#barcode_select td,
+table.ui-table#barcode_select th {
     border: none;
     padding: 0px;
     margin: 0px;
     background: transparent;
 }
 
-#content table#barcode_select th {
+table.ui-table#barcode_select th {
     padding-right: 6px;
 }
 
-#content table#barcode_select td {
+table.ui-table#barcode_select td {
     padding-right: 24px;
 }
 
-#content table#barcode_select tr,
-#content table#barcode_select tr:hover {
+table.ui-table#barcode_select tr,
+table.ui-table#barcode_select tr:hover {
     background: transparent;
+}
+
+table.ui-table tfoot td {
+    border: none;
+    background: transparent;
+    padding: 0px;
+    padding-top: 12px;
+    margin: 0px;
+}
+
+table.ui-table tfoot tr,
+table.ui-table tfoot tr:nth-child(3n+0),
+table.ui-table tfoot tr:hover {
+    background: transparent;
+}
+
+nav.pager {
+    display: table;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+}
+
+nav.pager > span {
+    display: table-cell;
+    text-align: center;
+}
+
+nav.pager > span:first-child {
+    width: 100px;
+    text-align: left;
+}
+
+nav.pager > span:last-child {
+    width: 100px;
+    text-align: right;
 }

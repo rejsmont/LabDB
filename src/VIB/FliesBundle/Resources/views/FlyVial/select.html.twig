@@ -3,63 +3,79 @@
 
 {% block content %}
 <h1>{{ header }}</h1>
-    <form action="{{ app.request.requestUri }}"
-          method="post" {{ form_enctype(form) }}>
-        <table id="barcode_select">
+<form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
+    <table id="barcode_select">
+        <tr>
+            <th><label for="barcode">To select vials, scan barcodes here:</label></th>
+            <td><input id="barcode" type="text" value="" onchange="checkVial()" /></td>
+        </tr>
+    </table>
+    {{ form_errors(form) }}
+    {% if form.items | length < 1 %}
+        {{ form_widget(form.items) }}
+    {% endif %}
+    <table id="vials" class="ui-table">
+        <thead>
             <tr>
-                <th><label for="barcode">To select vials, scan barcodes here:</label></th>
-                <td><input id="barcode" type="text" value="" onchange="checkVial()" /></td>
+                <th><input type="checkbox" id="checkall"></th>
+                <th>ID</th>
+                <th>Stock</th>
+                <th>Setup date</th>
+                <th>Flip date</th>
+                <th>Flipped from</th>
+                <th>Status</th>
             </tr>
-        </table>
-        {{ form_errors(form) }}
-        {% if form.items | length < 1 %}
-            {{ form_widget(form.items) }}
-        {% endif %}
-        <table id="vials">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="checkall"></th>
-                    <th>ID</th>
-                    <th>Stock</th>
-                    <th>Cross</th>
-                    <th>Setup date</th>
-                    <th>Flip date</th>
-                </tr>
-            </thead>
-            <tbody id="items">
-            {% set index = 0 %}
-            {% for item in form.items %}
-                {% set vial = list.items[index] %}
-                <tr>
-                    <td>{{ form_widget(item) }}</td>
-                    <td>{{ vial.name }}</td>
-                    <td>{{ vial.stock }}</td>
-                    <td>{{ vial.cross }}</td>
-                    <td>{{ vial.setupDate | date("d.m.Y") }}</td>
-                    <td>{{ vial.flipDate | date("d.m.Y") }}</td>
-                </tr>
-                {% set index = index + 1 %}
-            {% endfor %}
-            </tbody>
-        </table>
+        </thead>
+        <tbody id="items">
+        {% set index = 0 %}
+        {% for item in form.items %}
+            {% set vial = list.items[index] %}
+            <tr id="vial_{{ vial }}">
+                <td>{{ form_widget(item) }}</td>
+                <td><a href="{{ path('flyvial_show', { 'id': vial.id }) }}">
+                    {{ vial }}</a></td>
+                <td>{% if vial.stock is not empty %}
+                    <a href="{{ path('flystock_show', { 'id': vial.stock.id }) }}">{{ vial.stock }}</a>
+                    {% endif %}</td>
+                <td>{{ vial.setupDate | date("d M Y") }}</td>
+                <td>{{ vial.flipDate | date("d M Y") }}</td>
+                <td>{% if vial.parent is not empty %}
+                    <a href="{{ path('flyvial_show', { 'id': vial.parent.id }) }}">
+                    {{ vial.parent }}
+                    </a>
+                    {% endif %}</td>
+                <td>{% if vial.trashed %}
+                    <span style="color: black;">TRASHED</span>
+                    {% elseif vial.alive %}
+                    <span style="color: green;">ALIVE</span>
+                    {% else %}
+                    <span style="color: red;">DEAD</span>
+                    {% endif %}
 
-        {{ form_errors(form) }}
-        {{ form_rest(form) }}
+                </td>
+            </tr>
+            {% set index = index + 1 %}
+        {% endfor %}
+        </tbody>
+    </table>
 
-        {{ jq.button('Cancel',path('flyvial_list'),'ui-icon-closethick') }}
-        {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
-        {{ jq.submit_action_button(
-                'Flip',
-                "$('#FlyVialSelectType_action').val('flip'); $('form').submit();",
-                'ui-icon-copy') }}
-        {{ jq.submit_action_button(
-                'Trash',
-                "$('#FlyVialSelectType_action').val('trash'); $('form').submit();",
-                'ui-icon-trash') }}
-        {{ jq.submit_action_button(
-                'Print labels',
-                "$('#FlyVialSelectType_action').val('label'); $('form').submit();",
-                'ui-icon-print') }}
-    </form>
+    {{ form_errors(form) }}
+    {{ form_rest(form) }}
+
+    {{ jq.button('Cancel',path('flyvial_list'),'ui-icon-closethick') }}
+    {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
+    {{ jq.submit_action_button(
+            'Flip',
+            "$('#FlyVialSelectType_action').val('flip'); $('form').submit();",
+            'ui-icon-copy') }}
+    {{ jq.submit_action_button(
+            'Trash',
+            "$('#FlyVialSelectType_action').val('trash'); $('form').submit();",
+            'ui-icon-trash') }}
+    {{ jq.submit_action_button(
+            'Print labels',
+            "$('#FlyVialSelectType_action').val('label'); $('form').submit();",
+            'ui-icon-print') }}
+</form>
     
 {% endblock %}

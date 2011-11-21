@@ -1,21 +1,24 @@
 {% extends '::base.html.twig' %}
+{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
 
 {% block content %}
-
+<h1>Please log in</h1>
 {% if error %}
     <div>{{ error.message }}</div>
 {% endif %}
 
 <form action="{{ path('login_check') }}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" />
-
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="_password" />
-
+    <table class="data">
+        {{ s.tr_rrow(
+            '<label for="username">Username:</label>',
+            '<input type="text" id="username" name="_username" value="' ~  last_username ~ '" />') }}
+        {{ s.tr_rrow(
+             '<label for="password">Password:</label>',
+             '<input type="password" id="password" name="_password" />') }}
+    </table>
     <input type="hidden" name="_target_path" value="/" />
-
-    <input type="submit" name="login" />
+    {{ jq.submit_button('Login','ui-icon-locked') }}
 </form>
 
 {% endblock %}

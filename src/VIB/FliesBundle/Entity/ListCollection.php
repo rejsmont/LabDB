@@ -54,15 +54,20 @@ class ListCollection {
     /**
      * Construct ListCollection
      *
-     * @param VIB\FliesBundle\Entity\FlyVial $parent
+     * @param Doctrine\Common\Collections\Collection $items
      */
-    public function __construct($parent = null) {
+    public function __construct($items = null) {
         $this->items = new ArrayCollection();
+        if ($items != null) {
+            foreach ($items as $item) {
+                $this->items->add($item);
+            }
+        }
     }
     
     /**
      *
-     * @return Doctrine\Common\Collections\Collection 
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getItems() {
         return $this->items;

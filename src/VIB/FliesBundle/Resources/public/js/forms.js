@@ -145,14 +145,17 @@ $(document).ready(function() {
         dateFormat: 'dd M yy'
     });
 
-    $('nav a').button();
+    $('nav.top a').button();
     
     $('select').selectmenu({
         style:'dropdown',
         wrapperElement: "<div class='ui-selectmenu-wrap' />"
     });
     
-    $('td').addClass('ui-state-default');
+    $('table.ui-table td').addClass('ui-state-default');
+    $('table.ui-table th').addClass('ui-widget-header');
+    $('table.ui-table').attr('cellspacing','0');
+    
     $('input').addClass('ui-state-default');
     $('input').hover(
         function(){$(this).addClass("ui-state-hover");},
@@ -164,8 +167,6 @@ $(document).ready(function() {
     $('input').blur(
         function(){$(this).removeClass("ui-state-active");}
     );
-    $('th').addClass('ui-widget-header');
-    $('table').attr('cellspacing','0');
     
     $('#checkall').click(function () {
         $(this).parents('table').find(':checkbox').attr('checked', this.checked);
