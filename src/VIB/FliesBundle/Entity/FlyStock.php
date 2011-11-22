@@ -53,7 +53,8 @@ class FlyStock {
     protected $name;
     
     /**
-     * @ORM\OneToMany(targetEntity="FlyVial", mappedBy="stock")
+     * @ORM\OneToMany(targetEntity="FlyVial", mappedBy="stock", cascade={"persist", "remove"})
+     * 
      */
     protected $vials;
     

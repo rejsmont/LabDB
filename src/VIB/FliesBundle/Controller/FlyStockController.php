@@ -22,16 +22,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
-use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-
-use Pagerfanta\Pagerfanta;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-
 use VIB\FliesBundle\Entity\FlyStock;
 use VIB\FliesBundle\Form\FlyStockType;
 
@@ -40,29 +30,32 @@ use VIB\FliesBundle\Form\FlyStockType;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class FlyStockController extends Controller
+class FlyStockController extends CRUDController
 {
+    /**
+     * Construct FlyStockController
+     * 
+     */ 
+    public function __construct()
+    {
+        $this->entityClass = 'VIBFliesBundle:FlyStock';
+    }
+    
     /**
      * List stocks
      * 
      * @Route("/stocks/", name="flystock_list")
      * @Route("/stocks/page/{page}", name="flystock_listpage")
      * @Template()
+     * 
+     * @param integer $page
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function listAction($page = 1)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-
-        $query = $em->getRepository('VIBFliesBundle:FlyStock')->createQueryBuilder('s');
-        
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(15);
-        $pager->setCurrentPage($page);
-        $stocks = $pager->getCurrentPageResults();
-        
-        return array('stocks' => $stocks,
-                     'pager' => $pager);
+        $response = parent::baseListAction($page);     
+        return array('stocks' => $response['entities'],
+                     'pager' => $response['pager']);
     }
     
     /**
@@ -71,13 +64,14 @@ class FlyStockController extends Controller
      * @Route("/stocks/show/{id}", name="flystock_show")
      * @Template()
      * @ParamConverter("id", class="VIBFliesBundle:FlyStock")
+     * 
+     * @param mixed $id
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function showAction($id)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $stock = $em->find('VIBFliesBundle:FlyStock', $id);
-        
-        return array('stock' => $stock);
+        $response = parent::baseShowAction($id);
+        return array('stock' => $response['entity']);
     }
     
     
@@ -86,53 +80,21 @@ class FlyStockController extends Controller
      * 
      * @Route("/stocks/new", name="flystock_create")
      * @Template()
+     * 
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function createAction()
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $stock = new FlyStock();
-
-        $form = $this->get('form.factory')
-                ->create(new FlyStockType(), $stock);
-
-        $request = $this->get('request');
+        $response = parent::baseCreateAction(new FlyStock(), new FlyStockType());
         
-        if ($request->getMethod() == 'POST') {
-            
-            $form->bindRequest($request);
-            
-            if ($form->isValid()) {
-                $em->persist($stock);
-                foreach ($stock->getVials() as $vial) {
-                    $em->persist($vial);
-                }
-                $em->flush();
-                
-                $securityContext = $this->get('security.context');
-                $user = $securityContext->getToken()->getUser();
-                $securityIdentity = UserSecurityIdentity::fromAccount($user);
-                
-                $aclProvider = $this->get('security.acl.provider');
-                
-                $objectIdentity = ObjectIdentity::fromDomainObject($stock);
-                $acl = $aclProvider->createAcl($objectIdentity);
-                $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
-                $aclProvider->updateAcl($acl);
-                
-                foreach ($stock->getVials() as $vial) {
-                    $objectIdentity = ObjectIdentity::fromDomainObject($vial);
-                    $acl = $aclProvider->createAcl($objectIdentity);
-                    $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
-                    $aclProvider->updateAcl($acl);
-                }
-                
-                return $this->redirect($this->generateUrl('flystock_show',array('id' => $stock->getId())));
-            }
+        if (isset($response['redirect'])) {
+            $url = $this->generateUrl('flystock_show',array('id' => $response['entity']->getId()));
+            return $this->redirect($url);
+        } else {
+            return array(
+                'stock' => $response['entity'],
+                'form' => $response['form']);
         }
-        
-        return array(
-            'stock' => $stock,
-            'form' => $form->createView());
     }
 
     /**
@@ -141,31 +103,22 @@ class FlyStockController extends Controller
      * @Route("/stocks/edit/{id}", name="flystock_edit")
      * @Template()
      * @ParamConverter("id", class="VIBFliesBundle:FlyStock")
+     * 
+     * @param mixed $id
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function editAction($id)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $stock = $em->find('VIBFliesBundle:FlyStock', $id);
-
-        $form = $this->get('form.factory')
-                ->create(new FlyStockType(), $stock);
-
-        $request = $this->get('request');
+        $response = parent::baseEditAction($id, new FlyStockType());
         
-        if ($request->getMethod() == 'POST') {
-            
-            $form->bindRequest($request);
-            
-            if ($form->isValid()) {
-                $em->persist($stock);
-                $em->flush();
-                return $this->redirect($this->generateUrl('flystock_show',array('id' => $stock->getId())));
-            }
+        if (isset($response['redirect'])) {
+            $url = $this->generateUrl('flystock_show',array('id' => $response['entity']->getId()));
+            return $this->redirect($url);
+        } else {
+            return array(
+                'stock' => $response['entity'],
+                'form' => $response['form']);
         }
-        
-        return array(
-            'stock' => $stock,
-            'form' => $form->createView());
     }
 
     /**
@@ -174,14 +127,29 @@ class FlyStockController extends Controller
      * @Route("/stocks/delete/{id}", name="flystock_delete")
      * @Template()
      * @ParamConverter("id", class="VIBFliesBundle:FlyStock")
+     * 
+     * @param mixed $id
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $stock = $em->find('VIBFliesBundle:FlyStock', $id);
-
-        $em->remove($stock);
-        $em->flush();
+        parent::baseDeleteAction($id);
         return $this->redirect($this->generateUrl('flystock_list'));
+    }
+    
+    /**
+     * Set ACL for entity
+     * 
+     * @param Object $entity
+     * @param UserInterface|null $user
+     * @param integer $mask
+     */
+    protected function setACL($stock, $user = null, $mask = MaskBuilder::MASK_OWNER) {
+        
+        parent::setACL($stock, $user, $mask);
+        
+        foreach ($stock->getVials() as $vial) {
+            parent::setACL($vial, $user, $mask);
+        }
     }
 }

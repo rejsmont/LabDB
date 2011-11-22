@@ -52,7 +52,7 @@ class FlyCrossController extends Controller
             $form->bindRequest($request);
             
             if ($form->isValid()) {
-                return null;
+
             }
         }
                 
