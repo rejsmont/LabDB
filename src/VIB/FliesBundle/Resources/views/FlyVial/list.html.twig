@@ -3,10 +3,12 @@
 {% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
 
 {% block content %}
-<h1>{{ header }}</h1>
+<h1>{% block pheader %}Stock vials{% endblock %}</h1>
 
 <form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
 
+    {% block selector %}{% endblock %}
+    
     {{ form_errors(form) }}
     {% if form.items | length < 1 %}
         {{ form_widget(form.items) }}
@@ -25,49 +27,25 @@
             </tr>
         </thead>
         <tbody>
-        {% set index = 0 %}
-        {% for item in form.items %}
-            {% set vial = list.items[index] %}
-            <tr id="vial_{{ vial }}">
-                <td>{{ form_widget(item) }}</td>
-                <td><a href="{{ path('flyvial_show', { 'id': vial.id }) }}">
-                    {{ vial }}</a></td>
-                <td>{% if vial.stock is not empty %}
-                    <a href="{{ path('flystock_show', { 'id': vial.stock.id }) }}">{{ vial.stock }}</a>
-                    {% endif %}</td>
-                <td>{{ vial.setupDate | date("d M Y") }}</td>
-                <td>{{ vial.flipDate | date("d M Y") }}</td>
-                <td>{% if vial.parent is not empty %}
-                    <a href="{{ path('flyvial_show', { 'id': vial.parent.id }) }}">
-                    {{ vial.parent }}
-                    </a>
-                    {% endif %}</td>
-                <td>{% if vial.trashed %}
-                    <span style="color: black;">TRASHED</span>
-                    {% elseif vial.alive %}
-                    <span style="color: green;">ALIVE</span>
-                    {% else %}
-                    <span style="color: red;">DEAD</span>
-                    {% endif %}
-
-                </td>
-            </tr>
-            {% set index = index + 1 %}
+        {% for vial in vials %}
+            {% include 'VIBFliesBundle:FlyVial:_vial_row.html.twig' with {'vial': vial, 'class': null} %}
         {% endfor %}
-    </tbody>
-    {% if pager.nbPages > 1 %}
-    <tfoot>
-        <tr>
-            <td colspan="8">{{ s.pager(pager,'flyvial_listpage') }}</td>
-        </tr>
-    </tfoot>
-    {% endif %}
+        </tbody>
+        {% block pager %}
+        {% if pager.nbPages > 1 %}
+        <tfoot>
+            <tr>
+                <td colspan="8">{{ s.pager(pager,'flyvial_listpage') }}</td>
+            </tr>
+        </tfoot>
+        {% endif %}
+        {% endblock %}
     </table>
         
     {{ form_errors(form) }}
     {{ form_rest(form) }}
     
-    {{ jq.button('Select vials',path('flyvial_select'),'ui-icon-tag') }}
+    {% block actionbutton %}{{ jq.button('Select vials',path('flyvial_select'),'ui-icon-tag') }}{% endblock %}
     {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
     {{ jq.submit_action_button(
             'Flip',

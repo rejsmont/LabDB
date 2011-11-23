@@ -1,0 +1,34 @@
+{% if class is not empty %}
+    {% set td = 'td class=ui-state-default' %}
+{% else %}
+    {% set td = 'td' %}
+{% endif %}
+
+<tr id="vial_{{ vial }}">
+    <{{td}}>
+        <input type="checkbox" id="FlyVialSelectType_items_{{ vial.id }}" 
+               name="FlyVialSelectType[items][{{ vial.id }}]" 
+               value="{{ vial.id }}" checked="checked" />
+    </td>
+    <{{td}}><a href="{{ path('flyvial_show', { 'id': vial.id }) }}">
+        {{ vial }}</a></td>
+    <{{td}}>{% if vial.stock is not empty %}
+        <a href="{{ path('flystock_show', { 'id': vial.stock.id }) }}">{{ vial.stock }}</a>
+        {% endif %}</td>
+    <{{td}}>{{ vial.setupDate | date("d M Y") }}</td>
+    <{{td}}>{{ vial.flipDate | date("d M Y") }}</td>
+    <{{td}}>{% if vial.parent is not empty %}
+        <a href="{{ path('flyvial_show', { 'id': vial.parent.id }) }}">
+        {{ vial.parent }}
+        </a>
+        {% endif %}</td>
+    <{{td}}>{% if vial.trashed %}
+        <span style="color: black;">TRASHED</span>
+        {% elseif vial.alive %}
+        <span style="color: green;">ALIVE</span>
+        {% else %}
+        <span style="color: red;">DEAD</span>
+        {% endif %}
+
+    </td>
+</tr>

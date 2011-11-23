@@ -64,7 +64,7 @@ class FlyCross {
     protected $virginName;
     
     /**
-     * @ORM\OneToOne(targetEntity="FlyVial", mappedBy="cross")
+     * @ORM\OneToOne(targetEntity="FlyVial", mappedBy="cross", cascade={"persist", "remove"})
      */
     protected $vial;
     

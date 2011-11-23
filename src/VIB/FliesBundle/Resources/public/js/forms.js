@@ -55,6 +55,47 @@ function checkVial()
     $('#barcode').focus();
 }
 
+/**
+ * Handles vial barcode input for vial selection form
+ * 
+ */
+function checkCross()
+{
+    var id = parseInt($('#barcode').val(),10);
+    var checkbox = $("#FlyCrossSelectType_items_" + id);
+    
+    if(checkbox.length) {
+        if (checkbox.attr('checked')) {
+            checkbox.removeAttr("checked");
+            checkbox.parent().parent()
+                .stop().css("background-color","")
+                .effect("highlight", {color: "red"}, 5000);
+        } else {
+            checkbox.attr("checked","checked");
+            checkbox.parent().parent()
+                .stop().css("background-color","")
+                .effect("highlight", {color: "green"}, 5000);
+        }
+    } else {
+  
+        $.ajax({
+            type: "GET",
+            url:"/app_dev.php/ajax/crosses/" + id,
+            success: 
+                function(response) {
+                    $("#crosses").append(response);
+                    $("#FlyCrossSelectType_items_" + id).parent().parent()
+                        .stop().css("background-color","")
+                        .effect("highlight", {color: "green"}, 5000);
+                        
+                }
+        });
+    }
+
+    $('#barcode').val('');
+    $('#barcode').focus();
+}
+
 function getVial(caller)
 {
     var caller_id = caller.id;

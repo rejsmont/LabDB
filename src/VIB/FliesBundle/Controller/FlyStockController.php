@@ -53,7 +53,7 @@ class FlyStockController extends CRUDController
      */
     public function listAction($page = 1)
     {
-        $response = parent::baseListAction($page);     
+        $response = parent::baseListAction($page);
         return array('stocks' => $response['entities'],
                      'pager' => $response['pager']);
     }
@@ -138,7 +138,7 @@ class FlyStockController extends CRUDController
     }
     
     /**
-     * Set ACL for entity
+     * Cascade ACL setting for stock vials
      * 
      * @param Object $entity
      * @param UserInterface|null $user

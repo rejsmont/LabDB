@@ -28,6 +28,8 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 use VIB\FliesBundle\Entity\FlyVial;
+use VIB\FliesBundle\Entity\FlyCross;
+
 
 /**
  * Description of AJAXController
@@ -60,6 +62,25 @@ class AJAXController extends Controller {
         
         return array('vial' => $vial);;
     }
+
+    /**
+     * Handle cross AJAX request
+     * 
+     * @param integer $id
+     * @return mixed
+     * 
+     * @Route("/ajax/crosses/{id}", name="ajax_vial")
+     * @Template()
+     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
+     */    
+    public function crossAction($id) {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $vial = $em->find('VIBFliesBundle:FlyVial', $id);
+        $cross = $vial->getCross();
+        
+        return array('cross' => $cross);;
+    }
+    
 }
 
 ?>
