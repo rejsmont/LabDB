@@ -53,11 +53,19 @@ class AJAXController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
         $vial = $em->find('VIBFliesBundle:FlyVial', $id);
         
+        if(! $vial) {
+            return new Response('The vial ' . sprintf("%06d",$id) . ' does not exist', 404);
+        }
+        
         $serializer = $this->get('serializer');
         
         
         if ($format == 'json') {
             return new Response($serializer->serialize($vial, 'json')); 
+        }
+        
+        if(! $vial->getStock()) {
+            return new Response('The vial ' . sprintf("%06d",$id) . ' is not a stock vial', 404);
         }
         
         return array('vial' => $vial);;
@@ -69,14 +77,23 @@ class AJAXController extends Controller {
      * @param integer $id
      * @return mixed
      * 
-     * @Route("/ajax/crosses/{id}", name="ajax_vial")
+     * @Route("/ajax/crosses/{id}", name="ajax_cross")
      * @Template()
      * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
      */    
     public function crossAction($id) {
         $em = $this->get('doctrine.orm.entity_manager');
         $vial = $em->find('VIBFliesBundle:FlyVial', $id);
+        
+        if(! $vial) {
+            return new Response('The vial ' . sprintf("%06d",$id) . ' does not exist', 404);
+        }
+        
         $cross = $vial->getCross();
+        
+        if(! $cross) {
+            return new Response('The vial ' . sprintf("%06d",$id) . ' is not a cross vial', 404);
+        }
         
         return array('cross' => $cross);;
     }

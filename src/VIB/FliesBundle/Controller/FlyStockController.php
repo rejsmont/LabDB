@@ -22,6 +22,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+
 use VIB\FliesBundle\Entity\FlyStock;
 use VIB\FliesBundle\Form\FlyStockType;
 

@@ -6,7 +6,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\FliesBundle\Entity\FlyCross;
 use VIB\FliesBundle\Form\FlyCrossType;
@@ -83,6 +84,9 @@ class FlyCrossController extends GenericVialController
      * @Route("/crosses/show/{id}", name="flycross_show")
      * @Template()
      * @ParamConverter("id", class="VIBFliesBundle:FlyCross")
+     * 
+     * @param integer $id
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function showAction($id)
     {
@@ -96,6 +100,8 @@ class FlyCrossController extends GenericVialController
      * 
      * @Route("/crosses/new", name="flycross_create")
      * @Template()
+     * 
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function createAction()
     {
@@ -117,6 +123,9 @@ class FlyCrossController extends GenericVialController
      * @Route("/crosses/edit/{id}", name="flycross_edit")
      * @Template()
      * @ParamConverter("id", class="VIBFliesBundle:FlyCross")
+     * 
+     * @param integer $id
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function editAction($id)
     {
@@ -138,6 +147,9 @@ class FlyCrossController extends GenericVialController
      * @Route("/crosses/delete/{id}", name="flycross_delete")
      * @Template()
      * @ParamConverter("id", class="VIBFliesBundle:FlyCross")
+     * 
+     * @param integer $id
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
     {
@@ -159,5 +171,62 @@ class FlyCrossController extends GenericVialController
         if ($vial) {
             parent::setACL($vial, $user, $mask);
         }
+    }
+    
+    /**
+     * Handle batch action
+     * 
+     * @param string $action
+     * @param Doctrine\Common\Collections\Collection $vials
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function handleBatchAction($action, $vials) {
+        
+        switch($action) {
+            case 'label':
+                return $this->generateLabels($vials);
+                break;
+            case 'trash':
+                return $this->trashVials($vials);
+                break;
+            default:
+                return $this->redirect($this->generateUrl('flyvial_list'));
+                break;
+        }
+    }
+    
+    /**
+     * Trash vials
+     * 
+     * @param Doctrine\Common\Collections\Collection $crosses
+     * @return Symfony\Component\HttpFoundation\Response
+     */  
+    public function trashVials($crosses) {
+        
+        $vials = new ArrayCollection();
+        
+        foreach ($crosses as $cross) {
+            $vials->add($cross->getVial());
+        }
+        
+        parent::trashVials($vials);
+        return $this->redirect($this->generateUrl('flycross_list'));
+    }
+    
+    /**
+     * Generate vial labels
+     * 
+     * @param Doctrine\Common\Collections\Collection $crosses
+     * @return Symfony\Component\HttpFoundation\Response
+     */  
+    public function generateLabels($crosses) {
+        
+        $vials = new ArrayCollection();
+        
+        foreach ($crosses as $cross) {
+            $vials->add($cross->getVial());
+        }
+        
+        return parent::generateLabels($vials);
     }
 }

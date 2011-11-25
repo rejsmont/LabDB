@@ -22,8 +22,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-use Symfony\Component\Form\AbstractType;
-
 use VIB\FliesBundle\Entity\FlyVial;
 use VIB\FliesBundle\Form\FlyVialType;
 use VIB\FliesBundle\Form\FlyVialSelectType;
@@ -194,15 +192,6 @@ class FlyVialController extends GenericVialController {
                 return $this->redirect($this->generateUrl('flyvial_list'));
                 break;
         }
-    }
-    
-    /**
-     * Handle vial selection form
-     * 
-     * @return Symfony\Component\HttpFoundation\Response
-     */   
-    public function handleSelectForm(AbstractType $formType) {
-        return parent::handleSelectForm($formType);
     }
     
     /**

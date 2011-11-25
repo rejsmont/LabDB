@@ -23,15 +23,17 @@ function checkVial()
     var id = parseInt($('#barcode').val(),10);
     var checkbox = $("#FlyVialSelectType_items_" + id);
     
+    $('#barcode_error').html('');
+    
     if(checkbox.length) {
         if (checkbox.attr('checked')) {
-            checkbox.removeAttr("checked");
-            checkbox.parent().parent()
+            checkbox.checkbox("uncheck");
+            checkbox.parents('tr')
                 .stop().css("background-color","")
                 .effect("highlight", {color: "red"}, 5000);
         } else {
-            checkbox.attr("checked","checked");
-            checkbox.parent().parent()
+            checkbox.checkbox("check");
+            checkbox.parents('tr')
                 .stop().css("background-color","")
                 .effect("highlight", {color: "green"}, 5000);
         }
@@ -42,16 +44,22 @@ function checkVial()
             url:"/app_dev.php/ajax/vials/" + id,
             success: 
                 function(response) {
-                    $("#vials").append(response);
-                    $("#FlyVialSelectType_items_" + id).parent().parent()
+                    $("#vials tbody").append(response);
+                    $("#FlyVialSelectType_items_" + id).checkbox();
+                    $("#FlyVialSelectType_items_" + id).parents('tr')
                         .stop().css("background-color","")
                         .effect("highlight", {color: "green"}, 5000);
                         
+                },
+            error:
+                function(xhr, ajaxOptions, thrownError) {
+                    $('#barcode_error').html(form_error(xhr.responseText));
                 }
         });
     }
 
     $('#barcode').val('');
+    $('#barcode').parents('form').find(':input').blur();
     $('#barcode').focus();
 }
 
@@ -64,15 +72,17 @@ function checkCross()
     var id = parseInt($('#barcode').val(),10);
     var checkbox = $("#FlyCrossSelectType_items_" + id);
     
+    $('#barcode_error').html('');
+    
     if(checkbox.length) {
         if (checkbox.attr('checked')) {
-            checkbox.removeAttr("checked");
-            checkbox.parent().parent()
+            checkbox.checkbox("uncheck");
+            checkbox.parents('tr')
                 .stop().css("background-color","")
                 .effect("highlight", {color: "red"}, 5000);
         } else {
-            checkbox.attr("checked","checked");
-            checkbox.parent().parent()
+            checkbox.checkbox("check");
+            checkbox.parents('tr')
                 .stop().css("background-color","")
                 .effect("highlight", {color: "green"}, 5000);
         }
@@ -83,16 +93,22 @@ function checkCross()
             url:"/app_dev.php/ajax/crosses/" + id,
             success: 
                 function(response) {
-                    $("#crosses").append(response);
-                    $("#FlyCrossSelectType_items_" + id).parent().parent()
+                    $("#crosses tbody").append(response);
+                    $("#FlyCrossSelectType_items_" + id).checkbox();
+                    $("#FlyCrossSelectType_items_" + id).parents('tr')
                         .stop().css("background-color","")
                         .effect("highlight", {color: "green"}, 5000);
                         
+                },
+            error:
+                function(xhr, ajaxOptions, thrownError) {
+                    $('#barcode_error').html(form_error(xhr.responseText));
                 }
         });
     }
 
     $('#barcode').val('');
+    $('#barcode').parents('form').find(':input').blur();
     $('#barcode').focus();
 }
 
@@ -168,7 +184,7 @@ function preventEnterSubmit(e) {
         
         if (!$targ.is("textarea") && !$targ.is(":button,:submit")) {
             
-            var inputs = $targ.closest('form').find(':input').not(":hidden");
+            var inputs = $targ.parents('form').find(':input').not(":hidden");
             inputs.eq( inputs.index(e.target) + 1 ).focus();
             
             return false;
@@ -210,7 +226,19 @@ $(document).ready(function() {
     );
     
     $('#checkall').click(function () {
-        $(this).parents('table').find(':checkbox').attr('checked', this.checked);
+        $(this).parents('table').find('tbody :checkbox').checkbox(this.checked ? "check" : "uncheck");
     });
+    
+    $("form input").filter(":checkbox,:radio").checkbox();
 }); 
 
+function form_error(message) {
+    var error_html = "";
+    error_html += '<div class="ui-widget">';
+    error_html += '<div class="ui-state-error ui-corner-all" style="padding: 3px 5px;">'
+    error_html += '<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>'
+    error_html += message + '.';
+    error_html += '</div>'
+    error_html += '</div>'
+    return error_html;
+}
