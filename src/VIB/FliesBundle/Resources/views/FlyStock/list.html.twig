@@ -1,4 +1,5 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
 {% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
 
 {% block content %}
@@ -51,5 +52,9 @@
         </tr>
     </tfoot>
     {% endif %}
-</table>    
+</table>
+
+{{ jq.button('New',path('flystock_create'),'ui-icon-document') }}
+{{ jq.button('Expand',path('flyvial_expand'),'ui-icon-copy') }}
+
 {% endblock %}

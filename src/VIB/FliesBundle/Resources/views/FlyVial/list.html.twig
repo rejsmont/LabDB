@@ -44,7 +44,8 @@
         
     {{ form_errors(form) }}
     {{ form_rest(form) }}
-    
+
+    {{ jq.button('Expand',path('flyvial_expand'),'ui-icon-copy') }}
     {% block actionbutton %}{{ jq.button('Select vials',path('flyvial_select'),'ui-icon-tag') }}{% endblock %}
     {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
     {{ jq.submit_action_button(

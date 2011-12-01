@@ -12,8 +12,13 @@
     </table>
     
     {{ form_rest(form) }}
+
+    {% if stock.id > 0 %}
+        {{ jq.button('Cancel',path('flystock_show', { 'id': stock.id }),'ui-icon-closethick') }}
+    {% else %}
+        {{ jq.button('Cancel',path('flystock_list'),'ui-icon-closethick') }}
+    {% endif %}
     
-    {{ jq.button('Cancel',path('flystock_show', { 'id': stock.id }),'ui-icon-closethick') }}
     {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
     {{ jq.submit_button('Save','ui-icon-disk') }}
 </form>

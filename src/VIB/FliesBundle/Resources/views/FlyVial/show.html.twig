@@ -22,6 +22,7 @@
     {% endif %}
     
     {{ jq.button('New',path('flyvial_create'),'ui-icon-document') }}
+    {{ jq.button('Expand',path('flyvial_expand_id', { 'id': vial.id }),'ui-icon-copy') }}
     {{ jq.button('Edit',path('flyvial_edit', { 'id': vial.id }),'ui-icon-pencil') }}
     {{ jq.button('Delete',path('flyvial_delete', { 'id': vial.id }),'ui-icon-trash') }}
 {% endblock %}

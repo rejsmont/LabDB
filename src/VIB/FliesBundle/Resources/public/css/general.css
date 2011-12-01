@@ -185,6 +185,7 @@ table.data td li {
     color: black;
     font-weight: normal;
     padding: 3px 4px 3px 4px;
+    min-height: 14px;
 }
 
 #content input:focus {

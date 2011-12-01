@@ -19,7 +19,7 @@
             {{ s.tr_row("Check date:", cross.vial.flipDate | date("d M Y")) }}
         {% endif %}
         {{ s.tr_lrow("Stocks:", cross.stocks, 'flystock_show') }}
-        {{ s.tr_lrow("Crosses:", cross.crosses, 'flycross_show') }}
+        {{ s.tr_lrow("Crosses:", cross.livingCrosses, 'flycross_show') }}
     </table>
 
     {{ jq.button('List',path('flycross_list'),'ui-icon-folder-collapsed') }}    

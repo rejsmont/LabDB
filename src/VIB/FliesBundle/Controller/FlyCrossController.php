@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\FliesBundle\Entity\FlyCross;
 use VIB\FliesBundle\Form\FlyCrossType;
+use VIB\FliesBundle\Form\FlyCrossNewType;
 use VIB\FliesBundle\Form\FlyCrossSelectType;
 
 class FlyCrossController extends GenericVialController
@@ -105,16 +106,48 @@ class FlyCrossController extends GenericVialController
      */
     public function createAction()
     {
-        $response = parent::baseCreateAction(new FlyCross(), new FlyCrossType());
+        $cross = new FlyCross();
+        $data = array('cross' => $cross, 'number' => 1);
         
-        if (isset($response['redirect'])) {
-            $url = $this->generateUrl('flycross_show',array('id' => $response['entity']->getId()));
-            return $this->redirect($url);
-        } else {
-            return array(
-                'cross' => $response['entity'],
-                'form' => $response['form']);
+        $entityManager = $this->getEntityManager();
+        $form = $this->getFormFactory()->create(new FlyCrossNewType(), $data);
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                
+                $data = $form->getData();
+                $cross = $data['cross'];
+                $number = $data['number'];
+                
+                $crosses = new ArrayCollection();
+                
+                for ($i = 0; $i < $number; $i++) {
+                    $newcross = new FlyCross($cross);
+                    $entityManager->persist($newcross);
+                    $crosses->add($newcross);
+                }
+                
+                $entityManager->flush();
+
+                foreach($crosses as $cross) {
+                    $this->setACL($cross);
+                }
+                
+                if ($number == 1)
+                    $url = $this->generateUrl('flycross_show',array('id' => $cross->getId()));
+                else
+                    $url = $this->generateUrl('flycross_list');
+                return $this->redirect($url);
+            }
         }
+        
+        return array(
+            'cross' => $cross,
+            'form' => $form->createView());
     }
 
     /**
@@ -153,10 +186,16 @@ class FlyCrossController extends GenericVialController
      */
     public function deleteAction($id)
     {
-        parent::baseDeleteAction($id);
+        $entityManager = $this->getEntityManager();
+        $cross = $entityManager->find($this->getEntityClass(), $id);
+        
+        $entityManager->remove($cross);
+        $entityManager->flush();
+        
+        //parent::baseDeleteAction($id);
         return $this->redirect($this->generateUrl('flycross_list'));
     }
-
+    
     /**
      * Cascade ACL setting for stock vials
      * 

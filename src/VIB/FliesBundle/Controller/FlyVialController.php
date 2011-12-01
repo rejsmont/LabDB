@@ -22,8 +22,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use VIB\FliesBundle\Entity\FlyVial;
 use VIB\FliesBundle\Form\FlyVialType;
+use VIB\FliesBundle\Form\FlyVialExpandType;
 use VIB\FliesBundle\Form\FlyVialSelectType;
 
 /**
@@ -167,6 +170,68 @@ class FlyVialController extends GenericVialController {
     public function deleteAction($id) {
         parent::baseDeleteAction($id);
         return $this->redirect($this->generateUrl('flyvial_list'));
+    }
+    
+    /**
+     * Expand vial
+     * 
+     * @Route("/vials/expand/", name="flyvial_expand", defaults={"id" = 0})
+     * @Route("/vials/expand/{id}", name="flyvial_expand_id")
+     * @Template()
+     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
+     * 
+     * @param integer $id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function expandAction($id = null) {
+
+        $entityManager = $this->getEntityManager();
+
+        if ($id > 0) {
+            $source = $entityManager->find($this->getEntityClass(), $id);
+        } else {
+            $source = null;
+        }
+        
+        $data = array('source' => $source, 'number' => 1);
+        
+        $form = $this->getFormFactory()->create(new FlyVialExpandType(), $data);
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                
+                $data = $form->getData();
+                $source = $data['source'];
+                $number = $data['number'];
+                
+                $vials = new ArrayCollection();
+                
+                for ($i = 0; $i < $number; $i++) {
+                    $newvial = new FlyVial($source);
+                    $entityManager->persist($newvial);
+                    $vials->add($newvial);
+                }
+                
+                $entityManager->flush();
+
+                foreach($vials as $vial) {
+                    $this->setACL($vial);
+                }
+                
+                $url = $this->generateUrl('flyvial_list');
+                return $this->redirect($url);
+            }
+        }
+        
+        return array(
+            'source' => $source,
+            'form' => $form->createView());
+        
+        //return $this->redirect($this->generateUrl('flyvial_list'));
     }
     
     /**

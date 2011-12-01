@@ -19,7 +19,8 @@
 namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\SerializerBundle\Annotation\ExclusionPolicy;
 use JMS\SerializerBundle\Annotation\Expose;
 
@@ -64,7 +65,8 @@ class FlyCross {
     protected $virginName;
     
     /**
-     * @ORM\OneToOne(targetEntity="FlyVial", mappedBy="cross", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="FlyVial", mappedBy="cross", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $vial;
     
@@ -76,12 +78,22 @@ class FlyCross {
     /**
      * Construct FlyCross
      *
-     * @param VIB\FliesBundle\Entity\FlyVial $parent
+     * @param VIB\FliesBundle\Entity\FlyCross $template
      */ 
-    public function __construct()
+    public function __construct($template = null)
     {
         $this->vial = new \VIB\FliesBundle\Entity\FlyVial;
         $this->vial->setCross($this);
+        
+        if ($template) {
+            $this->setMale($template->getMale());
+            $this->setMaleName($template->getMaleName());
+            $this->setVirgin($template->getVirgin());
+            $this->setVirginName($template->getVirginName());
+            
+            $this->vial->setSetupDate($template->getVial()->getSetupDate());
+            $this->vial->setFlipDate($template->getVial()->getFlipDate());
+        }
     }
     
     /**
@@ -254,5 +266,22 @@ class FlyCross {
     public function getCrosses()
     {
         return $this->getVial()->getCrosses();
+    }
+    
+    /**
+     * Get living crosses
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getLivingCrosses() {
+        
+        $livingCrosses = new ArrayCollection();
+        
+        foreach ($this->getVial()->getCrosses() as $cross) {
+            if ($cross->getVial()->isAlive())
+                $livingCrosses->add($cross);
+        }
+        
+        return $livingCrosses;
     }
 }

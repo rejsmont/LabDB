@@ -80,7 +80,8 @@ class FlyVial {
     protected $stock;
     
     /**
-     * @ORM\OneToOne(targetEntity="FlyCross", inversedBy="vial", fetch="EAGER", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="FlyCross", inversedBy="vial", fetch="EAGER", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Expose
      */
     protected $cross;

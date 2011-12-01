@@ -15,7 +15,11 @@
     
     {{ form_rest(form) }}
 
-    {{ jq.button('Cancel',path('flycross_show', { 'id': cross.id }),'ui-icon-closethick') }}
+    {% if cross.id > 0 %}
+        {{ jq.button('Cancel',path('flycross_show', { 'id': cross.id }),'ui-icon-closethick') }}
+    {% else %}
+        {{ jq.button('Cancel',path('flycross_list'),'ui-icon-closethick') }}
+    {% endif %}
     {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
     {{ jq.submit_button('Save','ui-icon-disk') }}
 </form>

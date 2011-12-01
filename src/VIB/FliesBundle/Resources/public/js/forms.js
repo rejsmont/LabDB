@@ -18,10 +18,18 @@
  * Handles vial barcode input for vial selection form
  * 
  */
-function checkVial()
+function checkVial(filter)
 {
     var id = parseInt($('#barcode').val(),10);
-    var checkbox = $("#FlyVialSelectType_items_" + id);
+    var checkboxName;
+    var checkbox;
+    
+    if(filter == 'cross')
+        checkboxName = "#FlyCrossSelectType_items_" + id;
+    else
+        checkboxName = "#FlyVialSelectType_items_" + id;
+    
+    checkbox = $(checkboxName);
     
     $('#barcode_error').html('');
     
@@ -38,73 +46,34 @@ function checkVial()
                 .effect("highlight", {color: "green"}, 5000);
         }
     } else {
-  
-        $.ajax({
-            type: "GET",
-            url:"/app_dev.php/ajax/vials/" + id,
-            success: 
-                function(response) {
-                    $("#vials tbody").append(response);
-                    $("#FlyVialSelectType_items_" + id).checkbox();
-                    $("#FlyVialSelectType_items_" + id).parents('tr')
-                        .stop().css("background-color","")
-                        .effect("highlight", {color: "green"}, 5000);
-                        
-                },
-            error:
-                function(xhr, ajaxOptions, thrownError) {
-                    $('#barcode_error').html(form_error(xhr.responseText));
-                }
-        });
-    }
-
-    $('#barcode').val('');
-    $('#barcode').parents('form').find(':input').blur();
-    $('#barcode').focus();
-}
-
-/**
- * Handles vial barcode input for vial selection form
- * 
- */
-function checkCross()
-{
-    var id = parseInt($('#barcode').val(),10);
-    var checkbox = $("#FlyCrossSelectType_items_" + id);
-    
-    $('#barcode_error').html('');
-    
-    if(checkbox.length) {
-        if (checkbox.attr('checked')) {
-            checkbox.checkbox("uncheck");
-            checkbox.parents('tr')
-                .stop().css("background-color","")
-                .effect("highlight", {color: "red"}, 5000);
+        
+        
+        if (filter) {
+            url = '/app_dev.php/ajax/vials/' + filter + '/';
         } else {
-            checkbox.checkbox("check");
-            checkbox.parents('tr')
-                .stop().css("background-color","")
-                .effect("highlight", {color: "green"}, 5000);
+            url = '/app_dev.php/ajax/vials/';
         }
-    } else {
   
-        $.ajax({
+        var request = $.ajax({
             type: "GET",
-            url:"/app_dev.php/ajax/crosses/" + id,
-            success: 
-                function(response) {
-                    $("#crosses tbody").append(response);
-                    $("#FlyCrossSelectType_items_" + id).checkbox();
-                    $("#FlyCrossSelectType_items_" + id).parents('tr')
-                        .stop().css("background-color","")
-                        .effect("highlight", {color: "green"}, 5000);
-                        
-                },
-            error:
-                function(xhr, ajaxOptions, thrownError) {
-                    $('#barcode_error').html(form_error(xhr.responseText));
-                }
+            url: url + id
         });
+        
+        request.done(
+            function(response) {
+                $("#vials tbody").append(response);
+                checkbox = $(checkboxName);
+                checkbox.checkbox();
+                checkbox.parents('tr')
+                    .stop().css("background-color","")
+                    .effect("highlight", {color: "green"}, 5000);
+                        
+                });
+                
+        request.fail(
+            function(xhr, ajaxOptions, thrownError) {
+                $('#barcode_error').html(form_error(xhr.responseText));
+            });
     }
 
     $('#barcode').val('');
@@ -115,58 +84,89 @@ function checkCross()
 function getVial(caller)
 {
     var caller_id = caller.id;
-    var filter = caller_id.substring(7);
+    var filter = caller_id.substring(caller_id.lastIndexOf('_')+1);
+    var control = caller_id.substring(7);
     var vial_id = parseInt(caller.value,10);
+    
+    $('#' + caller.id + '_error').html('');
     
     if (caller.value == 0) {
         $('[id$="Type_' + filter + '"]').val('null');
         $('#' + caller.id + '_data').html('');
     } else {    
-        $.getJSON('/app_dev.php/ajax/vials/' + vial_id + '.json', function(vial) {
+        
+        var url = '';
+        
+        switch(filter) {
+            case 'source':
+            case 'stock':
+            case 'parent':
+                url = '/app_dev.php/ajax/vials/stock/';
+                break;
+            case 'source_cross':
+            case 'cross':
+                url = '/app_dev.php/ajax/vials/cross/';
+                break;
+            default:
+                url = '/app_dev.php/ajax/vials/';
+                break;
+        }
+        
+        var request = $.getJSON(url + vial_id + '.json').success(function(vial) {
             
             var html = '';
 
-            if (vial) {           
-                switch(filter) {
-                    case 'parent':
-                        if (vial.stock) {
-                            html = pad(vial.id + '',6);
-                            $('[id$="Type_' + filter + '"]').val(vial.id);
-                            $('#' + caller.id + '_data').html(html);
-                        }
-                        break;
-                    case 'stock':
-                        if (vial.stock) {
-                            html = vial.stock.name;
-                            $('[id$="Type_' + filter + '"]').val(vial.stock.id);
-                            $('#' + caller.id + '_data').html(html);
-                        }
-                        break;
-                    case 'source_cross':
-                    case 'cross':
-                        if (vial.cross) {
-                            html = vial.cross.virgin_name + " \u263f ✕ " + vial.cross.male_name + " \u2642";
-                            $('[id$="Type_' + filter + '"]').val(vial.cross.id);
-                            $('#' + caller.id + '_data').html(html);
-                        }
-                        break;
-                    case 'virgin':
-                    case 'male':
-                        if (vial.stock) {                            
-                            html = vial.stock.name + ' (' + pad(vial.id + '',6) + ')';
-                            $('[id$="Type_' + filter + '"]').val(vial.id);
-                            $('#' + caller.id + '_data').html(html);
-                            $('[id$="Type_' + filter + 'Name"]').val(vial.stock.name);
-                        } else if (vial.cross) {                            
-                            html = vial.cross.virgin_name + " \u263f ✕ " + vial.cross.male_name + " \u2642"
-                                 + ' (' + pad(vial.id + '',6) + ')';
-                            $('[id$="Type_' + filter + '"]').val(vial.id);
-                            $('#' + caller.id + '_data').html(html);
-                            $('[id$="Type_' + filter + 'Name"]').val('');
-                        }
-                        break;
-                }
+            switch(filter) {
+                case 'source':
+                    if (vial.stock) {
+                        html = pad(vial.id + '',6);
+                        $('#' + control).val(vial.id);
+                        $('#' + caller.id + '_data').html(html);
+                        $('#' + caller.id + '_header').html('' + vial.stock.name);
+                    }
+                    break;
+                case 'parent':
+                    if (vial.stock) {
+                        html = pad(vial.id + '',6);
+                        $('#' + control).val(vial.id);
+                        $('#' + caller.id + '_data').html(html);
+                    }
+                    break;
+                case 'stock':
+                    if (vial.stock) {
+                        html = vial.stock.name;
+                        $('#' + control).val(vial.stock.id);
+                        $('#' + caller.id + '_data').html(html);
+                    }
+                    break;
+                case 'source_cross':
+                case 'cross':
+                    if (vial.cross) {
+                        html = vial.cross.virgin_name + " \u263f ✕ " + vial.cross.male_name + " \u2642";
+                        $('#' + control).val(vial.cross.id);
+                        $('#' + caller.id + '_data').html(html);
+                    }
+                    break;
+                case 'virgin':
+                case 'male':
+                    if (vial.stock) {                            
+                        html = vial.stock.name + ' (' + pad(vial.id + '',6) + ')';
+                        $('#' + control).val(vial.id);
+                        $('#' + caller.id + '_data').html(html);
+                        $('#' + control + 'Name').val(vial.stock.name);
+                    } else if (vial.cross) {                            
+                        html = vial.cross.virgin_name + " \u263f ✕ " + vial.cross.male_name + " \u2642"
+                             + ' (' + pad(vial.id + '',6) + ')';
+                        $('#' + control).val(vial.id);
+                        $('#' + caller.id + '_data').html(html);
+                        $('#' + control + 'Name').val('');
+                    }
+                    break;
             }
+        })
+        
+        request.fail(function(xhr, ajaxOptions, thrownError) {
+            $('#' + caller.id + '_error').html(form_error(xhr.responseText));
         });
     
     }
@@ -230,6 +230,8 @@ $(document).ready(function() {
     });
     
     $("form input").filter(":checkbox,:radio").checkbox();
+    
+    form_errors();
 }); 
 
 function form_error(message) {
@@ -241,4 +243,15 @@ function form_error(message) {
     error_html += '</div>'
     error_html += '</div>'
     return error_html;
+}
+
+function form_errors() {
+    var message;
+    
+    $("td[id$='_error']").each(function(index) {
+        message = $(this).find("li").html();
+        if (message) {
+            $(this).html(form_error(message));
+        }
+    });
 }

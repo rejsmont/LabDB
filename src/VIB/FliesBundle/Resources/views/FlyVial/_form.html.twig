@@ -16,7 +16,12 @@
     
     {{ form_rest(form) }}
 
-    {{ jq.button('Cancel',path('flyvial_show', { 'id': vial.id }),'ui-icon-closethick') }}
+    {% if vial.id > 0 %}
+        {{ jq.button('Cancel',path('flyvial_show', { 'id': vial.id }),'ui-icon-closethick') }}
+    {% else %}
+        {{ jq.button('Cancel',path('flyvial_list'),'ui-icon-closethick') }}
+    {% endif %}
+    
     {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
     {{ jq.submit_button('Save','ui-icon-disk') }}
 </form>
