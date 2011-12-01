@@ -24,53 +24,115 @@ a:visited:not(.ui-widget) {
     color: black;
 }
 
+input[type='search'] {
+    -webkit-appearance: textfield;
+    background-color: white;
+}
+
+
+
 nav.top {
     margin: -8px;
     padding: 0px;
     border-width: 0px 0px 1px 0px;
 }
 
-
-nav.top a,
-nav.top a:link,
-nav.top a:visited {
+nav.top > a,
+nav.top > a:link,
+nav.top > a:visited {
     display: inline-block;
     margin: 0px;
     padding: 5px 8px 5px 8px;
     border-radius: 0px;
 }
 
-nav.top a.ui-state-default {
+nav.top > a.ui-state-default {
     border-width: 0px;
     padding: 0px 1px 0px 1px;
 }
 
-nav.top a.ui-state-hover,
-nav.top a.ui-state-active {
+nav.top > a.ui-state-hover,
+nav.top > a.ui-state-active {
     border-width: 0px 1px 1px 1px;
     margin-bottom: -1px;
     padding: 0px;
 
 }
 
-nav.top a:first-child {
+nav.top > a:first-child {
     padding-left: 0px;
 }
 
-nav.top a.ui-state-hover:first-child,
-nav.top a.ui-state-active:first-child {
+nav.top > a.ui-state-hover:first-child,
+nav.top > a.ui-state-active:first-child {
     border-left: 0px;
 }
 
-nav.top a#logout {
+nav.top > a#logout {
     float: right;
     padding-right: 0px;
 }
 
-nav.top a#logout.ui-state-hover,
-nav.top a#logout.ui-state-active {
+nav.top > a#logout.ui-state-hover,
+nav.top > a#logout.ui-state-active {
     border-right: 0px;
 }
+
+
+#search {
+    display: inline-block;
+    float: right;
+    margin: 0px 18px 0px 0px;
+    padding: 0px;
+}
+
+#search table,
+#search table td {
+    border: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+#search table {
+    border-collapse: collapse;
+}
+
+#search table td {
+    padding-top: 1px;
+    padding-right: 6px;
+}
+
+#search input[type="submit"],
+#search input[type="search"]
+{
+    height: 21px;
+    border-radius: 4px;
+}
+
+#search input[type="search"].ui-state-default {
+    background: white;
+    
+}
+
+#search input[type="submit"]
+{
+    font-weight: bold;
+}
+
+#search select {
+    width: 100px;
+}
+
+#search a.ui-selectmenu {
+    height: 19px;
+}
+
+#search span.ui-selectmenu-status {
+    padding: 2px 22px 2px 10px;
+}
+
+
+
 
 #content {
     font-size: 1em;
@@ -179,16 +241,16 @@ table.data td li {
     margin-top: 6px;
 }
 
-#content input {
+input {
     border-radius: 4px;
-    background: none;
+    background: white;
     color: black;
     font-weight: normal;
     padding: 3px 4px 3px 4px;
     min-height: 14px;
 }
 
-#content input:focus {
+input:focus {
     outline-style: none;
     border-width: 2px;
     padding: 2px 3px 2px 3px;

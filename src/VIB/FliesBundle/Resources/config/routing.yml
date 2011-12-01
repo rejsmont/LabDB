@@ -17,3 +17,7 @@ fly_vial:
 ajax:
     resource: "@VIBFliesBundle/Controller/AJAXController.php"
     type:     annotation
+    
+search:
+    resource: "@VIBFliesBundle/Controller/SearchController.php"
+    type:     annotation

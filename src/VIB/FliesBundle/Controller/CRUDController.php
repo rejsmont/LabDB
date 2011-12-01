@@ -36,16 +36,9 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class CRUDController extends Controller {
+class CRUDController extends AbstractController {
     
     protected $entityClass;
-    
-    private $entityManager;
-    private $formFactory;
-    private $request;
-    private $aclProvider;
-    private $securityContext;
-    private $currentUser;
     
     /**
      * Construct CRUDController
@@ -54,12 +47,6 @@ class CRUDController extends Controller {
     public function __construct()
     {
         $this->entityClass = null;
-        $this->entityManager = null;
-        $this->formFactory = null;
-        $this->request = null;
-        $this->aclProvider = null;
-        $this->securityContext = null;
-        $this->currentUser = null;
     }
         
     /**
@@ -208,51 +195,8 @@ class CRUDController extends Controller {
         $aclProvider->updateAcl($acl);
     }
     
-    /**
-     * Get current user
-     * 
-     * @return UserInterface 
-     */
-    protected function getCurrectUser() {
-        if ($this->currentUser == null)
-            $this->currentUser = $this->getSecurityContext()->getToken()->getUser();
-        return $this->currentUser;
-    }
-    
     public function getEntityClass() {
         return $this->entityClass;
     }
-
-    public function getEntityManager() {
-        if ($this->entityManager == null)
-            $this->entityManager = $this->get('doctrine.orm.entity_manager');
-        return $this->entityManager;
-    }
-
-    public function getFormFactory() {
-        if ($this->formFactory == null)
-            $this->formFactory = $this->get('form.factory');
-        return $this->formFactory;
-    }
-
-    public function getRequest() {
-        if ($this->request == null)
-            $this->request = $this->get('request');
-        return $this->request;
-    }
-    
-    public function getAclProvider() {
-        if ($this->aclProvider == null)
-            $this->aclProvider = $this->get('security.acl.provider');
-        return $this->aclProvider;
-    }
-
-    public function getSecurityContext() {
-        if ($this->securityContext == null)
-            $this->securityContext = $this->get('security.context');
-        return $this->securityContext;
-    }
-
-
 }
 ?>

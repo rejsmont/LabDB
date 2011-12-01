@@ -1,0 +1,18 @@
+{% extends "VIBFliesBundle::layout.html.twig" %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
+
+{% block content %}
+<h1>Search results</h1>
+<table class="ui-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Source cross</th>
+            <th>Vials</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+</table>
+{% endblock %}
