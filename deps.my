@@ -1,0 +1,10 @@
+[JMSSerializerBundle]
+    git=git://github.com/schmittjoh/JMSSerializerBundle.git
+    target=bundles/JMS/SerializerBundle
+
+[pagerfanta]
+    git=git://github.com/whiteoctober/Pagerfanta.git
+
+[PagerfantaBundle]
+    git=git://github.com/whiteoctober/WhiteOctoberPagerfantaBundle.git
+    target=bundles/WhiteOctober/PagerfantaBundle
