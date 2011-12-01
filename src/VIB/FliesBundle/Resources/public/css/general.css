@@ -31,6 +31,32 @@ input[type='search'] {
 
 
 
+input {
+    border-radius: 4px;
+    color: black;
+    font-weight: normal;
+    padding: 3px 4px 3px 4px;
+    min-height: 14px;
+}
+
+input:focus {
+    outline-style: none;
+    border-width: 2px;
+    padding: 2px 3px 2px 3px;
+}
+
+input,
+input.ui-state-default {
+    background-image: none;
+    background-color: white;
+}
+
+.ui-widget {
+    font-size: smaller;
+    outline-style: none;
+}
+
+
 nav.top {
     margin: -8px;
     padding: 0px;
@@ -102,11 +128,19 @@ nav.top > a#logout.ui-state-active {
     padding-right: 6px;
 }
 
-#search input[type="submit"],
 #search input[type="search"]
 {
     height: 21px;
     border-radius: 4px;
+}
+
+#search button[type="submit"] {
+    height: 21px;
+}
+
+#search button[type="submit"] span {
+    padding: 0px 6px;
+    font-weight: bold;
 }
 
 #search input[type="search"].ui-state-default {
@@ -241,25 +275,7 @@ table.data td li {
     margin-top: 6px;
 }
 
-input {
-    border-radius: 4px;
-    background: white;
-    color: black;
-    font-weight: normal;
-    padding: 3px 4px 3px 4px;
-    min-height: 14px;
-}
 
-input:focus {
-    outline-style: none;
-    border-width: 2px;
-    padding: 2px 3px 2px 3px;
-}
-
-.ui-widget {
-    font-size: smaller;
-    outline-style: none;
-}
 
 table.ui-table#barcode_select {
     border: none;
