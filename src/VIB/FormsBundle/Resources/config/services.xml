@@ -21,6 +21,7 @@
         <service id="form.type.entity_typeahead" class="%entity_typeahead.class%">
             <tag name="form.type" alias="entity_typeahead"/>
             <argument type="service" id="doctrine"/>
+            <argument type="service" id="router"/>
         </service>
     </services>
 </container>

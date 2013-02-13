@@ -1,3 +1,5 @@
+vib_forms:
+    resource: "@VIBFormsBundle/Resources/config/routing.yml"
 vib_flies:
     resource: "@VIBFliesBundle/Resources/config/routing.yml"
 

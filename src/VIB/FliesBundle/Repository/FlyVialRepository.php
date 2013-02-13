@@ -45,7 +45,7 @@ class FlyVialRepository extends EntityRepository
         $query = $queryBuilder
             ->where('b.setupDate > :date')
             ->andWhere('b.trashed = false')
-            ->setParameter('date', $date->format('d.m.y'))
+            ->setParameter('date', $date->format('Y-m-d'))
             ->orderBy('b.setupDate', 'DESC')
             ->addOrderBy('b.id', 'DESC');
                 

@@ -35,10 +35,11 @@ use VIB\FormsBundle\Form\DataTransformer\EntityToTextTransformer;
 class TextEntityType extends AbstractType
 {
     /**
-     * @var ManagerRegistry
+     * @var Doctrine\Common\Persistence\ManagerRegistry
      */
     protected $registry;
 
+    
     /**
      * 
      * @param Doctrine\Common\Persistence\ManagerRegistry $registry
