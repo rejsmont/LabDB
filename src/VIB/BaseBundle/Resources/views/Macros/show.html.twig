@@ -1,0 +1,66 @@
+{% macro row(label,value) %}
+<div class="control-group">
+    <span class="control-label">{{ label }}</span>
+    <div class="controls">
+        <span class="input-text">{{ value }}</span>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro arow(label, value, ctrl) %}
+<div class="control-group">
+    <span class="control-label">{{ label }}</span>
+    <div class="controls">
+        <span class="input-text">
+            {% if value is not empty %}
+            <a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro lrow(label, value, ctrl) %}
+<div class="control-group">
+    <span class="control-label">{{ label }}</span>
+    <div class="controls">
+        <ul class="unstyled input-text">
+        {% for item in value %}
+            <li>
+                <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro ldrow(label, value, ctrl) %}
+<div class="control-group">
+  <span class="control-label">{{ label }}</span>
+  <div class="controls">
+    <ul class="unstyled input-text">
+    {% for item in value %}
+      <li>
+        <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
+        ({{ item.setupDate | date("d F Y") }})
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro tr_crow(label, value, name, ctrl) %}
+{% if value is not empty %}
+<tr>
+    <th>{{ label }}</th>
+    <td>
+        {{ name }}
+        (<a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>)
+    </td>
+</tr>
+{% endif %}
+{% endmacro %}
+
+

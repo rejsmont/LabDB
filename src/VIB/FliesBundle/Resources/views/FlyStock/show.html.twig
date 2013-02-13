@@ -1,0 +1,13 @@
+{% extends "VIBBaseBundle:Show:modal.html.twig" %}
+
+{% block modal_header %}Stock {{ stock }}{% endblock modal_header %}
+
+{% block modal_body %}
+  {{ s.arow("Source cross:", stock.sourceCross, 'flycross_show') }}
+  {{ s.ldrow("Vials:", stock.livingVials, 'flyvial_show') }}
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  <a href="{{ path('flystock_edit', { 'id': stock.id }) }}" class="btn">Edit</a>
+  <a href="{{ path('flystock_list') }}" class="btn">List</a>
+{% endblock modal_footer %}

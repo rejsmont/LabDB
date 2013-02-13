@@ -1,0 +1,16 @@
+{% extends "VIBBaseBundle:Show:modal.html.twig" %}
+
+{% block modal_header %}Vial {{ vial }}{% endblock modal_header %}
+
+{% block modal_body %}
+  {{ s.row("Setup date:", vial.setupDate | date("d F Y")) }}
+  {{ s.row("Flip date:", vial.flipDate | date("d F Y")) }}
+  {{ s.arow("Flipped from:", vial.parent, 'flyvial_show') }}
+  {{ s.arow("Stock:", vial.stock, 'flystock_show') }}
+  {{ s.lrow("Flipped to:", vial.children, 'flyvial_show') }}
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  <a href="{{ path('flyvial_edit', { 'id': vial.id }) }}" class="btn">Edit</a>
+  <a href="{{ path('flyvial_list') }}" class="btn">List</a>
+{% endblock modal_footer %}

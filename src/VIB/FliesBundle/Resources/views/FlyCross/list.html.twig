@@ -1,0 +1,49 @@
+{% extends "VIBFliesBundle::layout.html.twig" %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
+
+{% block content %}
+<h1>{% block pheader %}Crosses{% endblock %}</h1>
+
+<form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
+
+    {% block selector %}{% endblock %}
+    
+    {{ form_errors(form) }}
+    {% if form.items | length < 1 %}
+        {{ form_widget(form.items) }}
+    {% endif %}
+
+    <table id="vials" class="ui-table">
+        {% include 
+                'VIBFliesBundle:FlyCross:_cross_table.html.twig'
+                with {'crosses': crosses, 'class': null, 'checkbox': true} %}
+        {% block pager %}
+        {% if pager.nbPages > 1 %}
+        <tfoot>
+            <tr>
+                <td colspan="8">{{ s.pager(pager,'flycross_listpage') }}</td>
+            </tr>
+        </tfoot>
+        {% endif %}
+        {% endblock %}
+    </table>
+    
+    {{ form_rest(form) }}
+
+    {{ jq.button('New',path('flycross_create'),'ui-icon-document') }}    
+    {% block actionbutton %}
+        {{ jq.button('Select crosses',path('flycross_select'),'ui-icon-tag') }}
+    {% endblock %}
+    {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
+    {{ jq.submit_action_button(
+            'Trash',
+            "$('#FlyCrossSelectType_action').val('trash'); $('form').submit();",
+            'ui-icon-trash') }}
+    {{ jq.submit_action_button(
+            'Print labels',
+            "$('#FlyCrossSelectType_action').val('label'); $('form').submit();",
+            'ui-icon-print') }}
+
+</form>
+{% endblock %}

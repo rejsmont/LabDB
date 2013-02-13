@@ -1,0 +1,21 @@
+{% extends "VIBBaseBundle::layout.html.twig" %}
+
+{% block page_header %}{% endblock page_header %}
+
+{% block content %}
+<div class="modal">
+  {% block form_header %}
+  <form action="{{ path('login_check') }}" method="post" class="form-horizontal">
+  {% endblock form_header %}
+  <div class="modal-header">
+    <h3>{% block modal_header %}{% endblock modal_header %}</h3>
+  </div>
+  <div class="modal-body">
+    {% block modal_body %}{% endblock modal_body %}
+  </div>
+  <div class="modal-footer">
+    {% block modal_footer %}{% endblock modal_footer %}
+  </div>
+  </form>
+</div>
+{% endblock content %}

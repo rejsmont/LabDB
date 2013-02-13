@@ -1,0 +1,52 @@
+{% extends "VIBBaseBundle::layout.html.twig" %}
+
+{% block headline %}Stock vials{% endblock headline %}
+{% block content %}
+<div class="span12">
+    <table id="vials" class="table table-striped table-bordered table-condensed">
+        <thead>
+            <tr class="inverse">
+                <th><input type="checkbox" id="checkall" checked="checked"></th>
+                <th>ID</th>
+                <th>Stock</th>
+                <th>Setup date</th>
+                <th>Flip date</th>
+                <th>Flipped from</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vial in vials %}
+            <tr>
+                <td style="width: 12px;">
+                    <input type="checkbox" id="FlyVialSelectType_items_{{ vial.id }}" 
+                           name="FlyVialSelectType[items][{{ vial.id }}]" 
+                           value="{{ vial.id }}" checked="checked" />
+                </td>
+                <td style="width: 100px;">
+                    <a href="{{ path('flyvial_show', { 'id': vial.id }) }}">
+                    {{ vial }}</a></td>
+                <td>{% if vial.stock is not empty %}
+                    <a href="{{ path('flystock_show', { 'id': vial.stock.id }) }}">{{ vial.stock }}</a>
+                    {% endif %}</td>
+                <td style="width: 150px;">{{ vial.setupDate | date("d F Y") }}</td>
+                <td style="width: 150px;">{{ vial.flipDate | date("d F Y") }}</td>
+                <td style="width: 100px;">{% if vial.parent is not empty %}
+                    <a href="{{ path('flyvial_show', { 'id': vial.parent.id }) }}">
+                    {{ vial.parent }}
+                    </a>
+                    {% endif %}</td>
+                <td style="width: 100px;">{% if vial.trashed %}
+                    <span class="label label-inverse">TRASHED</span>
+                    {% elseif vial.alive %}
+                    <span class="label label-success">ALIVE</span>
+                    {% else %}
+                    <span class="label label-important">DEAD</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
