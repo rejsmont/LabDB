@@ -20,6 +20,7 @@ namespace VIB\FliesBundle\Controller;
 
 use Symfony\Component\Form\AbstractType;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
@@ -39,6 +40,13 @@ class CRUDController extends AbstractController {
     protected $entityClass;
     
     /**
+     * Entity name for this controller
+     * 
+     * @var string
+     */
+    protected $entityName;
+    
+    /**
      * Construct CRUDController
      *
      */ 
@@ -54,7 +62,7 @@ class CRUDController extends AbstractController {
      * @param Doctrine\ORM\QueryBuilder $query
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function baseListAction($page = 1, $queryBuilder = null, $maxPerPage = 15)
+    protected function baseListAction($page = 1, $queryBuilder = null, $maxPerPage = 15)
     {        
         $entityManager = $this->getEntityManager();
         
@@ -70,27 +78,26 @@ class CRUDController extends AbstractController {
     /**
      * Show action
      * 
-     * @param mixed $id
+     * @param Object $entity
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function baseShowAction($id)
+    protected function baseShowAction($entity)
     {
-        $entity = $this->getEntityManager()->find($this->getEntityClass(), $id);
-        
-        return array('entity' => $entity);
+        return array($this->getEntityName() => $entity);
     }
-    
     
     /**
      * Create action
      * 
      * @param Object $entity
      * @param AbstractType $entityType
+     * @param string $route
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function baseCreateAction($entity, AbstractType $entityType)
+    protected function baseCreateAction($entity, AbstractType $entityType, $route)
     {
-        $entityManager = $this->getEntityManager();
+        $em = $this->getEntityManager();
         $form = $this->getFormFactory()->create($entityType, $entity);
         $request = $this->getRequest();
         
@@ -100,33 +107,31 @@ class CRUDController extends AbstractController {
             
             if ($form->isValid()) {
                 
-                $entityManager->persist($entity);
-                $entityManager->flush();
+                $em->persist($entity);
+                $em->flush();
 
                 $this->setACL($entity);
                 
-                return array(
-                    'entity' => $entity,
-                    'redirect' => true);
+                $url = $this->generateUrl($route,array('id' => $entity->getRoutableId()));
+                return $this->redirect($url);
             }
         }
         
-        return array(
-            'entity' => $entity,
-            'form' => $form->createView());
+        return array('form' => $form->createView());
     }
 
     /**
      * Edit action
      *     
-     * @param mixed $id
+     * @param Object $entity
      * @param AbstractType $entityType
+     * @param string $route
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function baseEditAction($id, AbstractType $entityType)
+    protected function baseEditAction($entity, AbstractType $entityType, $route)
     {
-        $entityManager = $this->getEntityManager();
-        $entity = $entityManager->find($this->getEntityClass(), $id);
+        $em = $this->getEntityManager();
         $form = $this->getFormFactory()->create($entityType, $entity);
         $request = $this->getRequest();
         
@@ -136,35 +141,33 @@ class CRUDController extends AbstractController {
             
             if ($form->isValid()) {
                 
-                $entityManager->persist($entity);
-                $entityManager->flush();
+                $em->persist($entity);
+                $em->flush();
                 
-                return array(
-                    'entity' => $entity,
-                    'redirect' => true);
+                $url = $this->generateUrl($route,array('id' => $entity->getRoutableId()));
+                return $this->redirect($url);
             }
         }
         
-        return array(
-            'entity' => $entity,
-            'form' => $form->createView());
+        return array('form' => $form->createView());
     }
 
     /**
      * Delete action
      * 
-     * @param mixed $id
+     * @param Object $entity
+     * @param string $route
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function baseDeleteAction($id)
+    protected function baseDeleteAction($entity, $route)
     {
-        $entityManager = $this->getEntityManager();
-        $entity = $entityManager->find($this->getEntityClass(), $id);
+        $em = $this->getEntityManager();
         
-        $entityManager->remove($entity);
-        $entityManager->flush();
+        $em->remove($entity);
+        $em->flush();
         
-        return array('redirect' => true);
+        return $this->redirect($this->generateUrl($route));
     }
 
     /**
@@ -174,7 +177,7 @@ class CRUDController extends AbstractController {
      * @param UserInterface|null $user
      * @param integer $mask
      */
-    protected function setACL($entity, $user = null, $mask = MaskBuilder::MASK_OWNER) {
+    protected function setACL($entity, UserInterface $user = null, $mask = MaskBuilder::MASK_OWNER) {
         
         if ($user === null) {
             $user = $this->getCurrectUser();
@@ -191,5 +194,11 @@ class CRUDController extends AbstractController {
     public function getEntityClass() {
         return $this->entityClass;
     }
+    
+    public function getEntityName() {
+        return $this->entityName;
+    }
+
+
 }
 ?>

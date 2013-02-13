@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\FliesBundle\Entity\FlyStock;
@@ -41,6 +42,7 @@ class FlyStockController extends CRUDController
     public function __construct()
     {
         $this->entityClass = 'VIBFliesBundle:FlyStock';
+        $this->entityName = 'stock';
     }
     
     /**
@@ -64,15 +66,14 @@ class FlyStockController extends CRUDController
      * 
      * @Route("/stocks/show/{id}", name="flystock_show")
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyStock")
+     * @ParamConverter("entity", class="VIBFliesBundle:FlyStock")
      * 
-     * @param mixed $id
+     * @param mixed $entity
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($id)
+    public function showAction($entity)
     {
-        $response = parent::baseShowAction($id);
-        return array('stock' => $response['entity']);
+        return parent::baseShowAction($entity);
     }
     
     
@@ -142,14 +143,14 @@ class FlyStockController extends CRUDController
      * Cascade ACL setting for stock vials
      * 
      * @param Object $entity
-     * @param UserInterface|null $user
+     * @param Symfony\Component\Security\Core\User\UserInterface|null $user
      * @param integer $mask
      */
-    protected function setACL($stock, $user = null, $mask = MaskBuilder::MASK_OWNER) {
+    protected function setACL($entity, UserInterface $user = null, $mask = MaskBuilder::MASK_OWNER) {
         
-        parent::setACL($stock, $user, $mask);
+        parent::setACL($entity, $user, $mask);
         
-        foreach ($stock->getVials() as $vial) {
+        foreach ($entity->getVials() as $vial) {
             parent::setACL($vial, $user, $mask);
         }
     }

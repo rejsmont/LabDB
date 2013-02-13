@@ -47,16 +47,22 @@ class FlyCrossType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('maleName', 'text', array('label' => 'Male name'))
-                ->add('virginName', 'text', array('label' => 'Virgin name'))
-                ->add('vial', new FlyVialType())
+        $builder->add('vial', new FlyVialSimpleType())
                 ->add('male', 'text_entity', array(
                         'property'     => 'id',
                         'class' => 'VIBFliesBundle:FlyVial',
+                        'format'    => '%06d',
+                        'label' => 'Male vial'))
+                ->add('maleName', 'text', array(
+                        'label' => 'Male name',
                         'required' => false))
                 ->add('virgin', 'text_entity', array(
                         'property'     => 'id',
                         'class' => 'VIBFliesBundle:FlyVial',
+                        'format'    => '%06d',
+                        'label' => 'Virgin vial'))
+                ->add('virginName', 'text', array(
+                        'label' => 'Virgin name',
                         'required' => false));
     }
 

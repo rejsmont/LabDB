@@ -1,3 +1,17 @@
-{% extends "VIBBaseBundle::form.html.twig" %}
+{% extends "VIBBaseBundle:Form:form.html.twig" %}
 
-{% block headline %}Edit cross{% endblock headline %}
+{% form_theme form _self %} 
+  
+{% block _FlyCrossType_vial_row %}
+  {{ form_widget(form) }}
+{% endblock %}
+
+{% block modal_header %}
+  Edit cross {{ form.get('value').name }} ({{ form.get('value').vial.name }})
+{% endblock modal_header %}
+
+{% block modal_footer %}
+  <button type="submit" class="btn btn-primary">Save</button>
+  <button type="reset" class="btn">Reset</button>
+  <a href="{{ path('flycross_show', { 'id': form.get('value').routableId }) }}" class="btn">Cancel</a>
+{% endblock modal_footer %}

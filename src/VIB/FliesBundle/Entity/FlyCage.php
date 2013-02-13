@@ -60,6 +60,16 @@ class FlyCage {
     }
 
     /**
+     * Get routable id
+     *
+     * @return integer
+     */
+    public function getRoutableId()
+    {
+        return $this->getId();
+    }
+    
+    /**
      * Set setupDate
      *
      * @param datetime $setupDate

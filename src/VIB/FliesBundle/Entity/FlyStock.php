@@ -25,6 +25,9 @@ use JMS\Serializer\Annotation\Expose;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ExecutionContext;
+
 use VIB\FliesBundle\Entity\FlyVial;
 use VIB\FliesBundle\Entity\FlyCross;
 
@@ -34,6 +37,7 @@ use VIB\FliesBundle\Entity\FlyCross;
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\FlyStockRepository")
+ * @Assert\Callback(methods={"isSourceCrossVialValid"})
  * @ExclusionPolicy("all")
  */
 class FlyStock {
@@ -43,25 +47,37 @@ class FlyStock {
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      * @Expose
+     * 
+     * @var integer;
      */
     protected $id; 
 
     /**
      * @ORM\Column(type="string", length=255, unique=true, nullable=false)
      * @Expose
+     * 
+     * @var string
      */
     protected $name;
     
     /**
      * @ORM\OneToMany(targetEntity="FlyVial", mappedBy="stock", cascade={"persist", "remove"})
      * 
+     * @var Doctrine\Common\Collections\Collection
      */
     protected $vials;
     
     /**
-     * @ORM\ManyToOne(targetEntity="FlyCross")
+     * @ORM\ManyToOne(targetEntity="FlyCross", inversedBy="stocks")
+     * 
+     * @var VIB\FliesBundle\Entity\FlyCross
      */
     protected $sourceCross;
+    
+    /**
+     * @var VIB\FliesBundle\Entity\FlyVial
+     */
+    protected $sourceCrossVial;
     
     /**
      * Construct FlyStock
@@ -69,6 +85,8 @@ class FlyStock {
      * @param VIB\FliesBundle\Entity\FlyVial $parent
      */    
     public function __construct() {
+        
+        $this->sourceCrossVial = null;
         $this->vials = new ArrayCollection();
         
         $this->addVials(new FlyVial());
@@ -96,6 +114,16 @@ class FlyStock {
         return $this->id;
     }
 
+    /**
+     * Get routable id
+     *
+     * @return integer
+     */
+    public function getRoutableId()
+    {
+        return $this->getId();
+    }
+    
     /**
      * Set name
      *
@@ -174,5 +202,42 @@ class FlyStock {
      */
     public function getSourceCross() {
         return $this->sourceCross;
+    }
+    
+    /**
+     * Set sourceCrossVial
+     *
+     * @param VIB\FliesBundle\Entity\FlyVial $sourceCrossVial
+     */
+    public function setSourceCrossVial(FlyVial $sourceCrossVial) {
+        $this->sourceCrossVial = $sourceCrossVial;
+        $this->sourceCross = null !== $sourceCrossVial ? $sourceCrossVial->getCross() : null;
+    }
+
+    /**
+     * Get sourceCrossVial
+     *
+     * @return VIB\FliesBundle\Entity\FlyVial
+     */
+    public function getSourceCrossVial() {
+        if (null === $this->sourceCrossVial) {
+            return null !== $this->sourceCross ? $this->sourceCross->getVial() : null;
+        } else {
+            return $this->sourceCrossVial;
+        }
+    }
+    
+    /**
+     * Check if source cross vial is valid
+     * 
+     * @param ExecutionContext $context
+     */
+    public function isSourceCrossVialValid(ExecutionContext $context) {
+        
+        $sourceCrossVial = null !== $this->sourceCross ? $this->sourceCross->getVial() : null;
+        
+        if ($sourceCrossVial !== $this->getSourceCrossVial()) {
+             $context->addViolationAtSubPath('source_cross_vial', 'Provided vial does not hold a cross', array(), null);
+        }
     }
 }

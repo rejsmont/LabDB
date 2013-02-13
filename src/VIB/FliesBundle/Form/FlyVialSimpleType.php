@@ -27,7 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class FlyVialType extends AbstractType
+class FlyVialSimpleType extends AbstractType
 {  
     /**
      * Get name
@@ -36,7 +36,7 @@ class FlyVialType extends AbstractType
      */
     public function getName()
     {
-        return "flyvial";
+        return "flyvial_simple";
     }
     
     /**
@@ -47,19 +47,8 @@ class FlyVialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('setupDate', 'datepicker', array('label' => 'Setup date:'))
-                ->add('flipDate', 'datepicker', array('label' => 'Flip date:'))
-                ->add('parent', 'text_entity', array(
-                        'property'  => 'id',
-                        'class'     => 'VIBFliesBundle:FlyVial',
-                        'format'    => '%06d',
-                        'required'  => false,
-                        'label'     => 'Flipped from:'))
-                ->add('stock', 'entity_typeahead', array(
-                        'property'  => 'name',
-                        'class'     => 'VIBFliesBundle:FlyStock',
-                        'required'  => false,
-                        'label'     => 'Stock:'));
+        $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
+                ->add('flipDate', 'datepicker', array('label' => 'Check date'));
     }
     
     /**

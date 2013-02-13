@@ -85,7 +85,7 @@ class FlyCross {
         $this->vial = new \VIB\FliesBundle\Entity\FlyVial;
         $this->vial->setCross($this);
         
-        if ($template) {
+        if (null !== $template) {
             $this->setMale($template->getMale());
             $this->setMaleName($template->getMaleName());
             $this->setVirgin($template->getVirgin());
@@ -113,6 +113,22 @@ class FlyCross {
     public function getId()
     {
         return $this->id;
+    }
+    
+    /**
+     * Get routable id
+     *
+     * @return integer
+     */
+    public function getRoutableId()
+    {
+        $vial = $this->getVial();
+        
+        if (null !== $vial) {
+            return $vial->getId();
+        } else {
+            return null;
+        }
     }
 
     /**

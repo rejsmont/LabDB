@@ -8,6 +8,6 @@
 {% endblock modal_body %}
 
 {% block modal_footer %}
-  <a href="{{ path('flystock_edit', { 'id': stock.id }) }}" class="btn">Edit</a>
+  <a href="{{ path('flystock_edit', { 'id': stock.routableId }) }}" class="btn">Edit</a>
   <a href="{{ path('flystock_list') }}" class="btn">List</a>
 {% endblock modal_footer %}
