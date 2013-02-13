@@ -26,6 +26,9 @@ $(document).ready(function () {
           return typeof json.options == 'undefined' ? false : process(json.options);
         }
       });
+    },
+    matcher: function (item) {
+      return true;
     }
   });
 });

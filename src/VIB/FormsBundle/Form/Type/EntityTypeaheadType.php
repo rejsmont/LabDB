@@ -18,6 +18,9 @@
 
 namespace VIB\FormsBundle\Form\Type;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
+
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -29,11 +32,34 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class EntityTypeaheadType extends TextEntityType
 {
     /**
+     * @var Symfony\Component\Routing\Router
+     */
+    protected $router;
+
+    
+    /**
+     * 
+     * @param Doctrine\Common\Persistence\ManagerRegistry $registry
+     */
+    public function __construct(ManagerRegistry $registry, Router $router) {
+        $this->registry = $registry;
+        $this->router = $router;
+    }
+    
+    /**
      * {@inheritdoc}
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['data_link'] = $options['data_link'];
+        $data_link = $options['data_link'];
+        
+        if (null === $data_link) {
+            $data_link = $this->router->generate('VIBFormsBundle_ajax_choices',
+                    array('class' => $options['class'],
+                          'property' => $options['property']));
+        }
+        
+        $view->vars['data_link'] = $data_link;
     }
   
     /**
@@ -42,8 +68,10 @@ class EntityTypeaheadType extends TextEntityType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
       parent::setDefaultOptions($resolver);
-
-      $resolver->setRequired(array('data_link'));    
+      
+      $resolver->setDefaults(array(
+            'data_link' => null
+        ));
     }
     
     /**

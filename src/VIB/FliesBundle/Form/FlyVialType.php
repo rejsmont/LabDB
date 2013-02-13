@@ -59,8 +59,7 @@ class FlyVialType extends AbstractType
                         'property'  => 'name',
                         'class'     => 'VIBFliesBundle:FlyStock',
                         'required'  => false,
-                        'label'     => 'Stock:',
-                        'data_link' => '/app_dev.php/ajax/stocks/search'))
+                        'label'     => 'Stock:'))
                 ->add('cross', 'text_entity', array(
                         'property'  => 'id',
                         'class'     => 'VIBFliesBundle:FlyCross',
