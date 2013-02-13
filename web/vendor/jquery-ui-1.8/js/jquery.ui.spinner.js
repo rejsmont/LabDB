@@ -103,7 +103,6 @@ $.widget('ui.spinner', {
 		
 		self._procOptions(true);
 		self._createButtons(input);
-                input.addClass('ui-spinner-input');
 
 		if (!input.is(':enabled'))
 			self.disable();
@@ -122,8 +121,9 @@ $.widget('ui.spinner', {
 			showOn = options.showOn,
 			box = $.support.boxModel,
 			height = input.outerHeight(),
-			rightMargin = self.oMargin = getMargin(input.css('margin-right')),
-			wrapper = self.wrapper = input
+			rightMargin = self.oMargin = getMargin(input.css('margin-right')), // store original width and right margin for later destroy
+			wrapper = self.wrapper = input.css({ width: (self.oWidth = (box ? input.width() : input.outerWidth())) - buttonWidth, 
+												 marginRight: rightMargin + buttonWidth, textAlign: 'right' })
 				.after('<span class="ui-spinner ui-widget"></span>').next(),
 			btnContainer = self.btnContainer = $(
 				'<div class="ui-spinner-buttons">' + 
@@ -146,15 +146,21 @@ $.widget('ui.spinner', {
 		// apply className before doing any calculations because it could affect them
 		if (className) wrapper.addClass(className);
 		
-		wrapper.append(btnContainer);
+		wrapper.append(btnContainer.css({ height: height, left: -buttonWidth-rightMargin,
+			// use offset calculation to fix vertical position in Firefox
+			top: (input.offset().top - wrapper.offset().top) + 'px' }));
 		
 		buttons = self.buttons = btnContainer.find('.ui-spinner-button');
+		buttons.css({ width: buttonWidth - (box ? buttons.outerWidth() - buttons.width() : 0), height: height/2 - (box ? buttons.outerHeight() - buttons.height() : 0) });
 		upButton = buttons[0];
 		downButton = buttons[1];
 
 		// fix icon centering
 		icons = buttons.find('.ui-icon');
+		icons.css({ marginLeft: (buttons.innerWidth() - icons.width()) / 2, marginTop:  (buttons.innerHeight() - icons.height()) / 2 });
 		
+		// set width of btnContainer to be the same as the buttons
+		btnContainer.width(buttons.outerWidth());
 		if (showOn != 'always')
 			btnContainer.css('opacity', 0);
 		
@@ -634,8 +640,7 @@ $.widget('ui.spinner', {
 	
 	destroy: function(target) {
 		this.wrapper.remove();
-                this.element.removeClass('ui-spinner-input');
-		this.element.unbind(eventNamespace);
+		this.element.unbind(eventNamespace).css({ width: this.oWidth, marginRight: this.oMargin });
 		
 		$.Widget.prototype.destroy.call(this);
 	}	

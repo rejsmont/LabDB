@@ -93,7 +93,7 @@ class Session implements \Serializable
     protected $oldFlashes;
     protected $locale;
     protected $defaultLocale;
-    protected $saved;
+    protected $closed;
 
     
     public function __construct(SessionStorageInterface $storage, $defaultLocale = 'en')
@@ -106,7 +106,7 @@ class Session implements \Serializable
         $this->attributes = array();
         $this->setPhpDefaultLocale($this->defaultLocale);
         $this->started = false;
-        $this->saved = false;
+        $this->closed = false;
     }
 
     
@@ -198,7 +198,7 @@ class Session implements \Serializable
     public function invalidate()
     {
         $this->clear();
-        $this->storage->regenerate();
+        $this->storage->regenerate(true);
     }
 
     
@@ -311,12 +311,17 @@ class Session implements \Serializable
             'flashes'    => $this->flashes,
             'locale'     => $this->locale,
         ));
-        $this->saved = true;
+    }
+
+    
+    public function close()
+    {
+        $this->closed = true;
     }
 
     public function __destruct()
     {
-        if (true === $this->started && !$this->saved) {
+        if (true === $this->started && !$this->closed) {
             $this->save();
         }
     }
@@ -2058,8 +2063,6 @@ class ServerBag extends ParameterBag
 namespace Symfony\Component\HttpFoundation
 {
 
-use Symfony\Component\HttpFoundation\SessionStorage\NativeSessionStorage;
-
 
 class Request
 {
@@ -2240,15 +2243,15 @@ class Request
             $dup->server = new ServerBag($server);
             $dup->headers = new HeaderBag($dup->server->getHeaders());
         }
-        $this->languages = null;
-        $this->charsets = null;
-        $this->acceptableContentTypes = null;
-        $this->pathInfo = null;
-        $this->requestUri = null;
-        $this->baseUrl = null;
-        $this->basePath = null;
-        $this->method = null;
-        $this->format = null;
+        $dup->languages = null;
+        $dup->charsets = null;
+        $dup->acceptableContentTypes = null;
+        $dup->pathInfo = null;
+        $dup->requestUri = null;
+        $dup->baseUrl = null;
+        $dup->basePath = null;
+        $dup->method = null;
+        $dup->format = null;
 
         return $dup;
     }
@@ -2820,7 +2823,7 @@ class Request
             $requestUri = substr($requestUri, 0, $pos);
         }
 
-        if ((null !== $baseUrl) && (false === ($pathInfo = substr($requestUri, strlen($baseUrl))))) {
+        if ((null !== $baseUrl) && (false === ($pathInfo = substr(urldecode($requestUri), strlen(urldecode($baseUrl)))))) {
                         return '/';
         } elseif (null === $baseUrl) {
             return $requestUri;
@@ -3484,8 +3487,12 @@ class ResponseHeaderBag extends HeaderBag
     }
 
     
-    public function removeCookie($name, $path = null, $domain = null)
+    public function removeCookie($name, $path = '/', $domain = null)
     {
+        if (null === $path) {
+            $path = '/';
+        }
+
         unset($this->cookies[$domain][$path][$name]);
 
         if (empty($this->cookies[$domain][$path])) {
@@ -3521,7 +3528,7 @@ class ResponseHeaderBag extends HeaderBag
     }
 
     
-    public function clearCookie($name, $path = null, $domain = null)
+    public function clearCookie($name, $path = '/', $domain = null)
     {
         $this->setCookie(new Cookie($name, null, 1, $path, $domain));
     }
@@ -4732,7 +4739,43 @@ class ContainerAwareEventDispatcher extends EventDispatcher
     }
 
     
+    public function hasListeners($eventName = null)
+    {
+        if (null === $eventName) {
+            return (Boolean) count($this->listenerIds) || (Boolean) count($this->listeners);
+        }
+
+        if (isset($this->listenerIds[$eventName])) {
+            return true;
+        }
+
+        return parent::hasListeners($eventName);
+    }
+
+    
+    public function getListeners($eventName = null)
+    {
+        if (null === $eventName) {
+            foreach ($this->listenerIds as $serviceEventName => $listners) {
+                $this->lazyLoad($serviceEventName);
+            }
+        } else {
+            $this->lazyLoad($eventName);
+        }
+
+        return parent::getListeners($eventName);
+    }
+
+    
     public function dispatch($eventName, Event $event = null)
+    {
+        $this->lazyLoad($eventName);
+
+        parent::dispatch($eventName, $event);
+    }
+
+    
+    protected function lazyLoad($eventName)
     {
         if (isset($this->listenerIds[$eventName])) {
             foreach ($this->listenerIds[$eventName] as $args) {
@@ -4750,8 +4793,6 @@ class ContainerAwareEventDispatcher extends EventDispatcher
                 $this->listeners[$eventName][$key] = $listener;
             }
         }
-
-        parent::dispatch($eventName, $event);
     }
 }
 }
@@ -4843,7 +4884,7 @@ class HttpKernel extends BaseHttpKernel
         $request = $this->container->get('request');
 
                 if (0 === strpos($controller, '/')) {
-            $subRequest = Request::create($controller, 'get', array(), $request->cookies->all(), array(), $request->server->all());
+            $subRequest = Request::create($request->getUriForPath($controller), 'get', array(), $request->cookies->all(), array(), $request->server->all());
             $subRequest->setSession($request->getSession());
         } else {
             $options['attributes']['_controller'] = $controller;
@@ -4895,6 +4936,39 @@ class HttpKernel extends BaseHttpKernel
         }
 
         return $uri;
+    }
+}
+}
+ 
+
+
+
+namespace Symfony\Component\Security\Http
+{
+
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
+
+
+class AccessMap
+{
+    private $map = array();
+
+    
+    public function add(RequestMatcherInterface $requestMatcher, array $roles = array(), $channel = null)
+    {
+        $this->map[] = array($requestMatcher, $roles, $channel);
+    }
+
+    public function getPatterns(Request $request)
+    {
+        foreach ($this->map as $elements) {
+            if (null === $elements[0] || $elements[0]->matches($request)) {
+                return array($elements[1], $elements[2]);
+            }
+        }
+
+        return array(null, null);
     }
 }
 }

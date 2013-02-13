@@ -11,10 +11,8 @@
 
 namespace Symfony\Tests\Component\Routing\Loader;
 
-use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Routing\Loader\AnnotationClassLoader;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 
 require_once __DIR__.'/../Fixtures/AnnotatedClasses/AbstractClass.php';
 require_once __DIR__.'/AbstractAnnotationLoaderTest.php';
@@ -25,6 +23,8 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->loader = $this->getClassLoader($this->getReader());
     }
 

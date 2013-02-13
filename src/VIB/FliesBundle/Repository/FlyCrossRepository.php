@@ -47,4 +47,22 @@ class FlyCrossRepository extends EntityRepository
                 
         return $query;
     }
+    
+        /**
+     * Return living cross vials
+     * 
+     * @return mixed 
+     */
+    public function findLivingCrossesByName($term) {
+        
+        $query = $this->findAllLivingQuery()
+            ->join('c.virgin','f')
+            ->join('c.male','m')
+            ->leftJoin('f.stock', 'fs')
+            ->leftJoin('m.stock', 'ms')
+            ->andWhere('fs.name like :term or ms.name like :term or c.maleName like :term or c.virginName like :term')
+            ->setParameter('term', '%' . $term .'%');
+                
+        return $query;
+    }
 }

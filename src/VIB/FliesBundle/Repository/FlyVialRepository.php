@@ -33,11 +33,16 @@ class FlyVialRepository extends EntityRepository
      * 
      * @return Doctrine\ORM\QueryBuilder
      */
-    public function findAllLivingQuery() {
+    public function findAllLivingQuery($qb = null) {
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
         
-        $query = $this->createQueryBuilder('b')
+        if ($qb == null)
+            $queryBuilder = $this->createQueryBuilder('b');
+        else
+            $queryBuilder = $qb;
+        
+        $query = $queryBuilder
             ->where('b.setupDate > :date')
             ->andWhere('b.trashed = false')
             ->setParameter('date', $date->format('d.m.y'))
@@ -83,6 +88,21 @@ class FlyVialRepository extends EntityRepository
 
         $query = $this->findAllLivingQuery()
             ->andWhere('b.cross is not null');
+                
+        return $query;
+    }
+    
+    /**
+     * Return living cross vials
+     * 
+     * @return mixed 
+     */
+    public function findLivingStocksByName($term) {
+        
+        $query = $this->findAllLivingQuery()
+            ->join('b.stock', 's')
+            ->andWhere('s.name like :term')
+            ->setParameter('term', '%' . $term .'%');
                 
         return $query;
     }

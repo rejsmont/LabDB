@@ -5,11 +5,15 @@
 {% endif %}
 
 <tr id="cross_{{ cross.id }}">
+    {% if checkbox is not empty %}
     <{{td}}>
+        <label>
         <input type="checkbox" id="FlyCrossSelectType_items_{{ cross.vial.id }}" 
                name="FlyCrossSelectType[items][{{ cross.id }}]" 
                value="{{ cross.id }}" checked="checked" />
+        </label>
     </td>
+    {% endif %}
     <{{td}}>{% if cross.vial is not empty %}
         <a href="{{ path('flycross_show', { 'id': cross.id }) }}">{{ cross.vial }}</a>
         {% endif %}

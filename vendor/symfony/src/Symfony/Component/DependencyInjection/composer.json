@@ -4,7 +4,7 @@
     "description": "Symfony DependencyInjection Component",
     "keywords": [],
     "homepage": "http://symfony.com",
-    "version": "2.0.4",
+    "version": "2.0.6",
     "license": "MIT",
     "authors": [
         {
@@ -24,5 +24,9 @@
     },
     "suggest": {
         "symfony/yaml": ">=2.0"
-    }
+    },
+    "autoload": {
+        "psr-0": { "Symfony\\Component\\DependencyInjection": "" }
+    },
+    "target-dir": "Symfony/Component/DependencyInjection"
 }

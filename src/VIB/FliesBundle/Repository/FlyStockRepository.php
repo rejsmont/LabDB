@@ -28,5 +28,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class FlyStockRepository extends EntityRepository
 {
-
+    /**
+     * Return stocks
+     * 
+     * @return mixed 
+     */
+    public function findStocksByName($term) {
+        
+        $query = $this->createQueryBuilder('b')
+            ->andWhere('b.name like :term')
+            ->setParameter('term', '%' . $term .'%');
+                
+        return $query;
+    }
 }

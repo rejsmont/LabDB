@@ -1,5 +1,5 @@
 {% if vial is not empty %}
-    {% include 'VIBFliesBundle:FlyVial:_vial_row.html.twig' with {'vial': vial, 'class': 'true'} %}
+    {% include 'VIBFliesBundle:FlyVial:_vial_row.html.twig' with {'vial': vial, 'class': 'true', 'checkbox': true} %}
 {% elseif cross is not empty %}
-    {% include 'VIBFliesBundle:FlyCross:_cross_row.html.twig' with {'cross': cross, 'class': 'true'} %}
+    {% include 'VIBFliesBundle:FlyCross:_cross_row.html.twig' with {'cross': cross, 'class': 'true', 'checkbox': true} %}
 {% endif %}

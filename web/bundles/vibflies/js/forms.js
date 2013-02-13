@@ -204,10 +204,12 @@ $(document).ready(function() {
 
     $('nav.top a').button();
     
-    $('select').selectmenu({
-        style:'dropdown',
-        wrapperElement: "<div class='ui-selectmenu-wrap' />"
-    });
+//    $('select').selectmenu({
+//        style:'dropdown',
+//        wrapperElement: "<div class='ui-selectmenu-wrap' />"
+//    });
+
+    $('select').selectmenu();
     
     $('table.ui-table td').addClass('ui-state-default');
     $('table.ui-table th').addClass('ui-widget-header');
@@ -226,10 +228,10 @@ $(document).ready(function() {
     );
     
     $('#checkall').click(function () {
-        $(this).parents('table').find('tbody :checkbox').checkbox(this.checked ? "check" : "uncheck");
+        $(this).parents('table').find('tbody :checkbox').prop("checked", $(this).checked);
     });
     
-    $("form input").filter(":checkbox,:radio").checkbox();
+    $("form input").filter(":checkbox").checkbox();
     
     form_errors();
 }); 

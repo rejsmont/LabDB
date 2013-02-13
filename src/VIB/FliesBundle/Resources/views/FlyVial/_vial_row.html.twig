@@ -5,11 +5,15 @@
 {% endif %}
 
 <tr id="vial_{{ vial }}">
+    {% if checkbox is not empty %}
     <{{td}}>
+        <label>
         <input type="checkbox" id="FlyVialSelectType_items_{{ vial.id }}" 
                name="FlyVialSelectType[items][{{ vial.id }}]" 
                value="{{ vial.id }}" checked="checked" />
+        </label>
     </td>
+    {% endif %}
     <{{td}}><a href="{{ path('flyvial_show', { 'id': vial.id }) }}">
         {{ vial }}</a></td>
     <{{td}}>{% if vial.stock is not empty %}

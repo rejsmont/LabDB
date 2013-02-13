@@ -15,22 +15,9 @@
     {% endif %}
 
     <table id="vials" class="ui-table">
-        <thead>
-            <tr>
-                <th><input type="checkbox" id="checkall" checked="checked"></th>
-                <th>Vial</th>
-                <th colspan="2">Virgin</th>
-                <th colspan="2">Male</th>
-                <th>Setup date</th>
-                <th>Check date</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for cross in crosses %}
-            {% include 'VIBFliesBundle:FlyCross:_cross_row.html.twig' with {'cross': cross, 'class': null} %}
-        {% endfor %}
-        </tbody>
+        {% include 
+                'VIBFliesBundle:FlyCross:_cross_table.html.twig'
+                with {'crosses': crosses, 'class': null, 'checkbox': true} %}
         {% block pager %}
         {% if pager.nbPages > 1 %}
         <tfoot>
@@ -41,12 +28,13 @@
         {% endif %}
         {% endblock %}
     </table>
-        
-    {{ form_errors(form) }}
+    
     {{ form_rest(form) }}
 
     {{ jq.button('New',path('flycross_create'),'ui-icon-document') }}    
-    {% block actionbutton %}{{ jq.button('Select crosses',path('flycross_select'),'ui-icon-tag') }}{% endblock %}
+    {% block actionbutton %}
+        {{ jq.button('Select crosses',path('flycross_select'),'ui-icon-tag') }}
+    {% endblock %}
     {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
     {{ jq.submit_action_button(
             'Trash',

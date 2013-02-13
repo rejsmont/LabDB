@@ -14,7 +14,7 @@ $loader->registerNamespaces(array(
     'Monolog'          => __DIR__.'/../vendor/monolog/src',
     'Assetic'          => __DIR__.'/../vendor/assetic/src',
     'Metadata'         => __DIR__.'/../vendor/metadata/src',
-    'Tecnick'          => __DIR__.'/../vendor/tecnick/src',
+    'Tecnick'          => __DIR__.'/../vendor/Tecnick/lib',
     'WhiteOctober\PagerfantaBundle' => __DIR__.'/../vendor/bundles',
     'Pagerfanta'                    => __DIR__.'/../vendor/pagerfanta/src',
 ));

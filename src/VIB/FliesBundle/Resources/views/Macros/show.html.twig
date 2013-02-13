@@ -55,7 +55,7 @@
 <tr>
     <th>{{ label }}</th>
     <td><ul>
-    {% for item in value %}
+    {% for child in vial.children %}
         <li>
             <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
             ({{ item.setupDate | date("d M Y") }})

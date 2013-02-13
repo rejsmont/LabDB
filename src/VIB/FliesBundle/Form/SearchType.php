@@ -17,9 +17,11 @@ class SearchType extends AbstractType
     {
         $builder->add('term', 'search', array('label' => 'Search:'))
                 ->add('filter','choice', array(
-                            'choices'   => array('s' => 'stocks', 'c' => 'crosses'),
-                            'empty_value' => 'everything',
-                            'required'  => false,
+                            'choices'   => array(
+                                    'stocks' => 'stocks',
+                                    'stock vials' => 'stock vials',
+                                    'crosses' => 'crosses'),
+                            'required'  => true,
                         ));
     }
 

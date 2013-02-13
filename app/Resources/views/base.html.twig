@@ -6,21 +6,24 @@
         {% block javascripts %}
             {% javascripts
                     'vendor/jquery/js/jquery-1.7.js'
-                    'vendor/jquery-ui/js/jquery-ui-1.8.16.min.js'
-                    'vendor/jquery-ui/js/jquery.ui.selectmenu-1.2.0.js'
-                    'vendor/jquery-ui/js/jquery.ui.checkbox.js'
-                    'vendor/jquery-ui/js/jquery.ui.spinner.js'
+                    'vendor/jquery-ui/js/ui-core/jquery.effects.core.js'
+                    'vendor/jquery-ui/js/ui-core/jquery.ui.core.js'
+                    'vendor/jquery-ui/js/ui-core/jquery.ui.widget.js'
+                    'vendor/jquery-ui/js/ui-core/jquery.ui.position.js'
+                    'vendor/jquery-ui/js/ui-core/jquery.ui.mouse.js'
+                    'vendor/jquery-ui/js/ui-core/jquery.ui.menu.js'
+                    'vendor/jquery-ui/js/ui-effects/*.js'
+                    'vendor/jquery-ui/js/ui-widgets/*.js'
                     '@VIBFliesBundle/Resources/public/js/*'
-                filter='yui_js' %}
+                %}
                 <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
         {% endblock %}
         {% block stylesheets %}
             {% stylesheets
-                    'vendor/jquery-ui/css/smoothness/jquery-ui-1.8.16.css'
+                    'vendor/jquery-ui/css/jquery.ui.all.css'
                     'vendor/jquery-ui/css/jquery.ui.selectmenu.css'
                     'vendor/jquery-ui/css/jquery.ui.checkbox.css'
-                    'vendor/jquery-ui/css/jquery.ui.spinner.css'
                     '@VIBFliesBundle/Resources/public/css/*'
                 filter='cssrewrite,yui_css' %}
                 <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
@@ -33,15 +36,17 @@
         <nav id="navigation" class="top ui-widget ui-state-default">
             {% block navigation %}
                 {% spaceless %}
-                <a href="/app_dev.php/">Home</a>
-                <a href="{{ path('flystock_list') }}">Stocks</a>
-                <a href="{{ path('flycross_list', { 'filter': 'cross' }) }}">Crosses</a>
-                <a href="{{ path('flyvial_list') }}">Vials</a>
+                <ul>
+                    <li><a href="/app_dev.php/">Home</a></li>
+                    <li><a href="{{ path('flystock_list') }}">Stocks</a></li>
+                    <li><a href="{{ path('flycross_list', { 'filter': 'cross' }) }}">Crosses</a></li>
+                    <li><a href="{{ path('flyvial_list') }}">Vials</a></li>
                 {% if app.user.username is defined %}
-                    <a id="logout" href="{{ path('logout') }}">Logout ({{ app.user.username }})</a>
+                    <li id="logout"><a href="{{ path('logout') }}">Logout ({{ app.user.username }})</a></li>
+                    {% render "VIBFliesBundle:Search:search" %}
                 {% endif %}
-                {% render "VIBFliesBundle:Search:search" %}
                 {% endspaceless %}
+                </ul>
             {% endblock %}
         </nav>
         <div id="content">

@@ -2,17 +2,61 @@
 {% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
 {% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
 
-{% block content %}
-<h1>Search results</h1>
-<table class="ui-table">
-    <thead>
+{% block pager %}
+    {% if pager.nbPages > 1 %}
+    <tfoot>
         <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Source cross</th>
-            <th>Vials</th>
-            <th>Status</th>
+            <td colspan="8">{{ s.pager(pager,'searchResultPage') }}</td>
         </tr>
-    </thead>
-</table>
+    </tfoot>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<h1>
+    Search results: {{ term }}
+    {% if filter is not empty %}
+        {{ filter }}
+    {% endif %}
+</h1>
+
+{% if filter == 'stocks' %}
+    {% if stocks is not empty %}
+    <table id="searchStocks" class="ui-table">
+        {% include 'VIBFliesBundle:FlyStock:_stock_table.html.twig' with {'stocks': stocks} %}
+        {{ block('pager') }}
+    </table>
+    {% else %}
+    <h2>No stocks matching search criteria were found.</h2>
+    {% endif %}
+{% endif %}
+
+{% if filter == 'crosses' %}
+    {% if crosses is not empty %}
+    <table id="searchCrosses" class="ui-table">
+        {% include 
+            'VIBFliesBundle:FlyCross:_cross_table.html.twig'
+            with {'crosses': crosses, 'class': null, 'checkbox': null} %}
+        {{ block('pager') }}
+    </table>
+    {% else %}
+    <h2>No crosses matching search criteria were found.</h2>
+    {% endif %}
+{% endif %}
+
+{% if filter == 'stock vials' %}
+    {% if vials is not empty %}
+    <table id="searchVials" class="ui-table">
+            {% include 
+                'VIBFliesBundle:FlyVial:_vial_table.html.twig'
+                with {'vials': vials, 'class': null, 'checkbox': null} %}
+            {{ block('pager') }}
+    </table>
+    {% else %}
+    <h2>No stock vials matching search criteria were found.</h2>
+    {% endif %}
+{% endif %}
+
+{{ form_errors(form) }}
+
 {% endblock %}

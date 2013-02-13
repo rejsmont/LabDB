@@ -15,23 +15,10 @@
     {% endif %}
 
     <table id="vials" class="ui-table">
-        <thead>
-            <tr>
-                <th><input type="checkbox" id="checkall" checked="checked"></th>
-                <th>ID</th>
-                <th>Stock</th>
-                <th>Setup date</th>
-                <th>Flip date</th>
-                <th>Flipped from</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for vial in vials %}
-            {% include 'VIBFliesBundle:FlyVial:_vial_row.html.twig' with {'vial': vial, 'class': null} %}
-        {% endfor %}
-        </tbody>
-        {% block pager %}
+    {% include 
+            'VIBFliesBundle:FlyVial:_vial_table.html.twig'
+            with {'vials': vials, 'pager': pager, 'class': null, 'checkbox': true} %}
+    {% block pager %}
         {% if pager.nbPages > 1 %}
         <tfoot>
             <tr>
@@ -39,10 +26,9 @@
             </tr>
         </tfoot>
         {% endif %}
-        {% endblock %}
+    {% endblock %}
     </table>
-        
-    {{ form_errors(form) }}
+    
     {{ form_rest(form) }}
 
     {{ jq.button('Expand',path('flyvial_expand'),'ui-icon-copy') }}

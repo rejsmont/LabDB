@@ -4,7 +4,7 @@
     "description": "Symfony Translation Component",
     "keywords": [],
     "homepage": "http://symfony.com",
-    "version": "2.0.4",
+    "version": "2.0.6",
     "license": "MIT",
     "authors": [
         {
@@ -22,5 +22,9 @@
     "suggest": {
         "symfony/config": ">=2.0",
         "symfony/yaml": ">=2.0"
-    }
+    },
+    "autoload": {
+        "psr-0": { "Symfony\\Component\\Translation": "" }
+    },
+    "target-dir": "Symfony/Component/Translation"
 }

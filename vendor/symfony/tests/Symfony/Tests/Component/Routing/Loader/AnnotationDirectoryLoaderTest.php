@@ -13,8 +13,6 @@ namespace Symfony\Tests\Component\Routing\Loader;
 
 use Symfony\Component\Routing\Loader\AnnotationDirectoryLoader;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\FileLocator;
 
 require_once __DIR__.'/AbstractAnnotationLoaderTest.php';
@@ -26,6 +24,8 @@ class AnnotationDirectoryLoaderTest extends AbstractAnnotationLoaderTest
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->reader = $this->getReader();
         $this->loader = new AnnotationDirectoryLoader(new FileLocator(), $this->getClassLoader($this->reader));
     }

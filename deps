@@ -70,3 +70,8 @@
 [PagerfantaBundle]
     git=git://github.com/whiteoctober/WhiteOctoberPagerfantaBundle.git
     target=bundles/WhiteOctober/PagerfantaBundle
+
+[TCPDF]
+    git=git://tcpdf.git.sourceforge.net/gitroot/tcpdf/tcpdf
+    target=Tecnick/TCPDF/src
+    

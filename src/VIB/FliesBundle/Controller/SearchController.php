@@ -19,11 +19,15 @@
 namespace VIB\FliesBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 use VIB\FliesBundle\Entity\FlyVial;
 use VIB\FliesBundle\Entity\FlyCross;
@@ -42,58 +46,102 @@ class SearchController extends AbstractController {
      * Handle search request
      *
      * @Template()
-     *  
-     * @param string $term
-     * @param string $filter
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */    
-    public function searchAction($term = null, $filter = null) {
+    public function searchAction() {
         
         $em = $this->getEntityManager();
         
         $form = $this->getFormFactory()->create(new SearchType());
         
         return array(
-            'form' => $form->createView());
+            'searchForm' => $form->createView());
     }
     
     /**
      * Handle search result
      * 
-     * @Route("/search/", name="searchResult")
+     * @Route("/search/result/", name="searchResult")
+     * @Route("/search/result/page/{page}", name="searchResultPage")
      * @Template()
      * 
      * @param string $term
      * @param string $filter
      * @return Symfony\Component\HttpFoundation\Response
      */    
-    public function searchResultAction($term = null, $filter = null) {
+    public function searchResultAction($page = 1) {
         
         $em = $this->getEntityManager();
         
         $form = $this->getFormFactory()->create(new SearchType());
         $request = $this->getRequest();
+        $session = $request->getSession();
+        
+        $stocks = null;
+        $crosses = null;
+        $vials = null;
+        $pager = null;
         
         if ($request->getMethod() == 'POST') {
             
             $form->bindRequest($request);
             
             if ($form->isValid()) {
-                
                 $data = $form->getData();
                 $term = $data['term'];
                 $filter = $data['filter'];
                 
-                switch($filter) {
-                    case 's':
-                    case 'c':
-                    default:
-                        break;
-                }
-
-                return $this->render('VIBFliesBundle:Search:searchResult.html.twig');
+                $session->set('search_term',$term);
+                $session->set('search_filter',$filter);
             }
-        }        
+        } else {          
+            $term = $session->get('search_term');
+            $filter = $session->get('search_filter');
+        }
+        
+        switch($filter) {
+            case 'stocks':
+                $queryBuilder = $this->getEntityManager()
+                    ->getRepository('VIBFliesBundle:FlyStock')
+                    ->findStocksByName($term);
+                $adapter = new DoctrineORMAdapter($queryBuilder);
+                $pager = new Pagerfanta($adapter);
+                $pager->setMaxPerPage(15);
+                $pager->setCurrentPage($page);
+                $stocks = $pager->getCurrentPageResults();
+                break;
+            case 'crosses':
+                $queryBuilder = $this->getEntityManager()
+                    ->getRepository('VIBFliesBundle:FlyCross')
+                    ->findLivingCrossesByName($term);
+                $adapter = new DoctrineORMAdapter($queryBuilder);
+                $pager = new Pagerfanta($adapter);
+                $pager->setMaxPerPage(15);
+                $pager->setCurrentPage($page);
+                $crosses = $pager->getCurrentPageResults();
+                break;
+            case 'stock vials':
+                $queryBuilder = $this->getEntityManager()
+                    ->getRepository('VIBFliesBundle:FlyVial')
+                    ->findLivingStocksByName($term);
+                $adapter = new DoctrineORMAdapter($queryBuilder);
+                $pager = new Pagerfanta($adapter);
+                $pager->setMaxPerPage(15);
+                $pager->setCurrentPage($page);
+                $vials = $pager->getCurrentPageResults();
+                break;
+            default:
+                break;
+        }
+
+        return array('stocks' => $stocks,
+                     'crosses' => $crosses,
+                     'vials' => $vials,
+                     'pager' => $pager,
+                     'filter' => $filter,
+                     'term' => $term,
+                     'form' => $form->createView());
     }
 }
 

@@ -203,11 +203,8 @@ $(document).ready(function() {
     });
 
     $('nav.top a').button();
-    
-    $('select').selectmenu({
-        style:'dropdown',
-        wrapperElement: "<div class='ui-selectmenu-wrap' />"
-    });
+
+    $('select').selectmenu();
     
     $('table.ui-table td').addClass('ui-state-default');
     $('table.ui-table th').addClass('ui-widget-header');
@@ -226,10 +223,19 @@ $(document).ready(function() {
     );
     
     $('#checkall').click(function () {
-        $(this).parents('table').find('tbody :checkbox').checkbox(this.checked ? "check" : "uncheck");
+        var checked = $(this).is(":checked");
+        $(this).parents('table').find('tbody :checkbox').each(function(index) {
+           $(this).prop("checked", checked);
+           $(this).closest('div.ui-checkbox')
+                  .find("span.ui-checkbox-icon")
+                  .toggleClass( "ui-icon ui-icon-check", checked )
+                  .attr( "aria-checked", checked );
+        });
+        
+        
     });
     
-    $("form input").filter(":checkbox,:radio").checkbox();
+    $("form input").filter(":checkbox").checkbox();
     
     form_errors();
 }); 
@@ -252,6 +258,7 @@ function form_errors() {
         message = $(this).find("li").html();
         if (message) {
             $(this).html(form_error(message));
+            
         }
     });
 }
