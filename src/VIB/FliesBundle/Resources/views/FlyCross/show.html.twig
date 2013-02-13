@@ -1,7 +1,25 @@
-{% extends "VIBFliesBundle::layout.html.twig" %}
-{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
-{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
+{% extends "VIBBaseBundle:Show:modal.html.twig" %}
 
+{% block modal_header %}Cross {{ cross.name }} ({{ cross.vial.name }}){% endblock modal_header %}
+
+{% block modal_body %}
+  {% if cross.vial is not empty %}
+    {{ s.row("Setup date:", cross.vial.setupDate | date("d F Y")) }}
+    {{ s.row("Check date:", cross.vial.flipDate | date("d F Y")) }}
+  {% endif %}
+  {{ s.crow("Male:", cross.male ,cross.maleName, 'flyvial_show') }}
+  {{ s.crow("Virgin:", cross.virgin, cross.virginName, 'flyvial_show') }}
+  {{ s.lrow("Stocks:", cross.stocks, 'flystock_show') }}
+  {{ s.lrow("Crosses:", cross.livingCrosses, 'flycross_show') }}
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  <a href="{{ path('flycross_edit', { 'id': cross.routableId }) }}" class="btn">Edit</a>
+  <a href="{{ path('flycross_list') }}" class="btn">List</a>
+{% endblock modal_footer %}
+
+
+{#
 {% block content %}
     <h1>
         Cross {{ cross }}
@@ -27,3 +45,4 @@
     {{ jq.button('Edit',path('flycross_edit', { 'id': cross.id }),'ui-icon-pencil') }}
     {{ jq.button('Delete',path('flycross_delete', { 'id': cross.id }),'ui-icon-trash') }}
 {% endblock %}
+#}

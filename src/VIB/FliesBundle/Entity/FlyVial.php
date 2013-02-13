@@ -147,6 +147,16 @@ class FlyVial {
     }
 
     /**
+     * Get routable id
+     *
+     * @return integer
+     */
+    public function getRoutableId()
+    {
+        return $this->getId();
+    }
+    
+    /**
      * Get name
      *
      * @return string

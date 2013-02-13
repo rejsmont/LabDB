@@ -13,7 +13,7 @@
     <div class="controls">
         <span class="input-text">
             {% if value is not empty %}
-            <a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>
+            <a href="{{ path(ctrl, { 'id': value.routableId }) }}">{{ value }}</a>
             {% endif %}
         </span>
     </div>
@@ -27,7 +27,7 @@
         <ul class="unstyled input-text">
         {% for item in value %}
             <li>
-                <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
+                <a href="{{ path(ctrl, { 'id': item.routableId }) }}">{{ item }}</a>
             </li>
         {% endfor %}
         </ul>
@@ -42,7 +42,7 @@
     <ul class="unstyled input-text">
     {% for item in value %}
       <li>
-        <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
+        <a href="{{ path(ctrl, { 'id': item.routableId }) }}">{{ item }}</a>
         ({{ item.setupDate | date("d F Y") }})
       </li>
     {% endfor %}
@@ -51,15 +51,17 @@
 </div>
 {% endmacro %}
 
-{% macro tr_crow(label, value, name, ctrl) %}
+{% macro crow(label, value, name, ctrl) %}
 {% if value is not empty %}
-<tr>
-    <th>{{ label }}</th>
-    <td>
-        {{ name }}
-        (<a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>)
-    </td>
-</tr>
+<div class="control-group">
+  <span class="control-label">{{ label }}</span>
+  <div class="controls">
+    <span class="input-text">
+      {{ name }}
+      (<a href="{{ path(ctrl, { 'id': value.routableId }) }}">{{ value }}</a>)
+    </span>
+  </div>
+</div>
 {% endif %}
 {% endmacro %}
 

@@ -1,49 +1,66 @@
-{% extends "VIBFliesBundle::layout.html.twig" %}
-{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
-{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
+{% extends "VIBBaseBundle::layout.html.twig" %}
 
+{% block headline %}Crosses{% endblock headline %}
 {% block content %}
-<h1>{% block pheader %}Crosses{% endblock %}</h1>
-
-<form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
-
-    {% block selector %}{% endblock %}
-    
-    {{ form_errors(form) }}
-    {% if form.items | length < 1 %}
-        {{ form_widget(form.items) }}
-    {% endif %}
-
-    <table id="vials" class="ui-table">
-        {% include 
-                'VIBFliesBundle:FlyCross:_cross_table.html.twig'
-                with {'crosses': crosses, 'class': null, 'checkbox': true} %}
-        {% block pager %}
-        {% if pager.nbPages > 1 %}
-        <tfoot>
-            <tr>
-                <td colspan="8">{{ s.pager(pager,'flycross_listpage') }}</td>
+<div class="span12">
+    <table id="vials" class="table table-striped table-bordered table-condensed">
+        <thead>
+            <tr class="inverse">
+                <th style="width: 12px;"><input type="checkbox" id="checkall" checked="checked"></th>
+                <th style="width: 100px;">ID</th>
+                <th colspan="2">Virgin</th>
+                <th colspan="2">Male</th>
+                <th style="width: 150px;">Setup date</th>
+                <th style="width: 150px;">Check date</th>
+                <th style="width: 100px;">Status</th>
             </tr>
-        </tfoot>
-        {% endif %}
-        {% endblock %}
+        </thead>
+        <tbody>
+        {% for cross in crosses %}
+            {% set vial = cross.vial %}
+            <tr>
+                <td>
+                    <input type="checkbox" id="FlyVialSelectType_items_{{ vial.id }}" 
+                           name="FlyVialSelectType[items][{{ vial.id }}]" 
+                           value="{{ vial.id }}" checked="checked" />
+                </td>
+                <td>
+                    <a href="{{ path('flycross_show', { 'id': cross.routableId }) }}">
+                    {{ vial }}</a></td>
+                <td style="width: 100px;">
+                    {% if cross.virgin is not empty %}
+                    <a href="{{ path('flyvial_show', { 'id': cross.virgin.routableId }) }}">
+                    {{ cross.virgin }}</a>
+                    {% endif %}</td>
+                <td>
+                    {{ cross.virginName }}</td>
+                <td style="width: 100px;">
+                    {% if cross.male is not empty %}
+                    <a href="{{ path('flyvial_show', { 'id': cross.male.routableId }) }}">
+                    {{ cross.male }}</a>
+                    {% endif %}</td>
+                <td>{{ cross.maleName }}</td>
+                <td>
+                    {% if cross.vial is not empty %}
+                      {{ cross.vial.setupDate | date("d F Y") }}
+                    {% endif %}</td>
+                <td>
+                    {% if cross.vial is not empty %}
+                      {{ cross.vial.flipDate | date("d F Y") }}
+                    {% endif %}</td>
+                <td>
+                    {% if cross.vial is not empty %}
+                      {% if cross.vial.trashed %}
+                        <span class="label label-inverse">TRASHED</span>
+                        {% elseif cross.vial.alive %}
+                        <span class="label label-success">ALIVE</span>
+                        {% else %}
+                        <span class="label label-important">DEAD</span>
+                      {% endif %}
+                    {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
     </table>
-    
-    {{ form_rest(form) }}
-
-    {{ jq.button('New',path('flycross_create'),'ui-icon-document') }}    
-    {% block actionbutton %}
-        {{ jq.button('Select crosses',path('flycross_select'),'ui-icon-tag') }}
-    {% endblock %}
-    {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
-    {{ jq.submit_action_button(
-            'Trash',
-            "$('#FlyCrossSelectType_action').val('trash'); $('form').submit();",
-            'ui-icon-trash') }}
-    {{ jq.submit_action_button(
-            'Print labels',
-            "$('#FlyCrossSelectType_action').val('label'); $('form').submit();",
-            'ui-icon-print') }}
-
-</form>
+</div>
 {% endblock %}

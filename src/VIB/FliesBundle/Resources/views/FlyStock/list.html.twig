@@ -17,14 +17,14 @@
     <tbody>
     {% for stock in stocks %}
         <tr>
-            <td><a href="{{ path('flystock_show', { 'id': stock.id }) }}">
+            <td><a href="{{ path('flystock_show', { 'id': stock.routableId }) }}">
                 {{ stock.id }}</a>
             </td>
-            <td><a href="{{ path('flystock_show', { 'id': stock.id }) }}">
+            <td><a href="{{ path('flystock_show', { 'id': stock.routableId }) }}">
                 {{ stock.name }}</a>
             </td>
             <td>{% if stock.sourceCross is not empty %}
-                <a href="{{ path('flycross_show', { 'id': stock.sourceCross.id }) }}">
+                <a href="{{ path('flycross_show', { 'id': stock.sourceCross.routableId }) }}">
                     {{ stock.sourceCross }}
                 </a>
                 {% endif %}

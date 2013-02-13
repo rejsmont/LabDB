@@ -48,10 +48,12 @@ class FlyStockType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text')
-                ->add('source_cross', 'text_entity', array(
+                ->add('source_cross_vial', 'text_entity', array(
                         'property' => 'id',
-                        'class'    => 'VIBFliesBundle:FlyCross',
-                        'required' => false));
+                        'class'    => 'VIBFliesBundle:FlyVial',
+                        'format'    => '%06d',
+                        'required' => false,
+                        'label'     => 'Source cross'));
     }
 
     /**

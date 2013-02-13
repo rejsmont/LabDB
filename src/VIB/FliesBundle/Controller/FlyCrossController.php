@@ -6,12 +6,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\FliesBundle\Entity\FlyCross;
+use VIB\FliesBundle\Entity\FlyVial;
 use VIB\FliesBundle\Form\FlyCrossType;
-use VIB\FliesBundle\Form\FlyCrossNewType;
 use VIB\FliesBundle\Form\FlyCrossSelectType;
 
 class FlyCrossController extends GenericVialController
@@ -19,11 +20,10 @@ class FlyCrossController extends GenericVialController
     
     /**
      * Construct FlyCrossController
-     * 
      */ 
-    public function __construct()
-    {
+    public function __construct() {
         $this->entityClass = 'VIBFliesBundle:FlyCross';
+        $this->entityName = 'cross';
     }
     
     /**
@@ -43,17 +43,19 @@ class FlyCrossController extends GenericVialController
                       ->findAllLivingQuery();
         
         $response = parent::baseListAction($page,$query);
-        $formResponse = $this->handleSelectForm(new FlyCrossSelectType());
+//        $formResponse = $this->handleSelectForm(new FlyCrossSelectType());
+//        
+//        if (isset($formResponse['response'])) {
+//            return $formResponse['response'];
+//        } else if (isset($formResponse['form'])) {       
+//            return array(
+//                'crosses' => $response['entities'],
+//                'form' => $formResponse['form'],
+//                'pager' => $response['pager']
+//            );
+//        }
         
-        if (isset($formResponse['response'])) {
-            return $formResponse['response'];
-        } else if (isset($formResponse['form'])) {       
-            return array(
-                'crosses' => $response['entities'],
-                'form' => $formResponse['form'],
-                'pager' => $response['pager']
-            );
-        }
+        return array('crosses' => $response['entities']);
     }
     
     /**
@@ -84,17 +86,15 @@ class FlyCrossController extends GenericVialController
      * 
      * @Route("/crosses/show/{id}", name="flycross_show")
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyCross")
+     * @ParamConverter("vial", class="VIBFliesBundle:FlyVial")
      * 
-     * @param integer $id
+     * @param VIB\FliesBundle\Entity\FlyVial $vial
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($id)
-    {
-        $response = parent::baseShowAction($id);
-        return array('cross' => $response['entity']);
+    public function showAction(FlyVial $vial) {
+        return parent::baseShowAction($vial->getCross());
     }
-    
     
     /**
      * Create new cross
@@ -104,50 +104,8 @@ class FlyCrossController extends GenericVialController
      * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function createAction()
-    {
-        $cross = new FlyCross();
-        $data = array('cross' => $cross, 'number' => 1);
-        
-        $entityManager = $this->getEntityManager();
-        $form = $this->getFormFactory()->create(new FlyCrossNewType(), $data);
-        $request = $this->getRequest();
-        
-        if ($request->getMethod() == 'POST') {
-            
-            $form->bindRequest($request);
-            
-            if ($form->isValid()) {
-                
-                $data = $form->getData();
-                $cross = $data['cross'];
-                $number = $data['number'];
-                
-                $crosses = new ArrayCollection();
-                
-                for ($i = 0; $i < $number; $i++) {
-                    $newcross = new FlyCross($cross);
-                    $entityManager->persist($newcross);
-                    $crosses->add($newcross);
-                }
-                
-                $entityManager->flush();
-
-                foreach($crosses as $cross) {
-                    $this->setACL($cross);
-                }
-                
-                if ($number == 1)
-                    $url = $this->generateUrl('flycross_show',array('id' => $cross->getId()));
-                else
-                    $url = $this->generateUrl('flycross_list');
-                return $this->redirect($url);
-            }
-        }
-        
-        return array(
-            'cross' => $cross,
-            'form' => $form->createView());
+    public function createAction() {
+        return parent::baseCreateAction(new FlyCross(), new FlyCrossType(), 'flycross_show');
     }
 
     /**
@@ -155,23 +113,14 @@ class FlyCrossController extends GenericVialController
      * 
      * @Route("/crosses/edit/{id}", name="flycross_edit")
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyCross")
+     * @ParamConverter("vial", class="VIBFliesBundle:FlyVial")
      * 
-     * @param integer $id
+     * @param VIB\FliesBundle\Entity\FlyVial $vial
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($id)
-    {
-        $response = parent::baseEditAction($id, new FlyCrossType());
-        
-        if (isset($response['redirect'])) {
-            $url = $this->generateUrl('flycross_show',array('id' => $response['entity']->getId()));
-            return $this->redirect($url);
-        } else {
-            return array(
-                'cross' => $response['entity'],
-                'form' => $response['form']);
-        }
+    public function editAction(FlyVial $vial) {
+        return parent::baseEditAction($vial->getCross(), new FlyCrossType(), 'flycross_show');
     }
 
     /**
@@ -179,35 +128,28 @@ class FlyCrossController extends GenericVialController
      * 
      * @Route("/crosses/delete/{id}", name="flycross_delete")
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyCross")
+     * @ParamConverter("vial", class="VIBFliesBundle:FlyVial")
      * 
-     * @param integer $id
+     * @param VIB\FliesBundle\Entity\FlyVial $vial
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($id)
-    {
-        $entityManager = $this->getEntityManager();
-        $cross = $entityManager->find($this->getEntityClass(), $id);
-        
-        $entityManager->remove($cross);
-        $entityManager->flush();
-        
-        //parent::baseDeleteAction($id);
-        return $this->redirect($this->generateUrl('flycross_list'));
+    public function deleteAction(FlyVial $vial) {
+        return parent::baseDeleteAction($vial->getCross(), 'flycross_list');
     }
     
     /**
-     * Cascade ACL setting for stock vials
+     * Cascade ACL setting for cross vial
      * 
-     * @param Object $entity
-     * @param UserInterface|null $user
+     * @param VIB\FliesBundle\Entity\FlyCross $cross
+     * @param Symfony\Component\Security\Core\User\UserInterface|null $user
      * @param integer $mask
      */
-    protected function setACL($cross, $user = null, $mask = MaskBuilder::MASK_OWNER) {
+    protected function setACL($cross, UserInterface $user = null, $mask = MaskBuilder::MASK_OWNER) {
         
         parent::setACL($cross, $user, $mask);
         $vial = $cross->getVial();
-        if ($vial) {
+        if (null !== $vial) {
             parent::setACL($vial, $user, $mask);
         }
     }

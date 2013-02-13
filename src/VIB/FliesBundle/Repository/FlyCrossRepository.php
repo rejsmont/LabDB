@@ -41,7 +41,7 @@ class FlyCrossRepository extends EntityRepository
             ->join('c.vial','v')
             ->where('v.setupDate > :date')
             ->andWhere('v.trashed = false')
-            ->setParameter('date', $date->format('d.m.y'))
+            ->setParameter('date', $date->format('Y-m-d'))
             ->orderBy('v.setupDate', 'DESC')
             ->addOrderBy('c.id', 'DESC');
                 

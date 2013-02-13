@@ -43,12 +43,13 @@ class FlyVialController extends GenericVialController {
     public function __construct()
     {
         $this->entityClass = 'VIBFliesBundle:FlyVial';
+        $this->entityName = 'vial';
     }
     
     /**
      * List vials
      * 
-     * @Route("/vials", name="flyvial_list")
+     * @Route("/vials/", name="flyvial_list")
      * @Route("/vials/page/{page}", name="flyvial_listpage")
      * @Template()
      * 
@@ -124,14 +125,22 @@ class FlyVialController extends GenericVialController {
      * 
      * @Route("/vials/show/{id}", name="flyvial_show")
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
+     * @ParamConverter("vial", class="VIBFliesBundle:FlyVial")
      * 
-     * @param integer $id
+     * @param VIB\FliesBundle\Entity\FlyVial $vial
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($id) {
-        $response = parent::baseShowAction($id);
-        return array('vial' => $response['entity']);
+    public function showAction(FlyVial $vial) {
+        
+        $cross = $vial->getCross();
+        
+        if (null !== $cross) {
+            $url = $this->generateUrl('flycross_show',array('id' => $cross->getId()));
+            return $this->redirect($url);
+        } else {
+            return parent::baseShowAction($vial);
+        }
     }    
     
     /**
@@ -143,16 +152,7 @@ class FlyVialController extends GenericVialController {
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function createAction() {
-        $response = parent::baseCreateAction(new FlyVial(), new FlyVialType());
-        
-        if (isset($response['redirect'])) {
-            $url = $this->generateUrl('flyvial_show',array('id' => $response['entity']->getId()));
-            return $this->redirect($url);
-        } else {
-            return array(
-                'vial' => $response['entity'],
-                'form' => $response['form']);
-        }
+        return parent::baseCreateAction(new FlyVial(), new FlyVialType(), 'flyvial_show');
     }
 
     /**
@@ -160,21 +160,21 @@ class FlyVialController extends GenericVialController {
      * 
      * @Route("/vials/edit/{id}", name="flyvial_edit")
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
+     * @ParamConverter("vial", class="VIBFliesBundle:FlyVial")
      * 
-     * @param integer $id
+     * @param VIB\FliesBundle\Entity\FlyVial $vial
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($id) {
-        $response = parent::baseEditAction($id, new FlyVialType());
+    public function editAction(FlyVial $vial) {
+
+        $cross = $vial->getCross();
         
-        if (isset($response['redirect'])) {
-            $url = $this->generateUrl('flyvial_show',array('id' => $response['entity']->getId()));
+        if (null !== $cross) {
+            $url = $this->generateUrl('flycross_edit',array('id' => $cross->getId()));
             return $this->redirect($url);
         } else {
-            return array(
-                'vial' => $response['entity'],
-                'form' => $response['form']);
+            return parent::baseEditAction($vial, new FlyVialType(), 'flyvial_show');
         }
     }
 
@@ -183,14 +183,22 @@ class FlyVialController extends GenericVialController {
      * 
      * @Route("/vials/delete/{id}", name="flyvial_delete")
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
+     * @ParamConverter("vial", class="VIBFliesBundle:FlyVial")
      * 
-     * @param integer $id
+     * @param integer $vial
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($id) {
-        parent::baseDeleteAction($id);
-        return $this->redirect($this->generateUrl('flyvial_list'));
+    public function deleteAction(FlyVial $vial) {
+        
+        $cross = $vial->getCross();
+        
+        if (null !== $cross) {
+            $url = $this->generateUrl('flycross_delete',array('id' => $cross->getId()));
+            return $this->redirect($url);
+        } else {
+            return parent::baseDeleteAction($vial, 'flyvial_list');
+        }
     }
     
     /**
@@ -202,6 +210,7 @@ class FlyVialController extends GenericVialController {
      * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
      * 
      * @param integer $id
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function expandAction($id = null) {
