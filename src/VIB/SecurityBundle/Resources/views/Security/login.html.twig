@@ -1,0 +1,25 @@
+{% extends "VIBBaseBundle:Form:modal.html.twig" %}
+
+{% block modal_header %}Please log in{% endblock modal_header %}
+
+{% block modal_body %}
+<div class="control-group">
+    <label for="username" class="control-label required">Username:</label>
+    <div class="controls">
+        <input type="text" id="username" name="_username" 
+               value="{{ last_username }}" required="required" class="not-removable" />
+    </div>
+</div>
+<div class="control-group">
+    <label for="password" class="control-label required">Password:</label>
+    <div class="controls">
+        <input type="password" id="password" name="_password" required="required" class="not-removable" />
+    </div>
+</div>
+<input type="hidden" name="_target_path" value="/" />
+{% endblock modal_body %}
+
+{% block modal_footer %}
+<button type="submit" class="btn btn-primary">Login</button>
+<button type="reset" class="btn">Cancel</button>
+{% endblock modal_footer %}

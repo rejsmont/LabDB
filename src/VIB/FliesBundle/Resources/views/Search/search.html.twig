@@ -1,0 +1,10 @@
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
+
+<form id="search" action="{{ path('searchResult') }}" method="post" {{ form_enctype(searchForm) }}>
+    <span>{{ form_label(searchForm.term) }}</span>
+    <span>{{ form_widget(searchForm.term) }}</span>
+    <span>{{ form_widget(searchForm.filter) }}</span>
+    <span>{{ jq.submit_button('Go') }}</span>
+    {{ form_rest(searchForm) }}
+</form>

@@ -1,0 +1,9 @@
+{% extends "VIBBaseBundle:Form:form.html.twig" %}
+
+{% block modal_header %}Edit vial{% endblock modal_header %}
+
+{% block modal_footer %}
+  <button type="submit" class="btn btn-primary">Save</button>
+  <button type="reset" class="btn">Reset</button>
+  <a href="{{ path('flyvial_show', { 'id': vial.id }) }}" class="btn">Cancel</a>
+{% endblock modal_footer %}

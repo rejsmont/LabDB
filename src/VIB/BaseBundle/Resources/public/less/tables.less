@@ -1,0 +1,25 @@
+// TABLE HEAD BACKGROUNDS
+// -----------------
+// Exact selectors below required to override .table-striped
+
+.table thead tr {
+  &.success th {
+    background-color: @successBackground;
+  }
+  &.error th {
+    background-color: @errorBackground;
+  }
+  &.warning th {
+    background-color: @warningBackground;
+  }
+  &.info th {
+    background-color: @infoBackground;
+  }
+  &.info th {
+    background-color: @infoBackground;
+  }
+  &.inverse th {
+    background-color: @grayDark;
+    color: @grayLighter;
+  }
+}

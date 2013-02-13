@@ -1,0 +1,50 @@
+{% extends "VIBBaseBundle::layout.html.twig" %}
+
+{% block headline %}Stocks{% endblock headline %}
+
+{% block content %}
+<div class="span12">
+  <table id="vials" class="table table-striped table-bordered table-condensed">
+    <thead>
+        <tr class="inverse">
+            <th style="width: 50px;">ID</th>
+            <th>Name</th>
+            <th>Source cross</th>
+            <th style="width: 50px;">Vials</th>
+            <th style="width: 100px;">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for stock in stocks %}
+        <tr>
+            <td><a href="{{ path('flystock_show', { 'id': stock.id }) }}">
+                {{ stock.id }}</a>
+            </td>
+            <td><a href="{{ path('flystock_show', { 'id': stock.id }) }}">
+                {{ stock.name }}</a>
+            </td>
+            <td>{% if stock.sourceCross is not empty %}
+                <a href="{{ path('flycross_show', { 'id': stock.sourceCross.id }) }}">
+                    {{ stock.sourceCross }}
+                </a>
+                {% endif %}
+            </td>
+            <td>
+                {{ stock.livingVials | length }}
+            </td>
+            <td>{% if stock.livingVials | length > 3 %}
+                <span class="label label-success">Amplified</span>
+                {% elseif stock.livingVials | length > 1 %}
+                <span class="label label-success">Healthy</span>
+                {% elseif stock.livingVials | length < 1 %}
+                <span class="label label-important">Dead</span>
+                {% else %}
+                <span class="label label-warning">Expand</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "VIBFliesBundle::layout.html.twig" %}
+{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% import 'VIBFliesBundle:Macros:show.html.twig' as s %}
+
+{% block content %}
+    <h1>
+        Cross {{ cross }}
+        {% if cross.vial is not empty %}
+            (<a href="{{ path('flyvial_show', { 'id': cross.vial.id }) }}">{{ cross.vial }}</a>)
+        {% endif %}
+    </h1>
+
+    <table class="data">
+        {{ s.tr_crow("Virgin:", cross.virgin, cross.virginName, 'flyvial_show') }}
+        {{ s.tr_crow("Male:", cross.male, cross.maleName, 'flyvial_show') }}
+ 
+        {% if cross.vial is not empty %}
+            {{ s.tr_row("Setup date:", cross.vial.setupDate | date("d M Y")) }}
+            {{ s.tr_row("Check date:", cross.vial.flipDate | date("d M Y")) }}
+        {% endif %}
+        {{ s.tr_lrow("Stocks:", cross.stocks, 'flystock_show') }}
+        {{ s.tr_lrow("Crosses:", cross.livingCrosses, 'flycross_show') }}
+    </table>
+
+    {{ jq.button('List',path('flycross_list'),'ui-icon-folder-collapsed') }}    
+    {{ jq.button('New',path('flycross_create'),'ui-icon-document') }}
+    {{ jq.button('Edit',path('flycross_edit', { 'id': cross.id }),'ui-icon-pencil') }}
+    {{ jq.button('Delete',path('flycross_delete', { 'id': cross.id }),'ui-icon-trash') }}
+{% endblock %}
