@@ -2,7 +2,7 @@
 
 {% form_theme form _self %} 
   
-{% block _FlyCrossType_vial_row %}
+{% block _flycross_vial_row %}
   {{ form_widget(form) }}
 {% endblock %}
 
@@ -11,7 +11,5 @@
 {% endblock modal_header %}
 
 {% block modal_footer %}
-  <button type="submit" class="btn btn-primary">Save</button>
-  <button type="reset" class="btn">Reset</button>
-  <a href="{{ path('flycross_show', { 'id': form.get('value').routableId }) }}" class="btn">Cancel</a>
+  {{ f.buttons(form.get('value'),'flycross') }}
 {% endblock modal_footer %}

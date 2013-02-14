@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use VIB\FliesBundle\Entity\FlyCross;
 use VIB\FliesBundle\Entity\FlyVial;
 use VIB\FliesBundle\Form\FlyCrossType;
+use VIB\FliesBundle\Form\FlyCrossNewType;
 use VIB\FliesBundle\Form\FlyCrossSelectType;
 
 class FlyCrossController extends GenericVialController
@@ -38,7 +39,7 @@ class FlyCrossController extends GenericVialController
      */
     public function listAction($page = 1)
     {
-        $query = $this->getEntityManager()
+        $query = $this->getDoctrine()->getManager()
                       ->getRepository($this->getEntityClass())
                       ->findAllLivingQuery();
         
@@ -86,14 +87,19 @@ class FlyCrossController extends GenericVialController
      * 
      * @Route("/crosses/show/{id}", name="flycross_show")
      * @Template()
-     * @ParamConverter("vial", class="VIBFliesBundle:FlyVial")
+     * @ParamConverter("vial", class="VIBFliesBundle:FlyVial",
+     *     options={"error_message": "Cross vial %s does not exist"})
      * 
      * @param VIB\FliesBundle\Entity\FlyVial $vial
      * 
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function showAction(FlyVial $vial) {
-        return parent::baseShowAction($vial->getCross());
+        if (null !== $vial->getCross()) {
+            return parent::baseShowAction($vial->getCross());
+        } else {
+            throw $this->createNotFoundException();
+        }
     }
     
     /**
@@ -105,7 +111,47 @@ class FlyCrossController extends GenericVialController
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function createAction() {
-        return parent::baseCreateAction(new FlyCross(), new FlyCrossType(), 'flycross_show');
+        
+        $cross = new FlyCross();
+        $data = array('cross' => $cross, 'number' => 1);
+        
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(new FlyCrossNewType(), $data);
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                
+                $data = $form->getData();
+                $cross = $data['cross'];
+                $number = $data['number'];
+                
+                $crosses = new ArrayCollection();
+                
+                for ($i = 0; $i < $number; $i++) {
+                    $newcross = new FlyCross($cross);
+                    $em->persist($newcross);
+                    $crosses->add($newcross);
+                }
+                
+                $em->flush();
+
+                foreach($crosses as $cross) {
+                    $this->setACL($cross);
+                }
+                
+                $url = $number == 1 ? 
+                    $this->generateUrl('flycross_show',array('id' => $cross->getRoutableId())) : 
+                    $this->generateUrl('flycross_list');
+
+                return $this->redirect($url);
+            }
+        }
+        
+        return array('form' => $form->createView());
     }
 
     /**
@@ -120,7 +166,11 @@ class FlyCrossController extends GenericVialController
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function editAction(FlyVial $vial) {
-        return parent::baseEditAction($vial->getCross(), new FlyCrossType(), 'flycross_show');
+        if (null !== $vial->getCross()) {
+            return parent::baseEditAction($vial->getCross(), new FlyCrossType(), 'flycross_show');
+        } else {
+            throw $this->createNotFoundException();
+        }
     }
 
     /**
@@ -135,7 +185,11 @@ class FlyCrossController extends GenericVialController
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(FlyVial $vial) {
-        return parent::baseDeleteAction($vial->getCross(), 'flycross_list');
+        if (null !== $vial->getCross()) {
+            return parent::baseDeleteAction($vial->getCross(), 'flycross_list');
+        } else {
+            throw $this->createNotFoundException();
+        }
     }
     
     /**

@@ -1,58 +1,9 @@
-{% macro tr_row(field) %}
-<tr>
-    <th>{{ form_label(field) }}</th>
-    <td>{{ form_widget(field) }}</td>
-    <td id="v_ajax_{{field.vars.id}}_error" colspan="2">{{ form_errors(field) }}</td>
-</tr>
-{% endmacro %}
-
-{% macro tr_vrow(field, value, javascript) %}
-<tr>
-    <th>{{ form_label(field) }}</th>
-    <td>
-        {{ form_widget(field) }}
-        <input id="v_ajax_{{field.vars.id}}" type="text" value="" onchange="{{ javascript }}" />
-    </td>
-    <td id="v_ajax_{{field.vars.id}}_data">
-        {% if value is not empty %}{{ value.name }}{% endif %}
-    </td>
-    <td id="v_ajax_{{field.vars.id}}_error">{{ form_errors(field) }}</td>
-</tr>
-{% endmacro %}
-
-{% macro tr_crow(field, name_field, value, javascript) %}
-<tr>
-    <th>{{ form_label(field) }}</th>
-    <td>
-        {{ form_widget(field) }}
-        <input id="v_ajax_{{field.vars.id}}" type="text" value="" onchange="{{ javascript }}" />
-    </td>
-    <td id="v_ajax_{{field.vars.id}}_data">
-    {% if value is not empty %}
-        {% if value.stock is not empty %}
-            {{ value.stock.name }}
-        {% elseif value.cross is not empty %}
-            {{ value.cross.name }}
-        {% endif %}
-        ({{ value.name }})
-    {% endif %}
-    </td>
-    <td id="v_ajax_{{field.vars.id}}_error">{{ form_errors(field) }}</td>
-</tr>
-<tr id="v_ajax_{{field.vars.id}}_name">
-    <th>{{ form_label(name_field) }}</th>
-    <td>{{ form_widget(name_field) }}</td>
-    <td id="v_ajax_{{name_field.vars.id}}_error" colspan="2">{{ form_errors(name_field) }}</td>
-</tr>
-{% endmacro %}
-
-{% macro tr_nrow(field) %}
-<tr>
-    <th>{{ form_label(field) }}</th>
-    <td>{{ form_widget(field) }}</td>
-    <td id="v_ajax_{{field.vars.id}}_error" colspan="2">{{ form_errors(field) }}</td>
-    <script>
-        $('#{{field.vars.id}}').spinner();
-    </script>
-</tr>
+{% macro buttons(value,name) %}
+  <button type="submit" class="btn btn-primary">Save</button>
+  {% if value.routableId is not null %}
+    <a href="{{ path(name ~ '_delete', { 'id': value.routableId }) }}" class="btn btn-danger">Delete</a>
+    <a href="{{ path(name ~ '_show', { 'id': value.routableId }) }}" class="btn">Cancel</a>
+  {% else %}
+    <a href="{{ path(name ~ '_list') }}" class="btn">Cancel</a>
+  {% endif %}
 {% endmacro %}

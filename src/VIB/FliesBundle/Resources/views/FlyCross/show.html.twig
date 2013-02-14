@@ -7,42 +7,12 @@
     {{ s.row("Setup date:", cross.vial.setupDate | date("d F Y")) }}
     {{ s.row("Check date:", cross.vial.flipDate | date("d F Y")) }}
   {% endif %}
-  {{ s.crow("Male:", cross.male ,cross.maleName, 'flyvial_show') }}
   {{ s.crow("Virgin:", cross.virgin, cross.virginName, 'flyvial_show') }}
+  {{ s.crow("Male:", cross.male ,cross.maleName, 'flyvial_show') }}
   {{ s.lrow("Stocks:", cross.stocks, 'flystock_show') }}
   {{ s.lrow("Crosses:", cross.livingCrosses, 'flycross_show') }}
 {% endblock modal_body %}
 
 {% block modal_footer %}
-  <a href="{{ path('flycross_edit', { 'id': cross.routableId }) }}" class="btn">Edit</a>
-  <a href="{{ path('flycross_list') }}" class="btn">List</a>
+  {{ s.buttons(cross, 'flycross') }}
 {% endblock modal_footer %}
-
-
-{#
-{% block content %}
-    <h1>
-        Cross {{ cross }}
-        {% if cross.vial is not empty %}
-            (<a href="{{ path('flyvial_show', { 'id': cross.vial.id }) }}">{{ cross.vial }}</a>)
-        {% endif %}
-    </h1>
-
-    <table class="data">
-        {{ s.tr_crow("Virgin:", cross.virgin, cross.virginName, 'flyvial_show') }}
-        {{ s.tr_crow("Male:", cross.male, cross.maleName, 'flyvial_show') }}
- 
-        {% if cross.vial is not empty %}
-            {{ s.tr_row("Setup date:", cross.vial.setupDate | date("d M Y")) }}
-            {{ s.tr_row("Check date:", cross.vial.flipDate | date("d M Y")) }}
-        {% endif %}
-        {{ s.tr_lrow("Stocks:", cross.stocks, 'flystock_show') }}
-        {{ s.tr_lrow("Crosses:", cross.livingCrosses, 'flycross_show') }}
-    </table>
-
-    {{ jq.button('List',path('flycross_list'),'ui-icon-folder-collapsed') }}    
-    {{ jq.button('New',path('flycross_create'),'ui-icon-document') }}
-    {{ jq.button('Edit',path('flycross_edit', { 'id': cross.id }),'ui-icon-pencil') }}
-    {{ jq.button('Delete',path('flycross_delete', { 'id': cross.id }),'ui-icon-trash') }}
-{% endblock %}
-#}

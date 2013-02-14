@@ -11,6 +11,5 @@
 {% endblock modal_body %}
 
 {% block modal_footer %}
-  <a href="{{ path('flyvial_edit', { 'id': vial.routableId }) }}" class="btn">Edit</a>
-  <a href="{{ path('flyvial_list') }}" class="btn">List</a>
+  {{ s.buttons(vial, 'flyvial') }}
 {% endblock modal_footer %}

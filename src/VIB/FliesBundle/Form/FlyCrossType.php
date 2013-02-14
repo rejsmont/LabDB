@@ -30,32 +30,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class FlyCrossType extends AbstractType
 {
     /**
-     * Get name
-     *
-     * @return string $name
+     * {@inheritdoc}
      */
     public function getName()
     {
-        return "FlyCrossType";
+        return "flycross";
     }
     
     /**
-     * Build form
-     *
-     * @param Symfony\Component\Form\FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('vial', new FlyVialSimpleType())
-                ->add('male', 'text_entity', array(
-                        'property'     => 'id',
-                        'class' => 'VIBFliesBundle:FlyVial',
-                        'format'    => '%06d',
-                        'label' => 'Male vial'))
-                ->add('maleName', 'text', array(
-                        'label' => 'Male name',
-                        'required' => false))
                 ->add('virgin', 'text_entity', array(
                         'property'     => 'id',
                         'class' => 'VIBFliesBundle:FlyVial',
@@ -63,18 +50,28 @@ class FlyCrossType extends AbstractType
                         'label' => 'Virgin vial'))
                 ->add('virginName', 'text', array(
                         'label' => 'Virgin name',
+                        'required' => false))
+                ->add('male', 'text_entity', array(
+                        'property'     => 'id',
+                        'class' => 'VIBFliesBundle:FlyVial',
+                        'format'    => '%06d',
+                        'label' => 'Male vial'))
+                ->add('maleName', 'text', array(
+                        'label' => 'Male name',
                         'required' => false));
     }
 
     /**
-     * Set default options
-     * 
-     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
+     * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'VIB\FliesBundle\Entity\FlyCross',
+            'error_mapping' => array(
+                'maleValid' => 'maleName',
+                'virginValid' => 'virginName',
+            )
         ));
     }
 }
