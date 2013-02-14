@@ -66,14 +66,14 @@ class FlyStockController extends CRUDController
      * 
      * @Route("/stocks/show/{id}", name="flystock_show")
      * @Template()
-     * @ParamConverter("entity", class="VIBFliesBundle:FlyStock")
+     * @ParamConverter("stock", class="VIBFliesBundle:FlyStock")
      * 
-     * @param mixed $entity
+     * @param VIB\FliesBundle\Entity\FlyStock $stock
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($entity)
+    public function showAction(FlyStock $stock)
     {
-        return parent::baseShowAction($entity);
+        return parent::baseShowAction($stock);
     }
     
     
@@ -87,16 +87,7 @@ class FlyStockController extends CRUDController
      */
     public function createAction()
     {
-        $response = parent::baseCreateAction(new FlyStock(), new FlyStockType());
-        
-        if (isset($response['redirect'])) {
-            $url = $this->generateUrl('flystock_show',array('id' => $response['entity']->getId()));
-            return $this->redirect($url);
-        } else {
-            return array(
-                'stock' => $response['entity'],
-                'form' => $response['form']);
-        }
+        return parent::baseCreateAction(new FlyStock(), new FlyStockType(), 'flystock_show');
     }
 
     /**
@@ -104,23 +95,15 @@ class FlyStockController extends CRUDController
      * 
      * @Route("/stocks/edit/{id}", name="flystock_edit")
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyStock")
+     * @ParamConverter("stock", class="VIBFliesBundle:FlyStock")
      * 
-     * @param mixed $id
+     * @param VIB\FliesBundle\Entity\FlyStock $stock
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($id)
+    public function editAction(FlyStock $stock)
     {
-        $response = parent::baseEditAction($id, new FlyStockType());
-        
-        if (isset($response['redirect'])) {
-            $url = $this->generateUrl('flystock_show',array('id' => $response['entity']->getId()));
-            return $this->redirect($url);
-        } else {
-            return array(
-                'stock' => $response['entity'],
-                'form' => $response['form']);
-        }
+        return parent::baseEditAction($stock, new FlyStockType(), 'flystock_show');
     }
 
     /**
@@ -128,15 +111,15 @@ class FlyStockController extends CRUDController
      * 
      * @Route("/stocks/delete/{id}", name="flystock_delete")
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyStock")
+     * @ParamConverter("stock", class="VIBFliesBundle:FlyStock")
      * 
-     * @param mixed $id
+     * @param VIB\FliesBundle\Entity\FlyStock $stock
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($id)
+    public function deleteAction(FlyStock $stock)
     {
-        parent::baseDeleteAction($id);
-        return $this->redirect($this->generateUrl('flystock_list'));
+        return parent::baseDeleteAction($stock, 'flystock_list');
     }
     
     /**

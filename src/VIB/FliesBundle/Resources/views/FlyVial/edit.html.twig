@@ -3,7 +3,5 @@
 {% block modal_header %}Edit vial {{ form.get('value').name }}{% endblock modal_header %}
 
 {% block modal_footer %}
-  <button type="submit" class="btn btn-primary">Save</button>
-  <button type="reset" class="btn">Reset</button>
-  <a href="{{ path('flyvial_show', { 'id': form.get('value').routableId }) }}" class="btn">Cancel</a>
+  {{ f.buttons(form.get('value'),'flyvial') }}
 {% endblock modal_footer %}

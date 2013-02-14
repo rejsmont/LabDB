@@ -65,4 +65,8 @@
 {% endif %}
 {% endmacro %}
 
-
+{% macro buttons(value, name) %}
+  <a href="{{ path(name ~ '_edit', { 'id': value.routableId }) }}" class="btn btn-primary">Edit</a>
+  <a href="{{ path(name ~ '_delete', { 'id': value.routableId }) }}" class="btn btn-danger">Delete</a>
+  <a href="{{ path(name ~ '_list') }}" class="btn">List</a>
+{% endmacro %}

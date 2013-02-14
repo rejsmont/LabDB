@@ -3,7 +3,5 @@
 {% block modal_header %}New vial{% endblock modal_header %}
 
 {% block modal_footer %}
-  <button type="submit" class="btn btn-primary">Save</button>
-  <button type="reset" class="btn">Reset</button>
-  <a href="{{ path('flyvial_list') }}" class="btn">Cancel</a>
+  {{ f.buttons(form.get('value'),'flyvial') }}
 {% endblock modal_footer %}

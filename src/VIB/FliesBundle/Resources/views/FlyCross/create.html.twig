@@ -2,7 +2,11 @@
 
 {% form_theme form _self %} 
   
-{% block _FlyCrossType_vial_row %}
+{% block _flycross_new_cross_row %}
+  {{ form_widget(form) }}
+{% endblock %}
+
+{% block _flycross_new_cross_vial_row %}
   {{ form_widget(form) }}
 {% endblock %}
 
@@ -14,7 +18,5 @@
 {% endblock modal_body %}
 
 {% block modal_footer %}
-  <button type="submit" class="btn btn-primary">Save</button>
-  <button type="reset" class="btn">Reset</button>
-  <a href="{{ path('flycross_list') }}" class="btn">Cancel</a>
+  {{ f.buttons(form.get('value').cross,'flycross') }}
 {% endblock modal_footer %}

@@ -58,7 +58,7 @@ class FlyVialController extends GenericVialController {
      */
     public function listAction($page = 1)
     {
-        $query = $this->getEntityManager()
+        $query = $this->getDoctrine()->getManager()
                       ->getRepository($this->getEntityClass())
                       ->findAllLivingStocksQuery();
         
@@ -132,12 +132,9 @@ class FlyVialController extends GenericVialController {
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function showAction(FlyVial $vial) {
-        
-        $cross = $vial->getCross();
-        
-        if (null !== $cross) {
-            $url = $this->generateUrl('flycross_show',array('id' => $cross->getId()));
-            return $this->redirect($url);
+                
+        if (null !== $vial->getCross()) {
+            return $this->forward('VIBFliesBundle:FlyCross:show', array('vial'  => $vial));
         } else {
             return parent::baseShowAction($vial);
         }
@@ -168,11 +165,8 @@ class FlyVialController extends GenericVialController {
      */
     public function editAction(FlyVial $vial) {
 
-        $cross = $vial->getCross();
-        
-        if (null !== $cross) {
-            $url = $this->generateUrl('flycross_edit',array('id' => $cross->getId()));
-            return $this->redirect($url);
+        if (null !== $vial->getCross()) {
+            return $this->forward('VIBFliesBundle:FlyCross:edit', array('vial'  => $vial));
         } else {
             return parent::baseEditAction($vial, new FlyVialType(), 'flyvial_show');
         }
@@ -191,11 +185,8 @@ class FlyVialController extends GenericVialController {
      */
     public function deleteAction(FlyVial $vial) {
         
-        $cross = $vial->getCross();
-        
-        if (null !== $cross) {
-            $url = $this->generateUrl('flycross_delete',array('id' => $cross->getId()));
-            return $this->redirect($url);
+        if (null !== $vial->getCross()) {
+            return $this->forward('VIBFliesBundle:FlyCross:delete', array('vial'  => $vial));
         } else {
             return parent::baseDeleteAction($vial, 'flyvial_list');
         }

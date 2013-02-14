@@ -19,14 +19,13 @@
 namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
+
+use JMS\Serializer\Annotation as Serializer;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContext;
 
 use VIB\FliesBundle\Entity\FlyVial;
 use VIB\FliesBundle\Entity\FlyCross;
@@ -38,7 +37,7 @@ use VIB\FliesBundle\Entity\FlyCross;
  * 
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\FlyStockRepository")
  * @Assert\Callback(methods={"isSourceCrossVialValid"})
- * @ExclusionPolicy("all")
+ * @Serializer\ExclusionPolicy("all")
  */
 class FlyStock {
     
@@ -46,7 +45,7 @@ class FlyStock {
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
-     * @Expose
+     * @Serializer\Expose
      * 
      * @var integer;
      */
@@ -54,7 +53,8 @@ class FlyStock {
 
     /**
      * @ORM\Column(type="string", length=255, unique=true, nullable=false)
-     * @Expose
+     * @Serializer\Expose
+     * @Assert\NotBlank(message = "Name cannot be blank")
      * 
      * @var string
      */
@@ -78,6 +78,7 @@ class FlyStock {
      * @var VIB\FliesBundle\Entity\FlyVial
      */
     protected $sourceCrossVial;
+    
     
     /**
      * Construct FlyStock
@@ -230,14 +231,12 @@ class FlyStock {
     /**
      * Check if source cross vial is valid
      * 
-     * @param ExecutionContext $context
+     * @Assert\True(message = "Vial does not hold a cross")
+     * 
+     * @return boolean
      */
-    public function isSourceCrossVialValid(ExecutionContext $context) {
-        
+    public function isSourceCrossVialValid() {
         $sourceCrossVial = null !== $this->sourceCross ? $this->sourceCross->getVial() : null;
-        
-        if ($sourceCrossVial !== $this->getSourceCrossVial()) {
-             $context->addViolationAtSubPath('source_cross_vial', 'Provided vial does not hold a cross', array(), null);
-        }
+        return $sourceCrossVial === $this->getSourceCrossVial();
     }
 }

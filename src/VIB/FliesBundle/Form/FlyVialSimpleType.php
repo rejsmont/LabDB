@@ -30,9 +30,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class FlyVialSimpleType extends AbstractType
 {  
     /**
-     * Get name
-     *
-     * @return string $name
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -40,10 +38,7 @@ class FlyVialSimpleType extends AbstractType
     }
     
     /**
-     * Build form
-     *
-     * @param Symfony\Component\Form\FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -52,9 +47,7 @@ class FlyVialSimpleType extends AbstractType
     }
     
     /**
-     * Set default options
-     * 
-     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
+     * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {

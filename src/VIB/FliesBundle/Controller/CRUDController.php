@@ -64,10 +64,10 @@ class CRUDController extends AbstractController {
      */
     protected function baseListAction($page = 1, $queryBuilder = null, $maxPerPage = 15)
     {        
-        $entityManager = $this->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         
         if ($queryBuilder == null) {
-            $queryBuilder = $entityManager->getRepository($this->getEntityClass())->createQueryBuilder('q');
+            $queryBuilder = $em->getRepository($this->getEntityClass())->createQueryBuilder('q');
         }
         
         $entities = $queryBuilder->getQuery()->getResult();
@@ -97,8 +97,8 @@ class CRUDController extends AbstractController {
      */
     protected function baseCreateAction($entity, AbstractType $entityType, $route)
     {
-        $em = $this->getEntityManager();
-        $form = $this->getFormFactory()->create($entityType, $entity);
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm($entityType, $entity);
         $request = $this->getRequest();
         
         if ($request->getMethod() == 'POST') {
@@ -131,8 +131,8 @@ class CRUDController extends AbstractController {
      */
     protected function baseEditAction($entity, AbstractType $entityType, $route)
     {
-        $em = $this->getEntityManager();
-        $form = $this->getFormFactory()->create($entityType, $entity);
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm($entityType, $entity);
         $request = $this->getRequest();
         
         if ($request->getMethod() == 'POST') {
@@ -162,7 +162,7 @@ class CRUDController extends AbstractController {
      */
     protected function baseDeleteAction($entity, $route)
     {
-        $em = $this->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         
         $em->remove($entity);
         $em->flush();
@@ -180,7 +180,7 @@ class CRUDController extends AbstractController {
     protected function setACL($entity, UserInterface $user = null, $mask = MaskBuilder::MASK_OWNER) {
         
         if ($user === null) {
-            $user = $this->getCurrectUser();
+            $user = $this->getUser();
         }
         
         $securityIdentity = UserSecurityIdentity::fromAccount($user);

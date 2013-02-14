@@ -22,6 +22,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+
 /**
  * FlyStockType class
  *
@@ -30,20 +31,15 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class FlyStockType extends AbstractType
 {
     /**
-     * Get name
-     *
-     * @return string $name
+     * {@inheritdoc}
      */
     public function getName()
     {
-        return "FlyStockType";
+        return "flystock";
     }
     
     /**
-     * Build form
-     *
-     * @param Symfony\Component\Form\FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -57,14 +53,15 @@ class FlyStockType extends AbstractType
     }
 
     /**
-     * Set default options
-     * 
-     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
+     * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'VIB\FliesBundle\Entity\FlyStock',
+            'error_mapping' => array(
+                'sourceCrossVialValid' => 'source_cross_vial',
+            )
         ));
     }
 }

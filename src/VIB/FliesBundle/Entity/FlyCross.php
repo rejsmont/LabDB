@@ -19,10 +19,14 @@
 namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
+
+use JMS\Serializer\Annotation as Serializer;
+
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * FlyStock class
@@ -30,7 +34,7 @@ use JMS\Serializer\Annotation\Expose;
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\FlyCrossRepository")
- * @ExclusionPolicy("all")
+ * @Serializer\ExclusionPolicy("all")
  */
 class FlyCross {
     
@@ -38,29 +42,31 @@ class FlyCross {
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
-     * @Expose
+     * @Serializer\Expose
      */
     protected $id; 
     
     /**
      * @ORM\ManyToOne(targetEntity="FlyVial", inversedBy="maleCrosses")
+     * @Assert\NotNull(message = "Male vial must be specified")
      */
     protected $male;
         
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Expose
+     * @Serializer\Expose
      */
     protected $maleName;
     
     /**
      * @ORM\ManyToOne(targetEntity="FlyVial", inversedBy="virginCrosses")
+     * @Assert\NotNull(message = "Virgin vial must be specified")
      */
     protected $virgin;
         
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Expose
+     * @Serializer\Expose
      */
     protected $virginName;
     
@@ -250,7 +256,7 @@ class FlyCross {
      */
     public function setVial(\VIB\FliesBundle\Entity\FlyVial $vial)
     {
-        $bottle->setCross($this);
+        $vial->setCross($this);
         $this->vial = $vial;
     }
 
@@ -299,5 +305,33 @@ class FlyCross {
         }
         
         return $livingCrosses;
+    }
+    
+    /**
+     * Check if male name is specified when male source is a cross
+     * 
+     * @Assert\True(message = "Male name must be specified")
+     * 
+     * @return boolean
+     */
+    public function isMaleValid() {
+        $vial = $this->getMale();
+        $cross = null !== $vial ? $vial->getCross() : null;
+        
+        return ! ((null !== $cross)&&(trim($this->getMaleName()) == ""));
+    }
+    
+    /**
+     * Check if virgin name is specified when virgin source is a cross
+     * 
+     * @Assert\True(message = "Virgin name must be specified")
+     * 
+     * @return boolean
+     */
+    public function isVirginValid() {
+        $vial = $this->getVirgin();
+        $cross = null !== $vial ? $vial->getCross() : null;
+        
+        return ! ((null !== $cross)&&(trim($this->getVirginName()) == ""));
     }
 }
