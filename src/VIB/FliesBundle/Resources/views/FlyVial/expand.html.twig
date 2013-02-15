@@ -1,38 +1,25 @@
-{% extends "VIBFliesBundle::layout.html.twig" %}
-{% import 'VIBFliesBundle:Macros:form.html.twig' as f %}
-{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% extends "VIBBaseBundle:Form:form.html.twig" %}
 
+{% set source = form.get('value').source %}
 
-{% block content %}
-    <h1>
-        Expand stock
-        {% spaceless %}
-        <span id="v_ajax_FlyVialExpandType_source_header">
-        {% if source is not null %}
-            {% if source.stock is not null %}
-                {{ source.stock.name }}
-            {% endif %}
-        {% endif %}
-        </span>
-        {% endspaceless %}
-    </h1>
+{% block modal_header %}
+  Expand stock
+  {% spaceless %}
+  <span id="v_ajax_flyvial_expand_source_header">
+  {% if source is not null %}
+      {% if source.stock is not null %}
+          {{ source.stock.name }}
+      {% endif %}
+  {% endif %}
+  </span>
+  {% endspaceless %}
+{% endblock modal_header %}
 
-    <form action="{{ app.request.requestUri }}"
-          method="post" {{ form_enctype(form) }}>
-
-        <table class="data">
-            {{ f.tr_vrow(form.source, source, 'getVial(this)') }}
-            {{ f.tr_nrow(form.number) }}
-        </table>
-
-        {{ form_rest(form) }}
-
-        {% if source is not null %}
-            {{ jq.button('Cancel',path('flyvial_show', { 'id': source.id }),'ui-icon-closethick') }}
-        {% else %}
-            {{ jq.button('Cancel',path('flyvial_list'),'ui-icon-closethick') }}
-        {% endif %}
-        {{ jq.button('Reset',app.request.requestUri,'ui-icon-refresh') }}
-        {{ jq.submit_button('Save','ui-icon-disk') }}
-    </form>
-{% endblock %}
+{% block modal_footer %}
+  <button type="submit" class="btn btn-primary">Save</button>
+  {% if source is not null %}
+    <a href="{{ path('flyvial_show', { 'id': source.routableId }) }}" class="btn">Cancel</a>
+  {% else %}
+    <a href="{{ path('flyvial_list') }}" class="btn">Cancel</a>
+  {% endif %}
+{% endblock modal_footer %}
