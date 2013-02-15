@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\FliesBundle\Entity\FlyCross;
@@ -16,15 +18,14 @@ use VIB\FliesBundle\Form\FlyCrossType;
 use VIB\FliesBundle\Form\FlyCrossNewType;
 use VIB\FliesBundle\Form\FlyCrossSelectType;
 
-class FlyCrossController extends GenericVialController
+class FlyCrossController extends VialController
 {
     
     /**
      * Construct FlyCrossController
      */ 
     public function __construct() {
-        $this->entityClass = 'VIBFliesBundle:FlyCross';
-        $this->entityName = 'cross';
+        $this->entityClass = 'VIB\FliesBundle\Entity\FlyCross';
     }
     
     /**
@@ -43,20 +44,7 @@ class FlyCrossController extends GenericVialController
                       ->getRepository($this->getEntityClass())
                       ->findAllLivingQuery();
         
-        $response = parent::baseListAction($page,$query);
-//        $formResponse = $this->handleSelectForm(new FlyCrossSelectType());
-//        
-//        if (isset($formResponse['response'])) {
-//            return $formResponse['response'];
-//        } else if (isset($formResponse['form'])) {       
-//            return array(
-//                'crosses' => $response['entities'],
-//                'form' => $formResponse['form'],
-//                'pager' => $response['pager']
-//            );
-//        }
-        
-        return array('crosses' => $response['entities']);
+        return $this->getListResponse($page,$query);
     }
     
     /**
@@ -96,7 +84,7 @@ class FlyCrossController extends GenericVialController
      */
     public function showAction(FlyVial $vial) {
         if (null !== $vial->getCross()) {
-            return parent::baseShowAction($vial->getCross());
+            return $this->getShowResponse($vial->getCross());
         } else {
             throw $this->createNotFoundException();
         }
@@ -167,7 +155,7 @@ class FlyCrossController extends GenericVialController
      */
     public function editAction(FlyVial $vial) {
         if (null !== $vial->getCross()) {
-            return parent::baseEditAction($vial->getCross(), new FlyCrossType(), 'flycross_show');
+            return $this->getEditResponse($vial->getCross(), new FlyCrossType(), 'flycross_show');
         } else {
             throw $this->createNotFoundException();
         }
@@ -186,7 +174,7 @@ class FlyCrossController extends GenericVialController
      */
     public function deleteAction(FlyVial $vial) {
         if (null !== $vial->getCross()) {
-            return parent::baseDeleteAction($vial->getCross(), 'flycross_list');
+            return $this->getDeleteResponse($vial->getCross(), 'flycross_list');
         } else {
             throw $this->createNotFoundException();
         }
@@ -215,7 +203,7 @@ class FlyCrossController extends GenericVialController
      * @param Doctrine\Common\Collections\Collection $vials
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function handleBatchAction($action, $vials) {
+    public function handleBatchAction($data) {
         
         switch($action) {
             case 'label':
@@ -236,7 +224,7 @@ class FlyCrossController extends GenericVialController
      * @param Doctrine\Common\Collections\Collection $crosses
      * @return Symfony\Component\HttpFoundation\Response
      */  
-    public function trashVials($crosses) {
+    public function trashVials(Collection $crosses) {
         
         $vials = new ArrayCollection();
         
@@ -254,7 +242,7 @@ class FlyCrossController extends GenericVialController
      * @param Doctrine\Common\Collections\Collection $crosses
      * @return Symfony\Component\HttpFoundation\Response
      */  
-    public function generateLabels($crosses) {
+    public function generateLabels(Collection $crosses) {
         
         $vials = new ArrayCollection();
         

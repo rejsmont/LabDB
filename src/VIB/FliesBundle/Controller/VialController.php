@@ -19,34 +19,48 @@
 namespace VIB\FliesBundle\Controller;
 
 use Symfony\Component\Form\AbstractType;
-use Doctrine\Common\Collections\ArrayCollection;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\QueryBuilder;
+
+use VIB\FliesBundle\Form\SelectType;
 use VIB\FliesBundle\Helpers\PDFLabel;
 use VIB\FliesBundle\Entity\FlyVial;
 
 /**
- * GenericVialController class
+ * VialController class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class GenericVialController extends CRUDController {
+abstract class VialController extends CRUDController {
+    
+    /**
+     * {@inheritdoc}
+     * @return array|Symfony\Component\HttpFoundation\Response
+     */
+    protected function getListResponse($page = 1, QueryBuilder $query = null, $maxPerPage = 15)
+    {        
+        $response = parent::getListResponse($page,$query,$maxPerPage);
+        $formResponse = $this->handleSelectForm(new SelectType($this->getEntityClass()));
+        
+        return is_array($formResponse) ? array_merge($response, $formResponse) : $formResponse;
+    }
     
     /**
      * Handle batch action
      * 
      * @param string $action
-     * @param Doctrine\Common\Collections\Collection $vials
+     * @param array $data
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function handleBatchAction($action, $vials) {
-        return null;
-    }
+    public abstract function handleBatchAction($data);
     
     /**
      * Handle vial selection form
      * 
-     * @param 
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Symfony\Component\Form\AbstractType $formType
+     * @return array|Symfony\Component\HttpFoundation\Response
      */   
     public function handleSelectForm(AbstractType $formType) {
         
@@ -58,8 +72,7 @@ class GenericVialController extends CRUDController {
             $form->bindRequest($request);
             
             if ($form->isValid()) {
-                $formData = $form->getData();
-                return array('response' => $this->handleBatchAction($formData['action'], $formData['items']));
+                return $this->handleBatchAction($form->getData());
             }
         }
         
@@ -72,18 +85,18 @@ class GenericVialController extends CRUDController {
      * @param Doctrine\Common\Collections\Collection $vials
      * @return Symfony\Component\HttpFoundation\Response
      */    
-    public function generateLabels($vials) {
+    public function generateLabels(Collection $vials) {
         
-        $entityManager = $this->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $pdf = new PDFLabel();
         
         foreach ($vials as $vial) {
             $vial->setLabelPrinted(true);
-            $entityManager->persist($vial);
+            $em->persist($vial);
             $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
         }
         
-        $entityManager->flush();
+        $em->flush();
         
         return $pdf->output();
     }
@@ -92,21 +105,20 @@ class GenericVialController extends CRUDController {
      * Flip vials
      * 
      * @param Doctrine\Common\Collections\Collection $vials
-     * @return Symfony\Component\HttpFoundation\Response
      */     
-    public function flipVials($vials) {
+    public function flipVials(Collection $vials) {
         
-        $entityManager = $this->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $newvials = new ArrayCollection();
         
         foreach ($vials as $vial) {       
             $newvial = new FlyVial($vial);
             $newvials->add($newvial);
-            $entityManager->persist($newvial);
+            $em->persist($newvial);
         }
         
-        $entityManager->flush();
+        $em->flush();
         
         foreach ($newvials as $vial) {
             $this->setACL($vial);
@@ -118,15 +130,15 @@ class GenericVialController extends CRUDController {
      * 
      * @param Doctrine\Common\Collections\Collection $vials
      */  
-    public function trashVials($vials) {
+    public function trashVials(Collection $vials) {
         
-        $entityManager = $this->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         
         foreach ($vials as $vial) {
             $vial->setTrashed(true);
-            $entityManager->persist($vial);
+            $em->persist($vial);
         }
         
-        $entityManager->flush();        
+        $em->flush();        
     }
 }

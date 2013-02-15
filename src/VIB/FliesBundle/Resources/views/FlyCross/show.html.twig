@@ -1,18 +1,18 @@
 {% extends "VIBBaseBundle:Show:modal.html.twig" %}
 
-{% block modal_header %}Cross {{ cross.name }} ({{ cross.vial.name }}){% endblock modal_header %}
+{% block modal_header %}Cross {{ entity.name }} ({{ entity.vial.name }}){% endblock modal_header %}
 
 {% block modal_body %}
-  {% if cross.vial is not empty %}
-    {{ s.row("Setup date:", cross.vial.setupDate | date("d F Y")) }}
-    {{ s.row("Check date:", cross.vial.flipDate | date("d F Y")) }}
+  {% if entity.vial is not empty %}
+    {{ s.row("Setup date:", entity.vial.setupDate | date("d F Y")) }}
+    {{ s.row("Check date:", entity.vial.flipDate | date("d F Y")) }}
   {% endif %}
-  {{ s.crow("Virgin:", cross.virgin, cross.virginName, 'flyvial_show') }}
-  {{ s.crow("Male:", cross.male ,cross.maleName, 'flyvial_show') }}
-  {{ s.lrow("Stocks:", cross.stocks, 'flystock_show') }}
-  {{ s.lrow("Crosses:", cross.livingCrosses, 'flycross_show') }}
+  {{ s.crow("Virgin:", entity.virgin, entity.virginName, 'flyvial_show') }}
+  {{ s.crow("Male:", entity.male ,entity.maleName, 'flyvial_show') }}
+  {{ s.lrow("Stocks:", entity.stocks, 'flystock_show') }}
+  {{ s.lrow("Crosses:", entity.livingCrosses, 'flycross_show') }}
 {% endblock modal_body %}
 
 {% block modal_footer %}
-  {{ s.buttons(cross, 'flycross') }}
+  {{ s.buttons(entity, 'flycross') }}
 {% endblock modal_footer %}

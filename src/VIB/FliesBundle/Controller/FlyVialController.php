@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\FliesBundle\Entity\FlyVial;
@@ -34,7 +35,7 @@ use VIB\FliesBundle\Form\FlyVialSelectType;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class FlyVialController extends GenericVialController {
+class FlyVialController extends VialController {
 
     /**
      * Construct FlyVialController
@@ -42,8 +43,7 @@ class FlyVialController extends GenericVialController {
      */ 
     public function __construct()
     {
-        $this->entityClass = 'VIBFliesBundle:FlyVial';
-        $this->entityName = 'vial';
+        $this->entityClass  = 'VIB\FliesBundle\Entity\FlyVial';
     }
     
     /**
@@ -62,18 +62,7 @@ class FlyVialController extends GenericVialController {
                       ->getRepository($this->getEntityClass())
                       ->findAllLivingStocksQuery();
         
-        $response = parent::baseListAction($page,$query);
-       // $formResponse = $this->handleSelectForm(new FlyVialSelectType());
-        
-//        if (isset($formResponse['response'])) {
-//            return $formResponse['response'];
-//        } else if (isset($formResponse['form'])) {       
-//            return array(
-//                'vials' => $response['entities'],
-//                'form' => $formResponse['form']
-//            );
-//        }
-        return array('vials' => $response['entities']);
+        return $this->getListResponse($page,$query);
     }
 
     /**
@@ -136,7 +125,7 @@ class FlyVialController extends GenericVialController {
         if (null !== $vial->getCross()) {
             return $this->forward('VIBFliesBundle:FlyCross:show', array('vial'  => $vial));
         } else {
-            return parent::baseShowAction($vial);
+            return $this->getShowResponse($vial);
         }
     }    
     
@@ -149,7 +138,7 @@ class FlyVialController extends GenericVialController {
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function createAction() {
-        return parent::baseCreateAction(new FlyVial(), new FlyVialType(), 'flyvial_show');
+        return $this->getCreateResponse(new FlyVial(), new FlyVialType(), 'flyvial_show');
     }
 
     /**
@@ -168,7 +157,7 @@ class FlyVialController extends GenericVialController {
         if (null !== $vial->getCross()) {
             return $this->forward('VIBFliesBundle:FlyCross:edit', array('vial'  => $vial));
         } else {
-            return parent::baseEditAction($vial, new FlyVialType(), 'flyvial_show');
+            return $this->getEditResponse($vial, new FlyVialType(), 'flyvial_show');
         }
     }
 
@@ -188,7 +177,7 @@ class FlyVialController extends GenericVialController {
         if (null !== $vial->getCross()) {
             return $this->forward('VIBFliesBundle:FlyCross:delete', array('vial'  => $vial));
         } else {
-            return parent::baseDeleteAction($vial, 'flyvial_list');
+            return $this->getDeleteResponse($vial, 'flyvial_list');
         }
     }
     
@@ -262,22 +251,26 @@ class FlyVialController extends GenericVialController {
      * @param Doctrine\Common\Collections\Collection $vials
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function handleBatchAction($action, $vials) {
+    public function handleBatchAction($data) {
+        
+        $action = $data['action'];
+        $vials = $data['items'];
+        
+        $response = $this->redirect($this->generateUrl('flyvial_list'));;
         
         switch($action) {
             case 'label':
-                return $this->generateLabels($vials);
+                $response = $this->generateLabels($vials);
                 break;
             case 'flip':
-                return $this->flipVials($vials);
+                $response = $this->flipVials($vials);
                 break;
             case 'trash':
-                return $this->trashVials($vials);
-                break;
-            default:
-                return $this->redirect($this->generateUrl('flyvial_list'));
+                $response = $this->trashVials($vials);
                 break;
         }
+        
+        return $response;
     }
     
     /**
@@ -286,7 +279,7 @@ class FlyVialController extends GenericVialController {
      * @param Doctrine\Common\Collections\Collection $vials
      * @return Symfony\Component\HttpFoundation\Response
      */     
-    public function flipVials($vials) {
+    public function flipVials(Collection $vials) {
         parent::flipVials($vials);
         return $this->redirect($this->generateUrl('flyvial_list'));
     }
@@ -297,7 +290,7 @@ class FlyVialController extends GenericVialController {
      * @param Doctrine\Common\Collections\Collection $vials
      * @return Symfony\Component\HttpFoundation\Response
      */  
-    public function trashVials($vials) {
+    public function trashVials(Collection $vials) {
         parent::trashVials($vials);
         return $this->redirect($this->generateUrl('flyvial_list'));
     }

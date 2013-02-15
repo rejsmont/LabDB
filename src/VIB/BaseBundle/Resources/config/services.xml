@@ -5,13 +5,15 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     
     <parameters>
-        <parameter key="vib_base.converter.doctrine.class">VIB\BaseBundle\Request\ParamConverter\DoctrineParamConverter</parameter>
+        <parameter key="vib.base.converter.doctrine.class">VIB\BaseBundle\Request\ParamConverter\DoctrineParamConverter</parameter>
+        <parameter key="vib.base.utils.inflector.class">VIB\BaseBundle\Utils\Inflector</parameter>
     </parameters>
     
     <services>
-        <service id="vib_base.converter.doctrine.orm" class="%vib_base.converter.doctrine.class%">
+        <service id="vib.base.converter.doctrine.orm" class="%vib.base.converter.doctrine.class%">
             <tag name="request.param_converter" priority="2" converter="vib.doctrine.orm" />
             <argument type="service" id="doctrine" on-invalid="ignore" />
         </service>
+        <service id="vib.base.utils.inflector" class="%vib.base.utils.inflector.class%" />
     </services>
 </container>
