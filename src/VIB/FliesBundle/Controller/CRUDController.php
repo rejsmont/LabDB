@@ -20,6 +20,8 @@ namespace VIB\FliesBundle\Controller;
 
 use Symfony\Component\Form\AbstractType;
 
+use Doctrine\ORM\QueryBuilder;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
@@ -30,7 +32,7 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class CRUDController extends AbstractController {
+abstract class CRUDController extends AbstractController {
     
     /**
      * Entity class for this controller
@@ -38,13 +40,7 @@ class CRUDController extends AbstractController {
      * @var string
      */
     protected $entityClass;
-    
-    /**
-     * Entity name for this controller
-     * 
-     * @var string
-     */
-    protected $entityName;
+
     
     /**
      * Construct CRUDController
@@ -54,23 +50,23 @@ class CRUDController extends AbstractController {
     {
         $this->entityClass = null;
     }
-        
+    
     /**
      * List action
      * 
      * @param integer $page
      * @param Doctrine\ORM\QueryBuilder $query
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array
      */
-    protected function baseListAction($page = 1, $queryBuilder = null, $maxPerPage = 15)
+    protected function getListResponse($page = 1, QueryBuilder $query = null, $maxPerPage = 15)
     {        
         $em = $this->getDoctrine()->getManager();
         
-        if ($queryBuilder == null) {
-            $queryBuilder = $em->getRepository($this->getEntityClass())->createQueryBuilder('q');
+        if ($query == null) {
+            $query = $em->getRepository($this->getEntityClass())->createQueryBuilder('q');
         }
         
-        $entities = $queryBuilder->getQuery()->getResult();
+        $entities = $query->getQuery()->getResult();
         
         return array('entities' => $entities);
     }
@@ -78,24 +74,24 @@ class CRUDController extends AbstractController {
     /**
      * Show action
      * 
-     * @param Object $entity
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param object $entity
+     * @return array
      */
-    protected function baseShowAction($entity)
+    protected function getShowResponse($entity)
     {
-        return array($this->getEntityName() => $entity);
+        return array('entity' => $entity);
     }
     
     /**
      * Create action
      * 
-     * @param Object $entity
+     * @param object $entity
      * @param AbstractType $entityType
      * @param string $route
      * 
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array|Symfony\Component\HttpFoundation\Response
      */
-    protected function baseCreateAction($entity, AbstractType $entityType, $route)
+    protected function getCreateResponse($entity, AbstractType $entityType, $route)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm($entityType, $entity);
@@ -123,13 +119,13 @@ class CRUDController extends AbstractController {
     /**
      * Edit action
      *     
-     * @param Object $entity
+     * @param object $entity
      * @param AbstractType $entityType
      * @param string $route
      * 
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array|Symfony\Component\HttpFoundation\Response
      */
-    protected function baseEditAction($entity, AbstractType $entityType, $route)
+    protected function getEditResponse($entity, AbstractType $entityType, $route)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm($entityType, $entity);
@@ -155,12 +151,12 @@ class CRUDController extends AbstractController {
     /**
      * Delete action
      * 
-     * @param Object $entity
+     * @param object $entity
      * @param string $route
      * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    protected function baseDeleteAction($entity, $route)
+    protected function getDeleteResponse($entity, $route)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -173,7 +169,7 @@ class CRUDController extends AbstractController {
     /**
      * Set ACL for entity
      * 
-     * @param Object $entity
+     * @param object $entity
      * @param UserInterface|null $user
      * @param integer $mask
      */
@@ -191,14 +187,13 @@ class CRUDController extends AbstractController {
         $aclProvider->updateAcl($acl);
     }
     
-    public function getEntityClass() {
+    /**
+     * Get managed entity class
+     * 
+     * @return string
+     */
+    protected function getEntityClass() {
         return $this->entityClass;
     }
-    
-    public function getEntityName() {
-        return $this->entityName;
-    }
-
-
 }
 ?>

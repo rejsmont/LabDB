@@ -22,7 +22,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\Event\DataEvent;
 
@@ -39,9 +39,9 @@ class SelectType extends AbstractType
      * Construct SelectType
      * 
      */ 
-    public function __construct()
+    public function __construct($entityClass = null)
     {
-        $this->entityClass = null;
+        $this->entityClass = $entityClass;
     }
     
     /**
@@ -51,16 +51,16 @@ class SelectType extends AbstractType
      */
     public function getName()
     {
-        return "SelectType";
+        return "select";
     }
     
     /**
      * Build form
      *
-     * @param Symfony\Component\Form\FormBuilder $builder
+     * @param Symfony\Component\Form\FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('action', 'hidden');
         
@@ -78,7 +78,7 @@ class SelectType extends AbstractType
                 return $qb;
             };
             
-            $form->add($factory->createNamed('entity','items',null, array(
+            $form->add($factory->createNamed('items', 'entity', null, array(
                 'class'         =>  $class,
                 'multiple'      =>  true,
                 'expanded'      =>  true,

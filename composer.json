@@ -27,7 +27,8 @@
         "friendsofsymfony/user-bundle": "dev-master",
         "exacttarget/fuelux": "master",
         "eternicode/bootstrap-datepicker": "master",
-        "fontawesome/font-awesome": "master"
+        "fontawesome/font-awesome": "master",
+        "whiteoctober/tcpdf-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [

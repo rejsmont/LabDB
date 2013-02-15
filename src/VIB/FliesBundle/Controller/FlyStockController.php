@@ -41,8 +41,7 @@ class FlyStockController extends CRUDController
      */ 
     public function __construct()
     {
-        $this->entityClass = 'VIBFliesBundle:FlyStock';
-        $this->entityName = 'stock';
+        $this->entityClass = 'VIB\FliesBundle\Entity\FlyStock';
     }
     
     /**
@@ -57,8 +56,7 @@ class FlyStockController extends CRUDController
      */
     public function listAction($page = 1)
     {
-        $response = parent::baseListAction($page);
-        return array('stocks' => $response['entities']);
+        return $this->getListResponse($page);
     }
     
     /**
@@ -73,7 +71,7 @@ class FlyStockController extends CRUDController
      */
     public function showAction(FlyStock $stock)
     {
-        return parent::baseShowAction($stock);
+        return $this->getShowResponse($stock);
     }
     
     
@@ -87,7 +85,7 @@ class FlyStockController extends CRUDController
      */
     public function createAction()
     {
-        return parent::baseCreateAction(new FlyStock(), new FlyStockType(), 'flystock_show');
+        return $this->getCreateResponse(new FlyStock(), new FlyStockType(), 'flystock_show');
     }
 
     /**
@@ -103,7 +101,7 @@ class FlyStockController extends CRUDController
      */
     public function editAction(FlyStock $stock)
     {
-        return parent::baseEditAction($stock, new FlyStockType(), 'flystock_show');
+        return $this->getEditResponse($stock, new FlyStockType(), 'flystock_show');
     }
 
     /**
@@ -119,7 +117,7 @@ class FlyStockController extends CRUDController
      */
     public function deleteAction(FlyStock $stock)
     {
-        return parent::baseDeleteAction($stock, 'flystock_list');
+        return $this->getDeleteResponse($stock, 'flystock_list');
     }
     
     /**
