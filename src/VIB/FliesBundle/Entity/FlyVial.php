@@ -116,9 +116,8 @@ class FlyVial {
         $this->children = new ArrayCollection();
         $this->maleCrosses = new ArrayCollection();
         $this->virginCrosses = new ArrayCollection();
-        $this->setupDate = new DateTime;
-        $this->flipDate = new DateTime;
-        $this->flipDate->add(new DateInterval('P14D'));
+        $this->setupDate = new DateTime();
+        $this->flipDate = (new DateTime())->add(new DateInterval('P14D'));
         $this->labelPrinted = false;
         $this->trashed = false;
         $this->selected = false;

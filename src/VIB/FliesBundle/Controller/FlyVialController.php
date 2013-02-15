@@ -168,7 +168,7 @@ class FlyVialController extends VialController {
      * @Template()
      * @ParamConverter("vial", class="VIBFliesBundle:FlyVial")
      * 
-     * @param integer $vial
+     * @param VIB\FliesBundle\Entity\FlyVial $vial
      * 
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -184,28 +184,20 @@ class FlyVialController extends VialController {
     /**
      * Expand vial
      * 
-     * @Route("/vials/expand/", name="flyvial_expand", defaults={"id" = 0})
+     * @Route("/vials/expand/", name="flyvial_expand")
      * @Route("/vials/expand/{id}", name="flyvial_expand_id")
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
+     * @ParamConverter("vial", class="VIBFliesBundle:FlyVial", isoptional="true")
      * 
-     * @param integer $id
+     * @param VIB\FliesBundle\Entity\FlyVial $source
      * 
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array|Symfony\Component\HttpFoundation\Response
      */
-    public function expandAction($id = null) {
+    public function expandAction(FlyVial $source = null) {
 
-        $entityManager = $this->getEntityManager();
-
-        if ($id > 0) {
-            $source = $entityManager->find($this->getEntityClass(), $id);
-        } else {
-            $source = null;
-        }
-        
-        $data = array('source' => $source, 'number' => 1);
-        
-        $form = $this->getFormFactory()->create(new FlyVialExpandType(), $data);
+        $em = $this->getDoctrine()->getManager();
+        $data = array('source' => $source, 'number' => 1);        
+        $form = $this->createForm(new FlyVialExpandType(), $data);
         $request = $this->getRequest();
         
         if ($request->getMethod() == 'POST') {
@@ -222,11 +214,11 @@ class FlyVialController extends VialController {
                 
                 for ($i = 0; $i < $number; $i++) {
                     $newvial = new FlyVial($source);
-                    $entityManager->persist($newvial);
+                    $em->persist($newvial);
                     $vials->add($newvial);
                 }
                 
-                $entityManager->flush();
+                $em->flush();
 
                 foreach($vials as $vial) {
                     $this->setACL($vial);
@@ -237,61 +229,14 @@ class FlyVialController extends VialController {
             }
         }
         
-        return array(
-            'source' => $source,
-            'form' => $form->createView());
-        
-        //return $this->redirect($this->generateUrl('flyvial_list'));
+        return array('form' => $form->createView());
     }
     
     /**
-     * Handle batch action
-     * 
-     * @param string $action
-     * @param Doctrine\Common\Collections\Collection $vials
-     * @return Symfony\Component\HttpFoundation\Response
+     * {@inheritdoc}
      */
-    public function handleBatchAction($data) {
-        
-        $action = $data['action'];
-        $vials = $data['items'];
-        
-        $response = $this->redirect($this->generateUrl('flyvial_list'));;
-        
-        switch($action) {
-            case 'label':
-                $response = $this->generateLabels($vials);
-                break;
-            case 'flip':
-                $response = $this->flipVials($vials);
-                break;
-            case 'trash':
-                $response = $this->trashVials($vials);
-                break;
-        }
-        
-        return $response;
-    }
-    
-    /**
-     * Flip vials
-     * 
-     * @param Doctrine\Common\Collections\Collection $vials
-     * @return Symfony\Component\HttpFoundation\Response
-     */     
-    public function flipVials(Collection $vials) {
-        parent::flipVials($vials);
+    protected function getDefaultBatchResponse() {
         return $this->redirect($this->generateUrl('flyvial_list'));
     }
-    
-    /**
-     * Trash vials
-     * 
-     * @param Doctrine\Common\Collections\Collection $vials
-     * @return Symfony\Component\HttpFoundation\Response
-     */  
-    public function trashVials(Collection $vials) {
-        parent::trashVials($vials);
-        return $this->redirect($this->generateUrl('flyvial_list'));
-    }
+
 }

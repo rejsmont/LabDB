@@ -197,59 +197,9 @@ class FlyCrossController extends VialController
     }
     
     /**
-     * Handle batch action
-     * 
-     * @param string $action
-     * @param Doctrine\Common\Collections\Collection $vials
-     * @return Symfony\Component\HttpFoundation\Response
+     * {@inheritdoc}
      */
-    public function handleBatchAction($data) {
-        
-        switch($action) {
-            case 'label':
-                return $this->generateLabels($vials);
-                break;
-            case 'trash':
-                return $this->trashVials($vials);
-                break;
-            default:
-                return $this->redirect($this->generateUrl('flyvial_list'));
-                break;
-        }
-    }
-    
-    /**
-     * Trash vials
-     * 
-     * @param Doctrine\Common\Collections\Collection $crosses
-     * @return Symfony\Component\HttpFoundation\Response
-     */  
-    public function trashVials(Collection $crosses) {
-        
-        $vials = new ArrayCollection();
-        
-        foreach ($crosses as $cross) {
-            $vials->add($cross->getVial());
-        }
-        
-        parent::trashVials($vials);
+    protected function getDefaultBatchResponse() {
         return $this->redirect($this->generateUrl('flycross_list'));
-    }
-    
-    /**
-     * Generate vial labels
-     * 
-     * @param Doctrine\Common\Collections\Collection $crosses
-     * @return Symfony\Component\HttpFoundation\Response
-     */  
-    public function generateLabels(Collection $crosses) {
-        
-        $vials = new ArrayCollection();
-        
-        foreach ($crosses as $cross) {
-            $vials->add($cross->getVial());
-        }
-        
-        return parent::generateLabels($vials);
     }
 }

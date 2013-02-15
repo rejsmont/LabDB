@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle($this),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+            new WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle(),
             new VIB\BaseBundle\VIBBaseBundle(),
             new VIB\FormsBundle\VIBFormsBundle(),
             new VIB\FliesBundle\VIBFliesBundle(),

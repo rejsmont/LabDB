@@ -1,0 +1,26 @@
+{% extends "VIBBaseBundle::layout.html.twig" %}
+
+{% block content %}
+{% if form is defined %}
+<form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
+{% endif %}
+<div class="span12">
+  {% block list_selector %}{% endblock list_selector %}
+  <table class="table table-striped table-bordered table-condensed">
+    <thead>
+      <tr class="inverse">{% block list_header %}{% endblock list_header %}</tr>
+    </thead>
+    <tbody>
+    {% if entities is defined %}
+      {% for entity in entities %}
+        <tr>{% block list_item %}{% endblock list_item %}</tr>
+      {% endfor %}
+    {% endif %}
+    </tbody>
+  </table>
+  {% block list_buttons %}{% endblock list_buttons %}
+</div>
+{% if form is defined %}
+</form>
+{% endif %}
+{% endblock %}

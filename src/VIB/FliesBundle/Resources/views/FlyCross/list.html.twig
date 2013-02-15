@@ -1,66 +1,73 @@
-{% extends "VIBBaseBundle::layout.html.twig" %}
+{% extends "VIBBaseBundle:List:table.html.twig" %}
+
+{% form_theme form _self %} 
+
+{% block _select_items_row %}{% endblock %}
 
 {% block headline %}Crosses{% endblock headline %}
-{% block content %}
-<div class="span12">
-    <table id="vials" class="table table-striped table-bordered table-condensed">
-        <thead>
-            <tr class="inverse">
-                <th style="width: 12px;"><input type="checkbox" id="checkall" checked="checked"></th>
-                <th style="width: 100px;">ID</th>
-                <th colspan="2">Virgin</th>
-                <th colspan="2">Male</th>
-                <th style="width: 150px;">Setup date</th>
-                <th style="width: 150px;">Check date</th>
-                <th style="width: 100px;">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for cross in entities %}
-            {% set vial = cross.vial %}
-            <tr>
-                <td>
-                    <input type="checkbox" id="FlyVialSelectType_items_{{ vial.id }}" 
-                           name="FlyVialSelectType[items][{{ vial.id }}]" 
-                           value="{{ vial.id }}" checked="checked" />
-                </td>
-                <td>
-                    <a href="{{ path('flycross_show', { 'id': cross.routableId }) }}">
-                    {{ vial }}</a></td>
-                <td style="width: 100px;">
-                    {% if cross.virgin is not empty %}
-                    <a href="{{ path('flyvial_show', { 'id': cross.virgin.routableId }) }}">
-                    {{ cross.virgin }}</a>
-                    {% endif %}</td>
-                <td>
-                    {{ cross.virginName }}</td>
-                <td style="width: 100px;">
-                    {% if cross.male is not empty %}
-                    <a href="{{ path('flyvial_show', { 'id': cross.male.routableId }) }}">
-                    {{ cross.male }}</a>
-                    {% endif %}</td>
-                <td>{{ cross.maleName }}</td>
-                <td>
-                    {% if cross.vial is not empty %}
-                      {{ cross.vial.setupDate | date("d F Y") }}
-                    {% endif %}</td>
-                <td>
-                    {% if cross.vial is not empty %}
-                      {{ cross.vial.flipDate | date("d F Y") }}
-                    {% endif %}</td>
-                <td>
-                    {% if cross.vial is not empty %}
-                      {% if cross.vial.trashed %}
-                        <span class="label label-inverse">TRASHED</span>
-                        {% elseif cross.vial.alive %}
-                        <span class="label label-success">ALIVE</span>
-                        {% else %}
-                        <span class="label label-important">DEAD</span>
-                      {% endif %}
-                    {% endif %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% endblock %}
+
+{% block list_selector %}
+  {{ form_errors(form) }}
+  {{ form_rest(form) }}
+{% endblock list_selector %}
+
+{% block list_header %}
+  <th style="width: 12px;"><input type="checkbox" id="checkall" checked="checked"></th>
+  <th style="width: 100px;">ID</th>
+  <th colspan="2">Virgin</th>
+  <th colspan="2">Male</th>
+  <th style="width: 150px;">Setup date</th>
+  <th style="width: 150px;">Check date</th>
+  <th style="width: 100px;">Flipped from</th>
+  <th style="width: 100px;">Status</th>
+{% endblock list_header %}
+
+{% block list_item %}
+  <td><input type="checkbox" id="select_items_{{ entity.vial.id }}" 
+             name="select[items][{{ entity.vial.id }}]"
+             value="{{ entity.vial.id }}" checked="checked" /></td>
+  <td><a href="{{ path('flycross_show', { 'id': entity.routableId }) }}">
+      {{ entity.vial }}</a></td>
+  <td style="width: 100px;">{% if entity.virgin is not empty %}
+      <a href="{{ path('flyvial_show', { 'id': entity.virgin.routableId }) }}">
+      {{ entity.virgin }}</a>
+      {% endif %}</td>
+  <td>{{ entity.virginName }}</td>
+  <td style="width: 100px;">{% if entity.male is not empty %}
+      <a href="{{ path('flyvial_show', { 'id': entity.male.routableId }) }}">
+      {{ entity.male }}</a>
+      {% endif %}</td>
+  <td>{{ entity.maleName }}</td>
+  <td>{% if entity.vial is not empty %}
+        {{ entity.vial.setupDate | date("d F Y") }}
+      {% endif %}</td>
+  <td>{% if entity.vial is not empty %}
+        {{ entity.vial.flipDate | date("d F Y") }}
+      {% endif %}</td>
+  <td>{% if entity.vial is not empty %}
+        {% if entity.vial.parent is not empty %}
+        <a href="{{ path('flycross_show', { 'id': entity.vial.parent.routableId }) }}">
+        {{ entity.vial.parent }}</a>
+        {% endif %}
+      {% endif %}</td>
+  <td>{% if entity.vial is not empty %}
+        {% if entity.vial.trashed %}
+          <span class="label label-inverse">TRASHED</span>
+          {% elseif entity.vial.alive %}
+          <span class="label label-success">ALIVE</span>
+          {% else %}
+          <span class="label label-important">DEAD</span>
+        {% endif %}
+      {% endif %}</td>
+{% endblock list_item %}
+
+{% block list_buttons %}
+  <a href="{{ path('flycross_create') }}" class="btn btn-primary">New</a>
+  <a href="#" class="btn">Select</a>
+  <button type="submit" class="btn" onclick="$('#select_action').val('flip'); $('form').submit();">
+    Flip</button>
+  <button type="submit" class="btn" onclick="$('#select_action').val('trash'); $('form').submit();">
+    Trash</button>
+  <button type="submit" class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
+    Print labels</button>
+{% endblock list_buttons %}

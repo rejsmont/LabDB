@@ -85,10 +85,11 @@ class FlyCross {
      * Construct FlyCross
      *
      * @param VIB\FliesBundle\Entity\FlyCross $template
+     * @param boolean $flip
      */ 
-    public function __construct($template = null)
+    public function __construct($template = null, $flip = false)
     {
-        $this->vial = new \VIB\FliesBundle\Entity\FlyVial;
+        $this->vial = (($flip)&&(null !== $template)) ? new FlyVial($template->getVial()) : new FlyVial();
         $this->vial->setCross($this);
         
         if (null !== $template) {
@@ -96,9 +97,10 @@ class FlyCross {
             $this->setMaleName($template->getMaleName());
             $this->setVirgin($template->getVirgin());
             $this->setVirginName($template->getVirginName());
-            
-            $this->vial->setSetupDate($template->getVial()->getSetupDate());
-            $this->vial->setFlipDate($template->getVial()->getFlipDate());
+            if (! $flip) {
+                $this->vial->setSetupDate($template->getVial()->getSetupDate());
+                $this->vial->setFlipDate($template->getVial()->getFlipDate());
+            }
         }
     }
     

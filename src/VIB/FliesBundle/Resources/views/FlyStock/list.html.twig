@@ -1,50 +1,41 @@
-{% extends "VIBBaseBundle::layout.html.twig" %}
+{% extends "VIBBaseBundle:List:table.html.twig" %}
 
 {% block headline %}Stocks{% endblock headline %}
 
-{% block content %}
-<div class="span12">
-  <table id="vials" class="table table-striped table-bordered table-condensed">
-    <thead>
-        <tr class="inverse">
-            <th style="width: 50px;">ID</th>
-            <th>Name</th>
-            <th>Source cross</th>
-            <th style="width: 50px;">Vials</th>
-            <th style="width: 100px;">Status</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for stock in entities %}
-        <tr>
-            <td><a href="{{ path('flystock_show', { 'id': stock.routableId }) }}">
-                {{ stock.id }}</a>
-            </td>
-            <td><a href="{{ path('flystock_show', { 'id': stock.routableId }) }}">
-                {{ stock.name }}</a>
-            </td>
-            <td>{% if stock.sourceCross is not empty %}
-                <a href="{{ path('flycross_show', { 'id': stock.sourceCross.routableId }) }}">
-                    {{ stock.sourceCross }}
-                </a>
-                {% endif %}
-            </td>
-            <td>
-                {{ stock.livingVials | length }}
-            </td>
-            <td>{% if stock.livingVials | length > 3 %}
-                <span class="label label-success">Amplified</span>
-                {% elseif stock.livingVials | length > 1 %}
-                <span class="label label-success">Healthy</span>
-                {% elseif stock.livingVials | length < 1 %}
-                <span class="label label-important">Dead</span>
-                {% else %}
-                <span class="label label-warning">Expand</span>
-                {% endif %}
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% endblock %}
+{% block list_header %}
+  <th style="width: 50px;">ID</th>
+  <th>Name</th>
+  <th>Source cross</th>
+  <th style="width: 50px;">Vials</th>
+  <th style="width: 100px;">Status</th>
+{% endblock list_header %}
+
+{% block list_item %}
+  <td><a href="{{ path('flystock_show', { 'id': entity.routableId }) }}">
+      {{ entity.id }}</a>
+  </td>
+  <td><a href="{{ path('flystock_show', { 'id': entity.routableId }) }}">
+      {{ entity.name }}</a>
+  </td>
+  <td>{% if entity.sourceCross is not empty %}
+      <a href="{{ path('flycross_show', { 'id': entity.sourceCross.routableId }) }}">
+        {{ entity.sourceCross }}</a>
+      {% endif %}
+  </td>
+  <td>{{ entity.livingVials | length }}</td>
+  <td>{% if entity.livingVials | length > 3 %}
+      <span class="label label-success">Amplified</span>
+      {% elseif entity.livingVials | length > 1 %}
+      <span class="label label-success">Healthy</span>
+      {% elseif entity.livingVials | length < 1 %}
+      <span class="label label-important">Dead</span>
+      {% else %}
+      <span class="label label-warning">Expand</span>
+      {% endif %}
+  </td>
+{% endblock list_item %}
+
+{% block list_buttons %}
+  <a href="{{ path('flystock_create') }}" class="btn btn-primary">New</a>
+  <a href="{{ path('flyvial_expand') }}" class="btn">Expand</a>
+{% endblock list_buttons %}
