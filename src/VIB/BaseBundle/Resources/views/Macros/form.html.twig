@@ -1,8 +1,8 @@
 {% macro buttons(value,name) %}
   <button type="submit" class="btn btn-primary">Save</button>
-  {% if value.routableId is not null %}
-    <a href="{{ path(name ~ '_delete', { 'id': value.routableId }) }}" class="btn btn-danger">Delete</a>
-    <a href="{{ path(name ~ '_show', { 'id': value.routableId }) }}" class="btn">Cancel</a>
+  {% if value.id is not null %}
+    <a href="{{ path(name ~ '_delete', { 'id': value.id }) }}" class="btn btn-danger">Delete</a>
+    <a href="{{ path(name ~ '_show', { 'id': value.id }) }}" class="btn">Cancel</a>
   {% else %}
     <a href="{{ path(name ~ '_list') }}" class="btn">Cancel</a>
   {% endif %}

@@ -13,7 +13,7 @@
     <div class="controls">
         <span class="input-text">
             {% if value is not empty %}
-            <a href="{{ path(ctrl, { 'id': value.routableId }) }}">{{ value }}</a>
+            <a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>
             {% endif %}
         </span>
     </div>
@@ -27,7 +27,7 @@
         <ul class="unstyled input-text">
         {% for item in value %}
             <li>
-                <a href="{{ path(ctrl, { 'id': item.routableId }) }}">{{ item }}</a>
+                <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
             </li>
         {% endfor %}
         </ul>
@@ -42,7 +42,7 @@
     <ul class="unstyled input-text">
     {% for item in value %}
       <li>
-        <a href="{{ path(ctrl, { 'id': item.routableId }) }}">{{ item }}</a>
+        <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
         ({{ item.setupDate | date("d F Y") }})
       </li>
     {% endfor %}
@@ -58,7 +58,7 @@
   <div class="controls">
     <span class="input-text">
       {{ name }}
-      (<a href="{{ path(ctrl, { 'id': value.routableId }) }}">{{ value }}</a>)
+      (<a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>)
     </span>
   </div>
 </div>
@@ -66,7 +66,7 @@
 {% endmacro %}
 
 {% macro buttons(value, name) %}
-  <a href="{{ path(name ~ '_edit', { 'id': value.routableId }) }}" class="btn btn-primary">Edit</a>
-  <a href="{{ path(name ~ '_delete', { 'id': value.routableId }) }}" class="btn btn-danger">Delete</a>
+  <a href="{{ path(name ~ '_edit', { 'id': value.id }) }}" class="btn btn-primary">Edit</a>
+  <a href="{{ path(name ~ '_delete', { 'id': value.id }) }}" class="btn btn-danger">Delete</a>
   <a href="{{ path(name ~ '_list') }}" class="btn">List</a>
 {% endmacro %}

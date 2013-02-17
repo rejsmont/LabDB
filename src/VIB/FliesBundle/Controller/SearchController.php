@@ -29,8 +29,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 
-use VIB\FliesBundle\Entity\FlyVial;
-use VIB\FliesBundle\Entity\FlyCross;
+use VIB\BaseBundle\Controller\AbstractController;
+
+use VIB\FliesBundle\Entity\Vial;
+use VIB\FliesBundle\Entity\CrossVial;
 
 use VIB\FliesBundle\Form\SearchType;
 
@@ -103,7 +105,7 @@ class SearchController extends AbstractController {
         switch($filter) {
             case 'stocks':
                 $queryBuilder = $this->getEntityManager()
-                    ->getRepository('VIBFliesBundle:FlyStock')
+                    ->getRepository('VIBFliesBundle:Stock')
                     ->findStocksByName($term);
                 $adapter = new DoctrineORMAdapter($queryBuilder);
                 $pager = new Pagerfanta($adapter);

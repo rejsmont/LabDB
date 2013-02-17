@@ -29,8 +29,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-use VIB\FliesBundle\Entity\FlyVial;
-use VIB\FliesBundle\Entity\FlyCross;
+use VIB\BaseBundle\Controller\AbstractController;
+
+use VIB\FliesBundle\Entity\Vial;
+use VIB\FliesBundle\Entity\CrossVial;
 
 
 /**
@@ -104,7 +106,7 @@ class AJAXController extends Controller {
         
         $query = $request->query->get('query');
         $found = $this->getDoctrine()
-                      ->getRepository('VIBFliesBundle:FlyStock')
+                      ->getRepository('VIBFliesBundle:Stock')
                       ->findStocksByName($query)
                       ->getQuery()
                       ->getResult();

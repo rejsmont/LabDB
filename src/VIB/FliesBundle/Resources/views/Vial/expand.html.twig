@@ -1,0 +1,16 @@
+{% extends "VIBBaseBundle:Form:form.html.twig" %}
+
+{% set source = form.get('value').source %}
+
+{% block modal_header %}
+  Expand vial
+{% endblock modal_header %}
+
+{% block modal_footer %}
+  <button type="submit" class="btn btn-primary">Save</button>
+  {% if source is not null %}
+    <a href="{{ path('vib_flies_vial_show', { 'id': source.id }) }}" class="btn">Cancel</a>
+  {% else %}
+    <a href="{{ path('vib_flies_vial_list') }}" class="btn">Cancel</a>
+  {% endif %}
+{% endblock modal_footer %}
