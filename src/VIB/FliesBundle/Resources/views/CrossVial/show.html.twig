@@ -1,0 +1,18 @@
+{% extends "VIBBaseBundle:Show:modal.html.twig" %}
+
+{% block modal_header %}Cross {{ entity.name }} ({{ entity.id }}){% endblock modal_header %}
+
+{% block modal_body %}
+  {{ s.row("Setup date:", entity.setupDate | date("d F Y")) }}
+  {{ s.row("Check date:", entity.flipDate | date("d F Y")) }}
+  {{ s.crow("Virgin:", entity.virgin, entity.virginName, 'vib_flies_vial_show') }}
+  {{ s.crow("Male:", entity.male ,entity.maleName, 'vib_flies_vial_show') }}
+  {{ s.arow("Flipped from:", entity.parent, 'vib_flies_stockvial_show') }}
+  {{ s.lrow("Flipped to:", entity.children, 'vib_flies_stockvial_show') }}
+  {{ s.lrow("Stocks:", entity.stocks, 'vib_flies_stock_show') }}
+  {{ s.lrow("Crosses:", entity.livingCrosses, 'flycross_show') }}
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  {{ s.buttons(entity, 'vib_flies_crossvial') }}
+{% endblock modal_footer %}

@@ -1,0 +1,18 @@
+{% extends "VIBBaseBundle:Form:form.html.twig" %}
+
+{% form_theme form _self %} 
+  
+{% block _crossvial_new_cross_row %}
+  {{ form_widget(form) }}
+{% endblock %}
+
+{% block modal_header %}New cross{% endblock modal_header %}
+
+{% block modal_body %}
+  {{ form_errors(form) }}
+  {{ form_rest(form) }}
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  {{ f.buttons(form.get('value').cross,'vib_flies_crossvial') }}
+{% endblock modal_footer %}

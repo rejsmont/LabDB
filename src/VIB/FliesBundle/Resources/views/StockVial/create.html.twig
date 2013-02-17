@@ -1,0 +1,7 @@
+{% extends "VIBBaseBundle:Form:form.html.twig" %}
+
+{% block modal_header %}New stock vial{% endblock modal_header %}
+
+{% block modal_footer %}
+  {{ f.buttons(form.get('value'),'vib_flies_stockvial') }}
+{% endblock modal_footer %}

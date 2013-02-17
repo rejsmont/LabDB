@@ -1,0 +1,15 @@
+{% extends "VIBBaseBundle:Show:modal.html.twig" %}
+
+{% block modal_header %}Vial {{ entity }}{% endblock modal_header %}
+
+{% block modal_body %}
+  {{ s.row("Setup date:", entity.setupDate | date("d F Y")) }}
+  {{ s.row("Flip date:", entity.flipDate | date("d F Y")) }}
+  {{ s.arow("Flipped from:", entity.parent, 'vib_flies_stockvial_show') }}
+  {{ s.arow("Stock:", entity.stock, 'vib_flies_stock_show') }}
+  {{ s.lrow("Flipped to:", entity.children, 'vib_flies_stockvial_show') }}
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  {{ s.buttons(entity, 'vib_flies_stockvial') }}
+{% endblock modal_footer %}

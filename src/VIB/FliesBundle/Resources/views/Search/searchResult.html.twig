@@ -23,7 +23,7 @@
 {% if filter == 'stocks' %}
     {% if stocks is not empty %}
     <table id="searchStocks" class="ui-table">
-        {% include 'VIBFliesBundle:FlyStock:_stock_table.html.twig' with {'stocks': stocks} %}
+        {% include 'VIBFliesBundle:Stock:_stock_table.html.twig' with {'stocks': stocks} %}
         {{ block('pager') }}
     </table>
     {% else %}
