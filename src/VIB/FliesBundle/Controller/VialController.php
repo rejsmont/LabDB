@@ -21,23 +21,23 @@ namespace VIB\FliesBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use JMS\SecurityExtraBundle\Annotation\SatisfiesParentSecurityPolicy;
 
 use Symfony\Component\Form\AbstractType;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\QueryBuilder;
 
 use VIB\BaseBundle\Controller\CRUDController;
 
 use VIB\FliesBundle\Utils\PDFLabel;
 
-use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Form\VialType;
 use VIB\FliesBundle\Form\VialExpandType;
 use VIB\FliesBundle\Form\SelectType;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use VIB\FliesBundle\Entity\Vial;
+
 
 /**
  * VialController class
@@ -76,12 +76,12 @@ class VialController extends CRUDController {
     /**
      * List vials
      * 
-     * @Route("/", defaults={"page" = 1})
-     * @Route("/page/{page}", defaults={"page" = 1})
+     * @Route("/")
      * @Template()
+     * @SatisfiesParentSecurityPolicy
      * 
      * @param integer $page
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction($page = 1)
     {
@@ -99,7 +99,7 @@ class VialController extends CRUDController {
      * 
      * @param mixed $id
      * 
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction($id) {
         $vial = $this->getEntity($id);
@@ -118,7 +118,7 @@ class VialController extends CRUDController {
      * 
      * @param mixed $id
      * 
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction($id) {
         $vial = $this->getEntity($id);
@@ -137,7 +137,7 @@ class VialController extends CRUDController {
      * 
      * @param mixed $id
      * 
-     * @return array|Symfony\Component\HttpFoundation\Response
+     * @return array|\Symfony\Component\HttpFoundation\Response
      */
     public function expandAction($id = null) {
 
@@ -184,7 +184,7 @@ class VialController extends CRUDController {
      * Handle batch action
      * 
      * @param array $data
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handleBatchAction($data) {
         
@@ -211,8 +211,8 @@ class VialController extends CRUDController {
     /**
      * Handle selection form
      * 
-     * @param Symfony\Component\Form\AbstractType $formType
-     * @return array|Symfony\Component\HttpFoundation\Response
+     * @param \Symfony\Component\Form\AbstractType $formType
+     * @return array|\Symfony\Component\HttpFoundation\Response
      */   
     public function handleSelectForm(AbstractType $formType) {
         
@@ -234,8 +234,8 @@ class VialController extends CRUDController {
     /**
      * Generate vial labels
      * 
-     * @param Doctrine\Common\Collections\Collection $vials
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param \Doctrine\Common\Collections\Collection $vials
+     * @return \Symfony\Component\HttpFoundation\Response
      */    
     public function generateLabels(Collection $vials) {
         
@@ -256,7 +256,7 @@ class VialController extends CRUDController {
     /**
      * Flip vials
      * 
-     * @param Doctrine\Common\Collections\Collection $vials
+     * @param \Doctrine\Common\Collections\Collection $vials
      */     
     public function flipVials(Collection $vials) {
         
@@ -282,7 +282,7 @@ class VialController extends CRUDController {
     /**
      * Trash vials
      * 
-     * @param Doctrine\Common\Collections\Collection $vials
+     * @param \Doctrine\Common\Collections\Collection $vials
      */  
     public function trashVials(Collection $vials) {
         
@@ -301,7 +301,7 @@ class VialController extends CRUDController {
     /**
      * Get default batch action response
      * 
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function getDefaultBatchResponse() {
         $request = $this->getRequest();

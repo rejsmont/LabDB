@@ -6,16 +6,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use VIB\FliesBundle\Entity\CrossVial;
-use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Form\CrossVialType;
 use VIB\FliesBundle\Form\CrossVialNewType;
+
+use VIB\FliesBundle\Entity\CrossVial;
+
 
 /**
  * StockVialController class
@@ -54,7 +51,7 @@ class CrossVialController extends VialController
      * @Route("/crosses/select", name="flycross_select")
      * @Template()
      * 
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array|\Symfony\Component\HttpFoundation\Response
      */
     public function selectAction() {
         
@@ -77,7 +74,7 @@ class CrossVialController extends VialController
      * @Route("/new")
      * @Template()
      * 
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array|\Symfony\Component\HttpFoundation\Response
      */
     public function createAction() {
         

@@ -20,15 +20,15 @@ namespace VIB\BaseBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
-use Doctrine\ORM\QueryBuilder;
-
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use \ReflectionClass;
 
@@ -60,16 +60,19 @@ abstract class CRUDController extends AbstractController {
     /**
      * List entities
      * 
-     * @Route("/", defaults={"page" = 1})
-     * @Route("/page/{page}", defaults={"page" = 1})
+     * @Route("/")
      * @Template()
+     * @Secure(roles="ROLE_USER, ROLE_ADMIN")
      * 
      * @param integer $page
      * @return array
      */
-    public function listAction($page = 1)
+    public function listAction()
     {
-        $entities = $this->getListQuery()->getQuery()->getResult();
+        $paginator  = $this->get('knp_paginator');
+        $page = $this->get('request')->query->get('page', 1);
+        $query = $this->get('vib.security.helper.acl')->apply($this->getListQuery());
+        $entities = $paginator->paginate($query, $page, 15);
         return array('entities' => $entities);
     }
     
@@ -85,6 +88,10 @@ abstract class CRUDController extends AbstractController {
      */
     public function showAction($id) {
         $entity = $this->getEntity($id);
+        $securityContext = $this->get('security.context');
+        if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('VIEW', $entity))) {
+            throw new AccessDeniedException();
+        }
         return array('entity' => $entity);
     }    
     
@@ -134,6 +141,10 @@ abstract class CRUDController extends AbstractController {
     public function editAction($id) {
         $em = $this->getDoctrine()->getManager();
         $entity = $this->getEntity($id);
+        $securityContext = $this->get('security.context');
+        if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('EDIT', $entity))) {
+            throw new AccessDeniedException();
+        }
         $form = $this->createForm($this->getEditForm(), $entity);
         $request = $this->getRequest();
 
@@ -167,6 +178,10 @@ abstract class CRUDController extends AbstractController {
     public function deleteAction($id) {
         $em = $this->getDoctrine()->getManager();
         $entity = $this->getEntity($id);
+        $securityContext = $this->get('security.context');
+        if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('DELETE', $entity))) {
+            throw new AccessDeniedException();
+        }
         $em->remove($entity);
         $em->flush();
         $request = $this->getRequest();
@@ -242,11 +257,14 @@ abstract class CRUDController extends AbstractController {
             $user = $this->getUser();
         }
         
-        $securityIdentity = UserSecurityIdentity::fromAccount($user);
+        $currentUserIdentity = UserSecurityIdentity::fromAccount($user);
+        $adminRoleIdentity = new RoleSecurityIdentity('ROLE_ADMIN');
+        $userRoleIdentity = new RoleSecurityIdentity('ROLE_USER');
         $objectIdentity = ObjectIdentity::fromDomainObject($entity);
         $aclProvider = $this->getAclProvider();
         $acl = $aclProvider->createAcl($objectIdentity);
-        $acl->insertObjectAce($securityIdentity, $mask);
+        $acl->insertObjectAce($currentUserIdentity, $mask);
+        $acl->insertObjectAce($userRoleIdentity, MaskBuilder::MASK_VIEW);
         $aclProvider->updateAcl($acl);
     }
     

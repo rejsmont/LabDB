@@ -1,16 +1,16 @@
 {% extends "VIBBaseBundle:Show:modal.html.twig" %}
 
-{% block modal_header %}Cross {{ entity.name }} ({{ entity.id }}){% endblock modal_header %}
+{% block modal_header %}Cross {{ entity.name }} ({{ entity }}){% endblock modal_header %}
 
 {% block modal_body %}
   {{ s.row("Setup date:", entity.setupDate | date("d F Y")) }}
   {{ s.row("Check date:", entity.flipDate | date("d F Y")) }}
-  {{ s.crow("Virgin:", entity.virgin, entity.virginName, 'vib_flies_vial_show') }}
-  {{ s.crow("Male:", entity.male ,entity.maleName, 'vib_flies_vial_show') }}
-  {{ s.arow("Flipped from:", entity.parent, 'vib_flies_stockvial_show') }}
-  {{ s.lrow("Flipped to:", entity.children, 'vib_flies_stockvial_show') }}
-  {{ s.lrow("Stocks:", entity.stocks, 'vib_flies_stock_show') }}
-  {{ s.lrow("Crosses:", entity.livingCrosses, 'flycross_show') }}
+  {{ s.row("Virgin:", entity.virgin, 'vib_flies_vial_show', entity.virginName) }}
+  {{ s.row("Male:", entity.male, 'vib_flies_vial_show', entity.maleName) }}
+  {{ s.row("Flipped from:", entity.parent, 'vib_flies_stockvial_show') }}
+  {{ s.list("Flipped to:", entity.children, 'vib_flies_stockvial_show') }}
+  {{ s.list("Stocks:", entity.stocks, 'vib_flies_stock_show') }}
+  {{ s.list("Crosses:", entity.livingCrosses, 'vib_flies_crossvial_show') }}
 {% endblock modal_body %}
 
 {% block modal_footer %}

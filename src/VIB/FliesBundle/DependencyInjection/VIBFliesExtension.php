@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace VIB\BaseBundle\DependencyInjection;
+namespace VIB\FliesBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -26,16 +26,13 @@ use Symfony\Component\DependencyInjection\Loader;
 /**
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VIBBaseExtension extends Extension
+class VIBFliesExtension extends Extension
 {
     /**
      * {@inheritDoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
-        
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('config.yml');
     }

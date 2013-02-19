@@ -22,8 +22,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-use VIB\FliesBundle\Entity\Vial;
-use VIB\FliesBundle\Entity\StockVial;
 use VIB\FliesBundle\Form\StockVialType;
 use VIB\FliesBundle\Form\StockVialSelectType;
 
@@ -58,7 +56,7 @@ class StockVialController extends VialController {
      * @Route("/select")
      * @Template()
      * 
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function selectAction() {
         
@@ -79,7 +77,7 @@ class StockVialController extends VialController {
      * List created stock vials
      * 
      * @param integer $vials
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listCreated($vials)
     {

@@ -27,8 +27,8 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\BaseBundle\Controller\CRUDController;
 
-use VIB\FliesBundle\Entity\Stock;
 use VIB\FliesBundle\Form\StockType;
+
 
 /**
  * StockController class
@@ -59,7 +59,7 @@ class StockController extends CRUDController
      * Cascade ACL setting for stock vials
      * 
      * @param Object $entity
-     * @param Symfony\Component\Security\Core\User\UserInterface|null $user
+     * @param \Symfony\Component\Security\Core\User\UserInterface|null $user
      * @param integer $mask
      */
     protected function setACL($entity, UserInterface $user = null, $mask = MaskBuilder::MASK_OWNER) {

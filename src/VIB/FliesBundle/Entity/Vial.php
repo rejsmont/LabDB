@@ -118,7 +118,7 @@ class Vial extends Entity {
      * @return integer
      */
     public function getId() {
-        return sprintf("%06d",$this->id);
+        return $this->id;
     }
     
     /**
@@ -145,7 +145,7 @@ class Vial extends Entity {
      * @return string
      */
     public function __toString() {
-        return $this->getName();
+        return sprintf("%06d",$this->getId());
     }
     
     /**

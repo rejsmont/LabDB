@@ -3,9 +3,9 @@
 {% block page_header %}{% endblock page_header %}
 
 {% block content %}
-<div class="modal">
+<div class="modal modal-embedded">
   {% block form_header %}
-  <form action="{{ path('vib_flies_login_check') }}" method="post" class="form-horizontal">
+  <form action="{{ path('login_check') }}" method="post" class="form-horizontal">
   {% endblock form_header %}
   <div class="modal-header">
     <h3>{% block modal_header %}{% endblock modal_header %}</h3>

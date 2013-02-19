@@ -1,72 +1,47 @@
-{% macro row(label,value) %}
+{% macro row(label, value, ctrl, name) %}
 <div class="control-group">
-    <span class="control-label">{{ label }}</span>
-    <div class="controls">
-        <span class="input-text">{{ value }}</span>
-    </div>
-</div>
-{% endmacro %}
-
-{% macro arow(label, value, ctrl) %}
-<div class="control-group">
-    <span class="control-label">{{ label }}</span>
-    <div class="controls">
-        <span class="input-text">
-            {% if value is not empty %}
+  <span class="control-label">{{ label }}</span>
+  <div class="controls">
+    <span class="input-text">{% spaceless %}
+        {% if value is not empty %}
+          {% set showName = (name is not empty or (value.name is defined and value.name != value.__toString)) %}
+          {% if showName %}{{ name }} ({% endif %}{% spaceless %}
+          {% if ctrl is not empty and (is_granted('ROLE_ADMIN') or is_granted('VIEW',value)) %}
             <a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>
-            {% endif %}
-        </span>
-    </div>
+          {% else %}{{ value }}{% endif %}
+          {% endspaceless %}{% if showName %}){% endif %}
+        {% endif %}
+    {% endspaceless %}</span>
+  </div>
 </div>
 {% endmacro %}
 
-{% macro lrow(label, value, ctrl) %}
-<div class="control-group">
-    <span class="control-label">{{ label }}</span>
-    <div class="controls">
-        <ul class="unstyled input-text">
-        {% for item in value %}
-            <li>
-                <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
-            </li>
-        {% endfor %}
-        </ul>
-    </div>
-</div>
-{% endmacro %}
-
-{% macro ldrow(label, value, ctrl) %}
+{% macro list(label, values, ctrl, name) %}
 <div class="control-group">
   <span class="control-label">{{ label }}</span>
   <div class="controls">
     <ul class="unstyled input-text">
-    {% for item in value %}
-      <li>
-        <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
-        ({{ item.setupDate | date("d F Y") }})
-      </li>
+    {% for item in values %}
+      <li>{% spaceless %}
+        {% set showName = (name is not empty or (value.name is defined and value.name != value.__toString)) %}
+        {% if showName %}{{ name }} ({% endif %}{% spaceless %}
+        {% if ctrl is not empty and (is_granted('ROLE_ADMIN') or is_granted('VIEW',value)) %}
+          <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
+        {% else %}{{ item }}{% endif %}
+        {% endspaceless %}{% if showName %}){% endif %}
+      {% endspaceless %}</li>
     {% endfor %}
     </ul>
   </div>
 </div>
 {% endmacro %}
 
-{% macro crow(label, value, name, ctrl) %}
-{% if value is not empty %}
-<div class="control-group">
-  <span class="control-label">{{ label }}</span>
-  <div class="controls">
-    <span class="input-text">
-      {{ name }}
-      (<a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>)
-    </span>
-  </div>
-</div>
-{% endif %}
-{% endmacro %}
-
 {% macro buttons(value, name) %}
+{% if is_granted('ROLE_ADMIN') or is_granted('EDIT',value) %} 
   <a href="{{ path(name ~ '_edit', { 'id': value.id }) }}" class="btn btn-primary">Edit</a>
+{% endif %}
+{% if is_granted('ROLE_ADMIN') or is_granted('DELETE',value) %} 
   <a href="{{ path(name ~ '_delete', { 'id': value.id }) }}" class="btn btn-danger">Delete</a>
+{% endif %}
   <a href="{{ path(name ~ '_list') }}" class="btn">List</a>
 {% endmacro %}

@@ -1,0 +1,2 @@
+parameters:
+    knp_paginator.template.pagination: MopaBootstrapBundle:Pagination:sliding.html.twig
