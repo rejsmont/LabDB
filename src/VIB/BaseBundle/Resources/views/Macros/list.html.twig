@@ -1,0 +1,36 @@
+{% macro link(entity, route, verify = true, nameField) %}{% spaceless %}
+{% if nameField is not empty and entity is not empty%}
+  {% set name = attribute(entity,nameField) %}{% else %}{% set name = entity %}
+{% endif %}
+{% if verify %}
+  {% if entity is not empty %}
+    {% if is_granted('ROLE_ADMIN') or is_granted('VIEW',entity) %}
+      <a href="{{ path(route, { 'id': entity.id }) }}">{{ name }}</a>
+    {% else %}{{ name }}{% endif %}
+  {% endif %}
+{% else %}
+  <a href="{{ path(route, { 'id': entity.id }) }}">{{ name }}</a>
+{% endif %}
+{% endspaceless %}{% endmacro %}
+
+{% macro vialStatus(vial) %}{% spaceless %}
+  {% if vial.trashed %}
+    <span class="label label-inverse">TRASHED</span>
+  {% elseif vial.alive %}
+    <span class="label label-success">ALIVE</span>
+  {% else %}
+    <span class="label label-important">DEAD</span>
+  {% endif %}
+{% endspaceless %}{% endmacro %}
+
+{% macro stockStatus(stock) %}{% spaceless %}
+  {% if stock.livingVials | length > 3 %}
+    <span class="label label-success">Amplified</span>
+    {% elseif stock.livingVials | length > 1 %}
+    <span class="label label-success">Healthy</span>
+    {% elseif stock.livingVials | length < 1 %}
+    <span class="label label-important">Dead</span>
+    {% else %}
+    <span class="label label-warning">Expand</span>
+  {% endif %}
+{% endspaceless %}{% endmacro %}

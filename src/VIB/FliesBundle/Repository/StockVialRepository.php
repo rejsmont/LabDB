@@ -45,10 +45,10 @@ class StockVialRepository extends EntityRepository
         $query = $queryBuilder
             ->where('b.setupDate > :date')
             ->andWhere('b.trashed = false')
-            ->setParameter('date', $date->format('Y-m-d'))
             ->orderBy('b.setupDate', 'DESC')
-            ->addOrderBy('b.id', 'DESC');
-                
+            ->addOrderBy('b.id', 'DESC')
+            ->setParameter('date', $date->format('Y-m-d'))
+        ;        
         return $query;
     }
     

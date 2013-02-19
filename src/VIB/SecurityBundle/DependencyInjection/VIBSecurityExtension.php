@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace VIB\BaseBundle\DependencyInjection;
+namespace VIB\SecurityBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -26,17 +26,38 @@ use Symfony\Component\DependencyInjection\Loader;
 /**
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VIBBaseExtension extends Extension
+class VIBSecurityExtension extends Extension
 {
     /**
      * {@inheritDoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
-    {
+    public function load(array $configs, ContainerBuilder $container) {
+        
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
         
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('config.yml');
+        $config = array();
+        foreach($configs as $c) {
+            $config = array_merge($config, $c);
+        }
+        
+        if (isset($config['acl_walker'])) {
+            $container->setParameter('vib.security.acl_walker', $config['acl_walker']);
+        } else {
+            $container->setParameter('vib.security.acl_walker', 'VIB\SecurityBundle\Bridge\Doctrine\AclWalker');
+        }
+        
+        if (isset($config['acl_class_mapping'])) {
+            $container->setParameter('vib.security.acl_class_mapping', $config['acl_class_mapping']);
+        } else {
+            $container->setParameter('vib.security.acl_class_mapping', array());
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */    
+    public function getAlias() {
+        return 'vib_security';
     }
 }

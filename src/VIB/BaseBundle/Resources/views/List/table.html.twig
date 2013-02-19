@@ -1,4 +1,10 @@
 {% extends "VIBBaseBundle::layout.html.twig" %}
+{% import "VIBBaseBundle:Macros:list.html.twig" as l %}
+
+{% if form is defined %}
+  {% form_theme form _self %} 
+  {% block _select_items_row %}{% endblock %}
+{% endif %}
 
 {% block content %}
 {% if form is defined %}
@@ -18,6 +24,7 @@
     {% endif %}
     </tbody>
   </table>
+  {{ knp_pagination_render(entities) }}
   {% block list_buttons %}{% endblock list_buttons %}
 </div>
 {% if form is defined %}

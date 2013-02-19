@@ -11,28 +11,11 @@
 {% endblock list_header %}
 
 {% block list_item %}
-  <td><a href="{{ path('vib_flies_stock_show', { 'id': entity.id }) }}">
-      {{ entity.id }}</a>
-  </td>
-  <td><a href="{{ path('vib_flies_stock_show', { 'id': entity.id }) }}">
-      {{ entity.name }}</a>
-  </td>
-  <td>{% if entity.sourceCross is not empty %}
-      <a href="{{ path('vib_flies_vial_show', { 'id': entity.sourceCross.id }) }}">
-        {{ entity.sourceCross.crossName }}</a>
-      {% endif %}
-  </td>
+  <td>{{ l.link(entity, 'vib_flies_stock_show', false, 'id') }}</td>
+  <td>{{ l.link(entity, 'vib_flies_stock_show', false) }}</td>
+  <td>{{ l.link(entity.sourceCross, 'vib_flies_crossvial_show', true, 'name') }}</td>
   <td>{{ entity.livingVials | length }}</td>
-  <td>{% if entity.livingVials | length > 3 %}
-      <span class="label label-success">Amplified</span>
-      {% elseif entity.livingVials | length > 1 %}
-      <span class="label label-success">Healthy</span>
-      {% elseif entity.livingVials | length < 1 %}
-      <span class="label label-important">Dead</span>
-      {% else %}
-      <span class="label label-warning">Expand</span>
-      {% endif %}
-  </td>
+  <td>{{ l.stockStatus(entity) }}</td>
 {% endblock list_item %}
 
 {% block list_buttons %}

@@ -4,8 +4,8 @@
 
 {% block modal_body %}
   {{ s.row("Genotype:", entity.genotype) }}
-  {{ s.arow("Source cross:", entity.sourceCross , 'vib_flies_crossvial_show') }}
-  {{ s.ldrow("Vials:", entity.livingVials, 'vib_flies_stockvial_show') }}
+  {{ s.row("Source cross:", entity.sourceCross , 'vib_flies_crossvial_show') }}
+  {{ s.list("Vials:", entity.livingVials, 'vib_flies_stockvial_show') }}
 {% endblock modal_body %}
 
 {% block modal_footer %}
