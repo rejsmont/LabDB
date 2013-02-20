@@ -24,7 +24,7 @@
 
 {% block list_buttons %}
   <a href="{{ path('vib_flies_crossvial_create') }}" class="btn btn-primary">New</a>
-  <a href="#" class="btn">Select</a>
+  <a href="{{ path('vib_flies_crossvial_select') }}" class="btn">Select</a>
   <button type="submit" class="btn" onclick="$('#select_action').val('flip'); $('form').submit();">
     Flip</button>
   <button type="submit" class="btn" onclick="$('#select_action').val('trash'); $('form').submit();">

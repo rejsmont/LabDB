@@ -1,5 +1,9 @@
 {% if checked is not defined %}
-  {% set checked = "" %}
+  {% if entity.labelPrinted %}
+    {% set checked = "" %}
+  {% else %}
+    {% set checked = "checked" %}
+  {% endif %}
 {% endif %}
 
 <td><input type="checkbox" id="select_items_{{ entity.id }}" 

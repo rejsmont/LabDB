@@ -1,6 +1,14 @@
+{% if checked is not defined %}
+  {% if entity.labelPrinted %}
+    {% set checked = "" %}
+  {% else %}
+    {% set checked = "checked" %}
+  {% endif %}
+{% endif %}
+
 <td><input type="checkbox" id="select_items_{{ entity.id }}" 
            name="select[items][{{ entity.id }}]" 
-           value="{{ entity.id }}" /></td>
+           value="{{ entity.id }}" {{ checked }}/></td>
 <td>{{ l.link(entity, 'vib_flies_stockvial_show', false) }}</td>
 <td>{{ l.link(entity.stock, 'vib_flies_stock_show') }}</td>
 <td>{{ entity.setupDate | date("d F Y") }}</td>
