@@ -44,29 +44,6 @@ class CrossVialController extends VialController
     protected function getEditForm() {
         return new CrossVialType();
     }
-    
-    /**
-     * Select crosses
-     * 
-     * @Route("/crosses/select", name="flycross_select")
-     * @Template()
-     * 
-     * @return array|\Symfony\Component\HttpFoundation\Response
-     */
-    public function selectAction() {
-        
-        $formResponse = $this->handleSelectForm(new FlyCrossSelectType());
-                
-        if (isset($formResponse['response'])) {
-            return $formResponse['response'];
-        } else if (isset($formResponse['form'])) {       
-            return array(
-                'crosses' => null,
-                'form' => $formResponse['form'],
-                'pager' => null
-            );
-        }
-    }
 
     /**
      * Create cross

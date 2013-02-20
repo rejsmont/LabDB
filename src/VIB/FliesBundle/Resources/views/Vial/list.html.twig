@@ -1,7 +1,6 @@
 {% extends "VIBBaseBundle:List:table.html.twig" %}
 
 {% form_theme form _self %} 
-
 {% block _select_items_row %}{% endblock %}
 
 {% block headline %}Vials{% endblock headline %}
@@ -12,7 +11,7 @@
 {% endblock list_selector %}
 
 {% block list_header %}
-  <th style="width: 12px;"><input type="checkbox" id="checkall" checked="checked"></th>
+  <th style="width: 12px;"><input type="checkbox" id="checkall" {% block checkall_attr %}{%endblock checkall_attr %}></th>
   <th style="width: 100px;">ID</th>
   <th>Contents</th>
   <th style="width: 150px;">Setup date</th>
@@ -22,19 +21,7 @@
 {% endblock list_header %}
 
 {% block list_item %}
-  <td><input type="checkbox" id="select_items_{{ entity.id }}" 
-             name="select[items][{{ entity.id }}]" 
-             value="{{ entity.id }}" checked="checked" /></td>
-  <td>{{ l.link(entity, 'vib_flies_vial_show', false) }}</td>
-  <td>{% spaceless %}{% if entity.type == 'stock' %}
-        {{ l.link(entity.stock, 'vib_flies_stock_show') }}
-      {% elseif entity.type == 'cross' %}
-        {{ l.link(entity, 'vib_flies_crossvial_show', true, 'name') }}
-      {% endif %}{% endspaceless %}</td>
-  <td>{{ entity.setupDate | date("d F Y") }}</td>
-  <td>{{ entity.flipDate | date("d F Y") }}</td>
-  <td>{{ l.link(entity.parent, 'vib_flies_vial_show') }}</td>
-  <td>{{ l.vialStatus(entity) }}</td>
+  {% include 'VIBFliesBundle:Vial:list_row.html.twig' with {'entity': entity} %}
 {% endblock list_item %}
 
 {% block list_buttons %}

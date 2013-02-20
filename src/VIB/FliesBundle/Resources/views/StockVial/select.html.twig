@@ -1,20 +1,15 @@
-{% extends "VIBFliesBundle:FlyVial:list.html.twig" %}
-{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% extends "VIBFliesBundle:StockVial:list.html.twig" %}
 
-{% block pheader %}Select vials{% endblock %}
-    
-{% block selector %}
-<table id="barcode_select">
-    <tr>
-        <th><label for="barcode">To select vials, scan barcodes here:</label></th>
-        <td><input id="barcode" type="text" value="" onchange="checkVial('stock')" /></td>
-        <td id="barcode_error"></td>
-    </tr>
-</table>
-{% endblock %}
+{% block headline %}Select vials{% endblock headline %}
 
-{% block pager %}{% endblock %}
+{% block table_attr %}id="select"{% endblock table_attr %}
+{% block checkall_attr %}checked{%endblock checkall_attr %}
 
-{% block actionbutton %}
-    {{ jq.button('Cancel',path('vib_flies_vial_list'),'ui-icon-closethick') }}
-{% endblock %}
+{% block list_selector %}
+  {{ form_errors(form) }}
+  {{ form_rest(form) }}
+  <div class="form-inline control-group well">
+    <input id="barcode" type="text" placeholder="Scan your barcodes here" value="" onchange="checkVial('stock')" />
+    <span class="help-inline"></span>
+  </div>
+{% endblock list_selector %}

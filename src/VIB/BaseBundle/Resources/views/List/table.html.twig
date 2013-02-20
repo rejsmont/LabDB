@@ -12,7 +12,7 @@
 {% endif %}
 <div class="span12">
   {% block list_selector %}{% endblock list_selector %}
-  <table class="table table-striped table-bordered table-condensed">
+  <table class="table table-striped table-bordered table-condensed" {% block table_attr %}{% endblock table_attr %}>
     <thead>
       <tr class="inverse">{% block list_header %}{% endblock list_header %}</tr>
     </thead>
@@ -24,7 +24,7 @@
     {% endif %}
     </tbody>
   </table>
-  {{ knp_pagination_render(entities) }}
+  {% if entities is defined %}{{ knp_pagination_render(entities) }}{% endif %}
   {% block list_buttons %}{% endblock list_buttons %}
 </div>
 {% if form is defined %}

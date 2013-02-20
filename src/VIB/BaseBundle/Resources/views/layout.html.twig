@@ -18,8 +18,10 @@
 
 {% block foot_script %}
     {% javascripts
-        '@VIBBaseBundle/Resources/public/js/jquery.js'
+        '@BmatznerJQueryBundle/Resources/public/js/jquery.js'
+        '@BmatznerJQueryUIBundle/Resources/public/js/jquery-ui.js'
         '@VIBFormsBundle/Resources/public/js/forms.js'
+        '@VIBFliesBundle/Resources/public/js/forms.js'
         '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-transition.js'
         '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-modal.js'
         '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-dropdown.js'
@@ -34,7 +36,7 @@
         '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-typeahead.js'
         '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
         '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-subnav.js'
-        '@VIBBaseBundle/Resources/public/js/bootstrap-datepicker.js'
+        '@MopaBootstrapBundle/Resources/public/js/eyecon-bootstrap-datepicker.js'
     %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}

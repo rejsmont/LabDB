@@ -181,6 +181,21 @@ class VialController extends CRUDController {
     }
     
     /**
+     * Select vials
+     * 
+     * @Route("/select")
+     * @Template()
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function selectAction() {
+        $response = array();
+        $formResponse = $this->handleSelectForm(new SelectType('VIB\FliesBundle\Entity\Vial'));
+        
+        return is_array($formResponse) ? array_merge($response, $formResponse) : $formResponse;
+    }
+    
+    /**
      * Handle batch action
      * 
      * @param array $data

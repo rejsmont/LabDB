@@ -51,29 +51,6 @@ class StockVialController extends VialController {
     }
     
     /**
-     * Select stock vials
-     * 
-     * @Route("/select")
-     * @Template()
-     * 
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function selectAction() {
-        
-        $formResponse = $this->handleSelectForm(new StockVialSelectType());
-                
-        if (isset($formResponse['response'])) {
-            return $formResponse['response'];
-        } else if (isset($formResponse['form'])) {       
-            return array(
-                'vials' => null,
-                'form' => $formResponse['form'],
-                'pager' => null
-            );
-        }
-    }
-    
-    /**
      * List created stock vials
      * 
      * @param integer $vials
