@@ -20,24 +20,19 @@ namespace VIB\FliesBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-
-use VIB\BaseBundle\Controller\AbstractController;
 
 use VIB\FliesBundle\Entity\Vial;
-use VIB\FliesBundle\Entity\CrossVial;
-
 
 /**
  * Description of AJAXController
  *
+ * @Route("/ajax")
+ * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class AJAXController extends Controller {
@@ -45,12 +40,9 @@ class AJAXController extends Controller {
     /**
      * Handle vial AJAX request
      * 
-     * @Route("/ajax/vials/{id}.{format}", name="ajax_vial_format")
-     * @Route("/ajax/vials/{filter}/{id}.{format}", name="ajax_vial_filter_format")
-     * @Route("/ajax/vials/{id}/", name="ajax_vial")
-     * @Route("/ajax/vials/{filter}/{id}/", name="ajax_vial_filter")
+     * @Route("/vials/{id}.{format}", defaults={"filter" = null, "format" = "json"})
+     * @Route("/vials/{filter}/{id}.{format}", defaults={"filter" = null, "format" = "json"})
      * @Template()
-     * @ParamConverter("id", class="VIBFliesBundle:FlyVial")
      * 
      * @param integer $id
      * @return Symfony\Component\HttpFoundation\Response
@@ -58,46 +50,29 @@ class AJAXController extends Controller {
     public function vialAction($id, $filter = null, $format = null) {
         
         $em = $this->get('doctrine.orm.entity_manager');
-        $vial = $em->find('VIBFliesBundle:FlyVial', $id);
+        $securityContext = $this->get('security.context');
+        $vial = $em->find('VIBFliesBundle:Vial', $id);
+        $type = $filter !== null ? ' ' . $filter : '';
         
-        if(! $vial) {
-            return new Response('The vial ' . sprintf("%06d",$id) . ' does not exist', 404);
+        if((! $vial instanceof Vial)||(($filter !== null)&&($vial->getType() != $filter))) {
+            return new Response('The' . $type . ' vial ' . sprintf("%06d",$id) . ' does not exist', 404);
+        } elseif (!($securityContext->isGranted('ROLE_ADMIN') || $securityContext->isGranted('VIEW', $vial))) {
+            return new Response('Access to' . $type . ' vial ' . sprintf("%06d",$id) . ' denied', 401);
         }
         
         $serializer = $this->get('serializer');
         
-        if ($filter == 'cross') {
-            
-            $cross = $vial->getCross();
-            
-            if (! $cross) {
-                return new Response('The vial ' . sprintf("%06d",$id) . ' is not a cross vial', 404);
-            } else {
-                if ($format == 'json') {
-                    return new Response($serializer->serialize($vial, 'json')); 
-                } else {
-                    return array('cross' => $cross,
-                                 'vial' => null);
-                }
-            }
-        }
-        
-        if (($filter == 'stock')&&(! $vial->getStock())) {
-            return new Response('The vial ' . sprintf("%06d",$id) . ' is not a stock vial', 404);
-        }
-        
         if ($format == 'json') {
             return new Response($serializer->serialize($vial, 'json')); 
         } else {
-            return array('vial' => $vial,
-                         'cross' => null);
+            return array('entity' => $vial, 'checked' => 'checked');
         }
     }
     
     /**
      * Handle stock search AJAX request
      * 
-     * @Route("/ajax/stocks/search", name="ajax_stock_search")
+     * @Route("/stocks/search")
      * 
      * @param Symfony\Component\HttpFoundation\Request $request
      * @return Symfony\Component\HttpFoundation\Response
@@ -105,10 +80,11 @@ class AJAXController extends Controller {
     public function stockSearchAction(Request $request) {
         
         $query = $request->query->get('query');
-        $found = $this->getDoctrine()
-                      ->getRepository('VIBFliesBundle:Stock')
-                      ->findStocksByName($query)
-                      ->getQuery()
+        $qb = $this->getDoctrine()
+                   ->getRepository('VIBFliesBundle:Stock')
+                   ->findStocksByName($query);
+        $found = $this->get('vib.security.helper.acl')
+                      ->apply($qb)
                       ->getResult();
         
         $stockNames = array();

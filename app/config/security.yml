@@ -5,7 +5,7 @@ security:
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
         in_memory:
@@ -30,7 +30,7 @@ security:
         - { path: ^/css, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/css/images, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/js, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_USER }
     
     acl:
         connection: default

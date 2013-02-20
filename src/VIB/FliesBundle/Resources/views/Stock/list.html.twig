@@ -11,11 +11,7 @@
 {% endblock list_header %}
 
 {% block list_item %}
-  <td>{{ l.link(entity, 'vib_flies_stock_show', false, 'id') }}</td>
-  <td>{{ l.link(entity, 'vib_flies_stock_show', false) }}</td>
-  <td>{{ l.link(entity.sourceCross, 'vib_flies_crossvial_show', true, 'name') }}</td>
-  <td>{{ entity.livingVials | length }}</td>
-  <td>{{ l.stockStatus(entity) }}</td>
+  {% include 'VIBFliesBundle:Stock:list_row.html.twig' with {'entity': entity} %}
 {% endblock list_item %}
 
 {% block list_buttons %}

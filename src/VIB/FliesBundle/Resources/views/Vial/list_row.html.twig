@@ -1,0 +1,17 @@
+{% if checked is not defined %}
+  {% set checked = "" %}
+{% endif %}
+
+<td><input type="checkbox" id="select_items_{{ entity.id }}" 
+           name="select[items][{{ entity.id }}]" 
+           value="{{ entity.id }}" {{ checked }} /></td>
+<td>{{ l.link(entity, 'vib_flies_vial_show', false) }}</td>
+<td>{% spaceless %}{% if entity.type == 'stock' %}
+      {{ l.link(entity.stock, 'vib_flies_stock_show') }}
+    {% elseif entity.type == 'cross' %}
+      {{ l.link(entity, 'vib_flies_crossvial_show', true, 'name') }}
+    {% endif %}{% endspaceless %}</td>
+<td>{{ entity.setupDate | date("d F Y") }}</td>
+<td>{{ entity.flipDate | date("d F Y") }}</td>
+<td>{{ l.link(entity.parent, 'vib_flies_vial_show') }}</td>
+<td>{{ l.vialStatus(entity) }}</td>

@@ -71,3 +71,10 @@ mopa_bootstrap:
                 icon: trash
             widget_add_btn:
                 icon: plus-sign
+
+vib_security:
+    acl_walker: VIB\SecurityBundle\Bridge\Doctrine\AclWalker
+    acl_class_mapping:
+        VIB\FliesBundle\Entity\Vial:
+            - 'VIB\FliesBundle\Entity\StockVial'
+            - 'VIB\FliesBundle\Entity\CrossVial'

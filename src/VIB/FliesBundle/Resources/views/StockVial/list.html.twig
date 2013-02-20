@@ -8,7 +8,7 @@
 {% endblock list_selector %}
 
 {% block list_header %}
-  <th style="width: 12px;"><input type="checkbox" id="checkall" checked="checked"></th>
+  <th style="width: 12px;"><input type="checkbox" id="checkall" {% block checkall_attr %}{%endblock checkall_attr %}></th>
   <th style="width: 100px;">ID</th>
   <th>Stock</th>
   <th style="width: 150px;">Setup date</th>
@@ -18,15 +18,7 @@
 {% endblock list_header %}
 
 {% block list_item %}
-  <td><input type="checkbox" id="select_items_{{ entity.id }}" 
-             name="select[items][{{ entity.id }}]" 
-             value="{{ entity.id }}" checked="checked" /></td>
-  <td>{{ l.link(entity, 'vib_flies_stockvial_show', false) }}</td>
-  <td>{{ l.link(entity.stock, 'vib_flies_stock_show') }}</td>
-  <td>{{ entity.setupDate | date("d F Y") }}</td>
-  <td>{{ entity.flipDate | date("d F Y") }}</td>
-  <td>{{ l.link(entity.parent, 'vib_flies_stockvial_show') }}</td>
-  <td>{{ l.vialStatus(entity) }}</td>
+  {% include 'VIBFliesBundle:StockVial:list_row.html.twig' with {'entity': entity} %}
 {% endblock list_item %}
 
 {% block list_buttons %}
