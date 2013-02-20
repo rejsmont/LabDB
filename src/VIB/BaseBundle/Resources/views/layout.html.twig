@@ -19,7 +19,9 @@
 {% block foot_script %}
     {% javascripts
         '@BmatznerJQueryBundle/Resources/public/js/jquery.js'
-        '@BmatznerJQueryUIBundle/Resources/public/js/jquery-ui.js'
+        '@BmatznerJQueryUIBundle/Resources/public/js/jquery.ui.core.js'
+        '@BmatznerJQueryUIBundle/Resources/public/js/jquery.ui.effect.js'
+        '@BmatznerJQueryUIBundle/Resources/public/js/jquery.ui.effect-highlight.js'
         '@VIBFormsBundle/Resources/public/js/forms.js'
         '@VIBFliesBundle/Resources/public/js/forms.js'
         '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-transition.js'
@@ -36,7 +38,8 @@
         '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-typeahead.js'
         '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
         '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-subnav.js'
-        '@MopaBootstrapBundle/Resources/public/js/eyecon-bootstrap-datepicker.js'
+        '../vendor/eternicode/bootstrap-datepicker/js/bootstrap-datepicker.js'
+         filter='?yui_js'
     %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}

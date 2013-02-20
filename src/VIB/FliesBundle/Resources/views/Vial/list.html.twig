@@ -26,7 +26,7 @@
 
 {% block list_buttons %}
   <a href="{{ path('vib_flies_vial_expand') }}" class="btn">Expand</a>
-  <a href="#" class="btn">Select</a>
+  <a href="{{ path('vib_flies_vial_select') }}" class="btn">Select</a>
   <button type="submit" class="btn" onclick="$('#select_action').val('flip'); $('form').submit();">
     Flip</button>
   <button type="submit" class="btn" onclick="$('#select_action').val('trash'); $('form').submit();">

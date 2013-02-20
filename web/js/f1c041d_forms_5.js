@@ -1,0 +1,1 @@
+$(document).ready(function(){$(".ajax-typeahead").typeahead({source:function(a,b){return $.ajax({url:$(this)[0].$element.data("link"),type:"get",data:{query:a},dataType:"json",success:function(c){return typeof c.options=="undefined"?false:b(c.options)}})},matcher:function(a){return true}})});
