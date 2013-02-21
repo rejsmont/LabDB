@@ -1,4 +1,5 @@
 {% extends 'MopaBootstrapBundle::base' ~ theme_type|default('')~ '.html.twig' %}
+{% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
 
 {% block head_style %}
     {% stylesheets
@@ -7,11 +8,11 @@
     <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
     {% endstylesheets %}
 {% endblock head_style %}
-
+    
 {% block title %}Laboratory of Neurogenetics{% endblock title %}
     
 {% block navbar %}
-<div class="navbar">
+<div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -22,39 +23,30 @@
       <a class="brand" href="{{ path('default') }}">LNG FlyDB</a>
       <div class="nav-collapse">
         <ul class="nav">
-          <li class="first dropdown dropdown-split">
-            <a href="{{ path('vib_flies_stock_list') }}" class="dropdown-toggle">Stocks</a>
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="caret"></i></a>
-            <ul class="dropdown-menu menu_level_1">
-              <li class="first last"><a href="{{ path('vib_flies_stock_create') }}">New</a></li>
-            </ul>
+          <li class="first">
+            <a href="{{ path('vib_flies_stock_list') }}">Stocks</a>
           </li>
-          <li class="dropdown dropdown-split">
-            <a href="{{ path('vib_flies_stockvial_list') }}" class="dropdown-toggle">Stock vials</a>
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="caret"></i></a>
-            <ul class="dropdown-menu menu_level_1">
-              <li class="first"><a href="{{ path('vib_flies_stockvial_select') }}">Select</a></li>
-              <li class="last"><a href="{{ path('vib_flies_stockvial_expand') }}">Expand</a></li>
-            </ul>
+          <li>
+            <a href="{{ path('vib_flies_stockvial_list') }}">Stock vials</a>
           </li>
-          <li class="dropdown dropdown-split">
-            <a href="{{ path('vib_flies_crossvial_list') }}" class="dropdown-toggle">Crosses</a>
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="caret"></i></a>
-            <ul class="dropdown-menu menu_level_1">
-              <li class="first"><a href="{{ path('vib_flies_crossvial_create') }}">New</a></li>
-              <li class="last"><a href="{{ path('vib_flies_crossvial_select') }}">Select</a></li>
-            </ul>
+          <li>
+            <a href="{{ path('vib_flies_crossvial_list') }}">Crosses</a>
           </li>
-          <li class="dropdown dropdown-split">
-            <a href="{{ path('vib_flies_vial_list') }}" class="dropdown-toggle">Vials</a>
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="caret"></i></a>
+          <li>
+              <a href="{{ path('vib_flies_vial_list') }}">Vials</a>
+          </li>
+          <li class="dropdown last visible-desktop">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <i class="caret"></i></a>
             <ul class="dropdown-menu menu_level_1">
-              <li class="first"><a href="{{ path('vib_flies_vial_select') }}">Select</a></li>
-              <li class="last"><a href="{{ path('vib_flies_vial_expand') }}">Expand</a></li>
+              <li class="first"><a href="{{ path('vib_flies_stock_create') }}">New stock</a></li>
+              <li><a href="{{ path('vib_flies_crossvial_create') }}">New cross</a></li>
+              <li class="divider"></li>
+              <li><a href="{{ path('vib_flies_vial_select') }}">Select vials</a></li>
+              <li class="last"><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
             </ul>
           </li>
         </ul>
-        <form class="navbar-form form-search pull-right">
+        <form class="navbar-form form-search pull-right visible-desktop">
           <div class="input-append">
             <input type="text" placeholder="Search" class="span search-query">
             <div class="btn-group">
@@ -75,8 +67,57 @@
 </div>
 {% endblock navbar %}
 
-{% block footer %}
-{% endblock footer %}
+{% block container %}
+    <div class="{% block container_class %}container{% endblock container_class %}">
+        {% block header %}
+        {% endblock header %}
+        <div class="content">
+          <div class="row">
+            <div class="offset3 span9">
+              {% block page_header %}
+              <div class="page-header">
+                    <h1>{% block headline %}Welcome{% endblock headline %}</h1>
+              </div>
+              {% endblock page_header %}
+              {% block flashes %}
+              {% if app.session.flashbag.peekAll|length > 0 %}
+              <div class="row-fluid">
+                  <div class="span12">
+                  {{ session_flash() }}
+                  </div>
+              </div>
+              {% endif %}
+              {% endblock flashes %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="span3">
+              {% block content_sidebar %}
+              <ul class="nav nav-list well">
+                <li class="nav-header">Stock vials</li>
+                <li><a href="#">List my vials</a></li>
+                <li><a href="#">List all vials</a></li>
+              </ul>
+              {% endblock content_sidebar %}
+            </div>
+            <div class="span9">
+              {% block content_row %}
+              <div class="row-fluid">
+                  {% block content %}
+                      {% block content_content %}
+                      {% endblock content_content %}
+                  {% endblock content %}
+              </div>
+              {% endblock content_row %}
+            </div>
+          </div>
+        </div>
+        <footer>
+        {% block footer %}
+        {% endblock footer %}
+        </footer>
+    </div> <!-- /container -->
+{% endblock container %}
 
 {% block foot_script %}
     {% javascripts
@@ -105,4 +146,7 @@
     %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
+<script type="text/javascript">
+  $('.date').datepicker();
+</script>
 {% endblock foot_script %}

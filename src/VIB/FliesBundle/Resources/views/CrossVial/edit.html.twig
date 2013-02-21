@@ -1,4 +1,6 @@
-{% extends "VIBBaseBundle:Form:form.html.twig" %}
+{% extends "VIBFliesBundle:CrossVial:layout.html.twig" %}
+{% use "VIBBaseBundle:Form:form.html.twig" %}
+{% import "VIBBaseBundle:Macros:form.html.twig" as f %}
 
 {% form_theme form _self %} 
   
@@ -7,7 +9,7 @@
 {% endblock %}
 
 {% block modal_header %}
-  Edit cross {{ form.get('value').name }} ({{ form.get('value').id }})
+  Edit cross {{ form.get('value').name }} ({{ form.get('value') }})
 {% endblock modal_header %}
 
 {% block modal_footer %}

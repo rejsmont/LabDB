@@ -1,4 +1,6 @@
-{% extends "VIBBaseBundle:Form:form.html.twig" %}
+{% extends "VIBFliesBundle:Vial:layout.html.twig" %}
+{% use "VIBBaseBundle:Form:form.html.twig" %}
+{% import "VIBBaseBundle:Macros:form.html.twig" as f %}
 
 {% set source = form.get('value').source %}
 

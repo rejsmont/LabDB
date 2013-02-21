@@ -1,11 +1,3 @@
-{% extends "VIBBaseBundle::layout.html.twig" %}
-{% import "VIBBaseBundle:Macros:list.html.twig" as l %}
-
-{% if form is defined %}
-  {% form_theme form _self %} 
-  {% block _select_items_row %}{% endblock %}
-{% endif %}
-
 {% block content %}
 {% if form is defined %}
 <form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>

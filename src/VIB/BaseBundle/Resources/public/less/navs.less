@@ -2,6 +2,16 @@
 // -----------------
 // Exact selectors below required to override .table-striped
 
+.navbar .nav > li > .dropdown-split > a {
+  // Vertically center the text given @navbarHeight
+  padding: ((@navbarHeight - @baseLineHeight) / 2) 15px ((@navbarHeight - @baseLineHeight) / 2);
+  color: @navbarLinkColor;
+  text-decoration: none;
+  text-shadow: 0 1px 0 @navbarBackgroundHighlight;
+  display: inline-block;
+  float: left;
+}
+
 .navbar .nav > li.dropdown-split > a {
   display: inline-block;
   float: left;

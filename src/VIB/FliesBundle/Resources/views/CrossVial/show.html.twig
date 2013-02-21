@@ -1,4 +1,6 @@
-{% extends "VIBBaseBundle:Show:modal.html.twig" %}
+{% extends "VIBFliesBundle:CrossVial:layout.html.twig" %}
+{% use "VIBBaseBundle:Show:modal.html.twig" %}
+{% import "VIBBaseBundle:Macros:show.html.twig" as s %}
 
 {% block modal_header %}Cross {{ entity.name }} ({{ entity }}){% endblock modal_header %}
 
