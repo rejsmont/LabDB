@@ -359,9 +359,10 @@ class VialController extends CRUDController {
      */
     protected function getDefaultBatchResponse() {
         $request = $this->getRequest();
-        $pieces = explode('_',$request->attributes->get('_route'));
+        $currentRoute = $request->attributes->get('_route');
+        $pieces = explode('_',$currentRoute);
         $pieces[count($pieces) - 1] = 'list';
-        $route = implode('_', $pieces);
+        $route = ($currentRoute == 'default') ? 'default' : implode('_', $pieces);
         $url = $this->generateUrl($route);
         return $this->redirect($url);
     }
