@@ -52,6 +52,7 @@ class Stock extends Entity {
     /**
      * @ORM\Column(type="string", length=255)
      * @Serializer\Expose
+     * @Assert\NotBlank(message = "Genotype cannot be blank")
      * 
      * @var string
      */

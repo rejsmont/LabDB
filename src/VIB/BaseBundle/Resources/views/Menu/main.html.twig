@@ -1,0 +1,25 @@
+{% block navbar %}
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            {% if navbar.hasOption('title') %}<a class="brand" href="{{ path(navbar.getOption('titleRoute')) }}">{{ navbar.getOption('title') }}</a>{% endif %}
+            <div class="nav-collapse">
+                {{ navbar.hasMenu('main') ? knp_menu_render(navbar.getMenu('main'), {'currentClass': 'active', 'ancestorClass': 'active', 'allow_safe_labels': 'true'}) : '' }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block form_widget %}
+{{ block('field_rows') }}
+{% endblock %}
+
+{% block field_row %}
+{{ form_widget(form) }}
+{% endblock field_row %}
