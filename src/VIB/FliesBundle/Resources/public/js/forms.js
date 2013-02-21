@@ -33,7 +33,7 @@ function checkVial(filter)
     $('#barcode').siblings('span.help-inline').html('');
     
     if(checkbox.length) {
-        if (checkbox.attr('checked')) {
+        if (checkbox.is(':checked')) {
             checkbox.removeAttr('checked');
             checkbox.parents('tr').children('td')
                 .stop().css("background-color","")
