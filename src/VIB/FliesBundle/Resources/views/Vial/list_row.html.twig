@@ -15,7 +15,7 @@
     {% elseif entity.type == 'cross' %}
       {{ l.link(entity, 'vib_flies_crossvial_show', true, 'name') }}
     {% endif %}{% endspaceless %}</td>
-<td>{{ entity.setupDate | date("d F Y") }}</td>
-<td>{{ entity.flipDate | date("d F Y") }}</td>
+<td>{{ entity.setupDate | date("d-m-Y") }}</td>
+<td>{{ entity.flipDate | date("d-m-Y") }}</td>
 <td>{{ l.link(entity.parent, 'vib_flies_vial_show') }}</td>
 <td>{{ l.vialStatus(entity) }}</td>

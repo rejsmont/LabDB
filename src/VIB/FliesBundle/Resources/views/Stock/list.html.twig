@@ -5,11 +5,7 @@
 {% block headline %}Stocks{% endblock headline %}
 
 {% block list_header %}
-  <th style="width: 50px;">ID</th>
-  <th>Name</th>
-  <th>Source cross</th>
-  <th style="width: 50px;">Vials</th>
-  <th style="width: 100px;">Status</th>
+  {% include 'VIBFliesBundle:Stock:list_head.html.twig' %}
 {% endblock list_header %}
 
 {% block list_item %}
@@ -17,6 +13,4 @@
 {% endblock list_item %}
 
 {% block list_buttons %}
-  <a href="{{ path('vib_flies_stock_create') }}" class="btn btn-primary">New</a>
-  <a href="{{ path('vib_flies_vial_expand') }}" class="btn">Expand</a>
 {% endblock list_buttons %}

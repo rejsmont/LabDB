@@ -29,11 +29,12 @@ use Doctrine\ORM\EntityRepository;
 class CrossVialRepository extends EntityRepository
 {
     /**
-     * Return QueryBuilder object finding all living crosses
+     * Search stocks
      * 
-     * @return Doctrine\ORM\QueryBuilder
+     * @return mixed 
      */
-    public function findAllLivingQuery() {
+    public function search($term) {
+        
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
         
@@ -42,26 +43,9 @@ class CrossVialRepository extends EntityRepository
             ->andWhere('b.trashed = false')
             ->orderBy('b.setupDate', 'DESC')
             ->addOrderBy('b.id', 'DESC')
-            ->setParameter('date', $date->format('Y-m-d'));
-                
-        return $query;
-    }
-    
-        /**
-     * Return living cross vials
-     * 
-     * @return mixed 
-     */
-    public function findLivingCrossesByName($term) {
-        
-        $query = $this->findAllLivingQuery()
-            ->join('b.virgin','f')
-            ->join('b.male','m')
-            ->leftJoin('f.stock', 'fs')
-            ->leftJoin('m.stock', 'ms')
-            ->andWhere('fs.name like :term or ms.name like :term or c.maleName like :term or c.virginName like :term')
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->andWhere('b.maleName like :term or b.virginName like :term')
             ->setParameter('term', '%' . $term .'%');
-                
         return $query;
     }
 }

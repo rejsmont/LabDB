@@ -48,7 +48,8 @@ class CrossVialSimpleType extends AbstractType
                         'property'     => 'id',
                         'class' => 'VIBFliesBundle:Vial',
                         'format'    => '%06d',
-                        'label' => 'Virgin vial'))
+                        'label' => 'Virgin vial',
+                        'attr' => array('class' => 'barcode')))
                 ->add('virginName', 'text', array(
                         'label' => 'Virgin name',
                         'required' => false))
@@ -56,7 +57,8 @@ class CrossVialSimpleType extends AbstractType
                         'property'     => 'id',
                         'class' => 'VIBFliesBundle:Vial',
                         'format'    => '%06d',
-                        'label' => 'Male vial'))
+                        'label' => 'Male vial',
+                        'attr' => array('class' => 'barcode')))
                 ->add('maleName', 'text', array(
                         'label' => 'Male name',
                         'required' => false));

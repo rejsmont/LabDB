@@ -41,4 +41,18 @@ class StockRepository extends EntityRepository
                 
         return $query;
     }
+    
+    /**
+     * Search stocks
+     * 
+     * @return mixed 
+     */
+    public function search($term) {
+        
+        $query = $this->createQueryBuilder('b')
+            ->where('b.name like :term')
+            ->setParameter('term', '%' . $term .'%');
+                
+        return $query;
+    }
 }

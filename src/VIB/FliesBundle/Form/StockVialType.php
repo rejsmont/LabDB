@@ -49,7 +49,8 @@ class StockVialType extends AbstractType
                         'class'     => 'VIBFliesBundle:StockVial',
                         'format'    => '%06d',
                         'required'  => false,
-                        'label'     => 'Flipped from:'))
+                        'label'     => 'Flipped from:',
+                        'attr' => array('class' => 'barcode')))
                 ->add('stock', 'entity_typeahead', array(
                         'property'  => 'name',
                         'class'     => 'VIBFliesBundle:Stock',

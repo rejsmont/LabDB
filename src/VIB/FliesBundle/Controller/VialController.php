@@ -60,14 +60,6 @@ class VialController extends CRUDController {
     /**
      * {@inheritdoc}
      */
-    protected function getListQuery() {
-        $em = $this->getDoctrine()->getManager();
-        return $em->getRepository($this->getEntityClass())->findAllLivingQuery();
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
     protected function getEditForm() {
         return new VialType();
     }
@@ -77,18 +69,65 @@ class VialController extends CRUDController {
      * List vials
      * 
      * @Route("/")
+     * @Route("/list/{filter}")
      * @Template()
      * @SatisfiesParentSecurityPolicy
      * 
      * @param integer $page
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction($page = 1)
+    public function listAction($filter = null)
     {
-        $response = parent::listAction($page);
+        $response = parent::listAction($filter);
         $formResponse = $this->handleSelectForm(new SelectType('VIB\FliesBundle\Entity\Vial'));
         
         return is_array($formResponse) ? array_merge($response, $formResponse) : $formResponse;
+    }
+    
+    /**
+     * Filter query
+     * 
+     * @param \Doctrine\ORM\QueryBuilder $query
+     * @param string $filter
+     * @return \Doctrine\ORM\Query
+     */
+    public function applyFilter($query, $filter = null)
+    {
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P2M'));
+        
+        switch($filter) {
+            case 'public':
+            case 'all':
+                $query = $query->where('b.setupDate > :date')
+                               ->andWhere('b.trashed = false')
+                               ->orderBy('b.setupDate', 'DESC')
+                               ->addOrderBy('b.id', 'DESC')
+                               ->setParameter('date', $date->format('Y-m-d'));
+                return $this->get('vib.security.helper.acl')->apply($query);
+                break;
+            case 'trashed':
+                $query = $query->where('b.trashed = true')
+                               ->orderBy('b.setupDate', 'DESC')
+                               ->addOrderBy('b.id', 'DESC');
+                return $this->get('vib.security.helper.acl')->apply($query);
+                break;
+            case 'dead':
+                $query = $query->where('b.setupDate < :date')
+                               ->orderBy('b.setupDate', 'DESC')
+                               ->addOrderBy('b.id', 'DESC')
+                               ->setParameter('date', $date->format('Y-m-d'));
+                return $this->get('vib.security.helper.acl')->apply($query);
+                break;
+            default:
+                $query = $query->where('b.setupDate > :date')
+                               ->andWhere('b.trashed = false')
+                               ->orderBy('b.setupDate', 'DESC')
+                               ->addOrderBy('b.id', 'DESC')
+                               ->setParameter('date', $date->format('Y-m-d'));
+                return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
+                break;
+        }
     }
     
     /**

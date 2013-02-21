@@ -1,4 +1,4 @@
-{% extends "VIBFliesBundle:StockVial:list.html.twig" %}
+{% extends "VIBFliesBundle:CrossVial:list.html.twig" %}
 
 {% block headline %}Select cross vials{% endblock headline %}
 
@@ -9,18 +9,11 @@
   {{ form_errors(form) }}
   {{ form_rest(form) }}
   <div class="form-inline control-group well">
-    <input id="barcode" type="text" placeholder="Scan your barcodes here" value="" onchange="checkVial('cross')" />
+    <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value="" onchange="checkVial('cross')" />
     <span class="help-inline"></span>
   </div>
 {% endblock list_selector %}
 
-
-{% block list_buttons %}
-  <a href="{{ path('vib_flies_crossvial_list') }}" class="btn">List</a>
-  <button type="submit" class="btn" onclick="$('#select_action').val('flip'); $('form').submit();">
-    Flip</button>
-  <button type="submit" class="btn" onclick="$('#select_action').val('trash'); $('form').submit();">
-    Trash</button>
-  <button type="submit" class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
-    Print labels</button>
-{% endblock list_buttons %}
+{% block list_header %}
+  {% include 'VIBFliesBundle:CrossVial:list_head.html.twig' with {'checked' : 'checked'} %}
+{% endblock list_header %}

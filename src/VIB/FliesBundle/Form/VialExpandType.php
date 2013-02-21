@@ -48,6 +48,7 @@ class VialExpandType extends AbstractType
                         'class'    => 'VIBFliesBundle:Vial',
                         'format'   => '%06d',
                         'label'    => 'Source',
+                        'attr' => array('class' => 'barcode'),
                         'constraints' => array(
                             new NotNull())))
                 ->add('number','number', array(

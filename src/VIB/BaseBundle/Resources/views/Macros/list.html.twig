@@ -34,3 +34,14 @@
     <span class="label label-warning">Expand</span>
   {% endif %}
 {% endspaceless %}{% endmacro %}
+
+{% macro select_buttons() %}
+<div class="well">
+  <button type="submit" class="btn btn-primary" onclick="$('#select_action').val('flip'); $('form').submit();">
+    Flip</button>
+  <button type="submit" class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
+    Trash</button>
+  <button type="submit" class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
+    Print labels</button>
+</div>
+{% endmacro select_buttons %}
