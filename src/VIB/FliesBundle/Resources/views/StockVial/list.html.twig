@@ -1,4 +1,11 @@
-{% extends "VIBBaseBundle:List:table.html.twig" %}
+{% extends "VIBFliesBundle:StockVial:layout.html.twig" %}
+{% use "VIBBaseBundle:List:table.html.twig" %}
+{% import "VIBBaseBundle:Macros:list.html.twig" as l %}
+
+{% if form is defined %}
+  {% form_theme form _self %} 
+  {% block _select_items_row %}{% endblock %}
+{% endif %}
 
 {% block headline %}Stock vials{% endblock headline %}
 
