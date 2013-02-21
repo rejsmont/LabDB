@@ -11,6 +11,68 @@
 {% block title %}Laboratory of Neurogenetics{% endblock title %}
     
 {% block navbar %}
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="{{ path('default') }}">LNG FlyDB</a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li class="first dropdown dropdown-split">
+            <a href="{{ path('vib_flies_stock_list') }}" class="dropdown-toggle">Stocks</a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="caret"></i></a>
+            <ul class="dropdown-menu menu_level_1">
+              <li class="first last"><a href="{{ path('vib_flies_stock_create') }}">New</a></li>
+            </ul>
+          </li>
+          <li class="dropdown dropdown-split">
+            <a href="{{ path('vib_flies_stockvial_list') }}" class="dropdown-toggle">Stock vials</a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="caret"></i></a>
+            <ul class="dropdown-menu menu_level_1">
+              <li class="first"><a href="{{ path('vib_flies_stockvial_select') }}">Select</a></li>
+              <li class="last"><a href="{{ path('vib_flies_stockvial_expand') }}">Expand</a></li>
+            </ul>
+          </li>
+          <li class="dropdown dropdown-split">
+            <a href="{{ path('vib_flies_crossvial_list') }}" class="dropdown-toggle">Crosses</a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="caret"></i></a>
+            <ul class="dropdown-menu menu_level_1">
+              <li class="first"><a href="{{ path('vib_flies_crossvial_create') }}">New</a></li>
+              <li class="last"><a href="{{ path('vib_flies_crossvial_select') }}">Select</a></li>
+            </ul>
+          </li>
+          <li class="dropdown dropdown-split">
+            <a href="{{ path('vib_flies_vial_list') }}" class="dropdown-toggle">Vials</a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="caret"></i></a>
+            <ul class="dropdown-menu menu_level_1">
+              <li class="first"><a href="{{ path('vib_flies_vial_select') }}">Select</a></li>
+              <li class="last"><a href="{{ path('vib_flies_vial_expand') }}">Expand</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form class="navbar-form form-search pull-right">
+          <div class="input-append">
+            <input type="text" placeholder="Search" class="span search-query">
+            <div class="btn-group">
+              <button class="btn"><i class="icon-search"></i></button>
+              <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu pull-right">
+                <li><a href="#">Search stocks</a></li>
+                <li><a href="#">Search crosses</a></li>
+              </ul>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock navbar %}
 
 {% block footer %}
@@ -44,4 +106,3 @@
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 {% endblock foot_script %}
-

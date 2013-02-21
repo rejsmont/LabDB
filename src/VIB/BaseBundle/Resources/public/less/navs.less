@@ -1,0 +1,40 @@
+// TABLE HEAD BACKGROUNDS
+// -----------------
+// Exact selectors below required to override .table-striped
+
+.navbar .nav > li.dropdown-split > a {
+  display: inline-block;
+  float: left;
+}
+
+.navbar .nav > li.dropdown-split > a:first-child {
+  padding-right: 0px;
+}
+
+.navbar .nav > li.dropdown-split > a:first-child + a {
+  padding-left: 4px;
+}
+
+.navbar .nav > li.dropdown-split.active > a:first-child,
+.navbar .nav > li.dropdown-split.active > a:first-child:hover,
+.navbar .nav > li.dropdown-split.active > a:first-child:focus {
+  color: @navbarLinkColorActive;
+  text-decoration: none;
+  background-color: @navbarLinkBackgroundActive;
+  @shadow: inset 8px 0 8px -8px rgba(0,0,0,.125), inset 0 11px 8px -8px rgba(0,0,0,.125), inset 0 -5px 8px -8px rgba(0,0,0,.125);
+  .box-shadow(@shadow);
+}
+
+.navbar .nav > li.dropdown-split.active > a:first-child + a,
+.navbar .nav > li.dropdown-split.active > a:first-child:hover + a,
+.navbar .nav > li.dropdown-split.active > a:first-child:focus + a {
+  color: @navbarLinkColorActive;
+  text-decoration: none;
+  background-color: @navbarLinkBackgroundActive;
+  @shadow: inset -8px 0 8px -8px rgba(0,0,0,.125), inset 0 11px 8px -8px rgba(0,0,0,.125), inset 0 -5px 8px -8px rgba(0,0,0,.125);
+  .box-shadow(@shadow);
+}
+
+.navbar .input-append > .btn-group {
+  margin-top: 0px;
+}
