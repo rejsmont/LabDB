@@ -175,9 +175,10 @@ function pad (str, max) {
 function preventEnterSubmit(e) {
     if (e.which == 13) {
         var $targ = $(e.target);
-        if (!$targ.is("textarea") && !$targ.is(":button,:submit")) {
-            var inputs = $targ.parents('form').find(':input').not(":hidden");
-            inputs.eq( inputs.index(e.target) + 1 ).focus();
+        if (!$targ.is("textarea") && $targ.is(".barcode")) {
+            $targ.blur();
+            $targ.focus();
+            $targ.select();
             return false;
         }
         return true;

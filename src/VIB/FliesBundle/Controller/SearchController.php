@@ -21,13 +21,6 @@ namespace VIB\FliesBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-
-use Pagerfanta\Pagerfanta;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 use VIB\BaseBundle\Controller\AbstractController;
 
@@ -39,6 +32,8 @@ use VIB\FliesBundle\Form\SearchType;
 
 /**
  * Description of SearchController
+ * 
+ * @Route("/search")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
@@ -47,103 +42,87 @@ class SearchController extends AbstractController {
     /**
      * Handle search request
      *
+     * @Route("/")
+     * @Method({"GET"})
      * @Template()
      *
      * @return Symfony\Component\HttpFoundation\Response
      */    
     public function searchAction() {
-        
-        $em = $this->getEntityManager();
-        
-        $form = $this->getFormFactory()->create(new SearchType());
-        
-        return array(
-            'searchForm' => $form->createView());
+        return $this->render('VIBFliesBundle:Search:search.html.twig');
+    }
+    
+    /**
+     * Render search form
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */  
+    public function formAction() {
+        $form = $this->createForm(new SearchType());
+        return $this->render('VIBFliesBundle:Search:form.html.twig', array('form' => $form->createView()));
     }
     
     /**
      * Handle search result
      * 
-     * @Route("/search/result/", name="searchResult")
-     * @Route("/search/result/page/{page}", name="searchResultPage")
+     * @Route("/result/")
      * @Template()
      * 
-     * @param string $term
-     * @param string $filter
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array
      */    
-    public function searchResultAction($page = 1) {
+    public function resultAction() {
         
-        $em = $this->getEntityManager();
-        
-        $form = $this->getFormFactory()->create(new SearchType());
-        $request = $this->getRequest();
+        $em = $this->getDoctrine();
+        $form = $this->createForm(new SearchType());
+        $request = $this->get('request');
         $session = $request->getSession();
-        
-        $stocks = null;
-        $crosses = null;
-        $vials = null;
-        $pager = null;
-        
+                
         if ($request->getMethod() == 'POST') {
             
             $form->bindRequest($request);
             
             if ($form->isValid()) {
                 $data = $form->getData();
-                $term = $data['term'];
-                $filter = $data['filter'];
-                
-                $session->set('search_term',$term);
+                $query = $data['query'];
+                if ('' == $data['filter']) {
+                    if (is_numeric($query)) {
+                        $filter = 'vial';
+                    } else {
+                        $filter = 'stocks';
+                    }
+                } else {
+                    $filter = $data['filter'];
+                }
+                $session->set('search_query',$query);
                 $session->set('search_filter',$filter);
             }
         } else {          
-            $term = $session->get('search_term');
+            $query = $session->get('search_query');
             $filter = $session->get('search_filter');
         }
         
-        switch($filter) {
-            case 'stocks':
-                $queryBuilder = $this->getEntityManager()
-                    ->getRepository('VIBFliesBundle:Stock')
-                    ->findStocksByName($term);
-                $adapter = new DoctrineORMAdapter($queryBuilder);
-                $pager = new Pagerfanta($adapter);
-                $pager->setMaxPerPage(15);
-                $pager->setCurrentPage($page);
-                $stocks = $pager->getCurrentPageResults();
-                break;
+        switch ($filter) {
             case 'crosses':
-                $queryBuilder = $this->getEntityManager()
-                    ->getRepository('VIBFliesBundle:FlyCross')
-                    ->findLivingCrossesByName($term);
-                $adapter = new DoctrineORMAdapter($queryBuilder);
-                $pager = new Pagerfanta($adapter);
-                $pager->setMaxPerPage(15);
-                $pager->setCurrentPage($page);
-                $crosses = $pager->getCurrentPageResults();
+                $queryBuilder = $em->getRepository('VIB\FliesBundle\Entity\CrossVial')->search($query);
+                $result = $this->get('vib.security.helper.acl')->apply($queryBuilder);
                 break;
-            case 'stock vials':
-                $queryBuilder = $this->getEntityManager()
-                    ->getRepository('VIBFliesBundle:FlyVial')
-                    ->findLivingStocksByName($term);
-                $adapter = new DoctrineORMAdapter($queryBuilder);
-                $pager = new Pagerfanta($adapter);
-                $pager->setMaxPerPage(15);
-                $pager->setCurrentPage($page);
-                $vials = $pager->getCurrentPageResults();
+            case 'vial':
+                $url = $this->generateUrl('vib_flies_vial_show', array('id' => $query));
+                return $this->redirect($url);
                 break;
+            case 'stocks':
             default:
+                $queryBuilder = $em->getRepository('VIB\FliesBundle\Entity\Stock')->search($query);
+                $result = $this->get('vib.security.helper.acl')->apply($queryBuilder);
                 break;
         }
-
-        return array('stocks' => $stocks,
-                     'crosses' => $crosses,
-                     'vials' => $vials,
-                     'pager' => $pager,
-                     'filter' => $filter,
-                     'term' => $term,
-                     'form' => $form->createView());
+        
+        $paginator  = $this->get('knp_paginator');
+        $page = $this->get('request')->query->get('page', 1);
+        $entities = $paginator->paginate($result, $page, 10);
+        return array('entities' => $entities,
+                     'query' => $query,
+                     'filter' => $filter);
     }
 }
 

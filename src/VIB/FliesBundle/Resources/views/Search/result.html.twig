@@ -1,0 +1,27 @@
+{% extends "VIBBaseBundle::layout.html.twig" %}
+{% use "VIBBaseBundle:List:table.html.twig" %}
+{% import "VIBBaseBundle:Macros:list.html.twig" as l %}
+
+{% block headline %}
+  Search results
+  <small>{{ filter | capitalize }}: {{ query }}</small>
+{% endblock headline %}
+
+
+{% block list_header %}
+{% if filter == 'stocks' %}
+  {% include 'VIBFliesBundle:Stock:list_head.html.twig' %}
+{% elseif filter == 'crosses' %}
+  {% include 'VIBFliesBundle:CrossVial:list_head.html.twig' %}
+{% endif %}{% endblock list_header %}
+
+{% block list_item %}
+{% if filter == 'stocks' %}
+  {% include 'VIBFliesBundle:Stock:list_row.html.twig' with {'entity': entity} %}
+{% elseif filter == 'crosses' %}
+  {% include 'VIBFliesBundle:CrossVial:list_row.html.twig' with {'entity': entity,'checkbox': false} %}
+{% endif %}
+{% endblock list_item %}
+  
+{% block list_buttons %}
+{% endblock list_buttons %}

@@ -61,19 +61,40 @@ abstract class CRUDController extends AbstractController {
      * List entities
      * 
      * @Route("/")
+     * @Route("/list/{filter}")
      * @Template()
      * @Secure(roles="ROLE_USER, ROLE_ADMIN")
      * 
      * @param integer $page
      * @return array
      */
-    public function listAction()
+    public function listAction($filter = null)
     {
         $paginator  = $this->get('knp_paginator');
         $page = $this->get('request')->query->get('page', 1);
-        $query = $this->get('vib.security.helper.acl')->apply($this->getListQuery());
-        $entities = $paginator->paginate($query, $page, 15);
+        $query = $this->applyFilter($this->getListQuery(), $filter);
+        $entities = $paginator->paginate($query, $page, 10);
         return array('entities' => $entities);
+    }
+    
+    /**
+     * Filter query
+     * 
+     * @param type $query
+     * @param type $filter
+     * @return type
+     */
+    public function applyFilter($query, $filter = null)
+    {
+        switch($filter) {
+            case 'public':
+            case 'all':
+                return $this->get('vib.security.helper.acl')->apply($query);
+                break;
+            default:
+                return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
+                break;
+        }
     }
     
     /**
@@ -197,7 +218,7 @@ abstract class CRUDController extends AbstractController {
      */
     protected function getListQuery() {
         $em = $this->getDoctrine()->getManager();
-        return $em->getRepository($this->getEntityClass())->createQueryBuilder('q');
+        return $em->getRepository($this->getEntityClass())->createQueryBuilder('b');
     }
         
     /**

@@ -52,7 +52,8 @@ class StockType extends AbstractType
                         'class'    => 'VIBFliesBundle:CrossVial',
                         'format'    => '%06d',
                         'required' => false,
-                        'label'     => 'Source cross'));
+                        'label'     => 'Source cross',
+                        'attr' => array('class' => 'barcode')));
     }
 
     /**

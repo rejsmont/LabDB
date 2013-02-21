@@ -5,7 +5,12 @@
 {% block content_sidebar %}
 <ul class="nav nav-list well">
   <li class="nav-header">List</li>
-  <li><a href="#">List my vials</a></li>
-  <li><a href="#">List all vials</a></li>
+  <li><a href="{{ path('vib_flies_vial_list') }}">My vials</a></li>
+  <li><a href="{{ path('vib_flies_vial_list_1',{ 'filter': 'public' }) }}">Public vials</a></li>
+  <li><a href="{{ path('vib_flies_vial_list_1',{ 'filter': 'trashed' }) }}">Trashed vials</a></li>
+  <li><a href="{{ path('vib_flies_vial_list_1',{ 'filter': 'dead' }) }}">Dead vials</a></li>
+  <li class="nav-header">Actions</li>
+  <li><a href="{{ path('vib_flies_vial_select') }}">Select vials</a></li>
+  <li><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
 </ul>
 {% endblock content_sidebar %}

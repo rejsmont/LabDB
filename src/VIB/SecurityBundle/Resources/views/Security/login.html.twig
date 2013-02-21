@@ -1,4 +1,16 @@
-{% extends "VIBBaseBundle:Form:modal.html.twig" %}
+{% extends "VIBBaseBundle::layout.html.twig" %}
+{% use "VIBBaseBundle:Form:modal.html.twig" %}
+
+{% block header_row %}{% endblock header_row %}
+{% block main_row %}
+<div class="span6 offset3">
+  {% block content_row %}
+  <div class="row-fluid no-header">
+      {{ block('content') }}
+  </div>
+  {% endblock content_row %}
+</div>
+{% endblock main_row %}
 
 {% block modal_header %}Please log in{% endblock modal_header %}
 

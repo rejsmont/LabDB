@@ -15,13 +15,7 @@
 {% endblock list_selector %}
 
 {% block list_header %}
-  <th style="width: 12px;"><input type="checkbox" id="checkall" {% block checkall_attr %}{%endblock checkall_attr %}></th>
-  <th style="width: 100px;">ID</th>
-  <th>Stock</th>
-  <th style="width: 150px;">Setup date</th>
-  <th style="width: 150px;">Flip date</th>
-  <th style="width: 100px;">Flipped from</th>
-  <th style="width: 100px;">Status</th>
+  {% include 'VIBFliesBundle:StockVial:list_head.html.twig' with {'checked' : ''} %}
 {% endblock list_header %}
 
 {% block list_item %}
@@ -29,12 +23,5 @@
 {% endblock list_item %}
 
 {% block list_buttons %}
-  <a href="{{ path('vib_flies_stockvial_expand') }}" class="btn">Expand</a>
-  <a href="{{ path('vib_flies_stockvial_select') }}" class="btn">Select</a>
-  <button type="submit" class="btn" onclick="$('#select_action').val('flip'); $('form').submit();">
-    Flip</button>
-  <button type="submit" class="btn" onclick="$('#select_action').val('trash'); $('form').submit();">
-    Trash</button>
-  <button type="submit" class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
-    Print labels</button>
+  {{ l.select_buttons() }}
 {% endblock list_buttons %}

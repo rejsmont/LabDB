@@ -64,7 +64,8 @@ swiftmailer:
     spool:     { type: memory }
 
 mopa_bootstrap:
-    navbar: ~
+    navbar:
+        template: 'VIBBaseBundle:Menu:main.html.twig'
     form: 
         collection:
             widget_remove_btn:

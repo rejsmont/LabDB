@@ -49,7 +49,8 @@ class VialType extends AbstractType
                         'class'     => 'VIBFliesBundle:StockVial',
                         'format'    => '%06d',
                         'required'  => false,
-                        'label'     => 'Flipped from:'));
+                        'label'     => 'Flipped from:',
+                        'attr' => array('class' => 'barcode')));
     }
     
     /**

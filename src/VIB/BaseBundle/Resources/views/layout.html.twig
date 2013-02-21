@@ -21,6 +21,7 @@
         <span class="icon-bar"></span>
       </a>
       <a class="brand" href="{{ path('default') }}">LNG FlyDB</a>
+      {% if app.user is not empty %}
       <div class="nav-collapse">
         <ul class="nav">
           <li class="first">
@@ -46,77 +47,74 @@
             </ul>
           </li>
         </ul>
-        <form class="navbar-form form-search pull-right visible-desktop">
-          <div class="input-append">
-            <input type="text" placeholder="Search" class="span search-query">
-            <div class="btn-group">
-              <button class="btn"><i class="icon-search"></i></button>
-              <button class="btn dropdown-toggle" data-toggle="dropdown">
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu pull-right">
-                <li><a href="#">Search stocks</a></li>
-                <li><a href="#">Search crosses</a></li>
-              </ul>
-            </div>
-          </div>
-        </form>
+        <ul class="nav pull-right user-menu">
+          <li class="dropdown first last">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              {{ app.user.username | capitalize }}
+              <i class="icon-user"></i>
+            </a>
+            <ul class="dropdown-menu menu_level_1 pull-right">
+              <li class="first last"><a href="{{ path('logout') }}">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+        {% render "VIBFliesBundle:Search:form" %}
       </div>
+      {% endif %}
     </div>
   </div>
 </div>
 {% endblock navbar %}
 
 {% block container %}
-    <div class="{% block container_class %}container{% endblock container_class %}">
-        {% block header %}
-        {% endblock header %}
-        <div class="content">
-          <div class="row">
-            <div class="offset3 span9">
-              {% block page_header %}
-              <div class="page-header">
-                    <h1>{% block headline %}Welcome{% endblock headline %}</h1>
-              </div>
-              {% endblock page_header %}
-              {% block flashes %}
-              {% if app.session.flashbag.peekAll|length > 0 %}
-              <div class="row-fluid">
-                  <div class="span12">
-                  {{ session_flash() }}
-                  </div>
-              </div>
-              {% endif %}
-              {% endblock flashes %}
-            </div>
+<div class="{% block container_class %}container{% endblock container_class %}">
+    {% block header %}
+    {% endblock header %}
+    <div class="content">
+      <div class="row">
+        {% block header_row %}
+        <div class="offset3 span9">
+          {% block page_header %}
+          <div class="page-header">
+                <h1>{% block headline %}Welcome{% endblock headline %}</h1>
           </div>
-          <div class="row">
-            <div class="span3">
-              {% block content_sidebar %}
-              <ul class="nav nav-list well">
-                <li class="nav-header">Stock vials</li>
-                <li><a href="#">List my vials</a></li>
-                <li><a href="#">List all vials</a></li>
-              </ul>
-              {% endblock content_sidebar %}
-            </div>
-            <div class="span9">
-              {% block content_row %}
-              <div class="row-fluid">
-                  {% block content %}
-                      {% block content_content %}
-                      {% endblock content_content %}
-                  {% endblock content %}
+          {% endblock page_header %}
+          {% block flashes %}
+          {% if app.session.flashbag.peekAll|length > 0 %}
+          <div class="row-fluid">
+              <div class="span12">
+              {{ session_flash() }}
               </div>
-              {% endblock content_row %}
-            </div>
           </div>
+          {% endif %}
+          {% endblock flashes %}
         </div>
-        <footer>
-        {% block footer %}
-        {% endblock footer %}
-        </footer>
-    </div> <!-- /container -->
+        {% endblock header_row %}
+      </div>
+      <div class="row">
+        {% block main_row %}
+        <div class="span3">
+          {% block content_sidebar %}
+          {% endblock content_sidebar %}
+        </div>
+        <div class="span9">
+          {% block content_row %}
+          <div class="row-fluid">
+              {% block content %}
+                  {% block content_content %}
+                  {% endblock content_content %}
+              {% endblock content %}
+          </div>
+          {% endblock content_row %}
+        </div>
+        {% endblock main_row %}
+      </div>
+    </div>
+    <footer>
+    {% block footer %}
+    {% endblock footer %}
+    </footer>
+</div>
 {% endblock container %}
 
 {% block foot_script %}

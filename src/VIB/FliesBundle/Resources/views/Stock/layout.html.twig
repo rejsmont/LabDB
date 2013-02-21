@@ -5,7 +5,10 @@
 {% block content_sidebar %}
 <ul class="nav nav-list well">
   <li class="nav-header">List</li>
-  <li><a href="#">List my stocks</a></li>
-  <li><a href="#">List all stocks</a></li>
+  <li><a href="{{ path('vib_flies_stock_list') }}">My stocks</a></li>
+  <li><a href="{{ path('vib_flies_stock_list_1',{ 'filter': 'public' }) }}">Public stocks</a></li>
+  <li class="nav-header">Actions</li>
+  <li><a href="{{ path('vib_flies_stock_create') }}">New stock</a></li>
+  <li><a href="{{ path('vib_flies_stockvial_expand') }}">Expand stock</a></li>
 </ul>
 {% endblock content_sidebar %}

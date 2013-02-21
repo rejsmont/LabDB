@@ -3,23 +3,16 @@
 {% block headline %}Select vials{% endblock headline %}
 
 {% block table_attr %}id="select"{% endblock table_attr %}
-{% block checkall_attr %}checked{%endblock checkall_attr %}
 
 {% block list_selector %}
   {{ form_errors(form) }}
   {{ form_rest(form) }}
   <div class="form-inline control-group well">
-    <input id="barcode" type="text" placeholder="Scan your barcodes here" value="" onchange="checkVial()" />
+    <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value="" onchange="checkVial()" />
     <span class="help-inline"></span>
   </div>
 {% endblock list_selector %}
 
-{% block list_buttons %}
-  <a href="{{ path('vib_flies_vial_list') }}" class="btn">List</a>
-  <button type="submit" class="btn" onclick="$('#select_action').val('flip'); $('form').submit();">
-    Flip</button>
-  <button type="submit" class="btn" onclick="$('#select_action').val('trash'); $('form').submit();">
-    Trash</button>
-  <button type="submit" class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
-    Print labels</button>
-{% endblock list_buttons %}
+{% block list_header %}
+  {% include 'VIBFliesBundle:Vial:list_head.html.twig' with {'checked' : 'checked'} %}
+{% endblock list_header %}

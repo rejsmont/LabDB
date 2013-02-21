@@ -5,7 +5,12 @@
 {% block content_sidebar %}
 <ul class="nav nav-list well">
   <li class="nav-header">List</li>
-  <li><a href="#">List my stocks</a></li>
-  <li><a href="#">List all stocks</a></li>
+  <li><a href="{{ path('vib_flies_crossvial_list') }}">My crosses</a></li>
+  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'public' }) }}">Public crosses</a></li>
+  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'trashed' }) }}">Trashed crosses</a></li>
+  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'dead' }) }}">Dead crosses</a></li>
+  <li class="nav-header">Actions</li>
+  <li><a href="{{ path('vib_flies_crossvial_create') }}">New cross</a></li>
+  <li><a href="{{ path('vib_flies_crossvial_select') }}">Select crosses</a></li>
 </ul>
 {% endblock content_sidebar %}
