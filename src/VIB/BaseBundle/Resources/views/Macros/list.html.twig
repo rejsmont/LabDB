@@ -1,11 +1,15 @@
-{% macro link(entity, route, verify = true, nameField) %}{% spaceless %}
+{% macro link(entity, route, verify = true, nameField, popover) %}{% spaceless %}
 {% if nameField is not empty and entity is not empty%}
   {% set name = attribute(entity,nameField) %}{% else %}{% set name = entity %}
 {% endif %}
 {% if verify %}
   {% if entity is not empty %}
     {% if is_granted('ROLE_ADMIN') or is_granted('VIEW',entity) %}
-      <a href="{{ path(route, { 'id': entity.id }) }}">{{ name }}</a>
+      <a href="{{ path(route, { 'id': entity.id }) }}"
+        {% if popover is not empty %}
+          class="popover-trigger" data-link="{{ path('vib_flies_ajax_popover')}}" data-type="{{ popover }}" data-id="{{ entity.id }}"
+        {% endif %}
+      >{{ name }}</a>
     {% else %}{{ name }}{% endif %}
   {% endif %}
 {% else %}
@@ -25,13 +29,13 @@
 
 {% macro stockStatus(stock) %}{% spaceless %}
   {% if stock.livingVials | length > 3 %}
-    <span class="label label-success">Amplified</span>
+    <span class="label label-success">AMPLIFIED</span>
     {% elseif stock.livingVials | length > 1 %}
-    <span class="label label-success">Healthy</span>
+    <span class="label label-success">HEALTHY</span>
     {% elseif stock.livingVials | length < 1 %}
-    <span class="label label-important">Dead</span>
+    <span class="label label-important">DEAD</span>
     {% else %}
-    <span class="label label-warning">Expand</span>
+    <span class="label label-warning">EXPAND</span>
   {% endif %}
 {% endspaceless %}{% endmacro %}
 

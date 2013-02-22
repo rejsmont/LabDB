@@ -11,11 +11,11 @@
            value="{{ entity.id }}" {{ checked }} /></td>
 <td>{{ l.link(entity, 'vib_flies_vial_show', false) }}</td>
 <td>{% spaceless %}{% if entity.type == 'stock' %}
-      {{ l.link(entity.stock, 'vib_flies_stock_show') }}
+      {{ l.link(entity.stock, 'vib_flies_stock_show', true, null, 'stock') }}
     {% elseif entity.type == 'cross' %}
       {{ l.link(entity, 'vib_flies_crossvial_show', true, 'name') }}
     {% endif %}{% endspaceless %}</td>
 <td>{{ entity.setupDate | date("d-m-Y") }}</td>
 <td>{{ entity.flipDate | date("d-m-Y") }}</td>
-<td>{{ l.link(entity.parent, 'vib_flies_vial_show') }}</td>
+<td>{{ l.link(entity.parent, 'vib_flies_vial_show', true, null, 'vial') }}</td>
 <td>{{ l.vialStatus(entity) }}</td>

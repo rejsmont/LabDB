@@ -27,6 +27,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use VIB\FliesBundle\Entity\Vial;
+use VIB\FliesBundle\Entity\StockVial;
+use VIB\FliesBundle\Entity\CrossVial;
+use VIB\FliesBundle\Entity\Stock;
 
 /**
  * Description of AJAXController
@@ -111,9 +114,58 @@ class AJAXController extends Controller {
     public function popoverAction(Request $request) {
         $type = $request->query->get('type');
         $id = $request->query->get('id');
+        
+        switch($type) {
+            case 'vial':
+                $entity =  $this->getDoctrine()
+                                ->getRepository('VIBFliesBundle:Vial')
+                                ->find($id);
+                $etype = "Vial";
+                break;
+            case 'stock':
+                $entity =  $this->getDoctrine()
+                                ->getRepository('VIBFliesBundle:Stock')
+                                ->find($id);
+                $etype = "Stock";
+                break;
+            default:
+                return new Response('Unrecognized type', 404);
+        }
+        
+        $status = "";
+        
+        if ($entity instanceof Vial) {
+            if($entity->isTrashed()) {
+                $status = "<span class=\"label label-inverse pull-right\">TRASHED</span>";
+            } elseif($entity->isAlive()) {
+                $status = "<span class=\"label label-success pull-right\">ALIVE</span>";
+            } else {
+                $status = "<span class=\"label label-important pull-right\">DEAD</span>";
+            }
+            if ($entity instanceof CrossVial) {
+                $type  = "crossvial";
+                $etype = "Cross";
+            } elseif (($entity instanceof StockVial)&&(null !== $entity->getStock())) {
+                $type  = "stockvial";
+            }            
+        } elseif ($entity instanceof Stock) {
+            $vials = count($entity->getLivingVials());
+            if($vials > 3) {
+                $status = "<span class=\"label label-success pull-right\">AMPLIFIED</span>";
+            } elseif($vials > 1) {
+                $status = "<span class=\"label label-success pull-right\">HEALTHY</span>";
+            } elseif($vials < 1) {
+                $status = "<span class=\"label label-important pull-right\">DEAD</span>";
+            } else {
+                $status = "<span class=\"label label-warning pull-right\">EXPAND</span>";
+            }
+        } else {
+             return new Response('Not found', 404);
+        }
+        
         $html = $this->render('VIBFliesBundle:AJAX:popover.html.twig',
-                array('type' => $type, 'id' => $id))->getContent();
-        $title = "Cross " . $id;
+                array('type' => $type, 'entity' => $entity))->getContent();
+        $title = "<b>" . $etype . " " . $entity . "</b>" . $status;
         
         $response = new JsonResponse();
         $response->setData(array('title' => $title, 'html' => $html));
