@@ -33,7 +33,7 @@
       <li>{% spaceless %}
         {% set showName = (name is not empty or (value.name is defined and value.name != value.__toString)) %}
         {% if showName %}{{ name }} ({% endif %}{% spaceless %}
-        {% if ctrl is not empty and (is_granted('ROLE_ADMIN') or is_granted('VIEW',value)) %}
+        {% if ctrl is not empty and (is_granted('ROLE_ADMIN') or is_granted('VIEW',item)) %}
           <a href="{{ path(ctrl, { 'id': item.id }) }}"
             {% if popover is not empty %}
               class="popover-trigger"
