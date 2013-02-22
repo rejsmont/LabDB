@@ -6,7 +6,9 @@
 </tbody></table>
 <div class="popover-foot">
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_crossvial_show',{'id': entity.id }) }}">Show</a>
+  {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
   <a class="btn btn-mini" href="{{ path('vib_flies_crossvial_edit',{'id': entity.id }) }}">Edit</a>
+  {% endif }
 </div>
 {% elseif type == 'stockvial' %}
 <p><b>{{ entity.stock.name }}</b></p>
@@ -16,7 +18,9 @@
 </tbody></table>
 <div class="popover-foot">
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_stockvial_show',{'id': entity.id }) }}">Show</a>
+  {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
   <a class="btn btn-mini" href="{{ path('vib_flies_stockvial_edit',{'id': entity.id }) }}">Edit</a>
+  {% endif }
 </div>
 {% elseif type == 'vial' %}
 <table class="table-plain"><tbody>
@@ -25,12 +29,16 @@
 </tbody></table>
 <div class="popover-foot">
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_vial_show',{'id': entity.id }) }}">Show</a>
+  {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
   <a class="btn btn-mini" href="{{ path('vib_flies_vial_edit',{'id': entity.id }) }}">Edit</a>
+  {% endif }
 </div>
 {% elseif type == 'stock' %}
 <p>{{ entity.genotype }}</p>
 <div class="popover-foot">
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_stock_show',{'id': entity.id }) }}">Show</a>
+  {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
   <a class="btn btn-mini" href="{{ path('vib_flies_stock_edit',{'id': entity.id }) }}">Edit</a>
+  {% endif }
 </div>
 {% endif %}
