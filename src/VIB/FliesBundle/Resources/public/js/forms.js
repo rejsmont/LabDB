@@ -209,7 +209,7 @@ $(document).ready(function() {
           $.ajax({
             url: element.data('link'),
             type: 'get',
-            data: {type: element.data('type'), id: element.text()},
+            data: {type: element.data('type'), id: element.data('id')},
             success: function(json) {
               var title = json.title == 'undefined' ? false : json.title;
               var html = json.html == 'undefined' ? false : json.html;
@@ -220,7 +220,6 @@ $(document).ready(function() {
                   placement:'bottom',
                   html:true,
                   trigger:'manual'
-                  //template: '<div class="popover" onmouseover="clearTimeout(popoverTimeoutLock);$(this).mouseleave(function(){$(this).hide();});"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
                 }).popover('show').mouseenter(function() {
                     var ref = $(this);
                     ref.addClass("hasFocus");
@@ -238,7 +237,7 @@ $(document).ready(function() {
                         }
                       }, 250);
                   });
-                $('.popover').mouseenter(function() {
+                $('.popover').off('mouseenter mouseleave').mouseenter(function() {
                     clearTimeout(popoverTimeoutLock);
                   }).mouseleave(function() {
                     var ref = $(this);

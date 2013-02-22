@@ -10,8 +10,8 @@
            name="select[items][{{ entity.id }}]" 
            value="{{ entity.id }}" {{ checked }}/></td>
 <td>{{ l.link(entity, 'vib_flies_stockvial_show', false) }}</td>
-<td>{{ l.link(entity.stock, 'vib_flies_stock_show') }}</td>
+<td>{{ l.link(entity.stock, 'vib_flies_stock_show', true, null, 'stock') }}</td>
 <td>{{ entity.setupDate | date("d-m-Y") }}</td>
 <td>{{ entity.flipDate | date("d-m-Y") }}</td>
-<td>{{ l.link(entity.parent, 'vib_flies_stockvial_show') }}</td>
+<td>{{ l.link(entity.parent, 'vib_flies_stockvial_show', true, null, 'stock') }}</td>
 <td>{{ l.vialStatus(entity) }}</td>

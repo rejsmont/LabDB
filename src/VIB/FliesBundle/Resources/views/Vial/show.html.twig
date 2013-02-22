@@ -7,8 +7,8 @@
 {% block modal_body %}
   {{ s.row("Setup date:", entity.setupDate | date("d F Y")) }}
   {{ s.row("Flip date:", entity.flipDate | date("d F Y")) }}
-  {{ s.row("Flipped from:", entity.parent, 'vib_flies_stockvial_show') }}
-  {{ s.list("Flipped to:", entity.children, 'vib_flies_stockvial_show') }}
+  {{ s.row("Flipped from:", entity.parent, 'vib_flies_vial_show', null, 'vial') }}
+  {{ s.list("Flipped to:", entity.children, 'vib_flies_vial_show', null, 'vial') }}
 {% endblock modal_body %}
 
 {% block modal_footer %}

@@ -37,6 +37,18 @@ body {
   position: relative;
 }
 
+.popover-foot {
+  text-align: right;
+  margin: 8px -14px -8px -14px; // reset heading margin
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 18px;
+  background-color: @popoverTitleBackground;
+  border-top: 1px solid darken(@popoverTitleBackground, 5%);
+  .border-radius(0 0 5px 5px);
+}
+
 // include the responsive after all of your stuff!
 @import "../../../../../../vendor/twitter/bootstrap/less/responsive.less";
 
