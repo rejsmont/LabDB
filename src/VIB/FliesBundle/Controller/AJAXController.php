@@ -98,6 +98,28 @@ class AJAXController extends Controller {
         
         return $response;
     }
+    
+    /**
+     * Handle stock search AJAX request
+     * 
+     * @Route("/popover")
+     * @Template()
+     * 
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @return Symfony\Component\HttpFoundation\Response
+     */    
+    public function popoverAction(Request $request) {
+        $type = $request->query->get('type');
+        $id = $request->query->get('id');
+        $html = $this->render('VIBFliesBundle:AJAX:popover.html.twig',
+                array('type' => $type, 'id' => $id))->getContent();
+        $title = "Cross " . $id;
+        
+        $response = new JsonResponse();
+        $response->setData(array('title' => $title, 'html' => $html));
+        
+        return $response;
+    }
 }
 
 ?>

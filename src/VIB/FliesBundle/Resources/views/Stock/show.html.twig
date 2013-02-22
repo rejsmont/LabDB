@@ -6,7 +6,7 @@
 
 {% block modal_body %}
   {{ s.row("Genotype:", entity.genotype) }}
-  {{ s.row("Source cross:", entity.sourceCross , 'vib_flies_crossvial_show') }}
+  {{ s.row("Source cross:", entity.sourceCross , 'vib_flies_crossvial_show', null, 'cross') }}
   {{ s.list("Vials:", entity.livingVials, 'vib_flies_stockvial_show') }}
 {% endblock modal_body %}
 
