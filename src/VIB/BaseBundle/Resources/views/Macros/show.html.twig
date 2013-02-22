@@ -1,13 +1,18 @@
-{% macro row(label, value, ctrl, name) %}
+{% macro row(label, value, ctrl, name, popover) %}
 <div class="control-group">
   <span class="control-label">{{ label }}</span>
   <div class="controls">
     <span class="input-text">{% spaceless %}
         {% if value is not empty %}
           {% set showName = (name is not empty or (value.name is defined and value.name != value.__toString)) %}
+          {% if name is empty and value.name is defined %}{% set name = value.name %}{% endif %}
           {% if showName %}{{ name }} ({% endif %}{% spaceless %}
           {% if ctrl is not empty and (is_granted('ROLE_ADMIN') or is_granted('VIEW',value)) %}
-            <a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>
+            <a href="{{ path(ctrl, { 'id': value.id }) }}"
+              {% if popover is not empty %}
+                class="popover-trigger" data-link="{{ path('vib_flies_ajax_popover')}}" data-type="{{ popover }}"
+              {% endif %}
+            >{{ value }}</a>
           {% else %}{{ value }}{% endif %}
           {% endspaceless %}{% if showName %}){% endif %}
         {% endif %}
@@ -16,7 +21,7 @@
 </div>
 {% endmacro %}
 
-{% macro list(label, values, ctrl, name) %}
+{% macro list(label, values, ctrl, name, popover) %}
 <div class="control-group">
   <span class="control-label">{{ label }}</span>
   <div class="controls">

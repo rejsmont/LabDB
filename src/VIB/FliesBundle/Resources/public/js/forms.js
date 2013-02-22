@@ -185,6 +185,8 @@ function preventEnterSubmit(e) {
     }
 }
 
+var popoverTimeoutLock;
+
 $(document).ready(function() {
     $('form').bind("keypress", function(e) {
         return preventEnterSubmit(e);
@@ -195,10 +197,63 @@ $(document).ready(function() {
         $(this).parents('table').find('tbody :checkbox').each(function(index) {
            $(this).prop("checked", checked);
         });
-        
-        
-    });    
-    form_errors();
+    });
+    
+    $('.popover-trigger').mouseenter(function() {
+      var element = $(this);
+      element.addClass("hasFocus");
+      setTimeout(function() { 
+        if (element.hasClass("hasFocus")) {
+          element.off('mouseenter mouseleave');
+          element.removeClass("hasFocus");
+          $.ajax({
+            url: element.data('link'),
+            type: 'get',
+            data: {type: element.data('type'), id: element.text()},
+            success: function(json) {
+              var title = json.title == 'undefined' ? false : json.title;
+              var html = json.html == 'undefined' ? false : json.html;
+              if ((title != false)&&(html != false)) {
+                element.popover({
+                  title:title,
+                  content:html,
+                  placement:'bottom',
+                  html:true,
+                  trigger:'manual'
+                  //template: '<div class="popover" onmouseover="clearTimeout(popoverTimeoutLock);$(this).mouseleave(function(){$(this).hide();});"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
+                }).popover('show').mouseenter(function() {
+                    var ref = $(this);
+                    ref.addClass("hasFocus");
+                    setTimeout(function() { 
+                      if (ref.hasClass("hasFocus")) {
+                        ref.popover('show');
+                      }
+                    },2000);
+                  }).mouseleave(function() {
+                      var ref = $(this);
+                      ref.removeClass("hasFocus");
+                      popoverTimeoutLock = setTimeout(function() {
+                        if (! ref.hasClass("hasFocus")) {
+                          ref.popover('hide');
+                        }
+                      }, 250);
+                  });
+                $('.popover').mouseenter(function() {
+                    clearTimeout(popoverTimeoutLock);
+                  }).mouseleave(function() {
+                    var ref = $(this);
+                    setTimeout(function() { 
+                      ref.hide();
+                    }, 250);
+                  });
+              }
+            }
+          });
+        }
+      },2000);
+    }).mouseleave(function() {
+      $(this).removeClass("hasFocus");
+    })
 }); 
 
 function form_error(message) {
@@ -210,16 +265,4 @@ function form_error(message) {
     error_html += '</div>'
     error_html += '</div>'
     return error_html;
-}
-
-function form_errors() {
-    var message;
-    
-    $("td[id$='_error']").each(function(index) {
-        message = $(this).find("li").html();
-        if (message) {
-            $(this).html(form_error(message));
-            
-        }
-    });
 }
