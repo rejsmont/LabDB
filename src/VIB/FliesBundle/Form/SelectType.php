@@ -22,9 +22,9 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\Event\DataEvent;
+use Symfony\Component\Form\Event\FormEvent;
 
 /**
  * SelectType class
@@ -33,34 +33,33 @@ use Symfony\Component\Form\Event\DataEvent;
  */
 class SelectType extends AbstractType
 {  
+    /**
+     * 
+     * @var string
+     */
     protected $entityClass;
     
     /**
      * Construct SelectType
      * 
      */ 
-    public function __construct()
+    public function __construct($entityClass = null)
     {
-        $this->entityClass = null;
+        $this->entityClass = $entityClass;
     }
     
     /**
-     * Get name
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
-        return "SelectType";
+        return "select";
     }
     
     /**
-     * Build form
-     *
-     * @param Symfony\Component\Form\FormBuilder $builder
-     * @param array $options
+     * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('action', 'hidden');
         
@@ -78,7 +77,7 @@ class SelectType extends AbstractType
                 return $qb;
             };
             
-            $form->add($factory->createNamed('entity','items',null, array(
+            $form->add($factory->createNamed('items', 'entity', null, array(
                 'class'         =>  $class,
                 'multiple'      =>  true,
                 'expanded'      =>  true,
@@ -87,7 +86,7 @@ class SelectType extends AbstractType
             )));
         };
  
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (DataEvent $event) use ($refreshEntities) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($refreshEntities) {
             
             $form = $event->getForm();
             $data = $event->getData();
@@ -105,7 +104,7 @@ class SelectType extends AbstractType
             }
         });
  
-        $builder->addEventListener(FormEvents::PRE_BIND, function (DataEvent $event) use ($refreshEntities) {
+        $builder->addEventListener(FormEvents::PRE_BIND, function (FormEvent $event) use ($refreshEntities) {
             
             $form = $event->getForm();
             $data = $event->getData();
@@ -124,17 +123,7 @@ class SelectType extends AbstractType
             }
         });
     }
-    
-    /**
-     * Get default options
-     *
-     * @param array $options
-     * @return array
-     */
-    public function getDefaultOptions(array $options)
-    {
-        return array();
-    }
+
 }
 
 ?>

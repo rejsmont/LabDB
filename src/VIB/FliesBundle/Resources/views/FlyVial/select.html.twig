@@ -1,5 +1,4 @@
-{% extends "VIBFliesBundle:FlyVial:list.html.twig" %}
-{% import 'VIBFliesBundle:Macros:jquery.html.twig' as jq %}
+{% extends "VIBFliesBundle:Vial:list.html.twig" %}
 
 {% block pheader %}Select vials{% endblock %}
     
@@ -14,7 +13,3 @@
 {% endblock %}
 
 {% block pager %}{% endblock %}
-
-{% block actionbutton %}
-    {{ jq.button('Cancel',path('flyvial_list'),'ui-icon-closethick') }}
-{% endblock %}

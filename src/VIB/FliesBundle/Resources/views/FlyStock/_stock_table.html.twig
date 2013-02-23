@@ -1,0 +1,40 @@
+<thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Source cross</th>
+        <th>Vials</th>
+        <th>Status</th>
+    </tr>
+</thead>
+<tbody>
+{% for stock in stocks %}
+    <tr>
+        <td><a href="{{ path('flystock_show', { 'id': stock.id }) }}">
+            {{ stock.id }}</a>
+        </td>
+        <td><a href="{{ path('flystock_show', { 'id': stock.id }) }}">
+            {{ stock.name }}</a>
+        </td>
+        <td>{% if stock.sourceCross is not empty %}
+            <a href="{{ path('flycross_show', { 'id': stock.sourceCross.id }) }}">
+                {{ stock.sourceCross }}
+            </a>
+            {% endif %}
+        </td>
+        <td>
+            {{ stock.livingVials | length }}
+        </td>
+        <td>{% if stock.livingVials | length > 3 %}
+            <span style="color: green;">Amplified</span>
+            {% elseif stock.livingVials | length > 1 %}
+            <span style="color: green;">Healthy</span>
+            {% elseif stock.livingVials | length < 1 %}
+            <span style="color: red;">Dead</span>
+            {% else %}
+            <span style="color: orange;">Expand</span>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}
+</tbody>

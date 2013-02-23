@@ -119,6 +119,26 @@ class FlyCrossController extends GenericVialController
             
             if ($form->isValid()) {
                 
+                //$data = $form->getData();
+                $cross = $data['cross'];
+                $number = $data['number'];
+                
+                $em->persist($entity);
+                $em->flush();
+
+                $this->setACL($entity);
+                
+                $url = $this->generateUrl($route,array('id' => $entity->getRoutableId()));
+                return $this->redirect($url);
+            }
+        }
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                
                 $data = $form->getData();
                 $cross = $data['cross'];
                 $number = $data['number'];

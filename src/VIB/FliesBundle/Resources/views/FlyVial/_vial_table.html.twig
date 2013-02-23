@@ -1,0 +1,18 @@
+<thead>
+    <tr>
+        {% if checkbox is not empty %}
+            <th><label><input type="checkbox" id="checkall" checked="checked"></label></th>
+        {% endif %}
+        <th>ID</th>
+        <th>Stock</th>
+        <th>Setup date</th>
+        <th>Flip date</th>
+        <th>Flipped from</th>
+        <th>Status</th>
+    </tr>
+</thead>
+<tbody>
+{% for vial in vials %}
+    {% include 'VIBFliesBundle:FlyVial:_vial_row.html.twig' with {'vial': vial, 'class': null, 'checkbox': checkbox} %}
+{% endfor %}
+</tbody>

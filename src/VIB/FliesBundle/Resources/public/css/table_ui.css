@@ -1,0 +1,110 @@
+/* 
+    Document   : general.css
+    Created on : Oct 11, 2011, 5:39:43 PM
+    Author     : ejsmont
+    Description:
+        General style sheet.
+*/
+
+table.ui-table {
+    padding: 0px;
+    margin: 0px;
+}
+
+table.ui-table th,
+table.ui-table td {
+    padding: 4px;
+    border-width: 0px 0px 1px 1px;
+}
+
+table.ui-table td {
+    font-weight: normal;
+    background: none;
+    color: black;
+}
+
+table.ui-table tr:first-child th {
+    border-width: 1px 0px 1px 1px;
+}
+
+table.ui-table tr:first-child th:last-child {
+    border-width: 1px;
+}
+
+table.ui-table tr td:last-child {
+    border-width: 0px 1px 1px 1px;
+}
+
+table.ui-table tr:first-child th:first-child {
+    border-top-left-radius:4px
+}
+	
+table.ui-table tr:first-child th:last-child {
+    border-top-right-radius:4px
+}
+
+table.ui-table tr:last-child td:first-child {
+    border-bottom-left-radius:4px
+}
+	
+table.ui-table tr:last-child td:last-child {
+    border-bottom-right-radius:4px
+}
+
+table.ui-table tr:nth-child(3n+0) {
+    background-color: #F8F8F8;
+}
+
+table.ui-table tr:hover {
+    background-color: #EEEEEE;
+}
+
+table.ui-table,
+table.ui-table#vials,
+table.ui-table#barcode_select
+{
+    margin-bottom: 24px;
+}
+
+/* Barcode select styles */
+
+table.ui-table#barcode_select {
+    border: none;
+}
+
+table.ui-table#barcode_select td,
+table.ui-table#barcode_select th {
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    background: transparent;
+}
+
+table.ui-table#barcode_select th {
+    padding-right: 6px;
+}
+
+table.ui-table#barcode_select td {
+    padding-right: 24px;
+}
+
+table.ui-table#barcode_select tr,
+table.ui-table#barcode_select tr:hover {
+    background: transparent;
+}
+
+/* Pager placeholder */
+
+table.ui-table tfoot td {
+    border: none;
+    background: transparent;
+    padding: 0px;
+    padding-top: 12px;
+    margin: 0px;
+}
+
+table.ui-table tfoot tr,
+table.ui-table tfoot tr:nth-child(3n+0),
+table.ui-table tfoot tr:hover {
+    background: transparent;
+}
