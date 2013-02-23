@@ -40,7 +40,7 @@ class CrossVial extends Vial {
     
     /**
      * @ORM\ManyToOne(targetEntity="Vial", inversedBy="maleCrosses")
-     * @Assert\NotNull(message = "Male must be specified")
+     * @Assert\NotBlank(message = "Male must be specified")
      */
     protected $male;
         
@@ -52,7 +52,7 @@ class CrossVial extends Vial {
     
     /**
      * @ORM\ManyToOne(targetEntity="Vial", inversedBy="virginCrosses")
-     * @Assert\NotNull(message = "Virgin must be specified")
+     * @Assert\NotBlank(message = "Virgin must be specified")
      */
     protected $virgin;
         
@@ -82,7 +82,7 @@ class CrossVial extends Vial {
     /**
      * {@inheritdoc}
      */
-    protected function inheritFromTemplate(Vial $template) {
+    protected function inheritFromTemplate(Vial $template = null) {
         parent::inheritFromTemplate($template);
         if ($template instanceof CrossVial) {
             $this->setMale($template->getMale());
@@ -103,7 +103,7 @@ class CrossVial extends Vial {
     /**
      * {@inheritdoc}
      */
-    public function addChild(Vial $child) {
+    public function addChild(Vial $child = null) {
         parent::addChild($child);
         if ($child instanceof CrossVial) {
             $this->setMale($child->getMale());
@@ -116,7 +116,7 @@ class CrossVial extends Vial {
     /**
      * {@inheritdoc}
      */
-    public function setParent(Vial $parent) {
+    public function setParent(Vial $parent = null) {
         parent::setParent($parent);
         if ($parent instanceof CrossVial) {
             $this->setMale($parent->getMale());
@@ -156,7 +156,7 @@ class CrossVial extends Vial {
      *
      * @param VIB\FliesBundle\Entity\Vial $male
      */
-    public function setMale(\VIB\FliesBundle\Entity\Vial $male)
+    public function setMale(Vial $male = null)
     {
         $this->male = $male;
         if ($this->male != null)
@@ -213,7 +213,7 @@ class CrossVial extends Vial {
      *
      * @param VIB\FliesBundle\Entity\Vial $virgin
      */
-    public function setVirgin(\VIB\FliesBundle\Entity\Vial $virgin)
+    public function setVirgin(Vial $virgin = null)
     {
         $this->virgin = $virgin;
         if ($this->virgin != null)

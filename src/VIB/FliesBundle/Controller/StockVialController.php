@@ -49,25 +49,4 @@ class StockVialController extends VialController {
     protected function getEditForm() {
         return new StockVialType();
     }
-    
-    /**
-     * List created stock vials
-     * 
-     * @param integer $vials
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function listCreated($vials)
-    {
-        $formResponse = $this->handleSelectForm(new SelectType());
-        
-        if (isset($formResponse['response'])) {
-            return $formResponse['response'];
-        } else if (isset($formResponse['form'])) {       
-            return array(
-                'vials' => $vials,
-                'form' => $formResponse['form'],
-                'pager' => null
-            );
-        }
-    }
 }

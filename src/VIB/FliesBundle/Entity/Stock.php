@@ -43,7 +43,7 @@ class Stock extends Entity {
     /**
      * @ORM\Column(type="string", length=255, unique=true, nullable=false)
      * @Serializer\Expose
-     * @Assert\NotBlank(message = "Name cannot be blank")
+     * @Assert\NotBlank(message = "Name must be specified")
      * 
      * @var string
      */
@@ -52,7 +52,7 @@ class Stock extends Entity {
     /**
      * @ORM\Column(type="string", length=255)
      * @Serializer\Expose
-     * @Assert\NotBlank(message = "Genotype cannot be blank")
+     * @Assert\NotBlank(message = "Genotype must be specified")
      * 
      * @var string
      */
@@ -144,7 +144,7 @@ class Stock extends Entity {
      *
      * @param \VIB\FliesBundle\Entity\Vial $vial
      */
-    public function addVial(Vial $vial) {
+    public function addVial(Vial $vial = null) {
         $this->getVials()->add($vial);
     }
     
@@ -153,7 +153,7 @@ class Stock extends Entity {
      *
      * @param \VIB\FliesBundle\Entity\Vial $vial
      */
-    public function removeVial(Vial $vial) {
+    public function removeVial(Vial $vial = null) {
         $this->getVials()->removeElement($vial);
     }
 
@@ -188,7 +188,7 @@ class Stock extends Entity {
      *
      * @param \VIB\FliesBundle\Entity\CrossVial $sourceCross
      */
-    public function setSourceCross(CrossVial $sourceCross) {
+    public function setSourceCross(CrossVial $sourceCross = null) {
         $this->sourceCross = $sourceCross;
     }
 

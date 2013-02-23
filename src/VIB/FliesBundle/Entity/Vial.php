@@ -134,7 +134,7 @@ class Vial extends Entity {
      * 
      * @param \VIB\FliesBundle\Entity\Vial $template
      */
-    protected function inheritFromTemplate(Vial $template) {
+    protected function inheritFromTemplate(Vial $template = null) {
         $this->setSetupDate($template->getSetupDate());
         $this->setFlipDate($template->getFlipDate());
     }
@@ -207,7 +207,7 @@ class Vial extends Entity {
      *
      * @param \VIB\FliesBundle\Entity\Vial $child
      */
-    public function addChild(Vial $child) {
+    public function addChild(Vial $child = null) {
         $this->getChildren()->add($child);
     }
     
@@ -216,7 +216,7 @@ class Vial extends Entity {
      *
      * @param \VIB\FliesBundle\Entity\Vial $child
      */
-    public function removeChild(Vial $child) {
+    public function removeChild(Vial $child = null) {
         $this->getChildren()->removeElement($child);
     }
 
@@ -234,7 +234,7 @@ class Vial extends Entity {
      *
      * @param \VIB\FliesBundle\Entity\Vial $parent
      */
-    public function setParent(Vial $parent) {
+    public function setParent(Vial $parent = null) {
         $this->parent = $parent;
     }
     

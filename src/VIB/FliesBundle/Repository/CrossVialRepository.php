@@ -44,8 +44,9 @@ class CrossVialRepository extends EntityRepository
             ->orderBy('b.setupDate', 'DESC')
             ->addOrderBy('b.id', 'DESC')
             ->setParameter('date', $date->format('Y-m-d'))
-            ->andWhere('b.maleName like :term or b.virginName like :term')
-            ->setParameter('term', '%' . $term .'%');
+            ->andWhere('b.maleName like :term_1 or b.virginName like :term_2')
+            ->setParameter('term_1', '%' . $term .'%')
+            ->setParameter('term_2', '%' . $term .'%');
         return $query;
     }
 }

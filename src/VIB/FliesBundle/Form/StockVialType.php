@@ -54,7 +54,6 @@ class StockVialType extends AbstractType
                 ->add('stock', 'entity_typeahead', array(
                         'property'  => 'name',
                         'class'     => 'VIBFliesBundle:Stock',
-                        'required'  => false,
                         'label'     => 'Stock:'));
     }
     
