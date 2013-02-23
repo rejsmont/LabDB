@@ -361,6 +361,9 @@ class VialController extends CRUDController {
         $request = $this->getRequest();
         $currentRoute = $request->attributes->get('_route');
         $pieces = explode('_',$currentRoute);
+        if (is_numeric($pieces[count($pieces) - 1])) {
+            array_pop($pieces);
+        }
         $pieces[count($pieces) - 1] = 'list';
         $route = ($currentRoute == 'default') ? 'default' : implode('_', $pieces);
         $url = $this->generateUrl($route);
