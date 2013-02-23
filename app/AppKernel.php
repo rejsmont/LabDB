@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle(),
             new Bmatzner\JQueryBundle\BmatznerJQueryBundle(),
             new Bmatzner\JQueryUIBundle\BmatznerJQueryUIBundle(),
+            new KULeuven\ShibbolethBundle\ShibbolethBundle(),
             new VIB\BaseBundle\VIBBaseBundle(),
             new VIB\FormsBundle\VIBFormsBundle(),
             new VIB\FliesBundle\VIBFliesBundle(),

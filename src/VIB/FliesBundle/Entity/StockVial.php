@@ -38,6 +38,7 @@ class StockVial extends Vial {
     
     /**
      * @ORM\ManyToOne(targetEntity="Stock", inversedBy="vials", fetch="EAGER")
+     * @Assert\NotBlank(message = "Stock must be specified")
      * @Serializer\Expose
      */
     protected $stock;
@@ -46,7 +47,7 @@ class StockVial extends Vial {
     /**
      * {@inheritdoc}
      */
-    protected function inheritFromTemplate(Vial $template) {
+    protected function inheritFromTemplate(Vial $template = null) {
         parent::inheritFromTemplate($template);
         if ($template instanceof StockVial) {
             $this->setStock($template->getStock());
@@ -67,7 +68,7 @@ class StockVial extends Vial {
     /**
      * {@inheritdoc}
      */
-    public function addChild(Vial $child) {
+    public function addChild(Vial $child = null) {
         parent::addChild($child);
         if ($child instanceof StockVial) {
             $child->setStock($this->getStock());
@@ -77,7 +78,7 @@ class StockVial extends Vial {
     /**
      * {@inheritdoc}
      */
-    public function setParent(Vial $parent) {
+    public function setParent(Vial $parent = null) {
         parent::setParent($parent);
         if ($parent instanceof StockVial) {
             $this->setStock($parent->getStock());
@@ -105,7 +106,7 @@ class StockVial extends Vial {
      *
      * @param \VIB\FliesBundle\Entity\Stock $stock
      */
-    public function setStock(Stock $stock)
+    public function setStock(Stock $stock = null)
     {
         $this->stock = $stock;
     }
