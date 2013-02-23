@@ -38,5 +38,5 @@ bin/envvars.default
 app/Resources/mopa_remote_update.sqlite
 
 # ignore files dumped by assetic
-web/css/*
-web/js/*
+web/css
+web/js
