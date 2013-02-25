@@ -8,7 +8,7 @@
   {{ form_errors(form) }}
   {{ form_rest(form) }}
   <div class="form-inline control-group well">
-    <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value="" onchange="checkVial()" />
+    <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value="" onchange="checkVial()" data-link="{{ path('vib_flies_ajax_vial')}}"/>
     <span class="help-inline"></span>
   </div>
 {% endblock list_selector %}
