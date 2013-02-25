@@ -42,14 +42,14 @@ class CrossVialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('setupDate', 'datepicker', array('label' => 'Setup date:'))
-                ->add('flipDate', 'datepicker', array('label' => 'Flip date:'))
+        $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
+                ->add('flipDate', 'datepicker', array('label' => 'Check date'))
                 ->add('parent', 'text_entity', array(
                         'property'  => 'id',
                         'class'     => 'VIBFliesBundle:CrossVial',
                         'format'    => '%06d',
                         'required'  => false,
-                        'label'     => 'Flipped from:',
+                        'label'     => 'Flipped from',
                         'attr' => array('class' => 'barcode')))
                 ->add('virgin', 'text_entity', array(
                         'property'     => 'id',
