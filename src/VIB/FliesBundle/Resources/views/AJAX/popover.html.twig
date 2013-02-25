@@ -1,8 +1,8 @@
 {% if type == 'crossvial' %}
 <p><b>{{ entity.name }}</b></p>
 <table class="table-plain"><tbody>
-  <tr><th>Setup:</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
-  <tr><th>Check:</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
+  <tr><th>Setup</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
+  <tr><th>Check</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
 </tbody></table>
 <div class="popover-foot">
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_crossvial_show',{'id': entity.id }) }}">Show</a>
@@ -13,8 +13,8 @@
 {% elseif type == 'stockvial' %}
 <p><b>{{ entity.stock.name }}</b></p>
 <table class="table-plain"><tbody>
-  <tr><th>Setup:</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
-  <tr><th>Check:</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
+  <tr><th>Setup</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
+  <tr><th>Flip</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
 </tbody></table>
 <div class="popover-foot">
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_stockvial_show',{'id': entity.id }) }}">Show</a>
@@ -24,8 +24,8 @@
 </div>
 {% elseif type == 'vial' %}
 <table class="table-plain"><tbody>
-  <tr><th>Setup:</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
-  <tr><th>Check:</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
+  <tr><th>Setup</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
+  <tr><th>Flip</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
 </tbody></table>
 <div class="popover-foot">
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_vial_show',{'id': entity.id }) }}">Show</a>

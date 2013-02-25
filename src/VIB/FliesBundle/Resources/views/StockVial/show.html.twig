@@ -5,11 +5,11 @@
 {% block modal_header %}Stock vial {{ entity }}{% endblock modal_header %}
 
 {% block modal_body %}
-  {{ s.row("Setup date:", entity.setupDate | date("d F Y")) }}
-  {{ s.row("Flip date:", entity.flipDate | date("d F Y")) }}
-  {{ s.row("Flipped from:", entity.parent, 'vib_flies_stockvial_show', null, 'vial') }}
-  {{ s.row("Stock:", entity.stock, 'vib_flies_stock_show', null, 'stock') }}
-  {{ s.list("Flipped to:", entity.children, 'vib_flies_stockvial_show', null, 'vial') }}
+  {{ s.row("Setup date", entity.setupDate | date("d F Y")) }}
+  {{ s.row("Flip date", entity.flipDate | date("d F Y")) }}
+  {{ s.row("Flipped from", entity.parent, 'vib_flies_stockvial_show', null, 'vial') }}
+  {{ s.row("Stock", entity.stock, 'vib_flies_stock_show', null, 'stock') }}
+  {{ s.list("Flipped to", entity.children, 'vib_flies_stockvial_show', null, 'vial') }}
 {% endblock modal_body %}
 
 {% block modal_footer %}
