@@ -125,9 +125,10 @@ class Vial extends Entity {
      * Reset dates
      */
     private function resetDates() {
-        $currentDate = new DateTime();
-        $this->setSetupDate($currentDate);
-        $this->setFlipDate($currentDate->add(new DateInterval('P14D')));
+        $setupDate = new DateTime();
+        $this->setSetupDate($setupDate);
+        $flipDate = $setupDate->add(new DateInterval('P14D'));
+        $this->setFlipDate($flipDate);
     }
     
     /**
