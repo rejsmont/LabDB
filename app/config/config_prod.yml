@@ -17,10 +17,3 @@ monolog:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
-
-assetic:
-    filters:
-        less:
-            node: /usr/bin/node
-            node_paths: [/usr/lib/nodejs]
-

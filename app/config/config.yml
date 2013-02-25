@@ -28,8 +28,8 @@ assetic:
     use_controller: false
     filters:
         less:
-            node: /opt/local/bin/node
-            node_paths: [/opt/local/lib/node_modules]
+            node: /usr/bin/node
+            node_paths: [/usr/lib/nodejs]
             apply_to: "\.less$"
         cssrewrite: ~
         cssembed:
