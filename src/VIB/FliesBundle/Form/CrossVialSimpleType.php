@@ -51,7 +51,7 @@ class CrossVialSimpleType extends AbstractType
                         'label' => 'Virgin vial',
                         'attr' => array('class' => 'barcode')))
                 ->add('virginName', 'text', array(
-                        'label' => 'Virgin name',
+                        'label' => 'Virgin genotype',
                         'required' => false))
                 ->add('male', 'text_entity', array(
                         'property'     => 'id',
@@ -60,7 +60,7 @@ class CrossVialSimpleType extends AbstractType
                         'label' => 'Male vial',
                         'attr' => array('class' => 'barcode')))
                 ->add('maleName', 'text', array(
-                        'label' => 'Male name',
+                        'label' => 'Male genotype',
                         'required' => false));
     }
 
