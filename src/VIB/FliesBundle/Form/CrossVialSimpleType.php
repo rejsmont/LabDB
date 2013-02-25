@@ -42,8 +42,8 @@ class CrossVialSimpleType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('setupDate', 'datepicker', array('label' => 'Setup date:'))
-                ->add('flipDate', 'datepicker', array('label' => 'Flip date:'))
+        $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
+                ->add('flipDate', 'datepicker', array('label' => 'Check date'))
                 ->add('virgin', 'text_entity', array(
                         'property'     => 'id',
                         'class' => 'VIBFliesBundle:Vial',

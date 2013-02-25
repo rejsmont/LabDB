@@ -72,6 +72,7 @@ mopa_bootstrap:
                 icon: trash
             widget_add_btn:
                 icon: plus-sign
+        render_optional_text: false
 
 vib_security:
     acl_walker: VIB\SecurityBundle\Bridge\Doctrine\AclWalker
