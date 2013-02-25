@@ -18,6 +18,7 @@
  * Handles vial barcode input for vial selection form
  * 
  * @param filter
+ * 
  */
 function checkVial(filter)
 {
@@ -46,11 +47,12 @@ function checkVial(filter)
         }
     } else {
 
-        url = filter ? '/app_dev.php/ajax/vials/' + filter + '/' : url = '/app_dev.php/ajax/vials/';
-  
+        url = $('#barcode').data('link');
+          
         var request = $.ajax({
             type: "GET",
-            url: url + id + '.html'
+            url: url,
+            data: {id: id, filter: filter, format: 'html'}
         });
         
         request.done(

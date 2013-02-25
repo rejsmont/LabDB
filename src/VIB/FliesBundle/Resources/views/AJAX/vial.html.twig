@@ -2,6 +2,12 @@
 
 {% if entity is not empty %}
 <tr>
+  {% if type == 'cross' %}
+    {% include 'VIBFliesBundle:CrossVial:list_row.html.twig' with {'entity': entity} %}
+  {% elseif type == 'stock' %}
+    {% include 'VIBFliesBundle:StockVial:list_row.html.twig' with {'entity': entity} %}
+  {% else %}
     {% include 'VIBFliesBundle:Vial:list_row.html.twig' with {'entity': entity} %}
+  {% endif %}
 </tr>
 {% endif %}

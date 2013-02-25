@@ -43,14 +43,16 @@ class AJAXController extends Controller {
     /**
      * Handle vial AJAX request
      * 
-     * @Route("/vials/{id}.{format}", defaults={"filter" = null, "format" = "json"})
-     * @Route("/vials/{filter}/{id}.{format}", defaults={"filter" = null, "format" = "json"})
+     * @Route("/vials")
      * @Template()
      * 
-     * @param integer $id
      * @return Symfony\Component\HttpFoundation\Response
      */    
-    public function vialAction($id, $filter = null, $format = null) {
+    public function vialAction(Request $request) {
+        
+        $id = $request->query->get('id');
+        $filter = $request->query->get('filter');
+        $format = $request->query->get('format');
         
         $em = $this->get('doctrine.orm.entity_manager');
         $securityContext = $this->get('security.context');
@@ -68,7 +70,7 @@ class AJAXController extends Controller {
         if ($format == 'json') {
             return new Response($serializer->serialize($vial, 'json')); 
         } else {
-            return array('entity' => $vial, 'checked' => 'checked');
+            return array('entity' => $vial, 'checked' => 'checked', 'type' => $filter);
         }
     }
     
