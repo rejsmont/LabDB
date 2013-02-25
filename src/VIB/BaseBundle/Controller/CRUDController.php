@@ -305,7 +305,8 @@ abstract class CRUDController extends AbstractController {
      * @return boolean
      */
     protected function controls($entity) {
-        return $this->getEntityClass() == (new ReflectionClass($entity))->getName();
+        $reflectionClass = new ReflectionClass($entity);
+        return $this->getEntityClass() == $reflectionClass->getName();
     }
 }
 ?>
