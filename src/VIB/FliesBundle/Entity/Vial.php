@@ -357,7 +357,8 @@ class Vial extends Entity {
      * @return boolean
      */
     public function isAlive() {
-        $date = (new DateTime())->sub(new DateInterval('P2M'));
+        $currentDate = new DateTime();
+        $date = $currentDate->sub(new DateInterval('P2M'));
         return (($this->getSetupDate() > $date ? true : false) && (! $this->isTrashed()));
     }
     
