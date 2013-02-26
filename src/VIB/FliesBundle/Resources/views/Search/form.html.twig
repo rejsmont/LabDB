@@ -1,5 +1,5 @@
 <form id="search-form" action="{{ path('vib_flies_search_result') }}" method="post" {{ form_enctype(form) }} class="navbar-form form-search pull-right visible-desktop">
-{% if 'MSIE' not in app.request.server.get('HTTP_USER_AGENT') or 'MSIE 10' in app.request.server.get('HTTP_USER_AGENT') %}
+{% if not msie %}
   <div class="input-append">
     {{ form_widget(form.query) }}
     <div class="btn-group">

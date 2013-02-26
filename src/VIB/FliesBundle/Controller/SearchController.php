@@ -59,7 +59,27 @@ class SearchController extends AbstractController {
      */  
     public function formAction() {
         $form = $this->createForm(new SearchType());
-        return $this->render('VIBFliesBundle:Search:form.html.twig', array('form' => $form->createView()));
+        
+        $request = $this->get('request');
+        $user_agent = $request->headers->get('User-Agent');
+        $is_msie = strpos($user_agent, 'MSIE') !== false;
+        if ($is_msie) {
+            $matches = preg_match('/MSIE (.*?)\.(.*?);/', $user_agent, $matches);
+            $msie_version = array_key_exists(1, $matches) ? $matches[1] : 0;
+            if ($msie_version <= 9) {
+                $session = $request->getSession();
+                $display = $session->get('msie_info_displayed') == null ? true : false;
+                $session->set('msie_info_displayed',true);
+            } else {
+                $display = false;
+            }
+        } else {
+            $display = false;
+        }
+        
+        return $this->render('VIBFliesBundle:Search:form.html.twig', array(
+            'form' => $form->createView(),
+            'msie' => false ));
     }
     
     /**
