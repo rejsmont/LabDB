@@ -52,7 +52,7 @@ class MessagesController extends Controller {
                 $display = false;
             }
         } else {
-            $display = true;
+            $display = false;
         }
         return array('display' => $display, 'version' => $msie_version);
     }
