@@ -36,6 +36,7 @@ class MessagesController extends Controller {
      * @return type
      */
     public function msieAction() {
+        $msie_version = 0;
         $request = $this->get('request');
         $user_agent = $request->headers->get('User-Agent');
         $is_msie = strpos($user_agent, 'MSIE') !== false;
@@ -52,7 +53,7 @@ class MessagesController extends Controller {
         } else {
             $display = false;
         }
-        return array('display' => $display);
+        return array('display' => $display, 'version' => $msie_version);
     }
 }
 ?>
