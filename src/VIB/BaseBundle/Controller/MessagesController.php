@@ -44,7 +44,6 @@ class MessagesController extends Controller {
             $matches = array();
             preg_match('/MSIE (.*?)\./', $user_agent, $matches);
             $msie_version = array_key_exists(1, $matches) ? $matches[1] : 0;
-            print_r($matches);
             if ($msie_version < 8) {
                 $session = $request->getSession();
                 $display = $session->get('msie_info_displayed') == null ? true : false;
