@@ -59,12 +59,12 @@ class SearchController extends AbstractController {
      */  
     public function formAction() {
         $form = $this->createForm(new SearchType());
-        
+        $msie_version = 10;
         $request = $this->get('request');
         $user_agent = $request->headers->get('User-Agent');
         $is_msie = strpos($user_agent, 'MSIE') !== false;
         if ($is_msie) {
-            $matches = preg_match('/MSIE (.*?)\.(.*?);/', $user_agent, $matches);
+            $matches = preg_match('/MSIE (.*?)\./', $user_agent, $matches);
             $msie_version = array_key_exists(1, $matches) ? $matches[1] : 0;
             if ($msie_version < 8) {
                 $session = $request->getSession();
