@@ -41,8 +41,10 @@ class MessagesController extends Controller {
         $user_agent = $request->headers->get('User-Agent');
         $is_msie = strpos($user_agent, 'MSIE') !== false;
         if ($is_msie) {
-            $matches = preg_match('/MSIE (.*?)\./', $user_agent, $matches);
+            $matches = array();
+            preg_match('/MSIE (.*?)\./', $user_agent, $matches);
             $msie_version = array_key_exists(1, $matches) ? $matches[1] : 0;
+            print_r($matches);
             if ($msie_version < 8) {
                 $session = $request->getSession();
                 $display = $session->get('msie_info_displayed') == null ? true : false;
@@ -51,7 +53,7 @@ class MessagesController extends Controller {
                 $display = false;
             }
         } else {
-            $display = false;
+            $display = true;
         }
         return array('display' => $display, 'version' => $msie_version);
     }
