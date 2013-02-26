@@ -66,7 +66,7 @@ class SearchController extends AbstractController {
         if ($is_msie) {
             $matches = preg_match('/MSIE (.*?)\.(.*?);/', $user_agent, $matches);
             $msie_version = array_key_exists(1, $matches) ? $matches[1] : 0;
-            if ($msie_version <= 9) {
+            if ($msie_version < 8) {
                 $session = $request->getSession();
                 $display = $session->get('msie_info_displayed') == null ? true : false;
                 $session->set('msie_info_displayed',true);
