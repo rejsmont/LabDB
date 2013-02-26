@@ -17,8 +17,7 @@
   </div>
 {% else %}
   {{ form_widget(form.query) }}
-  <a class="btn" href="#" onclick="$('#search_form_filter').val('stocks'); $('#search-form').submit();">Search stocks</a>
-  <a class="btn" href="#" onclick="$('#search_form_filter').val('crosses'); $('#search-form').submit();">Search crosses</a>
+  <a class="btn" href="#" onclick="$('#search_form_filter').val('stocks'); $('#search-form').submit();">Search</a>
 {% endif %}
   {{ form_rest(form) }}
 </form>
