@@ -200,7 +200,7 @@ class CrossVial extends Vial {
     /**
      * Check if male name is specified when male source is a cross
      * 
-     * @Assert\True(message = "Male name must be specified")
+     * @Assert\True(message = "Male genotype must be specified")
      * 
      * @return boolean
      */
@@ -257,7 +257,7 @@ class CrossVial extends Vial {
     /**
      * Check if virgin name is specified when virgin source is a cross
      * 
-     * @Assert\True(message = "Virgin name must be specified")
+     * @Assert\True(message = "Virgin genotype must be specified")
      * 
      * @return boolean
      */
