@@ -17,13 +17,15 @@
   </div>
 {% else %}
   {{ form_widget(form.query) }}
-  <button class="btn dropdown-toggle" data-toggle="dropdown">
-    Search <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu pull-right">
-    <li><a href="#" onclick="$('#search_form_filter').val('stocks'); $('#search-form').submit();">Search stocks</a></li>
-    <li><a href="#" onclick="$('#search_form_filter').val('crosses'); $('#search-form').submit();">Search crosses</a></li>
-  </ul>
+  <div class="btn-group">
+    <button class="btn dropdown-toggle" data-toggle="dropdown">
+      Search <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu pull-right">
+      <li><a href="#" onclick="$('#search_form_filter').val('stocks'); $('#search-form').submit();">Search stocks</a></li>
+      <li><a href="#" onclick="$('#search_form_filter').val('crosses'); $('#search-form').submit();">Search crosses</a></li>
+    </ul>
+  </div>
 {% endif %}
   {{ form_rest(form) }}
 </form>
