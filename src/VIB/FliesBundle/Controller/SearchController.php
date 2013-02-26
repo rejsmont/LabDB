@@ -68,18 +68,17 @@ class SearchController extends AbstractController {
             $msie_version = array_key_exists(1, $matches) ? $matches[1] : 0;
             if ($msie_version < 8) {
                 $session = $request->getSession();
-                $display = $session->get('msie_info_displayed') == null ? true : false;
-                $session->set('msie_info_displayed',true);
+                $msie = $session->get('msie_info_displayed') == null ? true : false;
             } else {
-                $display = false;
+                $msie = false;
             }
         } else {
-            $display = false;
+            $msie = false;
         }
         
         return $this->render('VIBFliesBundle:Search:form.html.twig', array(
             'form' => $form->createView(),
-            'msie' => false ));
+            'msie' => $msie ));
     }
     
     /**
