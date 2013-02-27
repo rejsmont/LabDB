@@ -57,7 +57,7 @@ class MessagesController extends Controller {
             $display = false;
             $compat = false;
         }
-        return array('display' => $display, 'version' => $msie_version);
+        return array('display' => $display, 'version' => $msie_version, 'compat' => $compat);
     }
 }
 ?>
