@@ -59,7 +59,7 @@ class PDFLabel {
                 $this->get2DBarcodeStyle());
         $this->pdf->setCellPaddings(0, 0, 0, 0);
         $this->pdf->setCellMargins(0, 0, 0, 0);
-        $this->pdf->SetFont('helvetica', 'B', 9);
+        $this->pdf->SetFont('helvetica', 'B', 12);
         $this->pdf->MultiCell(30, 12.5, $text,0,'C',0,1,20,2,true,0,false,true,16.5,'T',true);
         $this->pdf->SetFont('helvetica', '', 7);
         $this->pdf->MultiCell(30,6,$date->format("d.m.Y"),0,'C',0,1,20,17.5,true,0,false,true,6,'B',true);
