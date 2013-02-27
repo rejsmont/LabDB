@@ -32,6 +32,7 @@
         "whiteoctober/tcpdf-bundle": "dev-master",
         "bmatzner/jquery-bundle": "dev-master",
         "bmatzner/jquery-ui-bundle": "dev-master",
+        "rejsmont/php-ipp": "master",
         "kuleuven/shibboleth-bundle": "dev-master"
     },
     "scripts": {
@@ -102,6 +103,21 @@
                     "url": "https://github.com/FortAwesome/Font-Awesome.git",
                     "type": "git",
                     "reference": "master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "version": "master",
+                "name": "rejsmont/php-ipp",
+                "source": {
+                    "url": "https://github.com/rejsmont/php-ipp.git",
+                    "type": "git",
+                    "reference": "master"
+                },
+                "autoload": {
+                  "psr-0": { "PHP_IPP": ["lib/"] }
                 }
             }
         },

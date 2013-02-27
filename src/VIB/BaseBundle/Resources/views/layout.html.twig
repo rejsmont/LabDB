@@ -76,11 +76,7 @@
         <div class="span12">
           {% block flashes %}
           {% if app.session.flashbag.peekAll|length > 0 %}
-          <div class="row-fluid">
-              <div class="span12">
-              {{ session_flash() }}
-              </div>
-          </div>
+              {{ session_flash(true) }}
           {% endif %}
           {% endblock flashes %}
           {% block msie_info %}
