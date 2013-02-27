@@ -20,6 +20,7 @@ namespace VIB\FliesBundle\Utils;
 
 use Symfony\Component\HttpFoundation\Response;
 use WhiteOctober\TCPDFBundle\Controller\TCPDFController;
+use PHP_IPP\IPP\CupsPrintIPP;
 
 /**
  * Handle PDF Label generation
@@ -73,6 +74,16 @@ class PDFLabel {
                     'Content-Disposition' => 'attachment; filename="labels.pdf"'));
     }
     
+    public function printPDF() {
+        $ipp = new CupsPrintIPP();
+        $ipp->setLog('', 0, 0);
+        $ipp->setHost("localhost");
+        $ipp->setPrinterURI("/printers/Canon_MP550");
+        $ipp->setSides(1);
+        $ipp->setData($this->pdf->Output('', 'S'));
+        return $ipp->printJob();
+    }
+    
     /**
      * Generate label PDF
      * 
@@ -91,7 +102,7 @@ class PDFLabel {
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
 
-        $pdf->SetMargins(6,2,5);
+        $pdf->SetMargins(2,2);
         $pdf->SetAutoPageBreak(false);
         
         return $pdf;

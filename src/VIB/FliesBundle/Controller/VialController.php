@@ -249,7 +249,10 @@ class VialController extends CRUDController {
         
         switch($action) {
             case 'label':
-                $response = $this->generateLabels($vials);
+                $response = $this->downloadLabels($vials);
+                break;
+            case 'print':
+                $response = $this->printLabels($vials);
                 break;
             case 'flip':
                 $response = $this->flipVials($vials);
@@ -291,7 +294,18 @@ class VialController extends CRUDController {
      * @param \Doctrine\Common\Collections\Collection $vials
      * @return \Symfony\Component\HttpFoundation\Response
      */    
-    public function generateLabels(Collection $vials) {
+    public function downloadLabels(Collection $vials) {
+        $pdf = $this->prepareLabels($vials);
+        return $pdf->output();
+    }
+    
+    /**
+     * Prepare vial labels
+     * 
+     * @param \Doctrine\Common\Collections\Collection $vials
+     * @return \Symfony\Component\HttpFoundation\Response
+     */    
+    public function prepareLabels(Collection $vials) {
         
         $em = $this->getDoctrine()->getManager();
         $pdf = new PDFLabel($this->get('white_october.tcpdf'));
@@ -304,7 +318,34 @@ class VialController extends CRUDController {
         
         $em->flush();
         
-        return $pdf->output();
+        return $pdf;
+    }
+    
+    /**
+     * Print vial labels
+     * 
+     * @param \Doctrine\Common\Collections\Collection $vials
+     * @return \Symfony\Component\HttpFoundation\Response
+     */    
+    public function printLabels(Collection $vials) {
+        $count = count($vials);
+        if ($count > 0) { 
+            $pdf = $this->prepareLabels($vials);
+            $jobStatus = $pdf->printPDF();
+            if ($jobStatus == 'successfull-ok') {
+                if ($count == 1) {
+                    $this->get('session')->getFlashBag()
+                         ->add('success', 'Label for ' . $count . ' vial was sent to the printer.');
+                } else {
+                    $this->get('session')->getFlashBag()
+                         ->add('success', 'Labels for ' . $count . ' vials were sent to the printer. ');
+                }
+            } else {
+                $this->get('session')->getFlashBag()
+                     ->add('error', 'There was an error printing labels. The print server said: ' . $jobStatus);
+            }
+        }
+        return $this->getDefaultBatchResponse();
     }
     
     /**
