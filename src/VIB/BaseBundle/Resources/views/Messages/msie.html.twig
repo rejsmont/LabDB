@@ -1,13 +1,30 @@
 {% if display %}
+{% if compat %}
+<div class="row-fluid">
+    <div class="alert alert-block">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <h4>Your browser is running in compatibility mode</h4><br/>
+      <p>
+        Your Microsoft Internet Explorer is running in compatibility mode. While this website will still work in this
+        mode, some features might be unavailable or looking ugly. Please disable the compatibility mode when viewing
+        this website. To learn how to change settings for the compatibility mode,
+        <a href="http://windows.microsoft.com/en-us/internet-explorer/use-compatibility-view">click here</a>.
+      </p>
+    </div>
+</div>
+{% else %}
 <div class="row-fluid">
     <div class="alert alert-block">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       <h4>You are using an incompatible browser</h4><br/>
       <p>
         You are using Microsoft Internet Explorer version {{ version }}. While this website will still work with
-        your browser, some features might be unavailable or looking ugly. Please consider using a free, modern
-        browser like <a href="http://www.mozilla.org/firefox">Mozilla Firefox</a> or
+        your browser, some features might be unavailable or looking ugly. Please consider upgrading Internet Explorer
+        to the <a href="http://www.microsoft.com/ie">newest version</a>, or using a free, modern browser like
+        <a href="http://www.mozilla.org/firefox">Mozilla Firefox</a> or
         <a href="http://www.google.com/chrome">Google Chrome</a>.
+      </p>
     </div>
 </div>
+{% endif %}
 {% endif %}
