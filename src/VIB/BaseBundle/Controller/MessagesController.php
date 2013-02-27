@@ -47,7 +47,7 @@ class MessagesController extends Controller {
             if ($msie_version < 8) {
                 $session = $request->getSession();
                 $display = $session->get('msie_info_displayed') == null ? true : false;
-                $compat = strpos($user_agent, 'Trident') === true;
+                $compat = strpos($user_agent, 'Trident') !== false;
                 $session->set('msie_info_displayed',true);
             } else {
                 $display = false;
