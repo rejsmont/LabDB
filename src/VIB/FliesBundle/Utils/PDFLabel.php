@@ -78,7 +78,7 @@ class PDFLabel {
         $ipp = new CupsPrintIPP();
         $ipp->setLog('', 0, 0);
         $ipp->setHost("localhost");
-        $ipp->setPrinterURI("/printers/Canon_MP550");
+        $ipp->setPrinterURI("/printers/Zebra_GX430t");
         $ipp->setSides(1);
         $ipp->setData($this->pdf->Output('', 'S'));
         return $ipp->printJob();
