@@ -86,14 +86,18 @@ abstract class CRUDController extends AbstractController {
      */
     public function applyFilter($query, $filter = null)
     {
-        switch($filter) {
-            case 'public':
-            case 'all':
-                return $this->get('vib.security.helper.acl')->apply($query);
-                break;
-            default:
-                return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
-                break;
+        if ($this->getUser() !== null) {
+            switch($filter) {
+                case 'public':
+                case 'all':
+                    return $this->get('vib.security.helper.acl')->apply($query);
+                    break;
+                default:
+                    return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
+                    break;
+            }
+        } else {
+            return $query->getQuery();
         }
     }
     

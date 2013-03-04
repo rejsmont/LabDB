@@ -80,3 +80,14 @@ vib_security:
         VIB\FliesBundle\Entity\Vial:
             - 'VIB\FliesBundle\Entity\StockVial'
             - 'VIB\FliesBundle\Entity\CrossVial'
+
+shibboleth:
+    handler_path: /Shibboleth.sso
+    secured_handler: true
+    session_initiator_path: /Login
+
+fos_user:
+    db_driver: orm
+    firewall_name: secured_area
+    user_class: VIB\UserBundle\Entity\User
+

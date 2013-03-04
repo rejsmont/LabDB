@@ -26,11 +26,14 @@ class AppKernel extends Kernel
             new WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle(),
             new Bmatzner\JQueryBundle\BmatznerJQueryBundle(),
             new Bmatzner\JQueryUIBundle\BmatznerJQueryUIBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
             new KULeuven\ShibbolethBundle\ShibbolethBundle(),
             new VIB\BaseBundle\VIBBaseBundle(),
             new VIB\FormsBundle\VIBFormsBundle(),
             new VIB\FliesBundle\VIBFliesBundle(),
             new VIB\SecurityBundle\VIBSecurityBundle(),
+            new VIB\UserBundle\VIBUserBundle(),
+            new VIB\WelcomeBundle\VIBWelcomeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

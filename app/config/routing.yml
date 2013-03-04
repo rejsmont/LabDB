@@ -1,12 +1,11 @@
+default:
+    pattern:  /
+    defaults: { _controller: VIBWelcomeBundle:Default:index }
 vib_forms:
     resource: "@VIBFormsBundle/Resources/config/routing.yml"
+    prefix:   /secure
 vib_flies:
     resource: "@VIBFliesBundle/Resources/config/routing.yml"
-
-login:
-    pattern:   /login
-    defaults:  { _controller: VIBSecurityBundle:Security:login }
-login_check:
-    pattern:   /login_check
+    prefix:   /secure
 logout:
-    pattern:   /logout
+    pattern:   /secure/logout

@@ -1,7 +1,3 @@
-default:
-    pattern:  /
-    defaults: { _controller: VIBFliesBundle:StockVial:list }
-
 vial:
     resource: "@VIBFliesBundle/Controller/VialController.php"
     type:     annotation

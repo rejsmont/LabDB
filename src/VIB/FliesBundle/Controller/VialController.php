@@ -104,20 +104,32 @@ class VialController extends CRUDController {
                                ->orderBy('b.setupDate', 'DESC')
                                ->addOrderBy('b.id', 'DESC')
                                ->setParameter('date', $date->format('Y-m-d'));
-                return $this->get('vib.security.helper.acl')->apply($query);
+                if ($this->getUser() !== null) {
+                    return $this->get('vib.security.helper.acl')->apply($query);
+                } else {
+                    return $query->getQuery();
+                }
                 break;
             case 'trashed':
                 $query = $query->where('b.trashed = true')
                                ->orderBy('b.setupDate', 'DESC')
                                ->addOrderBy('b.id', 'DESC');
-                return $this->get('vib.security.helper.acl')->apply($query);
+                if ($this->getUser() !== null) {
+                    return $this->get('vib.security.helper.acl')->apply($query);
+                } else {
+                    return $query->getQuery();
+                }                
                 break;
             case 'dead':
                 $query = $query->where('b.setupDate < :date')
                                ->orderBy('b.setupDate', 'DESC')
                                ->addOrderBy('b.id', 'DESC')
                                ->setParameter('date', $date->format('Y-m-d'));
-                return $this->get('vib.security.helper.acl')->apply($query);
+                if ($this->getUser() !== null) {
+                    return $this->get('vib.security.helper.acl')->apply($query);
+                } else {
+                    return $query->getQuery();
+                }                
                 break;
             default:
                 $query = $query->where('b.setupDate > :date')
@@ -125,7 +137,11 @@ class VialController extends CRUDController {
                                ->orderBy('b.setupDate', 'DESC')
                                ->addOrderBy('b.id', 'DESC')
                                ->setParameter('date', $date->format('Y-m-d'));
-                return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
+                if ($this->getUser() !== null) {
+                    return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
+                } else {
+                    return $query->getQuery();
+                }                
                 break;
         }
     }
