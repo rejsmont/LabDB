@@ -1,0 +1,41 @@
+{% extends "VIBBaseBundle::layout.html.twig" %}
+
+{% block headline %}LNG FlyDB{% endblock headline %}
+
+{% block content %}
+<p>
+  Welcome the to the LNG FlyDB. Use the menu above to access lab's resources. You will redirected to the KU Leuven login
+  page, where you can log in with your <b>u-number</b> and <b>email password</b>. After successful login you will see
+  a list of your private stock vials.
+</p>
+<p>
+  The website is still in development, so if you encounter any errors, please send an email to 
+  <a href="mailto:radoslaw.ejsmont@med.kuleuven.be">webmaster</a>, including
+  description of what you were doing, URL from the address bar and the error message. I will try to fix the error as
+  soon as possible.
+</p>
+<p>
+  This place will be used for announcements of updates and new features. 
+</p>
+{% endblock content %}
+
+
+{% block header_row %}
+<div class="span12">
+  {% block page_header %}
+  <div class="page-header">
+        <h1>{{ block('headline') }}</h1>
+  </div>
+  {% endblock page_header %}
+</div>
+{% endblock header_row %}
+
+{% block main_row %}
+<div class="span12">
+  {% block content_row %}
+  <div class="row-fluid">
+      {{ block('content') }}
+  </div>
+  {% endblock content_row %}
+</div>
+{% endblock main_row %}
