@@ -4,9 +4,12 @@
 
 {% block content %}
 <p>
-  Welcome the to the LNG FlyDB. Use the menu above to access lab's resources. You will redirected to the KU Leuven login
+  Welcome the to the LNG FlyDB. Use the menu above to access database resources.
+  {% if app.user is empty %}
+  You will redirected to the KU Leuven login
   page, where you can log in with your <b>u-number</b> and <b>email password</b>. After successful login you will see
   a list of your private stock vials.
+  {% endif %}
 </p>
 <p>
   The website is still in development, so if you encounter any errors, please send an email to 
