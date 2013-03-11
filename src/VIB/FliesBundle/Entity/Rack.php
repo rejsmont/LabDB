@@ -42,7 +42,7 @@ use VIB\BaseBundle\Entity\Entity;
 class Rack extends Entity {
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Serializer\Expose
      * 
      * @var string
@@ -50,11 +50,22 @@ class Rack extends Entity {
     protected $description;
     
     /**
-     * @ORM\OneToMany(targetEntity="RackPosition", mappedBy="rack", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="RackPosition", mappedBy="rack", cascade={"persist", "remove"}, orphanRemoval=true)
      * 
      * @var \Doctrine\Common\Collections\Collection
      */
     protected $positions;
+    
+    /**
+     * @var integer
+     */
+    private $rows;
+    
+    /**
+     * @var integer
+     */
+    private $columns;
+    
     
     /**
      * Construct Rack
@@ -62,8 +73,8 @@ class Rack extends Entity {
      * @param integer $rows
      * @param integer $columns
      */    
-    public function __construct($rows, $columns) {
-
+    public function __construct($rows = null, $columns = null) {
+        $this->setGeometry($rows, $columns);
     }
     
     /**
@@ -156,6 +167,72 @@ class Rack extends Entity {
         $this->getPosition($row, $column)->setContents($contents);
     }
 
+    /**
+     * Update counters for rows and columns
+     * 
+     */
+    private function updateGeometry() {
+        if ((null === $this->rows)||(null === $this->columns)) {
+            $rows = array();
+            $columns = array();
+            foreach ($this->getPositions() as $position) {
+                $rows[$position->getRow()] = true;
+                $columns[$position->getColumn()] = true;
+            }
+            $this->rows = count($rows);
+            $this->columns = count($columns);
+        }
+    }
+    
+    /**
+     * Count rows in rack
+     * 
+     * @return integer
+     */
+    public function getRows() {
+        $this->updateGeometry();
+        return $this->rows;
+    }
+    
+    /**
+     * Count columns in rack
+     * 
+     * @return integer
+     */
+    public function getColumns() {
+        $this->updateGeometry();
+        return $this->columns;
+    }
+    
+    /**
+     * Get geometry
+     * 
+     * @return string
+     */
+    public function getGeometry() {
+        $this->updateGeometry();
+        return $this->rows . " ✕ " . $this->columns;
+    }
+    
+    /**
+     * Set geometry
+     * 
+     * @param integer $rows
+     * @param integer $columns
+     */
+    public function setGeometry($rows, $columns) {
+        $this->positions = new ArrayCollection();
+        if ((null !== $rows)&&(null !== $columns)) {
+            for($row = 1; $row <= $rows; $row++) {
+                for($column = 1; $column <= $columns; $column++) {
+                    $this->positions[] = new RackPosition($row,$column);
+                }
+            }
+            $this->rows = $rows;
+            $this->columns = $columns;
+        }
+    }
+    
     /**
      * Get vial
      * 

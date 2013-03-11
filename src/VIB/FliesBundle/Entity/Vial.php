@@ -379,7 +379,9 @@ class Vial extends Entity {
      */
     public function setPosition($position) {
         $this->position = $position;
-        $position->setContents($this);
+        if ($position->getContents() !== $this) {
+            $position->setContents($this);
+        }
     }
 
     /**
