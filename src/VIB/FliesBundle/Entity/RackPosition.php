@@ -55,6 +55,7 @@ class RackPosition extends Entity {
     
     /**
      * @ORM\ManyToOne(targetEntity="Rack", inversedBy="positions")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Serializer\Expose
      * @Assert\NotBlank(message = "Rack must be specified")
      * 
@@ -231,10 +232,12 @@ class RackPosition extends Entity {
      * 
      * @param \VIB\FliesBundle\Entity\Vial $contents
      */
-    public function setContents($contents) {
-        $this->setPrevContents($this->contents);
+    public function setContents(Vial $contents = null) {
+        $prevContents = $this->getContents();
+        $this->setPrevContents($prevContents);
+        $prevContents->setPosition(null);
         $this->contents = $contents;
-        if ($contents->getPosition() !== $this) {
+        if ((null !== $contents)&&($contents->getPosition() !== $this)) {
             $contents->setPosition($this);
         }
     }
@@ -253,8 +256,8 @@ class RackPosition extends Entity {
      * 
      * @param \VIB\FliesBundle\Entity\Vial $prevContents
      */
-    public function setPrevContents($prevContents) {
-        if ($prevContents->getPrevPosition() !== $this) {
+    public function setPrevContents(Vial $prevContents = null) {
+        if ((null !== $prevContents)&&($prevContents->getPrevPosition() !== $this)) {
             $prevContents->setPrevPosition($this);
         }
     }

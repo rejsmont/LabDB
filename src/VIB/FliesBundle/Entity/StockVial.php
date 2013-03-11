@@ -38,6 +38,7 @@ class StockVial extends Vial {
     
     /**
      * @ORM\ManyToOne(targetEntity="Stock", inversedBy="vials", fetch="EAGER")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotBlank(message = "Stock must be specified")
      * @Serializer\Expose
      */
