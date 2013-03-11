@@ -115,7 +115,7 @@ class Stock extends Entity {
     }
 
     /**
-     * Get name
+     * Get label
      *
      * @return string
      */

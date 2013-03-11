@@ -87,6 +87,16 @@ class Vial extends Entity {
      */
     protected $trashed;
     
+    /**
+     * @ORM\OneToOne(targetEntity="RackPosition", inversedBy="contents")
+     */
+    protected $position;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="RackPosition", inversedBy="prevContents")
+     */
+    protected $prevPosition;
+    
     
     /**
      * Construct Vial
@@ -353,6 +363,44 @@ class Vial extends Entity {
         $this->trashed = $trashed;
     }
     
+    /**
+     * Get position
+     * 
+     * @return type
+     */
+    public function getPosition() {
+        return $this->position;
+    }
+
+    /**
+     * Set position
+     * 
+     * @param type $position
+     */
+    public function setPosition($position) {
+        $this->position = $position;
+        $position->setContents($this);
+    }
+
+    /**
+     * Get previous position
+     * 
+     * @return type
+     */
+    public function getPrevPosition() {
+        return $this->prevPosition;
+    }
+
+    /**
+     * Set previous position
+     * 
+     * @param type $prevPosition
+     */
+    public function setPrevPosition($prevPosition) {
+        $this->prevPosition = $prevPosition;
+    }
+
+        
     /**
      * Is alive
      *
