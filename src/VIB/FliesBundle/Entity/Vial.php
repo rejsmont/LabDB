@@ -62,6 +62,7 @@ class Vial extends Entity {
     
     /**
      * @ORM\ManyToOne(targetEntity="Vial", inversedBy="children")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $parent;
     
@@ -89,11 +90,13 @@ class Vial extends Entity {
     
     /**
      * @ORM\OneToOne(targetEntity="RackPosition", inversedBy="contents")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $position;
     
     /**
      * @ORM\ManyToOne(targetEntity="RackPosition", inversedBy="prevContents")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $prevPosition;
     
@@ -366,7 +369,7 @@ class Vial extends Entity {
     /**
      * Get position
      * 
-     * @return type
+     * @return \VIB\FliesBundle\Entity\RackPosition
      */
     public function getPosition() {
         return $this->position;
@@ -375,11 +378,12 @@ class Vial extends Entity {
     /**
      * Set position
      * 
-     * @param type $position
+     * @param \VIB\FliesBundle\Entity\RackPosition $position
      */
-    public function setPosition($position) {
+    public function setPosition(RackPosition $position = null) {
+        $this->setPrevPosition($this->getPosition());
         $this->position = $position;
-        if ($position->getContents() !== $this) {
+        if ((null !== $position)&&($position->getContents() !== $this)) {
             $position->setContents($this);
         }
     }
@@ -387,7 +391,7 @@ class Vial extends Entity {
     /**
      * Get previous position
      * 
-     * @return type
+     * @return \VIB\FliesBundle\Entity\RackPosition
      */
     public function getPrevPosition() {
         return $this->prevPosition;
@@ -396,9 +400,9 @@ class Vial extends Entity {
     /**
      * Set previous position
      * 
-     * @param type $prevPosition
+     * @param \VIB\FliesBundle\Entity\RackPosition $prevPosition
      */
-    public function setPrevPosition($prevPosition) {
+    public function setPrevPosition(RackPosition $prevPosition = null) {
         $this->prevPosition = $prevPosition;
     }
 

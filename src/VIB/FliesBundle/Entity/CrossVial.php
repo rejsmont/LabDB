@@ -40,6 +40,7 @@ class CrossVial extends Vial {
     
     /**
      * @ORM\ManyToOne(targetEntity="Vial", inversedBy="maleCrosses")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotBlank(message = "Male must be specified")
      */
     protected $male;
@@ -52,6 +53,7 @@ class CrossVial extends Vial {
     
     /**
      * @ORM\ManyToOne(targetEntity="Vial", inversedBy="virginCrosses")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotBlank(message = "Virgin must be specified")
      */
     protected $virgin;

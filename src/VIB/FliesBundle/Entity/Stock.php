@@ -69,6 +69,7 @@ class Stock extends Entity {
     
     /**
      * @ORM\ManyToOne(targetEntity="CrossVial", inversedBy="stocks")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      * 
      * @var \VIB\FliesBundle\Entity\CrossVial
      */
