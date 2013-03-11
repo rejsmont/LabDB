@@ -35,6 +35,7 @@ use VIB\BaseBundle\Entity\Entity;
  * 
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\StockRepository")
  * @Serializer\ExclusionPolicy("all")
+ * @Assert\UniqueEntity("name")
  * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
