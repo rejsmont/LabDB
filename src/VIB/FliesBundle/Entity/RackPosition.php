@@ -19,14 +19,8 @@
 namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-
 use JMS\Serializer\Annotation as Serializer;
-
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity as UniqueEntity;
 
 use VIB\BaseBundle\Entity\Entity;
 
@@ -61,6 +55,8 @@ class RackPosition extends Entity {
     
     /**
      * @ORM\ManyToOne(targetEntity="Rack", inversedBy="positions")
+     * @Serializer\Expose
+     * @Assert\NotBlank(message = "Rack must be specified")
      * 
      * @var \VIB\FliesBundle\Entity\Rack
      */
@@ -68,6 +64,7 @@ class RackPosition extends Entity {
     
     /**
      * @ORM\OneToOne(targetEntity="Vial", mappedBy="position")
+     * @Serializer\Expose
      * 
      * @var \VIB\FliesBundle\Entity\Vial
      */
@@ -76,7 +73,7 @@ class RackPosition extends Entity {
     /**
      * @ORM\OneToMany(targetEntity="Vial", mappedBy="prevPosition")
      * 
-     * @var \VIB\FliesBundle\Entity\Vial
+     * @var \Doctrine\Common\Collections\Collection
      */
     protected $prevContents;
         
