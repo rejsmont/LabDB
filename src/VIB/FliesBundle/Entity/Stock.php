@@ -26,6 +26,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity as UniqueEntity;
 
 use VIB\BaseBundle\Entity\Entity;
 
@@ -35,7 +36,7 @@ use VIB\BaseBundle\Entity\Entity;
  * 
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\StockRepository")
  * @Serializer\ExclusionPolicy("all")
- * @Assert\UniqueEntity("name")
+ * @UniqueEntity("name")
  * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
