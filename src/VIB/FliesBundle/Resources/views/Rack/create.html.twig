@@ -1,15 +1,15 @@
-{% extends "VIBFliesBundle:CrossVial:layout.html.twig" %}
+{% extends "VIBFliesBundle:Rack:layout.html.twig" %}
 {% use "VIBBaseBundle:Form:form.html.twig" %}
 {% import "VIBBaseBundle:Macros:form.html.twig" as f %}
 
 {% form_theme form _self %} 
-  
-{% block _crossvial_new_cross_row %}
+
+{% block _rack_rack_row %}
   {{ form_widget(form) }}
 {% endblock %}
 
-{% block modal_header %}New cross{% endblock modal_header %}
+{% block modal_header %}New rack{% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.get('value').cross,'vib_flies_crossvial') }}
+  {{ f.buttons(form.get('value').rack,'vib_flies_rack') }}
 {% endblock modal_footer %}

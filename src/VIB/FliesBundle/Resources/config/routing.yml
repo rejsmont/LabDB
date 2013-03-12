@@ -13,6 +13,10 @@ stock_vial:
 stock:
     resource: "@VIBFliesBundle/Controller/StockController.php"
     type:     annotation
+    
+rack:
+    resource: "@VIBFliesBundle/Controller/RackController.php"
+    type:     annotation
 
 ajax:
     resource: "@VIBFliesBundle/Controller/AJAXController.php"

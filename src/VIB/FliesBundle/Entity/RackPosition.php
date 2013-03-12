@@ -82,10 +82,12 @@ class RackPosition extends Entity {
     /**
      * Construct RackPosition
      *
+     * @param \VIB\FliesBundle\Entity\Rack $rack
      * @param integer|string $row
      * @param integer $column
      */    
-    public function __construct($row, $column) {
+    public function __construct($rack, $row, $column) {
+        $this->setRack($rack);
         $this->setRow($row);
         $this->setColumn($column);
     }
@@ -114,16 +116,7 @@ class RackPosition extends Entity {
      * @return string
      */
     public function getRow() {
-        $base = ord('z') - ord('a') + 1;
-        $rest = $this->getRackRow();
-        $characters = array();
-        while($rest > $base) {
-            $div = floor($rest / $base);
-            $characters[] = chr(ord('a') + $div - 1);
-            $rest = $rest % $base;
-        }
-        $characters[] = chr(ord('a') + $rest - 1);
-        return strtoupper(implode(array_reverse($characters)));
+        return $this->numberToRow($this->getRackRow());
     }
     
     /**
@@ -132,15 +125,8 @@ class RackPosition extends Entity {
      * @param integer|string $rackRow
      */
     public function setRackRow($rackRow) {
-        if (!is_numeric($rackRow) && is_string($rackRow)) {
-            $base = ord('z') - ord('a') + 1;
-            $characters = array_reverse(str_split(strtolower($rackRow)));
-            $rackRow = 0;
-            foreach ($characters as $exp => $character) {
-                $rackRow += (ord($character) - ord('a') + 1) * pow($base,$exp);
-            }
-        }
-        $this->rackRow = $rackRow;
+        $row = $this->rowToNumber($rackRow);
+        $this->rackRow = $row;
     }
     
     /**
@@ -196,7 +182,8 @@ class RackPosition extends Entity {
      * @return boolean
      */
     public function isAt($row, $column) {
-        return ((null === $row)||($this->getRow() == strtoupper($row))) &&
+        
+        return ((null === $row)||($this->getRackRow() == $this->rowToNumber($row))) &&
             ((null === $column)||($this->getColumn() == $column));
     }
     
@@ -259,6 +246,35 @@ class RackPosition extends Entity {
     public function setPrevContents(Vial $prevContents = null) {
         if ((null !== $prevContents)&&($prevContents->getPrevPosition() !== $this)) {
             $prevContents->setPrevPosition($this);
+        }
+    }
+    
+    private function rowToNumber($row) {
+        if (!is_numeric($row) && is_string($row)) {
+            $base = ord('z') - ord('a') + 1;
+            $characters = array_reverse(str_split(strtolower($row)));
+            $row = 0;
+            foreach ($characters as $exp => $character) {
+                $row += (ord($character) - ord('a') + 1) * pow($base,$exp);
+            }
+        }
+        return $row;
+    }
+    
+    private function numberToRow($row) {
+        if (is_numeric($row)) {
+            $base = ord('z') - ord('a') + 1;
+            $rest = $row;
+            $characters = array();
+            while($rest > $base) {
+                $div = floor($rest / $base);
+                $characters[] = chr(ord('a') + $div - 1);
+                $rest = $rest % $base;
+            }
+            $characters[] = chr(ord('a') + $rest - 1);
+            return strtoupper(implode(array_reverse($characters)));
+        } else {
+            return $row;
         }
     }
 }

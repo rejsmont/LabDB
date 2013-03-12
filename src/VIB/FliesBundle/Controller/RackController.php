@@ -26,6 +26,7 @@ use VIB\BaseBundle\Controller\CRUDController;
 
 use VIB\FliesBundle\Form\RackType;
 
+use VIB\FliesBundle\Entity\Rack;
 
 /**
  * RackController class
@@ -50,5 +51,95 @@ class RackController extends CRUDController
      */
     protected function getEditForm() {
         return new RackType();
+    }
+    
+    /**
+     * Create rack
+     * 
+     * @Route("/new")
+     * @Template()
+     * 
+     * @return array|\Symfony\Component\HttpFoundation\Response
+     */
+    public function createAction() {
+        
+        $rack = new Rack();
+        $data = array('rack' => $rack, 'rows' => 10, 'columns' => 10);
+        
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm($this->getCreateForm(), $data);
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                
+                $data = $form->getData();
+                $rack = $data['rack'];
+                $rows = $data['rows'];
+                $columns = $data['columns'];
+                
+                $rack->setGeometry($rows, $columns);
+                
+                $em->persist($rack);
+                $em->flush();
+
+                $this->setACL($rack);
+                
+                $url = $this->generateUrl('vib_flies_rack_show',array('id' => $rack->getId())); 
+                return $this->redirect($url);
+            }
+        }
+        
+        return array('form' => $form->createView());
+    }
+    
+    /**
+     * Edit rack
+     * 
+     * @Route("/edit/{id}")
+     * @Template()
+     * 
+     * @param mixed $id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction($id) {
+        $em = $this->getDoctrine()->getManager();
+        $rack = $this->getEntity($id);
+        $securityContext = $this->get('security.context');
+        
+        if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('EDIT', $rack))) {
+            throw new AccessDeniedException();
+        }        
+        
+        $data = array('rack' => $rack, 'rows' => 10, 'columns' => 10);
+        
+        $form = $this->createForm($this->getCreateForm(), $data);
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                
+                $data = $form->getData();
+                $rack = $data['rack'];
+                $rows = $data['rows'];
+                $columns = $data['columns'];
+                
+                $rack->setGeometry($rows, $columns);
+                
+                $em->persist($rack);
+                $em->flush();
+                
+                $url = $this->generateUrl('vib_flies_rack_show',array('id' => $rack->getId())); 
+                return $this->redirect($url);
+            }
+        }
+        
+        return array('form' => $form->createView());
     }
 }

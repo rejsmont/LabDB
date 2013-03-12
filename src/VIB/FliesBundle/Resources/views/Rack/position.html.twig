@@ -1,0 +1,10 @@
+{% set uuid = random() ~ '_' ~ contents.id  %}
+<span class="popover-trigger" id="span_{{ uuid }}"
+      data-placement="top" data-container="#span_{{ uuid }}"
+      data-delay="500" data-link="/app_dev.php/secure/ajax/popover"
+      data-type="vial" data-id="{{ contents.id }}">
+  <a><input type="checkbox" id="select_items_{{ contents.id }}" 
+     name="select[items][{{ contents.id }}]" 
+     value="{{ contents.id }}" checked />
+  </a>
+</span>
