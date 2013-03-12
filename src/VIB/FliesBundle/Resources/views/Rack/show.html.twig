@@ -1,0 +1,66 @@
+{% extends "VIBFliesBundle:Rack:layout.html.twig" %}
+{% import "VIBBaseBundle:Macros:show.html.twig" as s %}
+{% import "VIBBaseBundle:Macros:list.html.twig" as l %}
+{% block headline %}Rack {{ entity }} <small>{{ entity.description }}</small>{% endblock headline %}
+
+{% block content %}
+{% if form is defined %}
+<form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
+{% endif %}
+<div class="span12">
+  {% block list_selector %}
+    {% if form is defined %}
+      {{ form_errors(form) }}
+      {{ form_rest(form) }}
+    {% endif %}
+    <div class="form-inline control-group well">
+      <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value="" onchange="checkRackVial()" data-link="{{ path('vib_flies_ajax_rackvial')}}"/>
+      <span class="help-inline"></span>
+    </div>
+  {% endblock list_selector %}
+  <table class="table table-bordered table-condensed rack-display">
+    <tbody>
+      <tr>
+        <th><input type="checkbox" id="checkall" checked/></th>
+      {% for i in 1..entity.columns %}
+        <th>
+          {{ entity.position(1,i).column }}
+        </th>
+      {% endfor %}
+      </tr>
+    {% set first = true %}
+    {% for i in 1..entity.rows %}
+      <tr>
+        <th>
+          {{ entity.position(i,1).row }}
+          <input type="checkbox" class="checkrow" checked/>
+        </th>
+        {% for j in 1..entity.columns %}
+          {% if entity.position(i,j).isEmpty %}
+            {% if first == true %}
+              {% set first = false %}
+              <td id="position_{{ entity.position(i,j).id }}" class="empty info"></td>
+            {% else %}
+              <td id="position_{{ entity.position(i,j).id }}" class="empty"></td>
+            {% endif %}
+          {% else %}
+            {% set contents = entity.position(i,j).contents %}
+            <td id="position_{{ entity.position(i,j).id }}" class="success">
+              {% include 'VIBFliesBundle:Rack:position.html.twig' with {'contents': contents} %}
+            </td>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% block list_buttons %}{{ l.select_buttons() }}{% endblock list_buttons %}
+  {% block paginator %}
+    {% if entities is defined %}{{ knp_pagination_render(entities) }}{% endif %}
+  {% endblock paginator %}
+</div>
+{% if form is defined %}
+</form>
+{% endif %}
+<div id="popovers"></div>
+{% endblock %}

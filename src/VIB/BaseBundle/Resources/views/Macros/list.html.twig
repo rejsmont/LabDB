@@ -5,11 +5,17 @@
 {% if verify %}
   {% if entity is not empty %}
     {% if is_granted('ROLE_ADMIN') or is_granted('VIEW',entity) %}
-      <a href="{{ path(route, { 'id': entity.id }) }}"
-        {% if popover is not empty %}
-          class="popover-trigger" data-link="{{ path('vib_flies_ajax_popover')}}" data-type="{{ popover }}" data-id="{{ entity.id }}"
-        {% endif %}
-      >{{ name }}</a>
+      {% if popover is not empty %}
+        {% set uuid = random() ~ '_' ~ entity.id  %}
+        <span class="popover-trigger" id="span_{{ uuid }}"
+              data-placement="bottom" data-container="#span_{{ uuid }}"
+              data-delay="500" data-link="{{ path('vib_flies_ajax_popover')}}"
+              data-type="{{ popover }}" data-id="{{ entity.id }}">
+      {% endif %}
+      <a href="{{ path(route, { 'id': entity.id }) }}">{{ name }}</a>
+      {% if popover is not empty %}
+        </span>
+      {% endif %}
     {% else %}{{ name }}{% endif %}
   {% endif %}
 {% else %}

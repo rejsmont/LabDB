@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 /**
  * Handles vial barcode input for vial selection form
  * 
@@ -78,100 +79,30 @@ function checkVial(filter)
     $('#barcode').focus();
 }
 
-function getVial(caller)
-{
-    var caller_id = caller.id;
-    var filter = caller_id.substring(caller_id.lastIndexOf('_')+1);
-    var control = caller_id.substring(7);
-    var vial_id = parseInt(caller.value,10);
-    
-    $('#' + caller.id + '_error').html('');
-    
-    if (caller.value == 0) {
-        $('[id$="Type_' + filter + '"]').val('null');
-        $('#' + caller.id + '_data').html('');
-    } else {    
-        
-        var url = '';
-        
-        switch(filter) {
-            case 'source':
-            case 'stock':
-            case 'parent':
-                url = '/app_dev.php/ajax/vials/stock/';
-                break;
-            case 'source_cross':
-            case 'cross':
-                url = '/app_dev.php/ajax/vials/cross/';
-                break;
-            default:
-                url = '/app_dev.php/ajax/vials/';
-                break;
-        }
-        
-        var request = $.getJSON(url + vial_id + '.json').success(function(vial) {
-            
-            var html = '';
-
-            switch(filter) {
-                case 'source':
-                    if (vial.stock) {
-                        html = pad(vial.id + '',6);
-                        $('#' + control).val(vial.id);
-                        $('#' + caller.id + '_data').html(html);
-                        $('#' + caller.id + '_header').html('' + vial.stock.name);
-                    }
-                    break;
-                case 'parent':
-                    if (vial.stock) {
-                        html = pad(vial.id + '',6);
-                        $('#' + control).val(vial.id);
-                        $('#' + caller.id + '_data').html(html);
-                    }
-                    break;
-                case 'stock':
-                    if (vial.stock) {
-                        html = vial.stock.name;
-                        $('#' + control).val(vial.stock.id);
-                        $('#' + caller.id + '_data').html(html);
-                    }
-                    break;
-                case 'source_cross':
-                case 'cross':
-                    if (vial.cross) {
-                        html = vial.cross.virgin_name + " \u263f ✕ " + vial.cross.male_name + " \u2642";
-                        $('#' + control).val(vial.cross.id);
-                        $('#' + caller.id + '_data').html(html);
-                    }
-                    break;
-                case 'virgin':
-                case 'male':
-                    if (vial.stock) {                            
-                        html = vial.stock.name + ' (' + pad(vial.id + '',6) + ')';
-                        $('#' + control).val(vial.id);
-                        $('#' + caller.id + '_data').html(html);
-                        $('#' + control + 'Name').val(vial.stock.name);
-                    } else if (vial.cross) {                            
-                        html = vial.cross.virgin_name + " \u263f ✕ " + vial.cross.male_name + " \u2642"
-                             + ' (' + pad(vial.id + '',6) + ')';
-                        $('#' + control).val(vial.id);
-                        $('#' + caller.id + '_data').html(html);
-                        $('#' + control + 'Name').val('');
-                    }
-                    break;
+function setupPopover(e) {
+  var element = e;
+  var timeout = element.data('delay') != null ? element.data('delay') : 0;
+  element.data('timeout', setTimeout(function() {
+    element.off('mouseenter mouseleave');
+    clearTimeout(element.data('timeout'));
+    $.ajax({
+          url: element.data('link'),
+          type: 'get',
+          data: {type: element.data('type'), id: element.data('id')},
+          success: function(json) {
+            title = json.title == 'undefined' ? false : json.title;
+            content = json.html == 'undefined' ? false : json.html;
+            if ((title != false)&&(content != false)) {
+              element.popover({
+                title:title,
+                content:content,
+                html:true,
+                trigger:'hover'
+              }).popover('show');
             }
-        })
-        
-        request.fail(function(xhr, ajaxOptions, thrownError) {
-            $('#' + caller.id + '_error').html(form_error(xhr.responseText));
-        });
-    
-    }
-    caller.value = '';
-}
-
-function pad (str, max) {
-  return str.length < max ? pad("0" + str, max) : str;
+          }
+    });
+  },timeout));
 }
 
 function preventEnterSubmit(e) {
@@ -187,8 +118,6 @@ function preventEnterSubmit(e) {
     }
 }
 
-var popoverTimeoutLock;
-
 $(document).ready(function() {
     $('form').bind("keypress", function(e) {
         return preventEnterSubmit(e);
@@ -201,69 +130,23 @@ $(document).ready(function() {
         });
     });
     
-    $('.popover-trigger').mouseenter(function() {
-      var element = $(this);
-      element.addClass("hasFocus");
-      setTimeout(function() { 
-        if (element.hasClass("hasFocus")) {
-          element.off('mouseenter mouseleave');
-          element.removeClass("hasFocus");
-          $.ajax({
-            url: element.data('link'),
-            type: 'get',
-            data: {type: element.data('type'), id: element.data('id')},
-            success: function(json) {
-              var title = json.title == 'undefined' ? false : json.title;
-              var html = json.html == 'undefined' ? false : json.html;
-              if ((title != false)&&(html != false)) {
-                element.popover({
-                  title:title,
-                  content:html,
-                  placement:'bottom',
-                  html:true,
-                  trigger:'manual'
-                }).popover('show').mouseenter(function() {
-                    var ref = $(this);
-                    ref.addClass("hasFocus");
-                    setTimeout(function() { 
-                      if (ref.hasClass("hasFocus")) {
-                        ref.popover('show');
-                      }
-                    },2000);
-                  }).mouseleave(function() {
-                      var ref = $(this);
-                      ref.removeClass("hasFocus");
-                      popoverTimeoutLock = setTimeout(function() {
-                        if (! ref.hasClass("hasFocus")) {
-                          ref.popover('hide');
-                        }
-                      }, 250);
-                  });
-                $('.popover').off('mouseenter mouseleave').mouseenter(function() {
-                    clearTimeout(popoverTimeoutLock);
-                  }).mouseleave(function() {
-                    var ref = $(this);
-                    setTimeout(function() { 
-                      ref.hide();
-                    }, 250);
-                  });
-              }
-            }
-          });
-        }
-      },2000);
-    }).mouseleave(function() {
-      $(this).removeClass("hasFocus");
-    })
-}); 
+    $('.checkrow').click(function () {
+        var checked = $(this).is(":checked");
+        $(this).parents('tr').find(':checkbox').each(function(index) {
+           $(this).prop("checked", checked);
+        });
+    });
 
-function form_error(message) {
-    var error_html = "";
-    error_html += '<div class="ui-widget">';
-    error_html += '<div class="ui-state-error ui-corner-all" style="padding: 3px 5px;">'
-    error_html += '<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>'
-    error_html += message + '.';
-    error_html += '</div>'
-    error_html += '</div>'
-    return error_html;
-}
+    $('.popover-trigger').hover(function() {
+      setupPopover($(this));
+    }, function() {
+      clearTimeout($(this).data('timeout'));
+    });
+
+    $('.rack-display').find('td').click(function() {
+      if($(this).hasClass('empty')) {
+        $('.rack-display').find('td.info').removeClass('info');
+        $(this).addClass('info');
+      }
+    });
+}); 

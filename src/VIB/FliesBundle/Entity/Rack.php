@@ -74,6 +74,7 @@ class Rack extends Entity {
      * @param integer $columns
      */    
     public function __construct($rows = null, $columns = null) {
+        $this->positions = new ArrayCollection();
         $this->setGeometry($rows, $columns);
     }
     
@@ -130,7 +131,7 @@ class Rack extends Entity {
      * @return \VIB\FliesBundle\Entity\RackPosition
      * @throws \OutOfBoundsException
      */
-    protected function getPosition($row, $column) {
+    public function getPosition($row, $column) {
         foreach ($this->getPositions() as $position) {
             if($position->isAt($row, $column)) {
                 return $position;
@@ -221,11 +222,20 @@ class Rack extends Entity {
      * @param integer $columns
      */
     public function setGeometry($rows, $columns) {
-        $this->positions = new ArrayCollection();
+        
+        $this->updateGeometry();
+        
+        if (($this->rows == $rows)&&($this->columns == $columns)) {
+            return;
+        }
+        
         if ((null !== $rows)&&(null !== $columns)) {
+            
+            $this->getPositions()->clear();
+            
             for($row = 1; $row <= $rows; $row++) {
                 for($column = 1; $column <= $columns; $column++) {
-                    $this->positions[] = new RackPosition($row,$column);
+                    $this->positions[] = new RackPosition($this,$row,$column);
                 }
             }
             $this->rows = $rows;

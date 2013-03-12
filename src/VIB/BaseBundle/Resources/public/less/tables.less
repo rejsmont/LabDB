@@ -15,10 +15,26 @@
   &.info th {
     background-color: @infoBackground;
   }
-  &.info th {
+  &.inverse th {
+    background-color: @grayDark;
+    color: @grayLighter;
+  }
+}
+
+.table td {
+  &.success {
+    background-color: @successBackground;
+  }
+  &.error {
+    background-color: @errorBackground;
+  }
+  &.warning {
+    background-color: @warningBackground;
+  }
+  &.info {
     background-color: @infoBackground;
   }
-  &.inverse th {
+  &.inverse {
     background-color: @grayDark;
     color: @grayLighter;
   }
@@ -34,4 +50,35 @@
 
 .pagination {
   text-align: center;
+}
+
+.rack-display {
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+  & > tbody > tr > td,
+  & > tbody > tr > th {
+    text-align: center;
+    vertical-align: middle;
+  }
+  & > tbody > tr > td {
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    position: relative;
+  }
+  & > tbody > tr > td > span > a {
+    display: block;
+    width: 30px;
+    height: 25px;
+    padding-top: 5px;
+  }
+}
+
+.table {
+  td, th {
+    input[type='checkbox'] {
+      margin-top: -4px;
+    }
+  }
 }

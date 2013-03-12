@@ -30,6 +30,7 @@ use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\StockVial;
 use VIB\FliesBundle\Entity\CrossVial;
 use VIB\FliesBundle\Entity\Stock;
+use VIB\FliesBundle\Entity\RackPosition;
 
 /**
  * Description of AJAXController
@@ -75,6 +76,39 @@ class AJAXController extends Controller {
     }
     
     /**
+     * Handle rack vial AJAX request
+     * 
+     * @Route("/racks/vials")
+     * @Template()
+     * 
+     * @return Symfony\Component\HttpFoundation\Response
+     */    
+    public function rackVialAction(Request $request) {
+        
+        $vialId = $request->query->get('vialId');
+        $positionId = $request->query->get('positionId');
+        
+        $em = $this->get('doctrine.orm.entity_manager');
+        $securityContext = $this->get('security.context');
+        $vial = $em->find('VIBFliesBundle:Vial', $vialId);
+        $position = $em->find('VIBFliesBundle:RackPosition', $positionId);
+        
+        if(($vialId != null)&&(! $vial instanceof Vial)) {
+            return new Response('The' . $type . ' vial ' . sprintf("%06d",$id) . ' does not exist', 404);
+        } elseif (!($securityContext->isGranted('ROLE_ADMIN') || $securityContext->isGranted('VIEW', $vial))) {
+            return new Response('Access to' . $type . ' vial ' . sprintf("%06d",$id) . ' denied', 401);
+        }
+        
+        if(! $position instanceof RackPosition) {
+            return new Response('Selected position does not exist', 404);
+        } elseif (($vialId != null)&&(! $position->isEmpty())) {
+            return new Response('Selected position is not empty', 406);
+        }
+        
+        return array('contents' => $vial);
+    }
+    
+    /**
      * Handle stock search AJAX request
      * 
      * @Route("/stocks/search")
@@ -87,7 +121,7 @@ class AJAXController extends Controller {
         $query = $request->query->get('query');
         $qb = $this->getDoctrine()
                    ->getRepository('VIBFliesBundle:Stock')
-                   ->findStocksByName($query);
+                   ->search($query);
         $found = $this->get('vib.security.helper.acl')
                       ->apply($qb)
                       ->getResult();

@@ -48,11 +48,19 @@ class StockRepository extends EntityRepository
      * @return mixed 
      */
     public function search($term) {
-        
-        $query = $this->createQueryBuilder('b')
-            ->where('b.name like :term')
-            ->setParameter('term', '%' . $term .'%');
-                
-        return $query;
+        $terms = explode(" ", $term);
+        $qb = $this->createQueryBuilder('b');
+        $expr = null;
+        foreach ($terms as $term) {
+            $expr = $qb->expr()->andX(
+                        $qb->expr()->orX(
+                            $qb->expr()->like('b.name', '\'%' . $term . '%\''),
+                            $qb->expr()->like('b.genotype', '\'%' . $term . '%\'')
+                        ),
+                        $expr
+                    );
+        }
+        $qb->add('where', $expr);
+        return $qb;
     }
 }

@@ -8,14 +8,17 @@
           {% if name is empty and value.name is defined %}{% set name = value.name %}{% endif %}
           {% if showName %}{{ name }} ({% endif %}{% spaceless %}
           {% if ctrl is not empty and (is_granted('ROLE_ADMIN') or is_granted('VIEW',value)) %}
-            <a href="{{ path(ctrl, { 'id': value.id }) }}"
-              {% if popover is not empty %}
-                class="popover-trigger"
-                data-link="{{ path('vib_flies_ajax_popover')}}"
-                data-type="{{ popover }}"
-                data-id="{{ value.id }}" 
-              {% endif %}
-            >{{ value }}</a>
+            {% if popover is not empty %}
+              {% set uuid = random() ~ '_' ~ value.id  %}
+              <span class="popover-trigger" id="span_{{ uuid }}"
+                    data-placement="bottom" data-container="#span_{{ uuid }}"
+                    data-delay="500" data-link="{{ path('vib_flies_ajax_popover')}}"
+                    data-type="{{ popover }}" data-id="{{ value.id }}">
+            {% endif %}
+            <a href="{{ path(ctrl, { 'id': value.id }) }}">{{ value }}</a>
+            {% if popover is not empty %}
+              </span>
+            {% endif %}
           {% else %}{{ value }}{% endif %}
           {% endspaceless %}{% if showName %}){% endif %}
         {% endif %}
@@ -34,14 +37,17 @@
         {% set showName = (name is not empty or (value.name is defined and value.name != value.__toString)) %}
         {% if showName %}{{ name }} ({% endif %}{% spaceless %}
         {% if ctrl is not empty and (is_granted('ROLE_ADMIN') or is_granted('VIEW',item)) %}
-          <a href="{{ path(ctrl, { 'id': item.id }) }}"
-            {% if popover is not empty %}
-              class="popover-trigger"
-              data-link="{{ path('vib_flies_ajax_popover')}}"
-              data-type="{{ popover }}"
-              data-id="{{ item.id }}"
-            {% endif %}
-          >{{ item }}</a>
+          {% if popover is not empty %}
+            {% set uuid = random() ~ '_' ~ item.id  %}
+            <span class="popover-trigger" id="span_{{ uuid }}"
+                  data-placement="bottom" data-container="#span_{{ uuid }}"
+                  data-delay="500" data-link="{{ path('vib_flies_ajax_popover')}}"
+                  data-type="{{ popover }}" data-id="{{ item.id }}">
+          {% endif %}
+          <a href="{{ path(ctrl, { 'id': item.id }) }}">{{ item }}</a>
+          {% if popover is not empty %}
+            </span>
+          {% endif %}
         {% else %}{{ item }}{% endif %}
         {% endspaceless %}{% if showName %}){% endif %}
       {% endspaceless %}</li>
