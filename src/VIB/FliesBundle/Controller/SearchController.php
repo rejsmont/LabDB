@@ -104,7 +104,9 @@ class SearchController extends AbstractController {
                 $data = $form->getData();
                 $query = $data['query'];
                 if ('' == $data['filter']) {
-                    if (is_numeric($query)) {
+                    if (preg_match("/^R\d+$/",$query) === 1) {
+                        $filter = 'rack';
+                    } elseif (is_numeric($query)) {
                         $filter = 'vial';
                     } else {
                         $filter = 'stocks';
@@ -127,6 +129,10 @@ class SearchController extends AbstractController {
                 break;
             case 'vial':
                 $url = $this->generateUrl('vib_flies_vial_show', array('id' => $query));
+                return $this->redirect($url);
+                break;
+            case 'rack':
+                $url = $this->generateUrl('vib_flies_rack_show', array('id' => (integer)str_replace('R','',$query)));
                 return $this->redirect($url);
                 break;
             case 'stocks':

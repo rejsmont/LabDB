@@ -118,7 +118,7 @@ abstract class CRUDController extends AbstractController {
             throw new AccessDeniedException();
         }
         return array('entity' => $entity);
-    }    
+    }
     
     /**
      * Create entity

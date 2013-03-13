@@ -1,6 +1,12 @@
 {% extends "VIBFliesBundle:Vial:layout.html.twig" %}
 {% import "VIBBaseBundle:Macros:list.html.twig" as l %}
-{% block headline %}Vial rack {{ entity }} <small>{{ entity.description }}</small>{% endblock headline %}
+
+{% if form is defined %}
+  {% form_theme form _self %} 
+  {% block _select_items_row %}{% endblock %}
+{% endif %}
+
+{% block headline %}Rack {{ entity }} <small>{{ entity.description }}</small>{% endblock headline %}
 
 {% block content %}
 {% if form is defined %}
@@ -63,10 +69,10 @@
       </a>
       <ul class="dropdown-menu">
         <li class="first">
-          <a href="#">Print label</a>
+          <a href="{{ path('vib_flies_rack_printlabel', { 'id': entity.id }) }}">Print label</a>
         </li>
         <li>
-          <a href="#">Download PDF</a>
+          <a href="{{ path('vib_flies_rack_downloadlabel', { 'id': entity.id }) }}">Download PDF</a>
         </li>
         <li class="divider"></li>
         <li>

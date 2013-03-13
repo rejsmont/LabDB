@@ -24,7 +24,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use VIB\BaseBundle\Controller\CRUDController;
 
+use VIB\FliesBundle\Utils\PDFLabel;
+
 use VIB\FliesBundle\Form\RackType;
+use VIB\FliesBundle\Form\SelectType;
 
 use VIB\FliesBundle\Entity\Rack;
 
@@ -51,6 +54,33 @@ class RackController extends CRUDController
      */
     protected function getEditForm() {
         return new RackType();
+    }
+    
+    /**
+     * Show rack
+     * 
+     * @Route("/show/{id}")
+     * @Template()
+     * 
+     * @param mixed $id
+     * 
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function showAction($id) {
+        $response = parent::showAction($id);
+        
+        $form = $this->createForm(new SelectType('VIB\FliesBundle\Entity\Vial'));
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'POST') {
+            $action = $request->request->get('select_action');
+            $selectResponse = $this->forward('VIBFliesBundle:Vial:select');
+            if (($action == 'flip')||($selectResponse->getStatusCode() >= 400)) {
+                return $selectResponse;
+            }
+        }
+        
+        return is_array($response) ? array_merge($response, array('form' => $form->createView())) : $response;
     }
     
     /**
@@ -142,4 +172,55 @@ class RackController extends CRUDController
         
         return array('form' => $form->createView());
     }
+    
+    /**
+     * Prepare label
+     * 
+     * @param VIB\FliesBundle\Entity\Rack $rack
+     * @return \Symfony\Component\HttpFoundation\Response
+     */    
+    public function prepareLabel(Rack $rack) {
+        $pdf = new PDFLabel($this->get('white_october.tcpdf'));
+        $pdf->addRackLabel($rack->getId(), $rack->getLabelText());
+        return $pdf;
+    }
+
+    /**
+     * Generate rack label
+     * 
+     * @Route("/label/{id}/download")
+     * 
+     * @param mixed $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */    
+    public function downloadLabelAction($id) {
+        $rack = $this->getEntity($id);        
+        $pdf = $this->prepareLabel($rack);
+        return $pdf->output();
+    }
+    
+    /**
+     * Print rack label
+     * 
+     * @Route("/label/{id}/print")
+     * 
+     * @param mixed $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */    
+    public function printLabelAction($id) {
+        $rack = $this->getEntity($id);
+        $pdf = $this->prepareLabel($rack);
+        $jobStatus = $pdf->printPDF();
+        if ($jobStatus == 'successfull-ok') {
+            $this->get('session')->getFlashBag()
+                 ->add('success', 'Label was sent to the printer. ');
+        } else {
+            $this->get('session')->getFlashBag()
+                 ->add('error', 'There was an error printing labels. The print server said: ' . $jobStatus);
+        }
+        
+        $url = $this->generateUrl('vib_flies_rack_show',array('id' => $rack->getId()));
+        return $this->redirect($url);
+    }
+    
 }

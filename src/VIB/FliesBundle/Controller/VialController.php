@@ -417,7 +417,14 @@ class VialController extends CRUDController {
     protected function getDefaultBatchResponse() {
         $request = $this->getRequest();
         $currentRoute = $request->attributes->get('_route');
+        
+        if ($currentRoute == '') {
+            $url = $this->generateUrl('vib_flies_vial_list');
+            return $this->redirect($url);
+        }
+        
         $pieces = explode('_',$currentRoute);
+        
         if (is_numeric($pieces[count($pieces) - 1])) {
             array_pop($pieces);
         }

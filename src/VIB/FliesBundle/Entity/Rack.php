@@ -110,7 +110,7 @@ class Rack extends Entity {
      *
      * @return string
      */
-    public function getLabel() {
+    public function getLabelText() {
         return $this->getDescription();
     }
     
