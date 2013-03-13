@@ -22,8 +22,23 @@
  * 
  */
 function checkVial(filter) {
+    
+    var barcode = $('#barcode').val();
+    var rack_redirect = $('#barcode').data('rack-redirect');
+    var id = parseInt(barcode.match(/\d+$/),10);
+    
+    if ((rack_redirect != null)&&(barcode.match(/^R\d+$/) != null)) {
+        window.location = rack_redirect +  id;
+    } else if (barcode.match(/^\d+$/) == null) {
+        $('#barcode').parents('.control-group').addClass('error');
+        $('#barcode').addClass('error');
+        $('#barcode').siblings('span.help-inline').html(form_error('Wrong barcode format'));
+        $('#barcode').val('');
+        $('#barcode').parents('form').find(':input').blur();
+        $('#barcode').focus();
+        return;
+    }
   
-    var id = parseInt($('#barcode').val(),10);
     var checkboxName;
     var checkbox;
     
@@ -85,7 +100,19 @@ function checkVial(filter) {
  */
 function checkRackVial() {
   
-    var vialID = parseInt($('#barcode').val(),10);
+    var barcode = $('#barcode').val();
+    var vialID = parseInt(barcode.match(/\d+$/),10);
+    
+    if (barcode.match(/^\d+$/) == null) {
+        $('#barcode').parents('.control-group').addClass('error');
+        $('#barcode').addClass('error');
+        $('#barcode').siblings('span.help-inline').html(form_error('Wrong barcode format'));
+        $('#barcode').val('');
+        $('#barcode').parents('form').find(':input').blur();
+        $('#barcode').focus();
+        return;
+    }
+  
     var position = $('.rack-display').find('td.empty.info');
     var positionID = position.length ? position.attr('id').replace("position_", "") : null;
     var rackID = $('.rack-display').attr('id').replace("rack_", "");

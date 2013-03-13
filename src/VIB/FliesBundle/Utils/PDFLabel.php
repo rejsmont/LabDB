@@ -67,6 +67,27 @@ class PDFLabel {
         $this->pdf->MultiCell(15,6,sprintf("%06d",$barcode),0,'C',0,1,2,17.5,true,0,false,true,6,'B',true);
     }
     
+    /**
+     * Add vial label to PDF
+     * 
+     * @param integer $barcode
+     * @param string $text
+     */    
+    public function addRackLabel($barcode,$text) {
+        $this->pdf->AddPage();
+        $this->pdf->write2DBarcode(
+                sprintf("R%06d",$barcode),
+                'QRCODE,H',
+                2,2,15,15,
+                $this->get2DBarcodeStyle());
+        $this->pdf->setCellPaddings(0, 0, 0, 0);
+        $this->pdf->setCellMargins(0, 0, 0, 0);
+        $this->pdf->SetFont('helvetica', 'B', 12);
+        $this->pdf->MultiCell(30, 12.5, $text,0,'C',0,1,20,2,true,0,false,true,16.5,'T',true);
+        $this->pdf->SetFont('helvetica', '', 7);
+        $this->pdf->MultiCell(15,6,sprintf("R%06d",$barcode),0,'C',0,1,2,17.5,true,0,false,true,6,'B',true);
+    }
+    
     public function output() {
         return new Response($this->pdf->Output('', 'S'),200,
                 array(
