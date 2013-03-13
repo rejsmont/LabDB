@@ -1,7 +1,6 @@
-{% extends "VIBFliesBundle:Rack:layout.html.twig" %}
-{% import "VIBBaseBundle:Macros:show.html.twig" as s %}
+{% extends "VIBFliesBundle:Vial:layout.html.twig" %}
 {% import "VIBBaseBundle:Macros:list.html.twig" as l %}
-{% block headline %}Rack {{ entity }} <small>{{ entity.description }}</small>{% endblock headline %}
+{% block headline %}Vial rack {{ entity }} <small>{{ entity.description }}</small>{% endblock headline %}
 
 {% block content %}
 {% if form is defined %}
@@ -18,7 +17,7 @@
       <span class="help-inline"></span>
     </div>
   {% endblock list_selector %}
-  <table class="table table-bordered table-condensed rack-display">
+  <table class="table table-bordered table-condensed rack-display" id="rack_{{ entity.id }}">
     <tbody>
       <tr>
         <th><input type="checkbox" id="checkall" checked/></th>
@@ -46,7 +45,7 @@
           {% else %}
             {% set contents = entity.position(i,j).contents %}
             <td id="position_{{ entity.position(i,j).id }}" class="success">
-              {% include 'VIBFliesBundle:Rack:position.html.twig' with {'contents': contents} %}
+              {% include 'VIBFliesBundle:Rack:position.html.twig' with {'contents': contents, 'rackID': entity.id} %}
             </td>
           {% endif %}
         {% endfor %}
@@ -54,7 +53,33 @@
     {% endfor %}
     </tbody>
   </table>
-  {% block list_buttons %}{{ l.select_buttons() }}{% endblock list_buttons %}
+  <div class="well">
+  {% block list_buttons %}
+    {{ l.select_buttons() }}
+    <div class="btn-group pull-right">
+      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+        Rack actions
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li class="first">
+          <a href="#">Print label</a>
+        </li>
+        <li>
+          <a href="#">Download PDF</a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a href="{{ path('vib_flies_rack_edit', { 'id': entity.id }) }}">Edit</a>
+        </li>
+        <li class="last"onclick="clearRack(this,{{ entity.id }})"
+            data-link="{{ path('vib_flies_ajax_rackvialremove') }}">
+          <a href="#">Clear contents</a>
+        </li>
+      </ul>
+    </div>
+  {% endblock list_buttons %}
+  </div>
   {% block paginator %}
     {% if entities is defined %}{{ knp_pagination_render(entities) }}{% endif %}
   {% endblock paginator %}
@@ -62,5 +87,4 @@
 {% if form is defined %}
 </form>
 {% endif %}
-<div id="popovers"></div>
 {% endblock %}

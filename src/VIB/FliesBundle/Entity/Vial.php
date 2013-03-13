@@ -364,6 +364,7 @@ class Vial extends Entity {
      */
     public function setTrashed($trashed) {
         $this->trashed = $trashed;
+        $this->setPosition(null);
     }
     
     /**

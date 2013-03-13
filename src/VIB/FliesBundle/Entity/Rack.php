@@ -317,4 +317,14 @@ class Rack extends Entity {
             $position->setContents(null);
         }
     }
+    
+    /**
+     * Check if a vial is in the rack
+     * 
+     * @param \VIB\FliesBundle\Entity\Vial $vial
+     * @return boolean
+     */
+    public function hasVial(Vial $vial) {
+        return $this->getVials()->contains($vial);
+    }
 }
