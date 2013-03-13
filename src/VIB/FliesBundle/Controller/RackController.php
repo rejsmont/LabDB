@@ -118,8 +118,14 @@ class RackController extends CRUDController
 
                 $this->setACL($rack);
                 
-                $url = $this->generateUrl('vib_flies_rack_show',array('id' => $rack->getId())); 
-                return $this->redirect($url);
+                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
+                
+                if ($shouldPrint) {
+                    return $this->printLabelAction($rack);
+                } else {
+                    $url = $this->generateUrl('vib_flies_rack_show',array('id' => $rack->getId())); 
+                    return $this->redirect($url);
+                }
             }
         }
         

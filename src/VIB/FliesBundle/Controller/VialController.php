@@ -166,6 +166,50 @@ class VialController extends CRUDController {
     }
 
     /**
+     * Create vial
+     * 
+     * @Route("/new")
+     * @Template()
+     * 
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function createAction() {
+        $em = $this->getDoctrine()->getManager();
+        $class = $this->getEntityClass();
+        $vial = new $class();
+        $form = $this->createForm($this->getCreateForm(), $vial);
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                
+                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
+                
+                if ($shouldPrint) {
+                    $pdf = $this->get('vibfolks.pdflabel');
+                    $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                    if ($this->submitPrintJob($pdf)) {
+                        $vial->setLabelPrinted(true);
+                    }
+                }
+                
+                $em->persist($vial);
+                $em->flush();
+
+                $this->setACL($vial);
+                
+                $route = str_replace("_create", "_show", $request->attributes->get('_route'));
+                $url = $this->generateUrl($route,array('id' => $vial->getId()));
+                return $this->redirect($url);
+            }
+        }
+        return array('form' => $form->createView());
+    }
+    
+    /**
      * Edit vial
      * 
      * @Route("/edit/{id}")
@@ -211,17 +255,36 @@ class VialController extends CRUDController {
                 $data = $form->getData();
                 $source = $data['source'];
                 $number = $data['number'];
+                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 $vials = new ArrayCollection();
                 
+                if ($shouldPrint) {
+                    $pdf = $this->get('vibfolks.pdflabel');
+                }
+                
                 for ($i = 0; $i < $number; $i++) {
                     $vial = $source->flip();
-                    $em->persist($vial);
+                    if ($shouldPrint) {
+                        $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                    }
                     $vials->add($vial);
                 }
                 
+                if ($shouldPrint) {
+                    $printResult = $this->submitPrintJob($pdf, count($vials));
+                } else {
+                    $printResult = false;
+                }
+                
+                foreach($vials as $vial) {
+                    if ($printResult) {
+                        $vial->setLabelPrinted(true);
+                    }
+                    $em->persist($vial);
+                }
                 $em->flush();
-
+                
                 foreach($vials as $vial) {
                     $this->setACL($vial);
                 }
@@ -268,16 +331,16 @@ class VialController extends CRUDController {
                 $response = $this->downloadLabels($vials);
                 break;
             case 'print':
-                $response = $this->printLabels($vials);
+                $this->printLabels($vials);
                 break;
             case 'flip':
-                $response = $this->flipVials($vials);
+                $this->flipVials($vials);
                 break;
             case 'fliptrash':
-                $response = $this->flipVials($vials,true);
+                $this->flipVials($vials,true);
                 break;
             case 'trash':
-                $response = $this->trashVials($vials);
+                $this->trashVials($vials);
                 break;
         }
         
@@ -310,61 +373,99 @@ class VialController extends CRUDController {
     /**
      * Generate vial labels
      * 
-     * @param \Doctrine\Common\Collections\Collection $vials
+     * @param mixed $vials
      * @return \Symfony\Component\HttpFoundation\Response
      */    
-    public function downloadLabels(Collection $vials) {
+    public function downloadLabels($vials) {
+        $em = $this->getDoctrine()->getManager();
         $pdf = $this->prepareLabels($vials);
+        $isVial = ($vials instanceof Vial);
+        if ((($vials instanceof Collection)&&(count($vials) > 0))||($isVial)) { 
+            $pdf = $this->prepareLabels($vials);
+            if ($isVial) {
+                $vial = $vials;
+                $vial->setLabelPrinted(true);
+                $em->persist($vial);
+            } else {
+                foreach ($vials as $vial) {
+                    $vial->setLabelPrinted(true);
+                    $em->persist($vial);
+                }
+            }
+            $em->flush();
+        }
         return $pdf->output();
     }
     
     /**
      * Prepare vial labels
      * 
-     * @param \Doctrine\Common\Collections\Collection $vials
+     * @param mixed $vials
      * @return \Symfony\Component\HttpFoundation\Response
      */    
-    public function prepareLabels(Collection $vials) {
-        
-        $em = $this->getDoctrine()->getManager();
+    public function prepareLabels($vials) {
         $pdf = $this->get('vibfolks.pdflabel');
-        
-        foreach ($vials as $vial) {
-            $vial->setLabelPrinted(true);
-            $em->persist($vial);
+        if ($vials instanceof Collection) {
+            foreach ($vials as $vial) {
+                $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+            }
+        } elseif ($vials instanceof Vial) {
+            $vial = $vials;
             $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
         }
-        
-        $em->flush();
-        
         return $pdf;
     }
     
     /**
      * Print vial labels
      * 
-     * @param \Doctrine\Common\Collections\Collection $vials
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param $mixed $vials
+     * @return boolean
      */    
-    public function printLabels(Collection $vials) {
-        $count = count($vials);
-        if ($count > 0) { 
+    public function printLabels($vials) {
+        $em = $this->getDoctrine()->getManager();
+        $isVial = ($vials instanceof Vial);
+        if ((($vials instanceof Collection)&&(($count = count($vials)) > 0))||($isVial)) { 
             $pdf = $this->prepareLabels($vials);
-            $jobStatus = $pdf->printPDF();
-            if ($jobStatus == 'successfull-ok') {
-                if ($count == 1) {
-                    $this->get('session')->getFlashBag()
-                         ->add('success', 'Label for ' . $count . ' vial was sent to the printer.');
+            if ($this->submitPrintJob($pdf, $isVial ? 1 : $count)) {
+                if ($isVial) {
+                    $vial = $vials;
+                    $vial->setLabelPrinted(true);
+                    $em->persist($vial);
                 } else {
-                    $this->get('session')->getFlashBag()
-                         ->add('success', 'Labels for ' . $count . ' vials were sent to the printer. ');
+                    foreach ($vials as $vial) {
+                        $vial->setLabelPrinted(true);
+                        $em->persist($vial);
+                    }
                 }
-            } else {
-                $this->get('session')->getFlashBag()
-                     ->add('error', 'There was an error printing labels. The print server said: ' . $jobStatus);
+                $em->flush();
             }
         }
-        return $this->getDefaultBatchResponse();
+    }
+    
+    /**
+     * Submit print job
+     * 
+     * @param VIB\FliesBundle\Utils\PDFLabel $pdf
+     * @param integer $count
+     * @return boolean
+     */
+    public function submitPrintJob(PDFLabel $pdf, $count = 1) {
+        $jobStatus = $pdf->printPDF();
+        if ($jobStatus == 'successfull-ok') {
+            if ($count == 1) {
+                $this->get('session')->getFlashBag()
+                     ->add('success', 'Label for 1 vial was sent to the printer.');
+            } else {
+                $this->get('session')->getFlashBag()
+                     ->add('success', 'Labels for ' . $count . ' vials were sent to the printer. ');
+            }
+            return true;
+        } else {
+            $this->get('session')->getFlashBag()
+                 ->add('error', 'There was an error printing labels. The print server said: ' . $jobStatus);
+            return false;
+        }
     }
     
     /**
@@ -376,8 +477,13 @@ class VialController extends CRUDController {
     public function flipVials(Collection $vials, $trash = false) {
         
         $em = $this->getDoctrine()->getManager();
-
+        $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
+        
         $flippedVials = new ArrayCollection();
+        
+        if ($shouldPrint) {
+            $pdf = $this->get('vibfolks.pdflabel');
+        }
         
         foreach ($vials as $source) {
             $vial = $source->flip();
@@ -386,17 +492,29 @@ class VialController extends CRUDController {
                 $source->setTrashed(true);
                 $em->persist($source);
             }
-            $em->persist($vial);
+            if ($shouldPrint) {
+                $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+            }
             $flippedVials->add($vial);
         }
         
+        if ($shouldPrint) {
+            $printResult = $this->submitPrintJob($pdf, count($vials));
+        } else {
+            $printResult = false;
+        }
+
+        foreach($flippedVials as $vial) {
+            if ($printResult) {
+                $vial->setLabelPrinted(true);
+            }
+            $em->persist($vial);
+        }
         $em->flush();
         
         foreach ($flippedVials as $vial) {
             parent::setACL($vial);
         }
-        
-        return $this->getDefaultBatchResponse();
     }
     
     /**
@@ -414,8 +532,6 @@ class VialController extends CRUDController {
         }
         
         $em->flush();
-        
-        return $this->getDefaultBatchResponse();
     }
     
     /**

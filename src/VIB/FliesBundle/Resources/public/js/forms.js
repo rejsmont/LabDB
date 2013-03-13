@@ -221,6 +221,21 @@ function clearRack(e,rackID) {
     });
 }
 
+/**
+ * Set autoprint
+ * 
+ */
+function setAutoPrint(e) {
+  var element = $(e);
+  var checked = element.prop("checked");
+  var setting = checked ? 'enabled' : 'disabled'
+  $.ajax({
+          url: element.data('link'),
+          type: 'get',
+          data: {setting: setting}
+    });
+}
+
 function setupPopover(e) {
   var element = e;
   var timeout = element.data('delay') != null ? element.data('delay') : 0;

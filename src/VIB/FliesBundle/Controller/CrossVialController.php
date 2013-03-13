@@ -71,15 +71,34 @@ class CrossVialController extends VialController
                 $data = $form->getData();
                 $cross = $data['cross'];
                 $number = $data['number'];
+                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 $crosses = new ArrayCollection();
                 
+                if ($shouldPrint) {
+                    $pdf = $this->get('vibfolks.pdflabel');
+                }
+                
                 for ($i = 0; $i < $number; $i++) {
                     $newcross = new CrossVial($cross);
-                    $em->persist($newcross);
+                    if ($shouldPrint) {
+                        $pdf->addFlyLabel($cross->getId(), $cross->getSetupDate(), $cross->getLabelText());
+                    }
                     $crosses->add($newcross);
                 }
                 
+                if ($shouldPrint) {
+                    $printResult = $this->submitPrintJob($pdf, count($crosses));
+                } else {
+                    $printResult = false;
+                }
+                
+                foreach($crosses as $cross) {
+                    if ($printResult) {
+                        $cross->setLabelPrinted(true);
+                    }
+                    $em->persist($cross);
+                }
                 $em->flush();
 
                 foreach($crosses as $cross) {

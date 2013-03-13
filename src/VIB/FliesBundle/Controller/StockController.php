@@ -27,6 +27,8 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\BaseBundle\Controller\CRUDController;
 
+use VIB\FliesBundle\Utils\PDFLabel;
+
 use VIB\FliesBundle\Form\StockType;
 
 
@@ -53,6 +55,80 @@ class StockController extends CRUDController
      */
     protected function getEditForm() {
         return new StockType();
+    }
+    
+    /**
+     * Create stock
+     * 
+     * @Route("/new")
+     * @Template()
+     * 
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function createAction() {
+        $em = $this->getDoctrine()->getManager();
+        $class = $this->getEntityClass();
+        $stock = new $class();
+        $form = $this->createForm($this->getCreateForm(), $stock);
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                
+                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
+                
+                if ($shouldPrint) {
+                    $pdf = $this->get('vibfolks.pdflabel');
+                    $vials = $stock->getVials();
+                    foreach ($vials as $vial) {
+                        $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                    }
+                    if ($this->submitPrintJob($pdf)) {
+                        foreach ($vials as $vial) {
+                            $vial->setLabelPrinted(true);
+                        }
+                    }
+                }
+                
+                $em->persist($stock);
+                $em->flush();
+
+                $this->setACL($stock);
+                
+                $route = str_replace("_create", "_show", $request->attributes->get('_route'));
+                $url = $this->generateUrl($route,array('id' => $stock->getId()));
+                return $this->redirect($url);
+            }
+        }
+        return array('form' => $form->createView());
+    }
+    
+    /**
+     * Submit print job
+     * 
+     * @param VIB\FliesBundle\Utils\PDFLabel $pdf
+     * @param integer $count
+     * @return boolean
+     */
+    public function submitPrintJob(PDFLabel $pdf, $count = 1) {
+        $jobStatus = $pdf->printPDF();
+        if ($jobStatus == 'successfull-ok') {
+            if ($count == 1) {
+                $this->get('session')->getFlashBag()
+                     ->add('success', 'Label for 1 vial was sent to the printer.');
+            } else {
+                $this->get('session')->getFlashBag()
+                     ->add('success', 'Labels for ' . $count . ' vials were sent to the printer. ');
+            }
+            return true;
+        } else {
+            $this->get('session')->getFlashBag()
+                 ->add('error', 'There was an error printing labels. The print server said: ' . $jobStatus);
+            return false;
+        }
     }
     
     /**
