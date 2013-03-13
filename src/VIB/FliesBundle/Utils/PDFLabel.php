@@ -35,13 +35,26 @@ class PDFLabel {
     private $pdf;
     
     /**
+     * @var string $printHost
+     */
+    private $printHost;
+    
+    /**
+     * @var string $printQueue
+     */
+    private $printQueue;
+    
+    /**
      * Construct PDFLabel
      * 
      * @param WhiteOctober\TCPDFBundle\Controller\TCPDFController $TCPDF
+     * @param string $printHost
+     * @param string $printQueue
      */ 
-    public function __construct(TCPDFController $TCPDF)
-    {
+    public function __construct(TCPDFController $TCPDF,$printHost,$printQueue) {
         $this->pdf = $this->prepareLabelPDF($TCPDF);
+        $this->printHost = $printHost;
+        $this->printQueue = $printQueue;
     }
     
     /**
@@ -98,8 +111,8 @@ class PDFLabel {
     public function printPDF() {
         $ipp = new CupsPrintIPP();
         $ipp->setLog('', 0, 0);
-        $ipp->setHost("localhost");
-        $ipp->setPrinterURI("/printers/Zebra_GX430t");
+        $ipp->setHost($this->printHost);
+        $ipp->setPrinterURI($this->printQueue);
         $ipp->setSides(1);
         $ipp->setData($this->pdf->Output('', 'S'));
         return $ipp->printJob();

@@ -25,3 +25,7 @@ ajax:
 search:
     resource: "@VIBFliesBundle/Controller/SearchController.php"
     type:     annotation
+
+autoprint:
+    resource: "@VIBFliesBundle/Controller/AutoPrintController.php"
+    type:     annotation
