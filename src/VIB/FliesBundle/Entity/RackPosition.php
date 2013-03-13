@@ -222,7 +222,9 @@ class RackPosition extends Entity {
     public function setContents(Vial $contents = null) {
         $prevContents = $this->getContents();
         $this->setPrevContents($prevContents);
-        $prevContents->setPosition(null);
+        if (null !== $prevContents) {
+            $prevContents->setPosition(null);
+        }
         $this->contents = $contents;
         if ((null !== $contents)&&($contents->getPosition() !== $this)) {
             $contents->setPosition($this);

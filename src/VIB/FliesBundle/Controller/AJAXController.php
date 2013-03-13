@@ -30,6 +30,7 @@ use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\StockVial;
 use VIB\FliesBundle\Entity\CrossVial;
 use VIB\FliesBundle\Entity\Stock;
+use VIB\FliesBundle\Entity\Rack;
 use VIB\FliesBundle\Entity\RackPosition;
 
 /**
@@ -85,27 +86,75 @@ class AJAXController extends Controller {
      */    
     public function rackVialAction(Request $request) {
         
-        $vialId = $request->query->get('vialId');
-        $positionId = $request->query->get('positionId');
+        $vialID = $request->query->get('vialID');
+        $positionID = $request->query->get('positionID');
+        $rackID = $request->query->get('rackID');
         
         $em = $this->get('doctrine.orm.entity_manager');
         $securityContext = $this->get('security.context');
-        $vial = $em->find('VIBFliesBundle:Vial', $vialId);
-        $position = $em->find('VIBFliesBundle:RackPosition', $positionId);
+        $vial = $em->find('VIBFliesBundle:Vial', $vialID);
+        $position = $em->find('VIBFliesBundle:RackPosition', $positionID);
         
-        if(($vialId != null)&&(! $vial instanceof Vial)) {
-            return new Response('The' . $type . ' vial ' . sprintf("%06d",$id) . ' does not exist', 404);
+        if(($vialID != null)&&(! $vial instanceof Vial)) {
+            return new Response('The vial ' . sprintf("%06d",$vialID) . ' does not exist', 404);
         } elseif (!($securityContext->isGranted('ROLE_ADMIN') || $securityContext->isGranted('VIEW', $vial))) {
             return new Response('Access to' . $type . ' vial ' . sprintf("%06d",$id) . ' denied', 401);
         }
         
         if(! $position instanceof RackPosition) {
             return new Response('Selected position does not exist', 404);
-        } elseif (($vialId != null)&&(! $position->isEmpty())) {
+        } elseif (($vialID != null)&&(! $position->isEmpty())) {
             return new Response('Selected position is not empty', 406);
         }
         
-        return array('contents' => $vial);
+        $vial->setPosition($position);
+        $em->persist($vial);
+        $em->flush();
+        
+        return array('contents' => $vial, 'rackID' => $rackID);
+    }
+    
+    /**
+     * Handle rack vial AJAX request
+     * 
+     * @Route("/racks/vials/remove")
+     * @Template()
+     * 
+     * @return Symfony\Component\HttpFoundation\Response
+     */    
+    public function rackVialRemoveAction(Request $request) {
+        
+        $vialID = $request->query->get('vialID');
+        $rackID = $request->query->get('rackID');
+        
+        $em = $this->get('doctrine.orm.entity_manager');
+        $securityContext = $this->get('security.context');
+        $vial = (null !== $vialID) ? $em->find('VIBFliesBundle:Vial', $vialID) : null;
+        $rack = (null !== $rackID) ? $em->find('VIBFliesBundle:Rack', $rackID) : null;
+        
+        if(($vialID != null)&&(! $vial instanceof Vial)) {
+            return new Response('The vial ' . sprintf("%06d",$vialID) . ' does not exist', 404);
+        } elseif (!($securityContext->isGranted('ROLE_ADMIN') || $securityContext->isGranted('VIEW', $vial))) {
+            return new Response('Access to' . $type . ' vial ' . sprintf("%06d",$id) . ' denied', 401);
+        }
+        
+        if(($rackID != null)&&(! $rack instanceof Rack)) {
+            return new Response('The rack R'. sprintf("%06d",$rackID) . ' does not exist', 404);
+        } elseif (($vialID != null)&&(! $rack->hasVial($vial))) {
+            return new Response('The vial ' . sprintf("%06d",$vialID) . ' is not in the rack R'. sprintf("%06d",$rackID), 404);
+        }
+        
+        if ($vialID !== null) { 
+            $vial->setPosition(null);
+            $em->persist($vial);
+            $em->flush();
+            return new Response('The vial'. sprintf("%06d",$rackID) . ' was removed from rack R'. sprintf("%06d",$rackID), 200);
+        } else {
+            $rack->clearVials();
+            $em->persist($rack);
+            $em->flush();
+            return new Response('The rack R'. sprintf("%06d",$rackID) . ' was cleared', 200);
+        }
     }
     
     /**
@@ -150,6 +199,7 @@ class AJAXController extends Controller {
     public function popoverAction(Request $request) {
         $type = $request->query->get('type');
         $id = $request->query->get('id');
+        $rack = $request->query->get('rack');
         
         switch($type) {
             case 'vial':
@@ -200,7 +250,7 @@ class AJAXController extends Controller {
         }
         
         $html = $this->render('VIBFliesBundle:AJAX:popover.html.twig',
-                array('type' => $type, 'entity' => $entity))->getContent();
+                array('type' => $type, 'entity' => $entity, 'rack' => $rack))->getContent();
         $title = "<b>" . $etype . " " . $entity . "</b>" . $status;
         
         $response = new JsonResponse();

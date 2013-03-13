@@ -46,26 +46,24 @@
 {% endspaceless %}{% endmacro %}
 
 {% macro select_buttons() %}
-<div class="well">
-  <button type="submit" class="btn btn-primary" onclick="$('#select_action').val('flip'); $('form').submit();">
-    Flip</button>
-  <button type="submit" class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
-    Trash</button>
-  <div class="btn-group">
-    <button type="submit" class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
-      Print labels
-    </button>
-    <button class="btn dropdown-toggle" data-toggle="dropdown">
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-      <li class="first last">
-        <a href="#" onclick="$('#select_action').val('label'); $('form').submit();">Download PDF</a>
-      </li>
-      <li class="first last">
-        <a href="#" onclick="$('#select_action').val('print'); $('form').submit();">Print PDF</a>
-      </li>
-    </ul>
-  </div>
+<button type="submit" class="btn btn-primary" onclick="$('#select_action').val('flip'); $('form').submit();">
+  Flip</button>
+<button type="submit" class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
+  Trash</button>
+<div class="btn-group">
+  <button type="submit" class="btn" onclick="$('#select_action').val('print'); $('form').submit();">
+    Print labels
+  </button>
+  <button class="btn dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li class="first">
+      <a href="#" onclick="$('#select_action').val('print'); $('form').submit();"><b>Print</b></a>
+    </li>
+    <li class="last">
+      <a href="#" onclick="$('#select_action').val('label'); $('form').submit();">Download PDF</a>
+    </li>
+  </ul>
 </div>
 {% endmacro select_buttons %}
