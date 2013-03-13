@@ -75,7 +75,7 @@ class RackController extends CRUDController
         if ($request->getMethod() == 'POST') {
             $action = $request->request->get('select_action');
             $selectResponse = $this->forward('VIBFliesBundle:Vial:select');
-            if (($action == 'flip')||($selectResponse->getStatusCode() >= 400)) {
+            if (($action == 'flip')||($action == 'label')||($selectResponse->getStatusCode() >= 400)) {
                 return $selectResponse;
             }
         }

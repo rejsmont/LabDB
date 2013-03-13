@@ -46,8 +46,22 @@
 {% endspaceless %}{% endmacro %}
 
 {% macro select_buttons() %}
-<button type="submit" class="btn btn-primary" onclick="$('#select_action').val('flip'); $('form').submit();">
-  Flip</button>
+<div class="btn-group">
+  <button type="submit" class="btn btn-primary" onclick="$('#select_action').val('flip'); $('form').submit();">
+    Flip
+  </button>
+  <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li class="first">
+      <a href="#" onclick="$('#select_action').val('flip'); $('form').submit();"><b>Flip</b></a>
+    </li>
+    <li class="last">
+      <a href="#" onclick="$('#select_action').val('fliptrash'); $('form').submit();">Flip & trash</a>
+    </li>
+  </ul>
+</div>
 <button type="submit" class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
   Trash</button>
 <div class="btn-group">
