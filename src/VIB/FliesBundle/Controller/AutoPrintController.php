@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use PHP_IPP\IPP\CupsPrintIPP;
@@ -37,7 +38,6 @@ class AutoPrintController extends Controller {
      * Autoprint panel
      * 
      * @Template()
-     * @Route("/autoprint")
      * 
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -47,11 +47,32 @@ class AutoPrintController extends Controller {
         $ipp->setHost($this->container->getParameter('print_host'));
         $ipp->setPrinterURI($this->container->getParameter('print_queue'));
         $ipp->getPrinterAttributes();
-        if (implode('\n',$ipp->status) != 'client-error-not-found') {
-            return new Response('Printer is OK ' . implode('\n',$ipp->status), 200);
-        } else {
-            return new Response('Printer is not OK ' . implode('\n',$ipp->status), 400);
-        }
+        $canPrint = (implode('\n',$ipp->status) == 'successfull-ok');
+        $setting = $this->get('request')->getSession()->get('autoprint') == 'enabled';
+        $autoprint = ($canPrint) ? $setting : $canPrint;
+        
+        return array('autoprint' => $autoprint);
+    }
+    
+    /**
+     * Autoprint panel
+     * 
+     * @Route("/ajax/autoprint/")
+     * 
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function setAutoPrintAction(Request $request) {
+        $ipp = new CupsPrintIPP();
+        $ipp->setLog('', 0, 0);
+        $ipp->setHost($this->container->getParameter('print_host'));
+        $ipp->setPrinterURI($this->container->getParameter('print_queue'));
+        $ipp->getPrinterAttributes();
+        $canPrint = (implode('\n',$ipp->status) == 'successfull-ok');
+        $setting = ($request->query->get('setting') == 'enabled');
+        $session = $request->getSession();
+        $autoprint = ($canPrint) ? $setting : $canPrint;
+        $session->set('autoprint', $autoprint ? 'enabled' : 'disabled');
+        return new Response();
     }
 }
 

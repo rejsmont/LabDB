@@ -97,9 +97,10 @@
       </div>
       <div class="row">
         {% block main_row %}
-        <div class="span3">
+        <div id="sidebar" class="span3">
           {% block content_sidebar %}
           {% endblock content_sidebar %}
+          {% render "VIBFliesBundle:AutoPrint:autoprint" %}
         </div>
         <div class="span9">
           {% block content_row %}
