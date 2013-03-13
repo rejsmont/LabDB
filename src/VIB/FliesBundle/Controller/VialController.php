@@ -273,6 +273,9 @@ class VialController extends CRUDController {
             case 'flip':
                 $response = $this->flipVials($vials);
                 break;
+            case 'fliptrash':
+                $response = $this->flipVials($vials,true);
+                break;
             case 'trash':
                 $response = $this->trashVials($vials);
                 break;
@@ -368,8 +371,9 @@ class VialController extends CRUDController {
      * Flip vials
      * 
      * @param \Doctrine\Common\Collections\Collection $vials
+     * @param boolean $trash
      */     
-    public function flipVials(Collection $vials) {
+    public function flipVials(Collection $vials, $trash = false) {
         
         $em = $this->getDoctrine()->getManager();
 
@@ -377,6 +381,11 @@ class VialController extends CRUDController {
         
         foreach ($vials as $source) {
             $vial = $source->flip();
+            if ($trash) {
+                $vial->setPosition($source->getPosition());
+                $source->setTrashed(true);
+                $em->persist($source);
+            }
             $em->persist($vial);
             $flippedVials->add($vial);
         }
