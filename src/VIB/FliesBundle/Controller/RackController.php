@@ -180,7 +180,7 @@ class RackController extends CRUDController
      * @return \Symfony\Component\HttpFoundation\Response
      */    
     public function prepareLabel(Rack $rack) {
-        $pdf = new PDFLabel($this->get('white_october.tcpdf'));
+        $pdf = $this->get('vibfolks.pdflabel');
         $pdf->addRackLabel($rack->getId(), $rack->getLabelText());
         return $pdf;
     }

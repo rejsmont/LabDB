@@ -64,6 +64,7 @@
 </div>
 <button type="submit" class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
   Trash</button>
+{% if can_print() %}
 <div class="btn-group">
   <button type="submit" class="btn" onclick="$('#select_action').val('print'); $('form').submit();">
     Print labels
@@ -80,4 +81,9 @@
     </li>
   </ul>
 </div>
+{% else %}
+  <button type="submit" class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
+    Download labels
+  </button>
+{% endif %}
 {% endmacro select_buttons %}

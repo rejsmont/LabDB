@@ -327,7 +327,7 @@ class VialController extends CRUDController {
     public function prepareLabels(Collection $vials) {
         
         $em = $this->getDoctrine()->getManager();
-        $pdf = new PDFLabel($this->get('white_october.tcpdf'));
+        $pdf = $this->get('vibfolks.pdflabel');
         
         foreach ($vials as $vial) {
             $vial->setLabelPrinted(true);
