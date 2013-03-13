@@ -7,7 +7,7 @@
     <parameters>
         <parameter key="vibfolks.pdflabel.class">VIB\FliesBundle\Utils\PDFLabel</parameter>
         <parameter key="vibfolks.twig.printing_extension.class">VIB\FliesBundle\Twig\PrintingExtension</parameter>
-        <parameter key="print_host"></parameter>
+        <parameter key="print_host">localhost</parameter>
         <parameter key="print_queue"></parameter>
     </parameters>
 
