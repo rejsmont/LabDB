@@ -76,7 +76,7 @@ class CrossVialController extends VialController
                 
                 for ($i = 0; $i < $number; $i++) {
                     $newcross = new CrossVial($cross);
-                    $em->persist($cross);
+                    $em->persist($newcross);
                     $crosses->add($newcross);
                 }
                 $em->flush();
