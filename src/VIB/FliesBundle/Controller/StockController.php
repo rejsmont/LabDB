@@ -30,6 +30,10 @@ use VIB\BaseBundle\Controller\CRUDController;
 use VIB\FliesBundle\Utils\PDFLabel;
 
 use VIB\FliesBundle\Form\StockType;
+use VIB\FliesBundle\Form\StockVialType;
+
+use VIB\FliesBundle\Entity\Stock;
+use VIB\FliesBundle\Entity\StockVial;
 
 
 /**
@@ -69,6 +73,7 @@ class StockController extends CRUDController
         $em = $this->getDoctrine()->getManager();
         $class = $this->getEntityClass();
         $stock = new $class();
+        $existingStock = null;
         $form = $this->createForm($this->getCreateForm(), $stock);
         $request = $this->getRequest();
         
@@ -102,6 +107,56 @@ class StockController extends CRUDController
                 
                 $route = str_replace("_create", "_show", $request->attributes->get('_route'));
                 $url = $this->generateUrl($route,array('id' => $stock->getId()));
+                return $this->redirect($url);
+            } elseif ($stock instanceof Stock) {
+                $existingStock = $em->getRepository($this->getEntityClass())
+                        ->findOneBy(array('name' => $stock->getName()));
+            }
+        }
+        return array('form' => $form->createView(), 'existingStock' => $existingStock);
+    }
+    
+    /**
+     * Create new vial of a stock
+     *
+     * @Route("/new/vial/{id}")
+     * @Template()
+     * 
+     * @param mixed $id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function newVialAction($id) {
+        $em = $this->getDoctrine()->getManager();
+        $stock = $this->getEntity($id);
+        $vial = new StockVial();
+        $vial->setStock($stock);
+        $form = $this->createForm(new StockVialType(), $vial);
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                
+                $em->persist($vial);
+                $em->flush();
+                
+                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
+                
+                if ($shouldPrint) {
+                    $pdf = $this->get('vibfolks.pdflabel');
+                    $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                    if ($this->submitPrintJob($pdf)) {
+                        $vial->setLabelPrinted(true);
+                        $em->persist($vial);
+                        $em->flush();
+                    }
+                }
+                
+                parent::setACL($vial);
+                
+                $url = $this->generateUrl('vib_flies_stockvial_show',array('id' => $vial->getId()));
                 return $this->redirect($url);
             }
         }

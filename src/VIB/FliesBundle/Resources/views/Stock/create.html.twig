@@ -7,3 +7,28 @@
 {% block modal_footer %}
   {{ f.buttons(form.get('value'),'vib_flies_stock') }}
 {% endblock modal_footer %}
+
+{% block info_messages %}
+{% if existingStock is not empty %}
+<div class="alert alert-block">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <h4 class="alert-header">Stock {{ existingStock.name }} already exists!</h4>
+  <p>
+    Stock names must be unique. If you want to create a new stock, please specify a different name.
+    If you just want to create a new vial of stock
+    {% if is_granted('ROLE_ADMIN') or is_granted('VIEW',existingStock) %}
+     {% set uuid = random() ~ '_' ~ existingStock.id  %}
+        <span class="popover-trigger" id="span_{{ uuid }}"
+              data-placement="bottom" data-container="#span_{{ uuid }}"
+              data-delay="500" data-link="{{ path('vib_flies_ajax_popover')}}"
+              data-type="stock" data-id="{{ existingStock.id }}">
+      <a href="{{ path('vib_flies_stock_show', { 'id': existingStock.id }) }}">{{ existingStock.name }}</a>
+      </span>
+    {% else %}{{ existingStock.name }}{% endif %}, click "yes" button below.</p>
+  <p>Do you want to create a new vial instead of a stock?</p>
+    <a href="{{ path('vib_flies_stock_newvial', { 'id': existingStock.id }) }}"
+       class="btn btn-small btn-primary alert-footer">Yes, please</a>
+    <button type="button" class="btn btn-small alert-footer" data-dismiss="alert">No, thanks</button>
+</div>
+{% endif %}
+{% endblock info_messages %}
