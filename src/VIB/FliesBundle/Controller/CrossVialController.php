@@ -71,36 +71,33 @@ class CrossVialController extends VialController
                 $data = $form->getData();
                 $cross = $data['cross'];
                 $number = $data['number'];
-                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 $crosses = new ArrayCollection();
                 
-                if ($shouldPrint) {
-                    $pdf = $this->get('vibfolks.pdflabel');
-                }
-                
                 for ($i = 0; $i < $number; $i++) {
                     $newcross = new CrossVial($cross);
-                    if ($shouldPrint) {
-                        $pdf->addFlyLabel($cross->getId(), $cross->getSetupDate(), $cross->getLabelText());
-                    }
+                    $em->persist($cross);
                     $crosses->add($newcross);
                 }
+                $em->flush();
+                
+                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
-                    $printResult = $this->submitPrintJob($pdf, count($crosses));
-                } else {
-                    $printResult = false;
+                    $pdf = $this->get('vibfolks.pdflabel');
+                    
+                    foreach($crosses as $cross) {
+                        $pdf->addFlyLabel($cross->getId(), $cross->getSetupDate(), $cross->getLabelText());
+                    }
+                    if ($this->submitPrintJob($pdf, count($crosses))) {
+                        foreach($crosses as $cross) {
+                            $cross->setLabelPrinted(true);
+                            $em->persist($cross);
+                        }
+                        $em->flush();
+                    }
                 }
                 
-                foreach($crosses as $cross) {
-                    if ($printResult) {
-                        $cross->setLabelPrinted(true);
-                    }
-                    $em->persist($cross);
-                }
-                $em->flush();
-
                 foreach($crosses as $cross) {
                     $this->setACL($cross);
                 }

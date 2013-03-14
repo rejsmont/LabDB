@@ -78,6 +78,9 @@ class StockController extends CRUDController
             
             if ($form->isValid()) {
                 
+                $em->persist($stock);
+                $em->flush();
+                
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
@@ -89,13 +92,12 @@ class StockController extends CRUDController
                     if ($this->submitPrintJob($pdf)) {
                         foreach ($vials as $vial) {
                             $vial->setLabelPrinted(true);
+                            $em->persist($vial);
                         }
+                        $em->flush();
                     }
                 }
                 
-                $em->persist($stock);
-                $em->flush();
-
                 $this->setACL($stock);
                 
                 $route = str_replace("_create", "_show", $request->attributes->get('_route'));
