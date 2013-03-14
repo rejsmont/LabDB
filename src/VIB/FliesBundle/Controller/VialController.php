@@ -186,6 +186,9 @@ class VialController extends CRUDController {
             
             if ($form->isValid()) {
                 
+                $em->persist($vial);
+                $em->flush();
+                
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
@@ -193,12 +196,11 @@ class VialController extends CRUDController {
                     $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
                     if ($this->submitPrintJob($pdf)) {
                         $vial->setLabelPrinted(true);
+                        $em->persist($vial);
+                        $em->flush();
                     }
                 }
                 
-                $em->persist($vial);
-                $em->flush();
-
                 $this->setACL($vial);
                 
                 $route = str_replace("_create", "_show", $request->attributes->get('_route'));
@@ -255,35 +257,32 @@ class VialController extends CRUDController {
                 $data = $form->getData();
                 $source = $data['source'];
                 $number = $data['number'];
-                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 $vials = new ArrayCollection();
                 
-                if ($shouldPrint) {
-                    $pdf = $this->get('vibfolks.pdflabel');
-                }
-                
                 for ($i = 0; $i < $number; $i++) {
                     $vial = $source->flip();
-                    if ($shouldPrint) {
-                        $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
-                    }
+                    $em->persist($vial);
                     $vials->add($vial);
                 }
+                $em->flush();
+                
+                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
-                    $printResult = $this->submitPrintJob($pdf, count($vials));
-                } else {
-                    $printResult = false;
-                }
-                
-                foreach($vials as $vial) {
-                    if ($printResult) {
-                        $vial->setLabelPrinted(true);
+                    $pdf = $this->get('vibfolks.pdflabel');
+                    
+                    foreach($vials as $vial) {
+                        $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
                     }
-                    $em->persist($vial);
+                    if ($this->submitPrintJob($pdf, count($vials))) {
+                        foreach($vials as $vial) {
+                            $vial->setLabelPrinted(true);
+                            $em->persist($vial);
+                        }
+                        $em->flush();
+                    }
                 }
-                $em->flush();
                 
                 foreach($vials as $vial) {
                     $this->setACL($vial);
@@ -477,13 +476,8 @@ class VialController extends CRUDController {
     public function flipVials(Collection $vials, $trash = false) {
         
         $em = $this->getDoctrine()->getManager();
-        $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
         
         $flippedVials = new ArrayCollection();
-        
-        if ($shouldPrint) {
-            $pdf = $this->get('vibfolks.pdflabel');
-        }
         
         foreach ($vials as $source) {
             $vial = $source->flip();
@@ -492,25 +486,27 @@ class VialController extends CRUDController {
                 $source->setTrashed(true);
                 $em->persist($source);
             }
-            if ($shouldPrint) {
-                $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
-            }
+            $em->persist($vial);
             $flippedVials->add($vial);
         }
-        
-        if ($shouldPrint) {
-            $printResult = $this->submitPrintJob($pdf, count($vials));
-        } else {
-            $printResult = false;
-        }
-
-        foreach($flippedVials as $vial) {
-            if ($printResult) {
-                $vial->setLabelPrinted(true);
-            }
-            $em->persist($vial);
-        }
         $em->flush();
+        
+        $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
+
+        if ($shouldPrint) {
+            $pdf = $this->get('vibfolks.pdflabel');
+
+            foreach($flippedVials as $vial) {
+                $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+            }
+            if ($this->submitPrintJob($pdf, count($flippedVials))) {
+                foreach($flippedVials as $vial) {
+                    $vial->setLabelPrinted(true);
+                    $em->persist($vial);
+                }
+                $em->flush();
+            }
+        }
         
         foreach ($flippedVials as $vial) {
             parent::setACL($vial);
