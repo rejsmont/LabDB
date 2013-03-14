@@ -12,5 +12,14 @@
 {% block modal_header %}New rack{% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.get('value').rack,'vib_flies_rack') }}
+  <button type="submit" class="btn btn-primary">Save</button>
+  {% set value = form.get('value').rack %}
+  {% if value.id is not null %}
+    {% if is_granted('ROLE_ADMIN') or is_granted('DELETE',value) %}
+    <a href="{{ path(name ~ '_delete', { 'id': value.id }) }}" class="btn btn-danger">Delete</a>
+    {% endif %}
+    <a href="{{ path(name ~ '_show', { 'id': value.id }) }}" class="btn">Cancel</a>
+  {% else %}
+    <a href="{{ path('vib_flies_vial_list') }}" class="btn">Cancel</a>
+  {% endif %}
 {% endblock modal_footer %}
