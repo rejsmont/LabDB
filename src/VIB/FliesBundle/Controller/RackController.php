@@ -150,7 +150,7 @@ class RackController extends CRUDController
             throw new AccessDeniedException();
         }        
         
-        $data = array('rack' => $rack, 'rows' => 10, 'columns' => 10);
+        $data = array('rack' => $rack, 'rows' => $rack->getRows(), 'columns' => $rack->getColumns());
         
         $form = $this->createForm($this->getCreateForm(), $data);
         $request = $this->getRequest();
