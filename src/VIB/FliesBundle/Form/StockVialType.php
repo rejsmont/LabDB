@@ -44,17 +44,17 @@ class StockVialType extends AbstractType
     {
         $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
                 ->add('flipDate', 'datepicker', array('label' => 'Flip date'))
+                ->add('stock', 'entity_typeahead', array(
+                        'property'  => 'name',
+                        'class'     => 'VIBFliesBundle:Stock',
+                        'label'     => 'Stock'))
                 ->add('parent', 'text_entity', array(
                         'property'  => 'id',
                         'class'     => 'VIBFliesBundle:StockVial',
                         'format'    => '%06d',
                         'required'  => false,
                         'label'     => 'Flipped from',
-                        'attr' => array('class' => 'barcode')))
-                ->add('stock', 'entity_typeahead', array(
-                        'property'  => 'name',
-                        'class'     => 'VIBFliesBundle:Stock',
-                        'label'     => 'Stock'));
+                        'attr' => array('class' => 'barcode')));
     }
     
     /**

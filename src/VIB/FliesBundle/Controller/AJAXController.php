@@ -25,6 +25,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\StockVial;
@@ -248,15 +251,37 @@ class AJAXController extends Controller {
         } else {
              return new Response('Not found', 404);
         }
-        
+        $owner = $this->getOwner($entity);
+
         $html = $this->render('VIBFliesBundle:AJAX:popover.html.twig',
-                array('type' => $type, 'entity' => $entity, 'rack' => $rack))->getContent();
+                array('type' => $type, 'entity' => $entity, 'owner' => $owner, 'rack' => $rack))->getContent();
         $title = "<b>" . $etype . " " . $entity . "</b>" . $status;
         
         $response = new JsonResponse();
         $response->setData(array('title' => $title, 'html' => $html));
         
         return $response;
+    }
+    
+    /**
+     * Get owner of entity
+     * 
+     * @param object $entity
+     */
+    protected function getOwner($entity) {
+        $objectIdentity = ObjectIdentity::fromDomainObject($entity);
+        $aclProvider = $this->get('security.acl.provider');
+        $acl = $aclProvider->findAcl($objectIdentity);
+        foreach($acl->getObjectAces() as $ace) {
+            if ($ace->getMask() == MaskBuilder::MASK_OWNER) {
+                $securityIdentity = $ace->getSecurityIdentity();
+                if ($securityIdentity instanceof UserSecurityIdentity) {
+                    $userManager = $this->get('fos_user.user_manager');
+                    return $userManager->findUserByUsername($securityIdentity->getUsername());
+                }
+            }
+        }
+        return null;
     }
 }
 

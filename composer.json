@@ -31,7 +31,7 @@
         "fontawesome/font-awesome": "master",
         "whiteoctober/tcpdf-bundle": "dev-master",
         "bmatzner/jquery-bundle": "dev-master",
-        "bmatzner/jquery-ui-bundle": "dev-master",
+        "bmatzner/jquery-ui-bundle": "1.10.1",
         "rejsmont/php-ipp": "master",
         "kuleuven/shibboleth-bundle": "dev-master"
     },
@@ -123,7 +123,7 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/rmoreas/ShibbolethBundle.git"
+            "url": "https://github.com/rejsmont/ShibbolethBundle.git"
         }
     ]
 }

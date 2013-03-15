@@ -113,11 +113,12 @@ abstract class CRUDController extends AbstractController {
      */
     public function showAction($id) {
         $entity = $this->getEntity($id);
+        $owner = $this->getOwner($entity);
         $securityContext = $this->get('security.context');
         if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('VIEW', $entity))) {
             throw new AccessDeniedException();
         }
-        return array('entity' => $entity);
+        return array('entity' => $entity, 'owner' => $owner);
     }
     
     /**
@@ -220,6 +221,21 @@ abstract class CRUDController extends AbstractController {
     }
     
     /**
+     * 
+     * @Route("/test/{id}")
+     * @Template
+     * 
+     * @param mixed $id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function testAclAction($id) {
+        $entity = $this->getEntity($id);
+        echo "<pre>";
+        return new \Symfony\Component\HttpFoundation\Response($this->getOwner($entity),200);
+        echo "</pre>";
+    }    
+        
+    /**
      * Get query returning entities to list
      * 
      * @return \Doctrine\ORM\QueryBuilder
@@ -294,6 +310,27 @@ abstract class CRUDController extends AbstractController {
         $acl->insertObjectAce($currentUserIdentity, $mask);
         $acl->insertObjectAce($userRoleIdentity, MaskBuilder::MASK_VIEW);
         $aclProvider->updateAcl($acl);
+    }
+    
+    /**
+     * Get owner of entity
+     * 
+     * @param object $entity
+     */
+    protected function getOwner($entity) {
+        $objectIdentity = ObjectIdentity::fromDomainObject($entity);
+        $aclProvider = $this->getAclProvider();
+        $acl = $aclProvider->findAcl($objectIdentity);
+        foreach($acl->getObjectAces() as $ace) {
+            if ($ace->getMask() == MaskBuilder::MASK_OWNER) {
+                $securityIdentity = $ace->getSecurityIdentity();
+                if ($securityIdentity instanceof UserSecurityIdentity) {
+                    $userManager = $this->get('fos_user.user_manager');
+                    return $userManager->findUserByUsername($securityIdentity->getUsername());
+                }
+            }
+        }
+        return null;
     }
     
     /**

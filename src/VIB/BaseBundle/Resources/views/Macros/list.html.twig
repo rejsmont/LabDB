@@ -19,7 +19,17 @@
     {% else %}{{ name }}{% endif %}
   {% endif %}
 {% else %}
+  {% if popover is not empty %}
+    {% set uuid = random() ~ '_' ~ entity.id  %}
+    <span class="popover-trigger" id="span_{{ uuid }}"
+          data-placement="bottom" data-container="#span_{{ uuid }}"
+          data-delay="500" data-link="{{ path('vib_flies_ajax_popover')}}"
+          data-type="{{ popover }}" data-id="{{ entity.id }}">
+  {% endif %}
   <a href="{{ path(route, { 'id': entity.id }) }}">{{ name }}</a>
+  {% if popover is not empty %}
+    </span>
+  {% endif %}
 {% endif %}
 {% endspaceless %}{% endmacro %}
 
