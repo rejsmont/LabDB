@@ -101,7 +101,7 @@ class AJAXController extends Controller {
         if(($vialID != null)&&(! $vial instanceof Vial)) {
             return new Response('The vial ' . sprintf("%06d",$vialID) . ' does not exist', 404);
         } elseif (!($securityContext->isGranted('ROLE_ADMIN') || $securityContext->isGranted('VIEW', $vial))) {
-            return new Response('Access to' . $type . ' vial ' . sprintf("%06d",$id) . ' denied', 401);
+            return new Response('Access to vial ' . sprintf("%06d",$vialID) . ' denied', 401);
         }
         
         if(! $position instanceof RackPosition) {
