@@ -11,7 +11,7 @@
            name="select[items][{{ entity.id }}]"
            value="{{ entity.id }}" {{ checked }} /></td>
 {% endif %}
-<td>{{ l.link(entity, 'vib_flies_crossvial_show', false) }}</td>
+<td>{{ l.link(entity, 'vib_flies_crossvial_show', false, null, 'vial') }}</td>
 <td>{{ l.link(entity.virgin, 'vib_flies_vial_show', true, null, 'vial') }}</td>
 <td>{{ entity.virginName }}</td>
 <td>{{ l.link(entity.male, 'vib_flies_vial_show', true, null, 'vial') }}</td>

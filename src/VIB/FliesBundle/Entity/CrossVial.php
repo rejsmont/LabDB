@@ -162,7 +162,7 @@ class CrossVial extends Vial {
     {
         $this->male = $male;
         if ($this->male != null)
-            if ($this->male instanceof StockVial)
+            if (($this->male instanceof StockVial)&&($this->maleName == ''))
                 $this->maleName = $this->male->getStock()->getName();
     }
 
@@ -184,8 +184,8 @@ class CrossVial extends Vial {
     public function setMaleName($maleName)
     {
         if ($this->male != null)
-            if ($this->male instanceof StockVial)
-                $maleName = $this->male->getStock()->getName();
+            if (($this->male instanceof StockVial)&&($maleName == ''))
+                $maleName = $this->male->getStock()->getGenotype();
         $this->maleName = $maleName;
     }
 
@@ -219,8 +219,8 @@ class CrossVial extends Vial {
     {
         $this->virgin = $virgin;
         if ($this->virgin != null)
-            if ($this->virgin instanceof StockVial)
-                $this->virginName = $this->virgin->getStock()->getName();
+            if (($this->virgin instanceof StockVial)&&($this->virginName == ''))
+                $this->virginName = $this->virgin->getStock()->getGenotype();
     }
 
     /**
@@ -241,8 +241,8 @@ class CrossVial extends Vial {
     public function setVirginName($virginName)
     {
         if ($this->virgin != null)
-            if ($this->virgin instanceof StockVial)
-                $virginName = $this->virgin->getStock()->getName();
+            if (($this->virgin instanceof StockVial)&&($virginName == ''))
+                $virginName = $this->virgin->getStock()->getGenotype();
         $this->virginName = $virginName;
     }
 

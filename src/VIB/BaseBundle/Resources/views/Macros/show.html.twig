@@ -57,6 +57,23 @@
 </div>
 {% endmacro %}
 
+{% macro user(label, user) %}
+<div class="control-group">
+  <span class="control-label">{{ label }}</span>
+  <div class="controls">
+    <span class="input-text">{% spaceless %}
+        {% if user is not empty %}
+          {% if user.email | default(null) is not empty %}
+            <a href="mailto: {{ user.email }}">{{ user.fullName }}</a>
+          {% else %}
+            {{ user.fullName }}
+          {% endif %}
+        {% endif %}
+    {% endspaceless %}</span>
+  </div>
+</div>
+{% endmacro %}
+
 {% macro buttons(value, name) %}
 {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',value) %} 
   <a href="{{ path(name ~ '_edit', { 'id': value.id }) }}" class="btn btn-primary">Edit</a>

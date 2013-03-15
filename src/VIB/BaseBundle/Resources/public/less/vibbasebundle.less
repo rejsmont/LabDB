@@ -52,6 +52,9 @@ body {
   background-color: @popoverTitleBackground;
   border-top: 1px solid darken(@popoverTitleBackground, 5%);
   .border-radius(0 0 5px 5px);
+  span {
+    margin-top: 2px;
+  }
 }
 
 #sidebar > .well {
@@ -68,6 +71,8 @@ body {
 .alert .alert-footer {
   margin-top: 8px;
 }
+
+
 
 // include the responsive after all of your stuff!
 @import "../../../../../../vendor/twitter/bootstrap/less/responsive.less";

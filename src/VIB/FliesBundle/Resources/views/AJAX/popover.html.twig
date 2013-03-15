@@ -1,10 +1,10 @@
+{% import _self as s %}
+
 {% if type == 'crossvial' %}
 <p><b>{{ entity.name }}</b></p>
-<table class="table-plain"><tbody>
-  <tr><th>Setup</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
-  <tr><th>Check</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
-</tbody></table>
+{{ s.dates(entity,'Check') }}
 <div class="popover-foot">
+  {{ s.user(owner) }}
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_crossvial_show',{'id': entity.id }) }}">Show</a>
   {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
     <a class="btn btn-mini" href="{{ path('vib_flies_crossvial_edit',{'id': entity.id }) }}">Edit</a>
@@ -16,12 +16,13 @@
   {% endif %}
 </div>
 {% elseif type == 'stockvial' %}
-<p><b>{{ entity.stock.name }}</b></p>
-<table class="table-plain"><tbody>
-  <tr><th>Setup</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
-  <tr><th>Flip</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
-</tbody></table>
+<p>
+  <strong>{{ entity.stock.name }}</strong><br/>
+  {{ entity.stock.genotype }}
+</p>
+{{ s.dates(entity) }}
 <div class="popover-foot">
+  {{ s.user(owner) }}
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_stockvial_show',{'id': entity.id }) }}">Show</a>
   {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
     <a class="btn btn-mini" href="{{ path('vib_flies_stockvial_edit',{'id': entity.id }) }}">Edit</a>
@@ -33,11 +34,9 @@
   {% endif %}
 </div>
 {% elseif type == 'vial' %}
-<table class="table-plain"><tbody>
-  <tr><th>Setup</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
-  <tr><th>Flip</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
-</tbody></table>
+{{ s.dates(entity) }}
 <div class="popover-foot">
+{{ s.user(owner) }}
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_vial_show',{'id': entity.id }) }}">Show</a>
   {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
     <a class="btn btn-mini" href="{{ path('vib_flies_vial_edit',{'id': entity.id }) }}">Edit</a>
@@ -51,9 +50,29 @@
 {% elseif type == 'stock' %}
 <p>{{ entity.genotype }}</p>
 <div class="popover-foot">
+  {{ s.user(owner) }}
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_stock_show',{'id': entity.id }) }}">Show</a>
   {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
   <a class="btn btn-mini" href="{{ path('vib_flies_stock_edit',{'id': entity.id }) }}">Edit</a>
   {% endif %}
 </div>
 {% endif %}
+
+{% macro user(user) %}{% spaceless %}
+  {% if user is not empty %}
+  <span class="pull-left">
+    {% if user.email | default(null) is not empty %}
+      <a href="mailto: {{ user.email }}">{{ user }}</a>
+    {% else %}
+      {{ user }}
+    {% endif %}
+  {% endif %}
+  </span>
+{% endspaceless %}{% endmacro %}
+
+{% macro dates(entity,checkLabel = 'Flip') %}
+<table class="table-plain"><tbody>
+  <tr><th>Setup</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
+  <tr><th>{{ checkLabel }}</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
+</tbody></table>
+{% endmacro %}
