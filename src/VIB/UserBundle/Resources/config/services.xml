@@ -8,5 +8,10 @@
         <service id="vib.user_provider.shibboleth" class="VIB\UserBundle\Security\ShibbolethUserProvider" public="false">
             <argument type="service" id="fos_user.user_manager" />
         </service>
+        <service id="vib.event_listener.shibboleth_login"
+                 class="VIB\UserBundle\EventListener\ShibbolethLoginListener">
+            <argument type="service" id="vib.user_provider.shibboleth" />
+            <tag name="kernel.event_subscriber" />
+        </service>
     </services>
 </container>
