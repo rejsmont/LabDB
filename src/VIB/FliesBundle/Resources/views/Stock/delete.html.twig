@@ -1,0 +1,24 @@
+{% extends "VIBFliesBundle:Stock:layout.html.twig" %}
+{% use "VIBBaseBundle:Delete:modal.html.twig" %}
+{% import "VIBBaseBundle:Macros:delete.html.twig" as d %}
+
+{% block modal_header %}Delete stock {{ entity }}{% endblock modal_header %}
+
+{% block modal_body %}
+  <h4>Are you sure you want to delete this stock?</h4>
+  <p>
+    Deleting this stock will also delete all the vials associated with it.
+    Moreover, all the crosses using these vials will be deleted, together
+    with any subsequent crosses. This may result in deletion of vials
+    owned by other users!
+  </p>
+  <p>
+    In general you should <strong>never</strong> delete <strong>any</strong>
+    stocks from the database, unless you have created them by mistake.
+  </p>
+  <h4>This operation cannot be undone!</h4>
+{% endblock %}
+
+{% block modal_footer %}
+  {{ d.buttons(entity,'vib_flies_stock') }}
+{% endblock modal_footer %}

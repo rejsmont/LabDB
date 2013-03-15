@@ -207,12 +207,16 @@ abstract class CRUDController extends AbstractController {
         if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('DELETE', $entity))) {
             throw new AccessDeniedException();
         }
-        $em->remove($entity);
-        $em->flush();
         $request = $this->getRequest();
-        $route = str_replace("_delete", "_list", $request->attributes->get('_route'));
-        $url = $this->generateUrl($route);
-        return $this->redirect($url);
+        if ($request->getMethod() == 'POST') {
+            $em->remove($entity);
+            $em->flush();
+            $request = $this->getRequest();
+            $route = str_replace("_delete", "_list", $request->attributes->get('_route'));
+            $url = $this->generateUrl($route);
+            return $this->redirect($url);
+        }
+        return array('entity' => $entity);
     }
     
     /**
@@ -283,7 +287,6 @@ abstract class CRUDController extends AbstractController {
         }
         
         $currentUserIdentity = UserSecurityIdentity::fromAccount($user);
-        $adminRoleIdentity = new RoleSecurityIdentity('ROLE_ADMIN');
         $userRoleIdentity = new RoleSecurityIdentity('ROLE_USER');
         $objectIdentity = ObjectIdentity::fromDomainObject($entity);
         $aclProvider = $this->getAclProvider();

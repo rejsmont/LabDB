@@ -1,0 +1,23 @@
+{% extends "VIBFliesBundle:StockVial:layout.html.twig" %}
+{% use "VIBBaseBundle:Delete:modal.html.twig" %}
+{% import "VIBBaseBundle:Macros:delete.html.twig" as d %}
+
+{% block modal_header %}Delete vial {{ entity }}{% endblock modal_header %}
+
+{% block modal_body %}
+  <h4>Are you sure you want to delete this vial?</h4>
+  <p>
+    Deleting this vial will also delete all the crosses associated with it,
+    together with any subsequent crosses.
+    This may result in deletion of vials owned by other users!
+  </p>
+  <p>
+    In general you should <strong>never</strong> delete <strong>any</strong>
+    vials from the database, unless you have created them by mistake.
+  </p>
+  <h4>This operation cannot be undone!</h4>
+{% endblock %}
+
+{% block modal_footer %}
+  {{ d.buttons(entity,'vib_flies_stockvial') }}
+{% endblock modal_footer %}

@@ -1,0 +1,6 @@
+{% macro buttons(value,name) %}
+  {% if value.id is not null %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{{ path(name ~ '_show', { 'id': value.id }) }}" class="btn btn-primary">Cancel</a>
+  {% endif %}
+{% endmacro %}

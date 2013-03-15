@@ -180,6 +180,21 @@ class RackController extends CRUDController
     }
     
     /**
+     * Delete rack
+     * 
+     * @Route("/delete/{id}")
+     * @Template()
+     * 
+     * @param mixed $id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction($id) {
+        $response = parent::deleteAction($id);
+        $url = $this->generateUrl('vib_flies_vial_list');
+        return is_array($response) ? $response : $this->redirect($url);
+    }
+    
+    /**
      * Prepare label
      * 
      * @param VIB\FliesBundle\Entity\Rack $rack

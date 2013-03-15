@@ -9,7 +9,8 @@
   }
 }
 
-.well-transparent {
+.well-modal {
+  .border-radius(6px);
   background: none;
   padding: 0px;
   form {
@@ -23,4 +24,17 @@
 
 .input-append > .btn-group > .btn:first-child {
   .border-radius(0);
+}
+
+.modal-danger,
+.modal-error {
+  border-color: @errorBorder;
+  color: @errorText;
+  .modal-header,
+  .modal-footer {
+    border-color: @errorBorder;
+  }
+  .modal-footer {
+    background-color: @errorBackground;
+  }
 }
