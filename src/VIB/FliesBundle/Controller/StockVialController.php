@@ -22,8 +22,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 use VIB\FliesBundle\Form\StockVialType;
-use VIB\FliesBundle\Form\StockVialSelectType;
+
 
 /**
  * StockVialController class
@@ -48,5 +50,81 @@ class StockVialController extends VialController {
      */
     protected function getEditForm() {
         return new StockVialType();
+    }
+    
+    /**
+     * Create new vial (of a stock)
+     *
+     * @Route("/new/{id}", defaults={"id" = null})
+     * @Template()
+     * 
+     * @param mixed $id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function createAction($id = null) {
+        $em = $this->getDoctrine()->getManager();
+        $class = $this->getEntityClass();
+        $vial = new $class;
+        if (null !== $id) {
+            $stock = $this->getStockEntity($id);
+            $vial->setStock($stock);
+        }
+        $form = $this->createForm($this->getCreateForm(), $vial);
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'POST') {
+            
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                
+                $em->persist($vial);
+                $em->flush();
+                
+                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
+                
+                if ($shouldPrint) {
+                    $pdf = $this->get('vibfolks.pdflabel');
+                    $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                    if ($this->submitPrintJob($pdf)) {
+                        $vial->setLabelPrinted(true);
+                        $em->persist($vial);
+                        $em->flush();
+                    }
+                }
+                
+                $this->setACL($vial);
+                
+                $url = $this->generateUrl('vib_flies_stockvial_show',array('id' => $vial->getId()));
+                return $this->redirect($url);
+            }
+        }
+        return array('form' => $form->createView());
+    }
+    
+    /**
+     * Get stock entity
+     * 
+     * @param mixed $id
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return \VIB\BaseBundle\Entity\Entity
+     */
+    protected function getStockEntity($id) {
+        $class = 'VIB\FliesBundle\Entity\Stock';        
+        
+        if ($id instanceof $class) {
+            return $id;
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository($class)->find($id);
+        
+        if ($entity instanceof $class) {
+            return $entity;
+        } else {
+            throw new NotFoundHttpException();
+        }
+        
+        return null;
     }
 }

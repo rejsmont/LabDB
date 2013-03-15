@@ -117,53 +117,6 @@ class StockController extends CRUDController
     }
     
     /**
-     * Create new vial of a stock
-     *
-     * @Route("/new/vial/{id}")
-     * @Template()
-     * 
-     * @param mixed $id
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function newVialAction($id) {
-        $em = $this->getDoctrine()->getManager();
-        $stock = $this->getEntity($id);
-        $vial = new StockVial();
-        $vial->setStock($stock);
-        $form = $this->createForm(new StockVialType(), $vial);
-        $request = $this->getRequest();
-        
-        if ($request->getMethod() == 'POST') {
-            
-            $form->bindRequest($request);
-            
-            if ($form->isValid()) {
-                
-                $em->persist($vial);
-                $em->flush();
-                
-                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
-                
-                if ($shouldPrint) {
-                    $pdf = $this->get('vibfolks.pdflabel');
-                    $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
-                    if ($this->submitPrintJob($pdf)) {
-                        $vial->setLabelPrinted(true);
-                        $em->persist($vial);
-                        $em->flush();
-                    }
-                }
-                
-                parent::setACL($vial);
-                
-                $url = $this->generateUrl('vib_flies_stockvial_show',array('id' => $vial->getId()));
-                return $this->redirect($url);
-            }
-        }
-        return array('form' => $form->createView());
-    }
-    
-    /**
      * Submit print job
      * 
      * @param VIB\FliesBundle\Utils\PDFLabel $pdf
