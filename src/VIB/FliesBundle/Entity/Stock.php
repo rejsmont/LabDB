@@ -61,6 +61,12 @@ class Stock extends Entity {
     protected $genotype;
     
     /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Expose
+     */
+    protected $notes;
+    
+    /**
      * @ORM\OneToMany(targetEntity="StockVial", mappedBy="stock", cascade={"persist", "remove"})
      * 
      * @var \Doctrine\Common\Collections\Collection
@@ -140,6 +146,24 @@ class Stock extends Entity {
      */
     public function getGenotype() {
         return $this->genotype;
+    }
+    
+    /**
+     * Set notes
+     * 
+     * @param string $notes
+     */
+    public function setNotes($notes) {
+        $this->notes = $notes;
+    }
+    
+    /**
+     * Get notes
+     * 
+     * @return type
+     */
+    public function getNotes() {
+        return $this->notes;
     }
     
     /**

@@ -1,13 +1,18 @@
 {% extends "VIBFliesBundle:Stock:layout.html.twig" %}
 {% use "VIBBaseBundle:Show:modal.html.twig" %}
 {% import "VIBBaseBundle:Macros:show.html.twig" as s %}
+{% import 'VIBBaseBundle:Macros:status.html.twig' as status %}
 
-{% block modal_header %}Stock {{ entity }}{% endblock modal_header %}
+{% block modal_header %}
+  Stock {{ entity }}
+  {{ status.stock(entity) }}
+{% endblock modal_header %}
 
 {% block modal_body %}
   {{ s.row("Genotype", entity.genotype) }}
   {{ s.user("Created by", owner) }}
   {{ s.row("Source cross", entity.sourceCross , 'vib_flies_crossvial_show', null, 'vial') }}
+  {{ s.row("Notes", entity.notes) }}
   {{ s.list("Vials", entity.livingVials, 'vib_flies_stockvial_show', null, 'vial') }}
 {% endblock modal_body %}
 

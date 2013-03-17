@@ -33,28 +33,6 @@
 {% endif %}
 {% endspaceless %}{% endmacro %}
 
-{% macro vialStatus(vial) %}{% spaceless %}
-  {% if vial.trashed %}
-    <span class="label label-inverse">TRASHED</span>
-  {% elseif vial.alive %}
-    <span class="label label-success">ALIVE</span>
-  {% else %}
-    <span class="label label-important">DEAD</span>
-  {% endif %}
-{% endspaceless %}{% endmacro %}
-
-{% macro stockStatus(stock) %}{% spaceless %}
-  {% if stock.livingVials | length > 3 %}
-    <span class="label label-success">AMPLIFIED</span>
-    {% elseif stock.livingVials | length > 1 %}
-    <span class="label label-success">HEALTHY</span>
-    {% elseif stock.livingVials | length < 1 %}
-    <span class="label label-important">DEAD</span>
-    {% else %}
-    <span class="label label-warning">EXPAND</span>
-  {% endif %}
-{% endspaceless %}{% endmacro %}
-
 {% macro select_buttons() %}
 <div class="btn-group">
   <button type="submit" class="btn btn-primary" onclick="$('#select_action').val('flip'); $('form').submit();">

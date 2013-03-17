@@ -48,6 +48,9 @@ class StockVialType extends AbstractType
                         'property'  => 'name',
                         'class'     => 'VIBFliesBundle:Stock',
                         'label'     => 'Stock'))
+                ->add('notes', 'textarea', array(
+                        'label' => 'Notes',
+                        'required' => false))
                 ->add('parent', 'text_entity', array(
                         'property'  => 'id',
                         'class'     => 'VIBFliesBundle:StockVial',

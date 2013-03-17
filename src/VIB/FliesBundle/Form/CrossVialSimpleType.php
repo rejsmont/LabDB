@@ -61,6 +61,9 @@ class CrossVialSimpleType extends AbstractType
                         'attr' => array('class' => 'barcode')))
                 ->add('maleName', 'text', array(
                         'label' => 'Male genotype',
+                        'required' => false))
+                ->add('notes', 'textarea', array(
+                        'label' => 'Notes',
                         'required' => false));
     }
 

@@ -25,7 +25,6 @@ use JMS\Serializer\Annotation as Serializer;
 
 use \DateTime;
 use \DateInterval;
-use \ReflectionClass;
 
 use VIB\BaseBundle\Entity\Entity;
 
@@ -54,6 +53,12 @@ class Vial extends Entity {
      * @Serializer\Expose
      */
     protected $flipDate;
+    
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Expose
+     */
+    protected $notes;
     
     /**
      * @ORM\OneToMany(targetEntity="Vial", mappedBy="parent")
@@ -218,6 +223,24 @@ class Vial extends Entity {
         return $this->flipDate;
     }
 
+    /**
+     * Set notes
+     * 
+     * @param string $notes
+     */
+    public function setNotes($notes) {
+        $this->notes = $notes;
+    }
+    
+    /**
+     * Get notes
+     * 
+     * @return type
+     */
+    public function getNotes() {
+        return $this->notes;
+    }
+        
     /**
      * Add child
      *
