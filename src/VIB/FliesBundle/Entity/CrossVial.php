@@ -99,7 +99,7 @@ class CrossVial extends Vial {
      */
     public function getLabelText()
     {
-        return $this->getVirginName() . "\nX\n" . $this->getMaleName();
+        return $this->getVirginName() . " ☿\n✕\n" . $this->getMaleName() . " ♂";
     }
     
     /**
