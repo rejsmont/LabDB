@@ -85,7 +85,8 @@ class StockVialController extends VialController {
                 
                 if ($shouldPrint) {
                     $pdf = $this->get('vibfolks.pdflabel');
-                    $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                    $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
+                                      $vial->getLabelText(), $this->getOwner($vial));
                     if ($this->submitPrintJob($pdf)) {
                         $vial->setLabelPrinted(true);
                         $em->persist($vial);

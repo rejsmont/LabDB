@@ -4,11 +4,13 @@
 
 {% block content_sidebar %}
 <ul class="nav nav-list well">
-  <li class="nav-header">List</li>
-  <li><a href="{{ path('vib_flies_crossvial_list') }}">My crosses</a></li>
-  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'public' }) }}">Public crosses</a></li>
-  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'trashed' }) }}">Trashed crosses</a></li>
-  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'dead' }) }}">Dead crosses</a></li>
+  <li class="nav-header">My crosses</li>
+  <li><a href="{{ path('vib_flies_crossvial_list') }}">Alive</a></li>
+  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'trashed' }) }}">Trashed</a></li>
+  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'dead' }) }}">Dead</a></li>
+  <li class="nav-header">Public crosses</li>
+  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'public' }) }}">Alive</a></li>
+  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'all' }) }}">All</a></li>
   <li class="nav-header">Actions</li>
   <li><a href="{{ path('vib_flies_crossvial_create') }}">New cross</a></li>
   <li><a href="{{ path('vib_flies_crossvial_select') }}">Select crosses</a></li>

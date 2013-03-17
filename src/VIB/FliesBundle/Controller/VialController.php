@@ -63,7 +63,6 @@ class VialController extends CRUDController {
     protected function getEditForm() {
         return new VialType();
     }
-    
         
     /**
      * List vials
@@ -98,7 +97,6 @@ class VialController extends CRUDController {
         
         switch($filter) {
             case 'public':
-            case 'all':
                 $query = $query->where('b.setupDate > :date')
                                ->andWhere('b.trashed = false')
                                ->orderBy('b.setupDate', 'DESC')
@@ -110,23 +108,35 @@ class VialController extends CRUDController {
                     return $query->getQuery();
                 }
                 break;
-            case 'trashed':
-                $query = $query->where('b.trashed = true')
-                               ->orderBy('b.setupDate', 'DESC')
+            case 'all':
+                $query = $query->orderBy('b.setupDate', 'DESC')
                                ->addOrderBy('b.id', 'DESC');
                 if ($this->getUser() !== null) {
                     return $this->get('vib.security.helper.acl')->apply($query);
+                } else {
+                    return $query->getQuery();
+                }
+                break;
+            case 'trashed':
+                $query = $query->where('b.setupDate > :date')
+                               ->andWhere('b.trashed = true')
+                               ->orderBy('b.setupDate', 'DESC')
+                               ->addOrderBy('b.id', 'DESC')
+                               ->setParameter('date', $date->format('Y-m-d'));
+                if ($this->getUser() !== null) {
+                    return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
                 } else {
                     return $query->getQuery();
                 }                
                 break;
             case 'dead':
                 $query = $query->where('b.setupDate < :date')
+                               ->orWhere('b.trashed = true')
                                ->orderBy('b.setupDate', 'DESC')
                                ->addOrderBy('b.id', 'DESC')
                                ->setParameter('date', $date->format('Y-m-d'));
                 if ($this->getUser() !== null) {
-                    return $this->get('vib.security.helper.acl')->apply($query);
+                    return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
                 } else {
                     return $query->getQuery();
                 }                
@@ -193,7 +203,8 @@ class VialController extends CRUDController {
                 
                 if ($shouldPrint) {
                     $pdf = $this->get('vibfolks.pdflabel');
-                    $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                    $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
+                                      $vial->getLabelText(), $this->getOwner($vial));
                     if ($this->submitPrintJob($pdf)) {
                         $vial->setLabelPrinted(true);
                         $em->persist($vial);
@@ -273,7 +284,8 @@ class VialController extends CRUDController {
                     $pdf = $this->get('vibfolks.pdflabel');
                     
                     foreach($vials as $vial) {
-                        $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                        $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
+                                          $vial->getLabelText(), $this->getOwner($vial));
                     }
                     if ($this->submitPrintJob($pdf, count($vials))) {
                         foreach($vials as $vial) {
@@ -406,11 +418,13 @@ class VialController extends CRUDController {
         $pdf = $this->get('vibfolks.pdflabel');
         if ($vials instanceof Collection) {
             foreach ($vials as $vial) {
-                $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
+                                  $vial->getLabelText(), $this->getOwner($vial));
             }
         } elseif ($vials instanceof Vial) {
             $vial = $vials;
-            $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+            $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
+                              $vial->getLabelText(), $this->getOwner($vial));
         }
         return $pdf;
     }
@@ -497,7 +511,8 @@ class VialController extends CRUDController {
             $pdf = $this->get('vibfolks.pdflabel');
 
             foreach($flippedVials as $vial) {
-                $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
+                                  $vial->getLabelText(), $this->getOwner($vial));
             }
             if ($this->submitPrintJob($pdf, count($flippedVials))) {
                 foreach($flippedVials as $vial) {

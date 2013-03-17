@@ -62,6 +62,13 @@ class StockController extends CRUDController
     }
     
     /**
+     * {@inheritdoc}
+     */
+    protected function getListQuery() {
+        return parent::getListQuery()->addOrderBy('b.name');
+    }
+    
+    /**
      * Create stock
      * 
      * @Route("/new")
@@ -92,7 +99,8 @@ class StockController extends CRUDController
                     $pdf = $this->get('vibfolks.pdflabel');
                     $vials = $stock->getVials();
                     foreach ($vials as $vial) {
-                        $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(), $vial->getLabelText());
+                        $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
+                                          $vial->getLabelText(), $this->getOwner($vial));
                     }
                     if ($this->submitPrintJob($pdf)) {
                         foreach ($vials as $vial) {
