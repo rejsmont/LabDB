@@ -44,6 +44,9 @@ class VialType extends AbstractType
     {
         $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
                 ->add('flipDate', 'datepicker', array('label' => 'Flip date'))
+                ->add('notes', 'textarea', array(
+                        'label' => 'Notes',
+                        'required' => false))
                 ->add('parent', 'text_entity', array(
                         'property'  => 'id',
                         'class'     => 'VIBFliesBundle:StockVial',

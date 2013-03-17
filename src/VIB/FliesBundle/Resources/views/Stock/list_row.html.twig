@@ -3,4 +3,4 @@
 <td>{{ entity.genotype }}</td>
 <td>{{ l.link(entity.sourceCross, 'vib_flies_crossvial_show', true, 'name', 'vial') }}</td>
 <td>{{ entity.livingVials | length }}</td>
-<td>{{ l.stockStatus(entity) }}</td>
+<td>{{ status.stock(entity) }}</td>

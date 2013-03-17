@@ -1,13 +1,18 @@
 {% extends "VIBFliesBundle:Vial:layout.html.twig" %}
 {% use "VIBBaseBundle:Show:modal.html.twig" %}
 {% import "VIBBaseBundle:Macros:show.html.twig" as s %}
+{% import 'VIBBaseBundle:Macros:status.html.twig' as status %}
 
-{% block modal_header %}Vial {{ entity }}{% endblock modal_header %}
+{% block modal_header %}
+  Vial {{ entity }}
+  {{ status.vial(entity) }}
+{% endblock modal_header %}
 
 {% block modal_body %}
   {{ s.row("Setup date", entity.setupDate | date("d F Y")) }}
   {{ s.row("Flip date", entity.flipDate | date("d F Y")) }}
   {{ s.user("Created by", owner) }}
+  {{ s.row("Notes", entity.notes) }}
   {{ s.row("Flipped from", entity.parent, 'vib_flies_vial_show', null, 'vial') }}
   {{ s.list("Flipped to", entity.children, 'vib_flies_vial_show', null, 'vial') }}
 {% endblock modal_body %}

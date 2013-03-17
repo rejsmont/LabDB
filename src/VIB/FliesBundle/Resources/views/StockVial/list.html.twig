@@ -1,6 +1,7 @@
 {% extends "VIBFliesBundle:StockVial:layout.html.twig" %}
 {% use "VIBBaseBundle:List:table.html.twig" %}
 {% import "VIBBaseBundle:Macros:list.html.twig" as l %}
+{% import 'VIBBaseBundle:Macros:status.html.twig' as status %}
 
 {% if form is defined %}
   {% form_theme form _self %} 
