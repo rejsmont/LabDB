@@ -87,7 +87,8 @@ class CrossVialController extends VialController
                     $pdf = $this->get('vibfolks.pdflabel');
                     
                     foreach($crosses as $cross) {
-                        $pdf->addFlyLabel($cross->getId(), $cross->getSetupDate(), $cross->getLabelText());
+                        $pdf->addFlyLabel($cross->getId(), $cross->getSetupDate(),
+                                          $cross->getLabelText(), $this->getOwner($cross));
                     }
                     if ($this->submitPrintJob($pdf, count($crosses))) {
                         foreach($crosses as $cross) {

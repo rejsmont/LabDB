@@ -64,7 +64,7 @@ class PDFLabel {
      * @param datetime $date
      * @param string $text
      */    
-    public function addFlyLabel($barcode,$date,$text) {
+    public function addFlyLabel($barcode,$date,$text,$owner = '') {
         $this->pdf->AddPage();
         $this->pdf->write2DBarcode(
                 sprintf("%06d",$barcode),
@@ -76,8 +76,9 @@ class PDFLabel {
         $this->pdf->SetFont('helvetica', 'B', 12);
         $this->pdf->MultiCell(30, 12.5, $text,0,'C',0,1,20,2,true,0,false,true,16.5,'T',true);
         $this->pdf->SetFont('helvetica', '', 7);
-        $this->pdf->MultiCell(30,6,$date->format("d.m.Y"),0,'C',0,1,20,17.5,true,0,false,true,6,'B',true);
-        $this->pdf->MultiCell(15,6,sprintf("%06d",$barcode),0,'C',0,1,2,17.5,true,0,false,true,6,'B',true);
+        $this->pdf->MultiCell(30,6,$date->format("d.m.Y"),0,'C',0,1,20,18,true,0,false,true,6,'B',true);
+        $this->pdf->MultiCell(15,6,sprintf("%06d",$barcode),0,'C',0,1,2,15,true,0,false,true,6,'B',true);
+        $this->pdf->MultiCell(25,6,sprintf($owner),0,'L',0,1,2,18,true,0,false,true,6,'B',true);
     }
     
     /**

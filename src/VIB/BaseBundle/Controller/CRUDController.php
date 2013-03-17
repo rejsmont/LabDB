@@ -74,7 +74,7 @@ abstract class CRUDController extends AbstractController {
         $page = $this->get('request')->query->get('page', 1);
         $query = $this->applyFilter($this->getListQuery(), $filter);
         $entities = $paginator->paginate($query, $page, 10);
-        return array('entities' => $entities);
+        return array('entities' => $entities, 'filter' => $filter);
     }
     
     /**
