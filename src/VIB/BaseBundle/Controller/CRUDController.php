@@ -90,10 +90,18 @@ abstract class CRUDController extends AbstractController {
             switch($filter) {
                 case 'public':
                 case 'all':
-                    return $this->get('vib.security.helper.acl')->apply($query);
+                    if (($this->getUser() !== null)&&(! $securityContext->isGranted('ROLE_ADMIN'))) {
+                        return $this->get('vib.security.helper.acl')->apply($query);
+                    } else {
+                        return $query->getQuery();
+                    }
                     break;
                 default:
-                    return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
+                    if ($this->getUser() !== null) {
+                        return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
+                    } else {
+                        return $query->getQuery();
+                    }
                     break;
             }
         } else {
