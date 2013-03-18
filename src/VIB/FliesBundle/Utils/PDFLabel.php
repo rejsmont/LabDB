@@ -66,6 +66,7 @@ class PDFLabel {
      */    
     public function addFlyLabel($barcode,$date,$text,$owner = '') {
         $this->pdf->AddPage();
+        $this->pdf->SetAutoPageBreak(false);
         $this->pdf->write2DBarcode(
                 sprintf("%06d",$barcode),
                 'QRCODE,H',
@@ -74,7 +75,7 @@ class PDFLabel {
         $this->pdf->setCellPaddings(0, 0, 0, 0);
         $this->pdf->setCellMargins(0, 0, 0, 0);
         $this->pdf->SetFont('DejaVuSans', 'B', 12);
-        $this->pdf->MultiCell(30, 12.5, $text,0,'C',0,1,20,2,true,0,false,true,16.5,'T',true);
+        $this->pdf->MultiCell(30, 12.5, $text,0,'C',0,1,20,2,true,0,false,true,18.5,'T',true);
         $this->pdf->SetFont('DejaVuSans', '', 7);
         $this->pdf->MultiCell(30,6,$date->format("d.m.Y"),0,'C',0,1,20,18,true,0,false,true,6,'B',true);
         $this->pdf->MultiCell(15,6,sprintf("%06d",$barcode),0,'C',0,1,2,15,true,0,false,true,6,'B',true);
