@@ -94,7 +94,7 @@ class VialController extends CRUDController {
     {
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
-        
+        $securityContext = $this->get('security.context');
         switch($filter) {
             case 'public':
                 $query = $query->where('b.setupDate > :date')
@@ -102,7 +102,7 @@ class VialController extends CRUDController {
                                ->orderBy('b.setupDate', 'DESC')
                                ->addOrderBy('b.id', 'DESC')
                                ->setParameter('date', $date->format('Y-m-d'));
-                if ($this->getUser() !== null) {
+                if (($this->getUser() !== null)&&(! $securityContext->isGranted('ROLE_ADMIN'))) {
                     return $this->get('vib.security.helper.acl')->apply($query);
                 } else {
                     return $query->getQuery();
@@ -111,7 +111,7 @@ class VialController extends CRUDController {
             case 'all':
                 $query = $query->orderBy('b.setupDate', 'DESC')
                                ->addOrderBy('b.id', 'DESC');
-                if ($this->getUser() !== null) {
+                if (($this->getUser() !== null)&&(! $securityContext->isGranted('ROLE_ADMIN'))) {
                     return $this->get('vib.security.helper.acl')->apply($query);
                 } else {
                     return $query->getQuery();
