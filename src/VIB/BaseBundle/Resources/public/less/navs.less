@@ -48,3 +48,12 @@
 .navbar .input-append > .btn-group {
   margin-top: 0px;
 }
+
+.navbar .nav > li:hover > a span.text-error,
+.navbar .nav > li:focus > a span.text-error {
+  color: darken(@errorText, 20%);
+}
+
+.navbar .nav > li.dropdown.open > a span.text-error {
+  color: darken(@errorText, 10%);
+}

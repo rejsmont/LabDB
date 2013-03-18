@@ -51,8 +51,14 @@
         <ul class="nav pull-right user-menu">
           <li class="dropdown first last">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              {% if is_granted('ROLE_ADMIN') %}
+                <span class="text-error">
+              {% endif %}
               {{ app.user }}
               <i class="icon-user"></i>
+              {% if is_granted('ROLE_ADMIN') %}
+                </span>
+              {% endif %}
             </a>
             <ul class="dropdown-menu menu_level_1 pull-right">
               <li class="first last"><a href="{{ path('logout') }}">Logout</a></li>
