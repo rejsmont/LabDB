@@ -199,6 +199,8 @@ class VialController extends CRUDController {
                 $em->persist($vial);
                 $em->flush();
                 
+                $this->setACL($vial);
+                
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
@@ -211,8 +213,6 @@ class VialController extends CRUDController {
                         $em->flush();
                     }
                 }
-                
-                $this->setACL($vial);
                 
                 $route = str_replace("_create", "_show", $request->attributes->get('_route'));
                 $url = $this->generateUrl($route,array('id' => $vial->getId()));
@@ -278,6 +278,10 @@ class VialController extends CRUDController {
                 }
                 $em->flush();
                 
+                foreach($vials as $vial) {
+                    $this->setACL($vial);
+                }
+                
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
@@ -294,10 +298,6 @@ class VialController extends CRUDController {
                         }
                         $em->flush();
                     }
-                }
-                
-                foreach($vials as $vial) {
-                    $this->setACL($vial);
                 }
                 
                 $route = str_replace("_expand", "_list", $request->attributes->get('_route'));
@@ -505,6 +505,10 @@ class VialController extends CRUDController {
         }
         $em->flush();
         
+        foreach ($flippedVials as $vial) {
+            parent::setACL($vial);
+        }
+        
         $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
 
         if ($shouldPrint) {
@@ -521,10 +525,6 @@ class VialController extends CRUDController {
                 }
                 $em->flush();
             }
-        }
-        
-        foreach ($flippedVials as $vial) {
-            parent::setACL($vial);
         }
     }
     

@@ -81,6 +81,10 @@ class CrossVialController extends VialController
                 }
                 $em->flush();
                 
+                foreach($crosses as $cross) {
+                    $this->setACL($cross);
+                }
+                
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
@@ -97,10 +101,6 @@ class CrossVialController extends VialController
                         }
                         $em->flush();
                     }
-                }
-                
-                foreach($crosses as $cross) {
-                    $this->setACL($cross);
                 }
                 
                 $url = $number == 1 ? 

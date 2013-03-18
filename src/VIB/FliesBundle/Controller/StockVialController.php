@@ -81,6 +81,8 @@ class StockVialController extends VialController {
                 $em->persist($vial);
                 $em->flush();
                 
+                $this->setACL($vial);
+                
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
@@ -93,8 +95,6 @@ class StockVialController extends VialController {
                         $em->flush();
                     }
                 }
-                
-                $this->setACL($vial);
                 
                 $url = $this->generateUrl('vib_flies_stockvial_show',array('id' => $vial->getId()));
                 return $this->redirect($url);
