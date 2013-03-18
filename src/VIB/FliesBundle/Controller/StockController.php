@@ -93,6 +93,8 @@ class StockController extends CRUDController
                 $em->persist($stock);
                 $em->flush();
                 
+                $this->setACL($stock);
+                
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
@@ -110,8 +112,6 @@ class StockController extends CRUDController
                         $em->flush();
                     }
                 }
-                
-                $this->setACL($stock);
                 
                 $route = str_replace("_create", "_show", $request->attributes->get('_route'));
                 $url = $this->generateUrl($route,array('id' => $stock->getId()));
