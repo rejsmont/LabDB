@@ -62,7 +62,11 @@ class SelectType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('action', 'hidden');
+        $builder->add('action', 'hidden')
+                ->add('incubator', 'hidden_entity', array(
+                      'property'     => 'name',
+                      'class' => 'VIBFliesBundle:Incubator',
+                      'attr' => array('class' => 'input-medium')));
         
         $factory = $builder->getFormFactory();
         $class = $this->entityClass;

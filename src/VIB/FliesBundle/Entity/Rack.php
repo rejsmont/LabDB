@@ -66,6 +66,11 @@ class Rack extends Entity {
      */
     private $columns;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Incubator", inversedBy="racks")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $incubator;
     
     /**
      * Construct Rack
@@ -326,5 +331,32 @@ class Rack extends Entity {
      */
     public function hasVial(Vial $vial) {
         return $this->getVials()->contains($vial);
+    }
+    
+    /**
+     * Get incubator
+     * 
+     * @return \VIB\FliesBundle\Entity\Incubator
+     */
+    public function getIncubator() {
+        return $this->incubator;
+    }
+
+    /**
+     * Set incubator
+     * 
+     * @param \VIB\FliesBundle\Entity\Incubator $incubator
+     */
+    public function setIncubator($incubator) {
+        $this->incubator = $incubator;
+    }
+
+    /**
+     * Get temperature
+     * 
+     * @return float The temperature rack is kept in
+     */
+    public function getTemperature() {
+        return (($incubator = $this->getIncubator()) instanceof Incubator) ? $incubator->getTemperature() : 21.00;
     }
 }

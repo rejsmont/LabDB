@@ -1,6 +1,6 @@
 {% block content %}
 {% if form is defined %}
-<form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
+<form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form)}} class="select">
 {% endif %}
 <div class="span12">
   {% block list_selector %}{% endblock list_selector %}
@@ -22,6 +22,10 @@
   {% endblock paginator %}
 </div>
 {% if form is defined %}
+{% block select_form %}
+  {{ form_errors(form) }}
+  {{ form_rest(form) }}
+{% endblock select_form %}
 </form>
 {% endif %}
 {% endblock %}

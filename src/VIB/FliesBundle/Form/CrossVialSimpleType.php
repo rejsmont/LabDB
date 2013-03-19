@@ -64,7 +64,11 @@ class CrossVialSimpleType extends AbstractType
                         'required' => false))
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',
-                        'required' => false));
+                        'required' => false))
+                ->add('incubator', 'entity', array(
+                        'property'     => 'name',
+                        'class' => 'VIBFliesBundle:Incubator',
+                        'label' => 'Incubator'));
     }
 
     /**

@@ -37,6 +37,7 @@ use VIB\FliesBundle\Form\VialExpandType;
 use VIB\FliesBundle\Form\SelectType;
 
 use VIB\FliesBundle\Entity\Vial;
+use VIB\FliesBundle\Entity\Incubator;
 
 
 /**
@@ -353,6 +354,10 @@ class VialController extends CRUDController {
             case 'trash':
                 $this->trashVials($vials);
                 break;
+            case 'incubate':
+                $incubator = $data['incubator'];
+                $this->incubateVials($vials,$incubator);
+                break;
         }
         
         return $response;
@@ -539,6 +544,24 @@ class VialController extends CRUDController {
         
         foreach ($vials as $vial) {
             $vial->setTrashed(true);
+            $em->persist($vial);
+        }
+        
+        $em->flush();
+    }
+    
+    /**
+     * Incubate vials
+     * 
+     * @param \Doctrine\Common\Collections\Collection $vials
+     * @param \VIB\FliesBundle\Entity\Incubator $incubator
+     */  
+    public function incubateVials(Collection $vials, Incubator $incubator) {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        foreach ($vials as $vial) {
+            $vial->setIncubator($incubator);
             $em->persist($vial);
         }
         

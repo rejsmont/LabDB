@@ -1,25 +1,34 @@
 {% macro vial(vial) %}{% spaceless %}
   {% if vial.trashed %}
     {% if vial.type == 'cross' and vial.sterile %}
-      <span class="label label-important">STERILE</span>
+      <span class="label status label-important">STERILE</span>
     {% else %}
-      <span class="label label-inverse">TRASHED</span>
+      <span class="label status label-inverse">TRASHED</span>
   {% endif %}
   {% elseif vial.alive %}
-    <span class="label label-success">ALIVE</span>
+    <span class="label status label-success">ALIVE</span>
+    {% if vial.temperature < 21 %}
+      <span class="label status label-info">{{ vial.temperature }}℃</span>
+    {% elseif vial.temperature < 25 %}
+      <span class="label status label-success">{{ vial.temperature }}℃</span>
+    {% elseif vial.temperature < 28 %}
+      <span class="label status label-warning">{{ vial.temperature }}℃</span>
+    {% else %}
+      <span class="label status label-important">{{ vial.temperature }}℃</span>
+    {% endif %}
   {% else %}
-    <span class="label label-important">DEAD</span>
+    <span class="label status label-important">DEAD</span>
   {% endif %}
 {% endspaceless %}{% endmacro %}
 
 {% macro stock(stock) %}{% spaceless %}
   {% if stock.livingVials | length > 3 %}
-    <span class="label label-success">AMPLIFIED</span>
+    <span class="label status label-success">AMPLIFIED</span>
     {% elseif stock.livingVials | length > 1 %}
-    <span class="label label-success">HEALTHY</span>
+    <span class="label status label-success">HEALTHY</span>
     {% elseif stock.livingVials | length < 1 %}
-    <span class="label label-important">DEAD</span>
+    <span class="label status label-important">DEAD</span>
     {% else %}
-    <span class="label label-warning">EXPAND</span>
+    <span class="label status label-warning">EXPAND</span>
   {% endif %}
 {% endspaceless %}{% endmacro %}

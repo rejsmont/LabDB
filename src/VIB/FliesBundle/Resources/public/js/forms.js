@@ -264,11 +264,14 @@ function setupPopover(e) {
 
 function preventEnterSubmit(e) {
     if (e.which == 13) {
-        var $targ = $(e.target);
-        if (!$targ.is("textarea") && $targ.is(".barcode")) {
-            $targ.blur();
-            $targ.focus();
-            $targ.select();
+        var targ = $(e.target);
+        var form = targ.parents('form');
+        if (!targ.is("textarea") && (targ.is(".barcode")||(form.hasClass('select')))) {
+            if(targ.is(".barcode")) {
+              targ.blur();
+              targ.focus();
+              targ.select();
+            }
             return false;
         }
         return true;
@@ -316,5 +319,6 @@ $(document).ready(function() {
         $('.rack-display').find('td.info').removeClass('info');
         $(this).addClass('info');
       }
+      $('#barcode').focus();
     });
 }); 

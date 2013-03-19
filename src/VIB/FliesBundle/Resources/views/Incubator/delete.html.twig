@@ -1,0 +1,19 @@
+{% extends "VIBFliesBundle:Vial:layout.html.twig" %}
+{% use "VIBBaseBundle:Delete:modal.html.twig" %}
+{% import "VIBBaseBundle:Macros:delete.html.twig" as d %}
+
+{% block headline %}Incubators{% endblock headline %}
+{% block modal_header %}Delete incubator {{ entity }}{% endblock modal_header %}
+
+{% block modal_body %}
+  <h4>Are you sure you want to delete this incubator?</h4>
+  <p>
+    Vials that were assiciated with it <strong>will not</strong> be deleted.
+    They will be simply unassigned from this incubator.
+  </p>
+  <h4>This operation cannot be undone.</h4>
+{% endblock %}
+
+{% block modal_footer %}
+  {{ d.buttons(entity,'vib_flies_rack') }}
+{% endblock modal_footer %}
