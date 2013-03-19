@@ -24,5 +24,58 @@
 {% endblock list_item %}
 
 {% block list_buttons %}
-  {{ l.select_buttons() }}
+<div class="btn-group">
+  <button type="submit" class="btn btn-primary" onclick="$('#select_action').val('flip'); $('form').submit();">
+    Flip
+  </button>
+  <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li class="first">
+      <a href="#" onclick="$('#select_action').val('flip'); $('form').submit();"><b>Flip</b></a>
+    </li>
+    <li class="last">
+      <a href="#" onclick="$('#select_action').val('fliptrash'); $('form').submit();">Flip & trash</a>
+    </li>
+  </ul>
+</div>
+<div class="btn-group">
+  <button type="submit" class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
+    Trash
+  </button>
+  <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li class="first">
+      <a href="#" onclick="$('#select_action').val('trash'); $('form').submit();"><b>Trash</b></a>
+    </li>
+    <li class="last">
+      <a href="#" onclick="$('#select_action').val('marksterile'); $('form').submit();">Mark as sterile</a>
+    </li>
+  </ul>
+</div>
+{% if can_print() %}
+<div class="btn-group">
+  <button type="submit" class="btn" onclick="$('#select_action').val('print'); $('form').submit();">
+    Print labels
+  </button>
+  <button class="btn dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li class="first">
+      <a href="#" onclick="$('#select_action').val('print'); $('form').submit();"><b>Print</b></a>
+    </li>
+    <li class="last">
+      <a href="#" onclick="$('#select_action').val('label'); $('form').submit();">Download PDF</a>
+    </li>
+  </ul>
+</div>
+{% else %}
+  <button type="submit" class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
+    Download label PDF
+  </button>
+{% endif %}
 {% endblock list_buttons %}

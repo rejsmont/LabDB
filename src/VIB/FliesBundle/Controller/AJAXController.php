@@ -225,7 +225,11 @@ class AJAXController extends Controller {
         
         if ($entity instanceof Vial) {
             if($entity->isTrashed()) {
-                $status = "<span class=\"label label-inverse pull-right\">TRASHED</span>";
+                if (($entity instanceof CrossVial)&&($entity->isSterile())) {
+                    $status = "<span class=\"label label-important pull-right\">STERILE</span>";
+                } else {
+                    $status = "<span class=\"label label-inverse pull-right\">TRASHED</span>";
+                }
             } elseif($entity->isAlive()) {
                 $status = "<span class=\"label label-success pull-right\">ALIVE</span>";
             } else {

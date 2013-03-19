@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\FliesBundle\Form\CrossVialType;
@@ -112,5 +113,45 @@ class CrossVialController extends VialController
         }
         
         return array('form' => $form->createView());
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function handleBatchAction($data) {
+        
+        $action = $data['action'];
+        $vials = $data['items'];
+        
+        $response = $this->getDefaultBatchResponse();
+        
+        switch($action) {
+            case 'marksterile':
+                $this->markSterile($vials);
+                break;
+            default:
+                return parent::handleBatchAction($data);
+        }
+        
+        return $response;
+    }
+    
+    /**
+     * Mark crosses as sterile and trash them
+     * 
+     * @param \Doctrine\Common\Collections\Collection $vials
+     */  
+    public function markSterile(Collection $vials) {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        foreach ($vials as $vial) {
+            if ($vial instanceof CrossVial) {
+                $vial->setSterile(true);
+                $em->persist($vial);
+            }
+        }
+        
+        $em->flush();
     }
 }
