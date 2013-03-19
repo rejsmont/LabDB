@@ -1,6 +1,10 @@
 {% macro vial(vial) %}{% spaceless %}
   {% if vial.trashed %}
-    <span class="label label-inverse">TRASHED</span>
+    {% if vial.type == 'cross' and vial.sterile %}
+      <span class="label label-important">STERILE</span>
+    {% else %}
+      <span class="label label-inverse">TRASHED</span>
+  {% endif %}
   {% elseif vial.alive %}
     <span class="label label-success">ALIVE</span>
   {% else %}

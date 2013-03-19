@@ -39,6 +39,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CrossVial extends Vial {
     
     /**
+     * @ORM\Column(type="boolean")
+     * @Serializer\Expose
+     */
+    protected $sterile;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Vial", inversedBy="maleCrosses")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotBlank(message = "Male must be specified")
@@ -79,6 +85,7 @@ class CrossVial extends Vial {
      */
     public function __construct(Vial $template = null, $flip = false) {
         parent::__construct($template, $flip);
+        $this->sterile = false;
     }
     
     /**
@@ -94,6 +101,16 @@ class CrossVial extends Vial {
         }
     }
     
+    public function isSterile() {
+        return $this->sterile;
+    }
+
+    public function setSterile($sterile) {
+        $this->sterile = $sterile;
+        $this->setTrashed($sterile);
+    }
+
+        
     /**
      * {@inheritdoc}
      */
