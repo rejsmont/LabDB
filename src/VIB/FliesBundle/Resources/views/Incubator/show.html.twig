@@ -1,0 +1,18 @@
+{% extends "VIBFliesBundle:Vial:layout.html.twig" %}
+{% use "VIBBaseBundle:Show:modal.html.twig" %}
+{% import "VIBBaseBundle:Macros:show.html.twig" as s %}
+
+{% block headline %}Incubators{% endblock headline %}
+
+{% block modal_header %}
+  Incubator {{ entity }}
+{% endblock modal_header %}
+
+{% block modal_body %}
+  {{ s.row("Name", entity.name) }}
+  {{ s.row("Temperature", entity.temperature) }}
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  {{ s.buttons(entity, 'vib_flies_incubator') }}
+{% endblock modal_footer %}

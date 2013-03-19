@@ -30,6 +30,7 @@ use VIB\FliesBundle\Form\RackType;
 use VIB\FliesBundle\Form\SelectType;
 
 use VIB\FliesBundle\Entity\Rack;
+use VIB\FliesBundle\Entity\Incubator;
 
 /**
  * RackController class
@@ -67,16 +68,26 @@ class RackController extends CRUDController
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function showAction($id) {
-        $response = parent::showAction($id);
+        $rack = $this->getEntity($id);
+        $response = parent::showAction($rack);
         
         $form = $this->createForm(new SelectType('VIB\FliesBundle\Entity\Vial'));
         $request = $this->getRequest();
         
         if ($request->getMethod() == 'POST') {
-            $action = $request->request->get('select_action');
-            $selectResponse = $this->forward('VIBFliesBundle:Vial:select');
-            if (($action == 'flip')||($action == 'label')||($selectResponse->getStatusCode() >= 400)) {
-                return $selectResponse;
+            $postForm = $request->request->get('select');
+            $action = is_array($postForm) ? $postForm['action'] : '';
+            if ($action == 'incubate') {
+                $form->bindRequest($request);
+                if ($form->isValid()) {
+                    $data = $form->getData();
+                    $this->incubateRack($rack, $data['incubator']);
+                }
+            } else {
+                $selectResponse = $this->forward('VIBFliesBundle:Vial:select');
+                if (($action == 'flip')||($action == 'label')||($selectResponse->getStatusCode() >= 400)) {
+                    return $selectResponse;
+                }
             }
         }
         
@@ -242,6 +253,22 @@ class RackController extends CRUDController
         
         $url = $this->generateUrl('vib_flies_rack_show',array('id' => $rack->getId()));
         return $this->redirect($url);
+    }
+    
+    /**
+     * Incubate rack
+     * 
+     * @param \VIB\FliesBundle\Entity\Rack $rack
+     * @param \VIB\FliesBundle\Entity\Incubator $incubator
+     */  
+    public function incubateRack(Rack $rack, Incubator $incubator) {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $rack->setIncubator($incubator);
+        $em->persist($rack);
+        
+        $em->flush();
     }
     
 }

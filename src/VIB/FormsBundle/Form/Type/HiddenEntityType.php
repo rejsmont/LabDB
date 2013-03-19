@@ -16,20 +16,29 @@
  * limitations under the License.
  */
 
-namespace VIB\UserBundle\Controller;
+namespace VIB\FormsBundle\Form\Type;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
-class DefaultController extends Controller
-{
+/**
+ * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ */
+class HiddenEntityType extends TextEntityType
+{    
+ 
     /**
-     * 
-     * 
+     * {@inheritDoc}
      */
-    public function indexAction($name)
+    public function getParent()
     {
-        return array('name' => $name);
+        return 'hidden';
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'hidden_entity';
     }
 }
+
+?>

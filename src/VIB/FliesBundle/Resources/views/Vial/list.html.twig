@@ -10,11 +10,6 @@
 
 {% block headline %}Vials{% endblock headline %}
 
-{% block list_selector %}
-  {{ form_errors(form) }}
-  {{ form_rest(form) }}
-{% endblock list_selector %}
-
 {% block list_header %}
   {% include 'VIBFliesBundle:Vial:list_head.html.twig' with {'checked' : ''} %}
 {% endblock list_header %}
@@ -25,4 +20,5 @@
 
 {% block list_buttons %}
   {{ l.select_buttons() }}
+  {{ l.incubate_button() }}
 {% endblock list_buttons %}

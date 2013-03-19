@@ -226,14 +226,23 @@ class AJAXController extends Controller {
         if ($entity instanceof Vial) {
             if($entity->isTrashed()) {
                 if (($entity instanceof CrossVial)&&($entity->isSterile())) {
-                    $status = "<span class=\"label label-important pull-right\">STERILE</span>";
+                    $status = "<span class=\"label status label-important\">STERILE</span>";
                 } else {
-                    $status = "<span class=\"label label-inverse pull-right\">TRASHED</span>";
+                    $status = "<span class=\"label status label-inverse\">TRASHED</span>";
                 }
             } elseif($entity->isAlive()) {
-                $status = "<span class=\"label label-success pull-right\">ALIVE</span>";
+                $status = "<span class=\"label status label-success\">ALIVE</span>";
+                if ($entity->getTemperature() < 21) {
+                    $status .= "<span class=\"label status label-info\">" . $entity->getTemperature() . "℃</span>";
+                } elseif ($entity->getTemperature() < 25) {
+                    $status .= "<span class=\"label status label-success\">" . $entity->getTemperature() . "℃</span>";
+                } elseif ($entity->getTemperature() < 28) {
+                    $status .= "<span class=\"label status label-warning\">" . $entity->getTemperature() . "℃</span>";
+                } else {
+                    $status .= "<span class=\"label status label-important\">" . $entity->getTemperature() . "℃</span>";
+                }
             } else {
-                $status = "<span class=\"label label-important pull-right\">DEAD</span>";
+                $status = "<span class=\"label status label-important\">DEAD</span>";
             }
             if ($entity instanceof CrossVial) {
                 $type  = "crossvial";
@@ -244,13 +253,13 @@ class AJAXController extends Controller {
         } elseif ($entity instanceof Stock) {
             $vials = count($entity->getLivingVials());
             if($vials > 3) {
-                $status = "<span class=\"label label-success pull-right\">AMPLIFIED</span>";
+                $status = "<span class=\"label status label-success\">AMPLIFIED</span>";
             } elseif($vials > 1) {
-                $status = "<span class=\"label label-success pull-right\">HEALTHY</span>";
+                $status = "<span class=\"label status label-success\">HEALTHY</span>";
             } elseif($vials < 1) {
-                $status = "<span class=\"label label-important pull-right\">DEAD</span>";
+                $status = "<span class=\"label status label-important\">DEAD</span>";
             } else {
-                $status = "<span class=\"label label-warning pull-right\">EXPAND</span>";
+                $status = "<span class=\"label status label-warning\">EXPAND</span>";
             }
         } else {
              return new Response('Not found', 404);

@@ -28,6 +28,7 @@ use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use \ReflectionClass;
@@ -325,15 +326,19 @@ abstract class CRUDController extends AbstractController {
     protected function getOwner($entity) {
         $objectIdentity = ObjectIdentity::fromDomainObject($entity);
         $aclProvider = $this->getAclProvider();
-        $acl = $aclProvider->findAcl($objectIdentity);
-        foreach($acl->getObjectAces() as $ace) {
-            if ($ace->getMask() == MaskBuilder::MASK_OWNER) {
-                $securityIdentity = $ace->getSecurityIdentity();
-                if ($securityIdentity instanceof UserSecurityIdentity) {
-                    $userManager = $this->get('fos_user.user_manager');
-                    return $userManager->findUserByUsername($securityIdentity->getUsername());
+        try {
+            $acl = $aclProvider->findAcl($objectIdentity);
+            foreach($acl->getObjectAces() as $ace) {
+                if ($ace->getMask() == MaskBuilder::MASK_OWNER) {
+                    $securityIdentity = $ace->getSecurityIdentity();
+                    if ($securityIdentity instanceof UserSecurityIdentity) {
+                        $userManager = $this->get('fos_user.user_manager');
+                        return $userManager->findUserByUsername($securityIdentity->getUsername());
+                    }
                 }
             }
+        } catch (AclNotFoundException $e) {
+            return null;
         }
         return null;
     }

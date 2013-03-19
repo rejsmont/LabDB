@@ -34,8 +34,14 @@
 {% endspaceless %}{% endmacro %}
 
 {% macro select_buttons() %}
+  {{ _self.flip_button() }}
+  {{ _self.trash_button() }}
+  {{ _self.print_button() }}
+{% endmacro select_buttons %}
+
+{% macro flip_button() %}
 <div class="btn-group">
-  <button type="submit" class="btn btn-primary" onclick="$('#select_action').val('flip'); $('form').submit();">
+  <button class="btn btn-primary" onclick="$('#select_action').val('flip'); $('form').submit();">
     Flip
   </button>
   <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -50,11 +56,18 @@
     </li>
   </ul>
 </div>
-<button type="submit" class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
-  Trash</button>
+{% endmacro flip_button %}
+
+{% macro trash_button() %}
+<button class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
+  Trash
+</button>
+{% endmacro trash_button %}
+
+{% macro print_button() %}
 {% if can_print() %}
 <div class="btn-group">
-  <button type="submit" class="btn" onclick="$('#select_action').val('print'); $('form').submit();">
+  <button class="btn" onclick="$('#select_action').val('print'); $('form').submit();">
     Print labels
   </button>
   <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -70,8 +83,12 @@
   </ul>
 </div>
 {% else %}
-  <button type="submit" class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
+  <button class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
     Download label PDF
   </button>
 {% endif %}
-{% endmacro select_buttons %}
+{% endmacro print_button %}
+
+{% macro incubate_button() %}
+  {% render "VIBFliesBundle:Incubator:incubate" %}
+{% endmacro incubate_button %}

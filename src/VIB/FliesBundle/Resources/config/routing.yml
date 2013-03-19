@@ -17,6 +17,10 @@ stock:
 rack:
     resource: "@VIBFliesBundle/Controller/RackController.php"
     type:     annotation
+    
+incubator:
+    resource: "@VIBFliesBundle/Controller/IncubatorController.php"
+    type:     annotation
 
 ajax:
     resource: "@VIBFliesBundle/Controller/AJAXController.php"

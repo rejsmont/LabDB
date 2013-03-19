@@ -16,20 +16,16 @@
  * limitations under the License.
  */
 
-namespace VIB\UserBundle\Controller;
+namespace VIB\FliesBundle\Repository;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Doctrine\ORM\EntityRepository;
 
-class DefaultController extends Controller
-{
-    /**
-     * 
-     * 
-     */
-    public function indexAction($name)
-    {
-        return array('name' => $name);
-    }
+/**
+ * IncubatorRepository
+ * 
+ * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ */
+class IncubatorRepository extends EntityRepository {
+    
 }

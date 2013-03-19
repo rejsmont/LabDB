@@ -14,10 +14,6 @@
 {% endif %}
 <div class="span12">
   {% block list_selector %}
-    {% if form is defined %}
-      {{ form_errors(form) }}
-      {{ form_rest(form) }}
-    {% endif %}
     <div class="form-inline control-group well">
       <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value="" onchange="checkRackVial()" data-link="{{ path('vib_flies_ajax_rackvial')}}"/>
       <span class="help-inline"></span>
@@ -59,7 +55,6 @@
     {% endfor %}
     </tbody>
   </table>
-  <div class="well">
   {% block list_buttons %}
     {{ l.select_buttons() }}
     <div class="btn-group pull-right">
@@ -75,22 +70,26 @@
           <a href="{{ path('vib_flies_rack_downloadlabel', { 'id': entity.id }) }}">Download PDF</a>
         </li>
         <li class="divider"></li>
+        {% if is_granted('EDIT',entity) %}
         <li>
           <a href="{{ path('vib_flies_rack_edit', { 'id': entity.id }) }}">Edit</a>
         </li>
+        {% endif %}
         <li class="last"onclick="clearRack(this,{{ entity.id }})"
             data-link="{{ path('vib_flies_ajax_rackvialremove') }}">
           <a href="#">Clear contents</a>
         </li>
       </ul>
     </div>
+    {{ l.incubate_button() }}
   {% endblock list_buttons %}
-  </div>
   {% block paginator %}
     {% if entities is defined %}{{ knp_pagination_render(entities) }}{% endif %}
   {% endblock paginator %}
 </div>
 {% if form is defined %}
+{{ form_errors(form) }}
+{{ form_rest(form) }}
 </form>
 {% endif %}
 {% endblock %}

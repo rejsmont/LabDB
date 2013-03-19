@@ -105,6 +105,12 @@ class Vial extends Entity {
      */
     protected $prevPosition;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Incubator", inversedBy="vials")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $incubator;
+    
     
     /**
      * Construct Vial
@@ -119,11 +125,10 @@ class Vial extends Entity {
         $this->setLabelPrinted(false);
         $this->setTrashed(false);
         if (null !== $template) {
+            $this->inheritFromTemplate($template);
             if ($flip) {
                 $this->setParent($template);
                 $this->resetDates();
-            } else {
-                $this->inheritFromTemplate($template);
             }
         } else {
             $this->resetDates();
@@ -158,6 +163,8 @@ class Vial extends Entity {
     protected function inheritFromTemplate(Vial $template = null) {
         $this->setSetupDate($template->getSetupDate());
         $this->setFlipDate($template->getFlipDate());
+        $this->setNotes($template->getNotes());
+        $this->setIncubator($template->getIncubator());
     }
     
     /**
@@ -430,7 +437,55 @@ class Vial extends Entity {
         $this->prevPosition = $prevPosition;
     }
 
+    /**
+     * Get incubator
+     * 
+     * @return \VIB\FliesBundle\Entity\Incubator
+     */
+    public function getIncubator() {
+        if ((($position = $this->getPosition()) instanceof RackPosition)&&
+            (($rack = $position->getRack()) instanceof Rack)) {
+            return $rack->getIncubator();
+        } else {
+            return $this->incubator;
+        }
+    }
+
+    /**
+     * Set incubator
+     * 
+     * @param \VIB\FliesBundle\Entity\Incubator $incubator
+     */
+    public function setIncubator(Incubator $incubator = null) {
+        $this->incubator = $incubator;
+    }
+
+    /**
+     * Get position
+     * 
+     * @return \VIB\FliesBundle\Entity\RackPosition
+     */
+    public function getLocation() {
+        $incubator = (string)$this->getIncubator();
+        $position = (string)$this->getPosition();
+        $glue = (null !== $incubator)&&(null !== $position) ? " " : "";
         
+        return $incubator . $glue . $position;
+    }
+    
+    /**
+     * Get temperature
+     * 
+     * @return float The temperature vial is kept in
+     */
+    public function getTemperature() {
+        if (($incubator = $this->getIncubator()) instanceof Incubator) {
+            return $incubator->getTemperature();
+        } else {
+            return 21.00;
+        }
+    }
+            
     /**
      * Is alive
      *
