@@ -23,6 +23,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use JMS\Serializer\Annotation as Serializer;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 use \DateTime;
 use \DateInterval;
 
@@ -44,12 +46,13 @@ class Vial extends Entity {
     
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message = "Setup date must be specified")
      * @Serializer\Expose
      */
     protected $setupDate;
     
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      * @Serializer\Expose
      */
     protected $flipDate;
@@ -128,7 +131,7 @@ class Vial extends Entity {
             $this->inheritFromTemplate($template);
             if ($flip) {
                 $this->setParent($template);
-                $this->resetDates();
+                $this->resetDates($template);
             }
         } else {
             $this->resetDates();
@@ -147,12 +150,16 @@ class Vial extends Entity {
     /**
      * Reset dates
      */
-    private function resetDates() {
+    private function resetDates(Vial $template = null) {
         $setupDate = new DateTime();
         $this->setSetupDate($setupDate);
-        $flipDate = new DateTime();
-        $flipDate->add(new DateInterval('P14D'));
-        $this->setFlipDate($flipDate);
+        if ((null !== $template)&&(null !== $template->getFlipDate()&&(null !== $template->getSetupDate()))) {
+            $flipDate = new DateTime();
+            $flipDate->add($template->getSetupDate()->diff($template->getFlipDate()));
+            $this->setFlipDate($flipDate);
+        } else {
+            $this->setFlipDate(null);
+        }
     }
     
     /**
@@ -485,7 +492,48 @@ class Vial extends Entity {
             return 21.00;
         }
     }
-            
+    
+    /**
+     * Get generation time
+     * 
+     * @return integer
+     */
+    public function getGenerationTime() {
+        return round(7346.7 * pow($this->getTemperature(),-2.079));
+    }
+    
+    /**
+     * Get progress
+     * 
+     * @return float
+     */
+    public function getProgress() {
+        $today = new DateTime();
+        $interval = $this->getSetupDate()->diff($today);
+        return $interval->format('%a') / $this->getGenerationTime();
+    }
+    
+    /**
+     * Get default flip date
+     * 
+     * @return \DateTime
+     */
+    public function getDefaultFlipDate() {
+        $interval = new DateInterval('P' . 2 * $this->getGenerationTime() . 'D');
+        $setup = clone $this->getSetupDate();
+        $setup->add($interval);
+        return $setup;
+    }
+    
+    /**
+     * Get set or calculated value for flip date
+     * 
+     * @return \DateTime
+     */
+    public function getRealFlipDate() {
+        return (null !== $this->getFlipDate()) ? $this->getFlipDate() : $this->getDefaultFlipDate();
+    }
+    
     /**
      * Is alive
      *

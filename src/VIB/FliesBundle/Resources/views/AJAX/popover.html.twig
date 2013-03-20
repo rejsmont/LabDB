@@ -73,7 +73,7 @@
 {% macro dates(entity,checkLabel = 'Flip') %}
 <table class="table-plain"><tbody>
   <tr><th>Setup&nbsp;date</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
-  <tr><th>{{ checkLabel }}&nbsp;date</th><td>{{ entity.flipDate | date("d-m-Y") }}</td></tr>
+  <tr><th>{{ checkLabel }}&nbsp;date</th><td>{{ entity.realFlipDate | date("d-m-Y") }}</td></tr>
   <tr><th>Location</th><td>{{ entity.location }}</td></tr>
 </tbody></table>
 {% endmacro %}

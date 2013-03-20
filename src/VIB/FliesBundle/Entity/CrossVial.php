@@ -27,6 +27,7 @@ use JMS\Serializer\Annotation as Serializer;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+use \DateInterval;
 
 /**
  * CrossVial class
@@ -295,5 +296,17 @@ class CrossVial extends Vial {
     public function getStocks()
     {
         return $this->stocks;
+    }
+    
+    /**
+     * Get default flip date
+     * 
+     * @return \DateTime
+     */
+    public function getDefaultFlipDate() {
+        $interval = new DateInterval('P' . $this->getGenerationTime() . 'D');
+        $setup = clone $this->getSetupDate();
+        $setup->add($interval);
+        return $setup;
     }
 }

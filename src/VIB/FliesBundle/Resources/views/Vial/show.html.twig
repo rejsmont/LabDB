@@ -10,7 +10,7 @@
 
 {% block modal_body %}
   {{ s.row("Setup date", entity.setupDate | date("d F Y")) }}
-  {{ s.row("Flip date", entity.flipDate | date("d F Y")) }}
+  {{ s.row("Flip date", entity.realFlipDate | date("d F Y")) }}
   {{ s.row("Location", entity.location) }}
   {{ s.user("Created by", owner) }}
   {{ s.row("Notes", entity.notes) }}
