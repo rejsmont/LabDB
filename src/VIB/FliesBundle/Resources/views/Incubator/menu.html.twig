@@ -1,0 +1,14 @@
+{% if entities|length > 0 or is_granted('ROLE_ADMIN') %}
+<li class="dropdown-submenu">
+  <a>Incubators</a>
+  <ul class="dropdown-menu menu_level_2">
+    {% if is_granted('ROLE_ADMIN') %}
+    <li><a href="{{ path('vib_flies_incubator_create') }}">New</a></li>
+    <li class="divider"></li>
+    {% endif %}
+    {% for entity in entities %}
+    <li><a href="{{ path('vib_flies_incubator_show', { 'id': entity.id }) }}">{{ entity }}</a></li>
+    {% endfor %}
+  </ul>
+</li>
+{% endif %}

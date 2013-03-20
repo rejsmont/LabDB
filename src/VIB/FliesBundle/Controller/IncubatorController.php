@@ -65,4 +65,17 @@ class IncubatorController extends CRUDController
         $entities = $query->getResult();
         return array('entities' => $entities);
     }
+    
+    /**
+     * Generate links for incubator menu
+     * 
+     * @Template()
+     * 
+     * @return array
+     */
+    public function menuAction() {
+        $query = $this->applyFilter($this->getListQuery(),'all');
+        $entities = $query->getResult();
+        return array('entities' => $entities);
+    }
 }
