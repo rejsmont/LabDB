@@ -38,15 +38,24 @@
           <li class="dropdown last visible-desktop">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <i class="caret"></i></a>
             <ul class="dropdown-menu menu_level_1">
-              <li class="first"><a href="{{ path('vib_flies_stock_create') }}">New stock</a></li>
-              <li><a href="{{ path('vib_flies_crossvial_create') }}">New cross</a></li>
-              <li><a href="{{ path('vib_flies_rack_create') }}">New rack</a></li>
-              <li class="divider"></li>
-              <li><a href="{{ path('vib_flies_vial_select') }}">Select vials</a></li>
-              <li><a href="{{ path('vib_flies_stockvial_select') }}">Select stock vials</a></li>
-              <li><a href="{{ path('vib_flies_crossvial_select') }}">Select crosses</a></li>
-              <li class="divider"></li>
+              <li class="dropdown-submenu first">
+                <a>New</a>
+                <ul class="dropdown-menu menu_level_2">
+                  <li class="first"><a href="{{ path('vib_flies_stock_create') }}">Stock</a></li>
+                  <li><a href="{{ path('vib_flies_crossvial_create') }}">Cross</a></li>
+                  <li><a href="{{ path('vib_flies_rack_create') }}">Rack</a></li>
+                </ul>
+              </li>
+              <li class="dropdown-submenu">
+                <a>Select</a>
+                <ul class="dropdown-menu menu_level_2">
+                  <li><a href="{{ path('vib_flies_vial_select') }}">Vials</a></li>
+                  <li><a href="{{ path('vib_flies_stockvial_select') }}">Stock vials</a></li>
+                  <li><a href="{{ path('vib_flies_crossvial_select') }}">Crosses</a></li>
+                </ul>
+              </li>
               <li class="last"><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
+              {% render "VIBFliesBundle:Incubator:menu" %}
             </ul>
           </li>
         </ul>
