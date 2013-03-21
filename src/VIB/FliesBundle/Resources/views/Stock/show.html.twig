@@ -10,10 +10,15 @@
 
 {% block modal_body %}
   {{ s.row("Genotype", entity.genotype) }}
-  {{ s.user("Created by", owner) }}
   {{ s.row("Source cross", entity.sourceCross , 'vib_flies_crossvial_show', null, 'vial') }}
+  {{ s.user("Created by", owner) }}
   {{ s.row("Notes", entity.notes) }}
-  {{ s.list("Vials", entity.livingVials, 'vib_flies_stockvial_show', null, 'vial') }}
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#vials"><strong>Vials</strong></a>
+  </div>
+  <div id="vials" class="collapse">
+    {{ s.list("Alive", entity.livingVials, 'vib_flies_stockvial_show', null, 'vial') }}
+  </div>
 {% endblock modal_body %}
 
 {% block modal_footer %}
