@@ -1,4 +1,4 @@
-{% macro row(label, value, ctrl, name, popover) %}
+{% macro row(label, value, ctrl, name, popover, additional) %}
 <div class="control-group">
   <span class="control-label">{{ label }}</span>
   <div class="controls">
@@ -21,6 +21,9 @@
             {% endif %}
           {% else %}{{ value }}{% endif %}
           {% endspaceless %}{% if showName %}){% endif %}
+          {% if additional is not empty %}
+            ({{ additional }})
+          {% endif %}
         {% endif %}
     {% endspaceless %}</span>
   </div>
@@ -70,6 +73,64 @@
           {% endif %}
         {% endif %}
     {% endspaceless %}</span>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro development(value) %}
+<div class="progress controls">
+  {% set progress = (value.progress * 100) % 100 %}
+  {% set width = progress > 11 ? 11 : progress %}
+  {% if width > 0 %}
+    <div class="bar" title="embryo" style="width: {{ width }}%;"></div>
+  {% endif %}
+  {% set width = (progress - 11) > 11 ? 11 : (progress - 11) %}
+  {% if width > 0 %}
+    <div class="bar bar-success" title="L1 larva" style="width: {{ width }}%;"></div>
+  {% endif %}
+  {% set width = (progress - 22) > 11 ? 11 : (progress - 22) %}
+  {% if width > 0 %}
+    <div class="bar bar-success" title="L2 larva" style="width: {{ width }}%;"></div>
+  {% endif %}
+  {% set width = (progress - 33) > 22 ? 22 : (progress - 33) %}
+  {% if width > 0 %}
+    <div class="bar bar-success" title="L3 larva" style="width: {{ width }}%;"></div>
+  {% endif %}
+  {% set width = (progress - 55) > 11 ? 11 : (progress - 55) %}
+  {% if width > 0 %}
+    <div class="bar bar-warning" title="prepupa" style="width: {{ width }}%;"></div>
+  {% endif %}
+  {% set width = (progress - 66) > 24 ? 24 : (progress - 66) %}
+  {% if width > 0 %}
+    <div class="bar bar-warning" title="pupa" style="width: {{ width }}%;"></div>
+  {% endif %}
+  {% set width = (progress - 90) > 10 ? 10 : (progress - 90) %}
+  {% if width > 0 %}
+    <div class="bar bar-danger" title="imago" style="width: {{ width }}%;"></div>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{% macro stage(value) %}
+<div class="control-group">
+  <span class="control-label">Stage</span>
+  <div class="controls">
+    {% set progress = (value.progress * 100) % 100 %}
+    {% if progress <= 11 %}
+      <span class="input-text">Embryo</span>
+    {% elseif progress <= 22%}
+      <span class="input-text">L1 larva</span>
+    {% elseif progress <= 33%}
+      <span class="input-text">L2 larva</span>
+    {% elseif progress <= 55%}
+      <span class="input-text">L3 larva</span>
+    {% elseif progress <= 66%}
+      <span class="input-text">Prepupa</span>
+    {% elseif progress <= 90%}
+      <span class="input-text">Pupa</span>
+    {% else %}
+      <span class="input-text">Imago</span>
+    {% endif %}
   </div>
 </div>
 {% endmacro %}

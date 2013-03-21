@@ -321,4 +321,15 @@ $(document).ready(function() {
       }
       $('#barcode').focus();
     });
+    
+    $('.control-group').children('.collapse-toggle').click(function() {
+        var target = $(this).parent().nextAll('.collapse:first');
+        if (target.hasClass('in')) {
+            target.removeClass('visible');
+        } else {
+            setTimeout(function() {
+                target.addClass('visible');
+            }, 1000);
+        }
+    });    
 }); 

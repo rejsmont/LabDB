@@ -11,15 +11,36 @@
 {% block modal_body %}
   {{ s.row("Setup date", entity.setupDate | date("d F Y")) }}
   {{ s.row("Check date", entity.realFlipDate | date("d F Y")) }}
-  {{ s.row("Location", entity.location) }}
-  {{ s.user("Created by", owner) }}
   {{ s.row("Virgin", entity.virgin, 'vib_flies_vial_show', entity.virginName, 'vial') }}
   {{ s.row("Male", entity.male, 'vib_flies_vial_show', entity.maleName, 'vial') }}
-  {{ s.row("Notes", entity.notes) }}
-  {{ s.row("Flipped from", entity.parent, 'vib_flies_crossvial_show', null, 'vial') }}
-  {{ s.list("Flipped to", entity.children, 'vib_flies_crossvial_show', null, 'vial') }}
-  {{ s.list("Stocks", entity.stocks, 'vib_flies_stock_show', null, 'stock') }}
-  {{ s.list("Crosses", entity.livingCrosses, 'vib_flies_crossvial_show', null, 'vial') }}
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#more">
+      <strong>More information</strong></a>
+  </div>
+  <div id="more" class="collapse">
+    {{ s.row("Location", entity.location) }}
+    {{ s.user("Created by", owner) }}
+    {{ s.row("Notes", entity.notes) }}
+  </div>
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#development">
+      <strong>Development</strong></a>
+  </div>
+  <div id="development" class="collapse">
+    {{ s.row("Generation", entity.progress // 1 + 1 ) }}
+    {{ s.stage(entity) }}
+    {{ s.development(entity) }}
+  </div>
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#vials">
+      <strong>Vials and stocks</strong></a>
+  </div>
+  <div id="vials" class="collapse">
+    {{ s.row("Flipped from", entity.parent, 'vib_flies_crossvial_show', null, 'vial') }}
+    {{ s.list("Flipped to", entity.children, 'vib_flies_crossvial_show', null, 'vial') }}
+    {{ s.list("Stocks", entity.stocks, 'vib_flies_stock_show', null, 'stock') }}
+    {{ s.list("Crosses", entity.livingCrosses, 'vib_flies_crossvial_show', null, 'vial') }}
+  </div>
 {% endblock modal_body %}
 
 {% block modal_footer %}
