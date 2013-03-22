@@ -53,7 +53,10 @@ class VialType extends AbstractType
                         'format'    => '%06d',
                         'required'  => false,
                         'label'     => 'Flipped from',
-                        'attr' => array('class' => 'barcode')));
+                        'attr' => array('class' => 'barcode')))
+                ->add('trashed', 'checkbox', array(
+                        'label' => '',
+                        'required' => false));
     }
     
     /**
