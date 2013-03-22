@@ -141,16 +141,25 @@ class CrossVial extends Vial {
         }
     }
     
+    public function hasProduced() {
+        return ((count($this->getStocks()) > 0)||(count($this->getCrosses()) > 0));
+    }
+    
     /**
      * Is cross successful
      * 
      * @return boolean|null
      */
     public function isSuccessful() {
+        $hasProduced = $this->hasProduced();
         if ($this->isAlive()) {
-            return ((count($this->getStocks()) > 0)||(count($this->getCrosses()) > 0)) ? true : $this->successful;
+            return $hasProduced ? true : $this->successful;
         } else {
-            return $this->successful !== null ? $this->successful : false;
+            if ($hasProduced) {
+                return true;
+            } else {
+                return $this->successful !== null ? $this->successful : false;
+            }
         }
     }
 
@@ -160,13 +169,52 @@ class CrossVial extends Vial {
      * @param boolean $successful
      */
     public function setSuccessful($successful) {
-        $this->successful = $successful;
+        $this->successful = $this->hasProduced() ? true : $successful;
         if ($successful) {
             $this->setSterile(false);
         }
     }
 
-        
+    /**
+     * Set outcome
+     * 
+     * @param string $outcome
+     */
+    public function setOutcome($outcome) {
+        switch ($outcome) {
+            case 'successful':
+                $this->setSuccessful(true);
+                break;
+            case 'failed':
+                $this->setSuccessful(false);
+                break;
+            case 'sterile':
+                $this->setSterile(true);
+                break;
+            case 'undefined':
+                $this->setSterile(false);
+                $this->setSuccessful(null);
+                break;
+        }
+    }
+    
+    /**
+     * Get outcome
+     * 
+     * @return $string
+     */
+    public function getOutcome() {
+        if ($this->isSterile()) {
+            return 'sterile';
+        } elseif ($this->isSuccessful() === true) {
+            return 'successful';
+        } elseif ($this->isSuccessful() === false) {
+            return 'failed';
+        } else {
+            return 'undefined';
+        }
+    }
+    
     /**
      * {@inheritdoc}
      */

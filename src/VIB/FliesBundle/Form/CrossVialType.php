@@ -75,12 +75,15 @@ class CrossVialType extends AbstractType
                 ->add('trashed', 'checkbox', array(
                         'label' => '',
                         'required' => false))
-                ->add('sterile', 'checkbox', array(
-                        'label' => '',
-                        'required' => false))
-                ->add('successful', 'checkbox', array(
-                        'label' => '',
-                        'required' => false));
+                ->add('outcome', 'choice', array(
+                        'choices' => array('successful' => 'Successful',
+                                           'failed' => 'Failed',
+                                           'sterile' => 'Sterile',
+                                           'undefined' => 'Undefined'),
+                        'expanded' => true,
+                        'label' => 'Outcome',
+                        'required' => false,
+                        'attr' => array('class' => 'input-text')));
     }
 
     /**
