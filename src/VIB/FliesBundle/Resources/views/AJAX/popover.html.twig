@@ -6,6 +6,7 @@
 <div class="popover-foot">
   {{ s.user(owner) }}
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_crossvial_show',{'id': entity.id }) }}">Show</a>
+  <a class="btn btn-mini" href="{{ path('vib_flies_crossvial_stats', { 'id': entity.id }) }}">Stats</a>
   {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
     <a class="btn btn-mini" href="{{ path('vib_flies_crossvial_edit',{'id': entity.id }) }}">Edit</a>
   {% endif %}
@@ -19,6 +20,9 @@
 <p>
   <strong>{{ entity.stock.name }}</strong><br/>
   {{ entity.stock.genotype }}
+  {% if entity.stock.verified %}
+    <i class="icon-ok text-success"></i>
+  {% endif %}
 </p>
 {{ s.dates(entity) }}
 <div class="popover-foot">
@@ -48,7 +52,12 @@
   {% endif %}
 </div>
 {% elseif type == 'stock' %}
-<p>{{ entity.genotype }}</p>
+<p>
+  {{ entity.genotype }}
+  {% if entity.verified %}
+    <i class="icon-ok text-success"></i>
+  {% endif %}
+</p>
 <div class="popover-foot">
   {{ s.user(owner) }}
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_stock_show',{'id': entity.id }) }}">Show</a>

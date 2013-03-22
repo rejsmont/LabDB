@@ -22,6 +22,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -132,6 +135,84 @@ class CrossVialController extends VialController
     }
     
     /**
+     * Statistics for cross
+     * 
+     * @Route("/stats/{id}")
+     * @Template()
+     * 
+     * @param mixed $id
+     * 
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function statsAction($id) {
+        $cross = $this->getEntity($id);
+        $owner = $this->getOwner($cross);
+        
+        $startDate = clone $cross->getSetupDate();
+        $stopDate = clone $cross->getSetupDate();
+        $startDate->sub(new \DateInterval('P2W'));
+        $stopDate->add(new \DateInterval('P2W'));
+        
+        $query = $this->getListQuery();
+        $query->andWhere('b.maleName = :male_name')
+              ->andWhere('b.virginName = :virgin_name')
+              ->andWhere('b.setupDate > :start_date')
+              ->andWhere('b.setupDate <= :stop_date')
+              ->orderBy('b.setupDate', 'ASC')
+              ->addOrderBy('b.id', 'ASC')
+              ->setParameter('male_name', $cross->getMaleName())
+              ->setParameter('virgin_name', $cross->getVirginName())
+              ->setParameter('start_date', $startDate->format('Y-m-d'))
+              ->setParameter('stop_date', $stopDate->format('Y-m-d'));
+        
+        $total = $this->get('vib.security.helper.acl')->apply($query,array('OWNER'),$owner)->getResult();
+        $sterile = new ArrayCollection();
+        $success = new ArrayCollection();
+        $fail = new ArrayCollection();
+        $ongoing =  new ArrayCollection();
+        $stocks = new ArrayCollection();
+        $crosses = new ArrayCollection();
+        $temps = new ArrayCollection();
+        
+        foreach ($total as $vial) {
+            $temp = $vial->getTemperature();
+            if (! $temps->contains($temp)) {
+                $temps->add($temp);
+            }
+            if ($vial->isSterile()) {
+                $sterile->add($vial);
+            } elseif ($vial->isSuccessful() === true) {
+                $success->add($vial);
+                foreach ($vial->getStocks() as $childStock) {
+                    if (! $stocks->contains($childStock)) {
+                        $stocks->add($childStock);
+                    }
+                }
+                foreach ($vial->getCrosses() as $childCross) {
+                    if (! $crosses->contains($childCross)) {
+                        $crosses->add($childCross);
+                    }
+                }
+            } elseif ($vial->isSuccessful() === false) {
+                $fail->add($vial);
+            } else {
+                $ongoing->add($vial);
+            }
+            
+        }
+        
+        return array('cross' => $cross,
+                     'total' => $total,
+                     'sterile' => $sterile,
+                     'fail' => $fail,
+                     'success' => $success,
+                     'ongoing' => $ongoing,
+                     'stocks' => $stocks,
+                     'crosses' => $crosses,
+                     'temps' => $temps);
+    }
+    
+    /**
      * {@inheritdoc}
      */
     public function handleBatchAction($data) {
@@ -144,6 +225,12 @@ class CrossVialController extends VialController
         switch($action) {
             case 'marksterile':
                 $this->markSterile($vials);
+                break;
+            case 'marksuccessful':
+                $this->markSuccessful($vials);
+                break;
+            case 'markfailed':
+                $this->markFailed($vials);
                 break;
             default:
                 return parent::handleBatchAction($data);
@@ -168,6 +255,44 @@ class CrossVialController extends VialController
             }
         }
         
+        $em->flush();
+    }
+    
+    /**
+     * Mark crosses as successful
+     * 
+     * @param \Doctrine\Common\Collections\Collection $vials
+     */  
+    public function markSuccessful(Collection $vials) {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        foreach ($vials as $vial) {
+            if ($vial instanceof CrossVial) {
+                $vial->setSuccessful(true);
+                $em->persist($vial);
+            }
+        }
+
+        $em->flush();
+    }
+    
+    /**
+     * Mark crosses as successful
+     * 
+     * @param \Doctrine\Common\Collections\Collection $vials
+     */  
+    public function markFailed(Collection $vials) {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        foreach ($vials as $vial) {
+            if ($vial instanceof CrossVial) {
+                $vial->setSuccessful(false);
+                $em->persist($vial);
+            }
+        }
+
         $em->flush();
     }
 }

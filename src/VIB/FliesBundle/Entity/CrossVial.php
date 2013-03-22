@@ -46,6 +46,12 @@ class CrossVial extends Vial {
     protected $sterile;
     
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @Serializer\Expose
+     */
+    protected $successful;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Vial", inversedBy="maleCrosses")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotBlank(message = "Male must be specified")
@@ -87,6 +93,7 @@ class CrossVial extends Vial {
     public function __construct(Vial $template = null, $flip = false) {
         parent::__construct($template, $flip);
         $this->sterile = false;
+        $this->successful = null;
     }
     
     /**
@@ -102,13 +109,58 @@ class CrossVial extends Vial {
         }
     }
     
+    /**
+     * {@inheritdoc}
+     */
+    public function setTrashed($trashed) {
+        parent::setTrashed($trashed);
+        if ($trashed === false) {
+            $this->sterile = $trashed;
+        }
+    }
+    
+    /**
+     * If cross sterile
+     * 
+     * @return boolean
+     */
     public function isSterile() {
         return $this->sterile;
     }
 
+    /**
+     * Set sterile
+     * 
+     * @param boolean $sterile
+     */
     public function setSterile($sterile) {
         $this->sterile = $sterile;
+        if ($sterile) {
+            $this->setSuccessful(false);
+        }
         $this->setTrashed($sterile);
+    }
+    
+    /**
+     * Is cross successful
+     * 
+     * @return boolean|null
+     */
+    public function isSuccessful() {
+        if ($this->isAlive()) {
+            return ((count($this->getStocks()) > 0)||(count($this->getCrosses()) > 0)) ? true : $this->successful;
+        } else {
+            return $this->successful !== null ? $this->successful : false;
+        }
+    }
+
+    /**
+     * Set successful
+     * 
+     * @param boolean $successful
+     */
+    public function setSuccessful($successful) {
+        $this->successful = $successful;
     }
 
         

@@ -114,6 +114,11 @@ class Vial extends Entity {
      */
     protected $incubator;
     
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    protected $temperature;
+    
     
     /**
      * Construct Vial
@@ -122,6 +127,7 @@ class Vial extends Entity {
      * @param boolean $flip
      */
     public function __construct(Vial $template = null, $flip = true) {
+        $this->temperature = 21.00;
         $this->children = new ArrayCollection();
         $this->virginCrosses = new ArrayCollection();
         $this->maleCrosses = new ArrayCollection();
@@ -401,7 +407,10 @@ class Vial extends Entity {
      */
     public function setTrashed($trashed) {
         $this->trashed = $trashed;
-        $this->setPosition(null);
+        if ($trashed) {
+            $this->temperature = $this->getTemperature();
+            $this->setPosition(null);
+        }
     }
     
     /**
@@ -477,7 +486,7 @@ class Vial extends Entity {
         $position = (string)$this->getPosition();
         $glue = (null !== $incubator)&&(null !== $position) ? " " : "";
         
-        return $incubator . $glue . $position;
+        return $this->isAlive() ? $incubator . $glue . $position : null;
     }
     
     /**
@@ -486,10 +495,11 @@ class Vial extends Entity {
      * @return float The temperature vial is kept in
      */
     public function getTemperature() {
-        if (($incubator = $this->getIncubator()) instanceof Incubator) {
+        $incubator = $this->getIncubator();
+        if (($incubator instanceof Incubator)&&(! $this->isTrashed())) {
             return $incubator->getTemperature();
         } else {
-            return 21.00;
+            return ($this->temperature !== null) ? $this->temperature : 21.00;
         }
     }
     

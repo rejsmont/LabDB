@@ -67,6 +67,31 @@ class Stock extends Entity {
     protected $notes;
     
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Expose
+     * 
+     * @var string
+     */
+    protected $vendor;
+    
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Expose
+     * @Assert\Url()
+     * 
+     * @var string
+     */
+    protected $infoURL;
+    
+    /**
+     * @ORM\Column(type="boolean", length=255, nullable=true)
+     * @Serializer\Expose
+     * 
+     * @var string
+     */
+    protected $verified;
+    
+    /**
      * @ORM\OneToMany(targetEntity="StockVial", mappedBy="stock", cascade={"persist", "remove"})
      * 
      * @var \Doctrine\Common\Collections\Collection
@@ -87,6 +112,7 @@ class Stock extends Entity {
      *
      */    
     public function __construct() {
+        $this->verified = false;
         $this->vials = new ArrayCollection();
         $this->addVial(new StockVial());
         foreach ($this->getVials() as $vial) {
@@ -160,12 +186,67 @@ class Stock extends Entity {
     /**
      * Get notes
      * 
-     * @return type
+     * @return string
      */
     public function getNotes() {
         return $this->notes;
     }
     
+    /**
+     * Get vendor
+     * 
+     * @return type
+     */
+    public function getVendor() {
+        return $this->vendor;
+    }
+
+    /**
+     * Set vendor
+     * 
+     * @return type
+     */
+    public function setVendor($stockVendor) {
+        $this->vendor = $stockVendor;
+    }
+
+    /**
+     * Get info URL
+     * 
+     * @return type
+     */
+    public function getInfoURL() {
+        return $this->infoURL;
+    }
+
+    /**
+     * Set info URL
+     * 
+     * @return type
+     */
+    public function setInfoURL($infoURL) {
+        $this->infoURL = $infoURL;
+    }
+
+    /**
+     * Is stock verified
+     * 
+     * @return type
+     */
+    public function isVerified() {
+        return (bool)$this->verified;
+    }
+
+    /**
+     * Set verified
+     * 
+     * @return type
+     */
+    public function setVerified($verified) {
+        $this->verified = $verified;
+    }
+
+        
     /**
      * Add vial
      *

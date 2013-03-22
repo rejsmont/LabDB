@@ -323,7 +323,7 @@ $(document).ready(function() {
     });
     
     $('.control-group').children('.collapse-toggle').click(function() {
-        var target = $(this).parent().nextAll('.collapse:first');
+        var target = $(this).parent().find('.collapse').add($(this).parent().nextAll('.collapse:first')).eq(0);
         if (target.hasClass('in')) {
             target.removeClass('visible');
         } else {
@@ -331,5 +331,5 @@ $(document).ready(function() {
                 target.addClass('visible');
             }, 1000);
         }
-    });    
+    });
 }); 

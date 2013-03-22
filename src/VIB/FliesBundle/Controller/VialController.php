@@ -241,7 +241,7 @@ class VialController extends CRUDController {
             return $this->getVialRedirect($vial);
         }
     }
-    
+     
     /**
      * Expand vial
      * 
@@ -353,6 +353,9 @@ class VialController extends CRUDController {
                 break;
             case 'trash':
                 $this->trashVials($vials);
+                break;
+            case 'untrash':
+                $this->untrashVials($vials);
                 break;
             case 'incubate':
                 $incubator = $data['incubator'];
@@ -544,6 +547,23 @@ class VialController extends CRUDController {
         
         foreach ($vials as $vial) {
             $vial->setTrashed(true);
+            $em->persist($vial);
+        }
+        
+        $em->flush();
+    }
+    
+    /**
+     * Untrash vials
+     * 
+     * @param \Doctrine\Common\Collections\Collection $vials
+     */  
+    public function untrashVials(Collection $vials) {
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        foreach ($vials as $vial) {
+            $vial->setTrashed(false);
             $em->persist($vial);
         }
         

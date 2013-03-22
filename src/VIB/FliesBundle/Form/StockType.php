@@ -56,6 +56,18 @@ class StockType extends AbstractType
                         'attr' => array('class' => 'barcode')))
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',
+                        'required' => false))
+                ->add('vendor', 'text', array(
+                        'label' => 'Vendor',
+                        'required' => false,
+                        'attr' => array('class' => 'input-block-level')))
+                ->add('infoURL', 'url', array(
+                        'label' => 'Info URL',
+                        'required' => false,
+                        'attr' => array('class' => 'input-block-level',
+                                        'placeholder' => 'Paste address here')))
+                ->add('verified', 'checkbox', array(
+                        'label' => '',
                         'required' => false));
     }
 

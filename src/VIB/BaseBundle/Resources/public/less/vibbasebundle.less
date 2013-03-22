@@ -73,30 +73,49 @@ body {
 }
 
 .modal-header h3 {
+  div.status {
+    float: right;
+  }
   .label.status {
     margin-right: 0;
     margin-left: 10px;
-    float: right;
     font-size: 21px;
     line-height: 25px;
   }
 }
-.popover-title .label.status {
-  margin-right: 0;
-  margin-left: 5px;
-  float: right;
+.popover-title {
+  div.status {
+    float: right;
+  }
+  .label.status {
+    margin-right: 0;
+    margin-left: 5px;
+  }
 }
 
 .label.status {
   margin-right: 5px;
 }
 
+.label.status:last-child {
+  margin-right: 0;
+}
+
+div.status {
+  white-space: nowrap;
+}
+
 .unstyled.input-text {
+  margin-bottom: 0;
   margin-left: -20px;
   li {
     display: inline-block;
     margin-left: 20px;
   }
+}
+
+.input-text + .unstyled.input-text {
+  padding: 0;
 }
 
 .visible {
