@@ -170,7 +170,7 @@ class CrossVial extends Vial {
     /**
      * Set successful
      * 
-     * @param boolean $successful
+     * @param boolean|null $successful
      */
     public function setSuccessful($successful) {
         $this->successful = $this->hasProduced() ? true : $successful;
