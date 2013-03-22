@@ -14,6 +14,34 @@
   {{ s.user("Created by", owner) }}
   {{ s.row("Notes", entity.notes) }}
   <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#more"><strong>More information</strong></a>
+  </div>
+  <div id="more" class="collapse">
+    {{ s.row("Vendor", entity.vendor) }}
+    <div class="control-group">
+      <span class="control-label">Stock information</span>
+      <div class="controls">
+        <span class="input-text">
+          {% if entity.infoURL is not empty %}
+            <a href="{{ entity.infoURL }}" target="_blank">{{ entity.infoURL }}</a> 
+          {% endif %}
+        </span>
+      </div>
+    </div>
+    <div class="control-group">
+      <span class="control-label">Verified</span>
+      <div class="controls">
+        <span class="input-text">
+          {% if entity.verified %}
+             <i class="icon-ok text-success"></i> Yes
+          {% else %}
+             <i class="icon-remove text-error"></i> No
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
     <a class="control-label collapse-toggle" data-toggle="collapse" href="#vials"><strong>Vials</strong></a>
   </div>
   <div id="vials" class="collapse">

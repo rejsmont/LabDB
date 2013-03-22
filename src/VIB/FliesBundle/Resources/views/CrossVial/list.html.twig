@@ -20,22 +20,24 @@
 
 {% block list_buttons %}
   {{ l.flip_button() }}
+  {{ l.trash_button() }}
   <div class="btn-group">
-    <button class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
-      Trash
-    </button>
-    <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+      Mark
       <span class="caret"></span>
-    </button>
+    </a>
     <ul class="dropdown-menu">
-      <li class="first">
-        <a href="#" onclick="$('#select_action').val('trash'); $('form').submit();"><b>Trash</b></a>
-      </li>
-      <li class="last">
-        <a href="#" onclick="$('#select_action').val('marksterile'); $('form').submit();">Mark as sterile</a>
-      </li>
+    <li onclick="$('#select_action').val('marksuccessful'); $('form').submit();">
+      <a href="#">Mark as successful</a>
+    </li>
+    <li onclick="$('#select_action').val('markfailed'); $('form').submit();">
+      <a href="#">Mark as failed</a>
+    </li>
+    <li onclick="$('#select_action').val('marksterile'); $('form').submit();">
+      <a href="#">Mark as sterile and trash</a>
+    </li>
     </ul>
   </div>
-  {{ l.print_button() }}
   {{ l.incubate_button() }}
+  {{ l.print_button() }}
 {% endblock list_buttons %}

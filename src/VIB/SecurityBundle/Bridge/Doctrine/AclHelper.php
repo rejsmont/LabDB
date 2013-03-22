@@ -73,7 +73,7 @@ class AclHelper
      * @return \Doctrine\ORM\Query
      */
     public function apply(QueryBuilder $queryBuilder,
-            array $permissions = array("VIEW"))
+            array $permissions = array("VIEW"), $user = null)
     {
  
         $whereQueryParts = $queryBuilder->getDQLPart('where');
@@ -98,7 +98,7 @@ class AclHelper
         $query->setHint('acl.root.entities', $entities);
  
         $query->setHint('acl.extra.query',
-                $this->getPermittedIdsACLSQLForUser($query, $queryBuilder));
+                $this->getPermittedIdsACLSQLForUser($query, $queryBuilder, $user));
  
         $class = $this->em->getClassMetadata($entities[0]);
         $entityRootTableName = $class->getQuotedTableName($this->em->getConnection()->getDatabasePlatform());
@@ -117,7 +117,7 @@ class AclHelper
      * @return string
      */
     private function getPermittedIdsACLSQLForUser(Query $query,
-            QueryBuilder $queryBuilder)
+            QueryBuilder $queryBuilder, $user = null)
     {
         $database = $this->aclConnection->getDatabase();
         $mask = $query->getHint('acl.mask');
@@ -133,8 +133,10 @@ class AclHelper
         }
         $INentities = implode(',', $rE);
  
-        $token = $this->securityContext->getToken(); // for now lets imagine we will have token i.e user is logged in
-        $user = $token->getUser();
+        if (null === $user) {
+            $token = $this->securityContext->getToken(); // for now lets imagine we will have token i.e user is logged in
+            $user = $token->getUser();
+        }
         $INroles = "''";
  
         if (is_object($user)) {

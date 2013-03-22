@@ -221,30 +221,34 @@ class AJAXController extends Controller {
                 return new Response('Unrecognized type', 404);
         }
         
-        $status = "";
+        $status = '<div class="status">';
         
         if ($entity instanceof Vial) {
             if($entity->isTrashed()) {
-                if (($entity instanceof CrossVial)&&($entity->isSterile())) {
-                    $status = "<span class=\"label status label-important\">STERILE</span>";
-                } else {
-                    $status = "<span class=\"label status label-inverse\">TRASHED</span>";
-                }
+                $status .= '<span title="trashed" class="label status label-inverse"><i class="icon-trash"></i></span>';
             } elseif($entity->isAlive()) {
-                $status = "<span class=\"label status label-success\">ALIVE</span>";
-                if ($entity->getTemperature() < 21) {
-                    $status .= "<span class=\"label status label-info\">" . $entity->getTemperature() . "℃</span>";
-                } elseif ($entity->getTemperature() < 25) {
-                    $status .= "<span class=\"label status label-success\">" . $entity->getTemperature() . "℃</span>";
-                } elseif ($entity->getTemperature() < 28) {
-                    $status .= "<span class=\"label status label-warning\">" . $entity->getTemperature() . "℃</span>";
-                } else {
-                    $status .= "<span class=\"label status label-important\">" . $entity->getTemperature() . "℃</span>";
-                }
+                $status .= '<span title="alive" class="label status label-success"><i class="icon-heart"></i></span>';
             } else {
-                $status = "<span class=\"label status label-important\">DEAD</span>";
+                $status .= '<span title="dead" class="label status label-important"><i class="icon-remove-sign"></i></span>';
+            }
+            if ($entity->getTemperature() < 21) {
+                $status .= '<span class="label status label-info">' . $entity->getTemperature() . '℃</span>';
+            } elseif ($entity->getTemperature() < 25) {
+                $status .= '<span class="label status label-success">' . $entity->getTemperature() . '℃</span>';
+            } elseif ($entity->getTemperature() < 28) {
+                $status .= '<span class="label status label-warning">' . $entity->getTemperature() . '℃</span>';
+            } else {
+                $status .= '<span class="label status label-important">' . $entity->getTemperature() . '℃</span>';
             }
             if ($entity instanceof CrossVial) {
+                if ($entity->isSuccessful()) {
+                    $status .= '<span title="successful" class="label status label-success"><i class="icon-ok"></i></span>';
+                } elseif ($entity->isSterile()) {
+                    $status .= '<span title="sterile" class="label status label-important"><i class="icon-remove-circle"></i></span>';
+                } elseif (null !== $entity->isSuccessful()) {
+                    $status .= '<span title="failed" class="label status label-warning"><i class="icon-remove"></i></span>';
+                }
+                    
                 $type  = "crossvial";
                 $etype = "Cross";
             } elseif (($entity instanceof StockVial)&&(null !== $entity->getStock())) {
@@ -253,17 +257,20 @@ class AJAXController extends Controller {
         } elseif ($entity instanceof Stock) {
             $vials = count($entity->getLivingVials());
             if($vials > 3) {
-                $status = "<span class=\"label status label-success\">AMPLIFIED</span>";
+                $status .= '<span title="amplified" class="label status label-success"><i class="icon-plus-sign"></i></span>';
             } elseif($vials > 1) {
-                $status = "<span class=\"label status label-success\">HEALTHY</span>";
+                $status .= '<span title="healthy" class="label status label-success"><i class="icon-ok-sign"></i></span>';
             } elseif($vials < 1) {
-                $status = "<span class=\"label status label-important\">DEAD</span>";
+                $status .= '<span title="dead" class="label status label-important"><i class="icon-remove-sign"></i></span>';
             } else {
-                $status = "<span class=\"label status label-warning\">EXPAND</span>";
+                $status .= '<span title="expand" class="label status label-warning"><i class="icon-minus-sign"></i></span>';
             }
         } else {
              return new Response('Not found', 404);
         }
+        
+        $status .= '</div>';
+        
         $owner = $this->getOwner($entity);
 
         $html = $this->render('VIBFliesBundle:AJAX:popover.html.twig',

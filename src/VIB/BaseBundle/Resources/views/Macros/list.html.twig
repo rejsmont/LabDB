@@ -33,13 +33,13 @@
 {% endif %}
 {% endspaceless %}{% endmacro %}
 
-{% macro select_buttons() %}
+{% macro select_buttons() %}{% spaceless %}
   {{ _self.flip_button() }}
   {{ _self.trash_button() }}
   {{ _self.print_button() }}
-{% endmacro select_buttons %}
+{% endspaceless %}{% endmacro %}
 
-{% macro flip_button() %}
+{% macro flip_button() %}{% spaceless %}
 <div class="btn-group">
   <button class="btn btn-primary" onclick="$('#select_action').val('flip'); $('form').submit();">
     Flip
@@ -56,15 +56,28 @@
     </li>
   </ul>
 </div>
-{% endmacro flip_button %}
+{% endspaceless %}{% endmacro %}
 
-{% macro trash_button() %}
-<button class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
-  Trash
-</button>
-{% endmacro trash_button %}
+{% macro trash_button() %}{% spaceless %}
+<div class="btn-group">
+  <button class="btn btn-danger" onclick="$('#select_action').val('trash'); $('form').submit();">
+    Trash
+  </button>
+  <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li class="first">
+      <a href="#" onclick="$('#select_action').val('trash'); $('form').submit();"><b>Trash</b></a>
+    </li>
+    <li class="last">
+      <a href="#" onclick="$('#select_action').val('untrash'); $('form').submit();">Untrash</a>
+    </li>
+  </ul>
+</div>
+{% endspaceless %}{% endmacro %}
 
-{% macro print_button() %}
+{% macro print_button() %}{% spaceless %}
 {% if can_print() %}
 <div class="btn-group">
   <button class="btn" onclick="$('#select_action').val('print'); $('form').submit();">
@@ -87,7 +100,7 @@
     Download label PDF
   </button>
 {% endif %}
-{% endmacro print_button %}
+{% endspaceless %}{% endmacro %}
 
 {% macro incubate_button() %}
   {% render "VIBFliesBundle:Incubator:incubate" %}

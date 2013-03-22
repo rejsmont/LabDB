@@ -117,19 +117,19 @@
   <div class="controls">
     {% set progress = (value.progress * 100) % 100 %}
     {% if progress <= 11 %}
-      <span class="input-text">Embryo</span>
+      <span class="input-text text-info">Embryo</span>
     {% elseif progress <= 22%}
-      <span class="input-text">L1 larva</span>
+      <span class="input-text text-success">L1 larva</span>
     {% elseif progress <= 33%}
-      <span class="input-text">L2 larva</span>
+      <span class="input-text text-success">L2 larva</span>
     {% elseif progress <= 55%}
-      <span class="input-text">L3 larva</span>
+      <span class="input-text text-success">L3 larva</span>
     {% elseif progress <= 66%}
-      <span class="input-text">Prepupa</span>
+      <span class="input-text text-warning">Prepupa</span>
     {% elseif progress <= 90%}
-      <span class="input-text">Pupa</span>
+      <span class="input-text text-warning">Pupa</span>
     {% else %}
-      <span class="input-text">Imago</span>
+      <span class="input-text text-error">Imago</span>
     {% endif %}
   </div>
 </div>

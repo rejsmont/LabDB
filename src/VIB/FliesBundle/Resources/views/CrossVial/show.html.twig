@@ -4,8 +4,9 @@
 {% import 'VIBBaseBundle:Macros:status.html.twig' as status %}
 
 {% block modal_header %}
-  Cross {{ entity.name }} ({{ entity }})
   {{ status.vial(entity) }}
+  Cross {{ entity }}<br/>
+  <span class="muted">{{ entity.name }}</span>
 {% endblock modal_header %}
 
 {% block modal_body %}
@@ -39,10 +40,14 @@
     {{ s.row("Flipped from", entity.parent, 'vib_flies_crossvial_show', null, 'vial') }}
     {{ s.list("Flipped to", entity.children, 'vib_flies_crossvial_show', null, 'vial') }}
     {{ s.list("Stocks", entity.stocks, 'vib_flies_stock_show', null, 'stock') }}
-    {{ s.list("Crosses", entity.livingCrosses, 'vib_flies_crossvial_show', null, 'vial') }}
+    {{ s.list("Crosses", entity.crosses, 'vib_flies_crossvial_show', null, 'vial') }}
   </div>
 {% endblock modal_body %}
 
 {% block modal_footer %}
-  {{ s.buttons(entity, 'vib_flies_crossvial') }}
+  {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %} 
+  <a href="{{ path('vib_flies_crossvial_edit', { 'id': entity.id }) }}" class="btn btn-primary">Edit</a>
+  {% endif %}
+  <a href="{{ path('vib_flies_crossvial_stats', { 'id': entity.id }) }}" class="btn">Stats</a>
+  <a href="{{ path('vib_flies_crossvial_list') }}" class="btn">List</a>
 {% endblock modal_footer %}
