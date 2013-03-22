@@ -92,8 +92,7 @@ class CrossVial extends Vial {
      */
     public function __construct(Vial $template = null, $flip = false) {
         parent::__construct($template, $flip);
-        $this->sterile = false;
-        $this->successful = null;
+        $this->setSuccessful(null);
     }
     
     /**
@@ -126,7 +125,7 @@ class CrossVial extends Vial {
      * @return boolean
      */
     public function isSterile() {
-        return $this->sterile;
+        return $this->hasProduced() ? false : $this->sterile;
     }
 
     /**
@@ -135,13 +134,18 @@ class CrossVial extends Vial {
      * @param boolean $sterile
      */
     public function setSterile($sterile) {
-        $this->sterile = $sterile;
-        if ($sterile) {
+        $this->sterile = $this->hasProduced() ? false : $sterile;
+        if ($this->sterile) {
             $this->setSuccessful(false);
             $this->setTrashed(true);
         }
     }
     
+    /**
+     * Has this cross produced stocks or crosses
+     * 
+     * @return boolean
+     */
     public function hasProduced() {
         return ((count($this->getStocks()) > 0)||(count($this->getCrosses()) > 0));
     }
@@ -152,11 +156,10 @@ class CrossVial extends Vial {
      * @return boolean|null
      */
     public function isSuccessful() {
-        $hasProduced = $this->hasProduced();
         if ($this->isAlive()) {
-            return $hasProduced ? true : $this->successful;
+            return $this->hasProduced() ? true : $this->successful;
         } else {
-            if ($hasProduced) {
+            if ($this->hasProduced()) {
                 return true;
             } else {
                 return $this->successful !== null ? $this->successful : false;
@@ -171,7 +174,7 @@ class CrossVial extends Vial {
      */
     public function setSuccessful($successful) {
         $this->successful = $this->hasProduced() ? true : $successful;
-        if ($successful) {
+        if (($this->successful === true)||($this->successful === null)) {
             $this->setSterile(false);
         }
     }
@@ -193,7 +196,6 @@ class CrossVial extends Vial {
                 $this->setSterile(true);
                 break;
             case 'undefined':
-                $this->setSterile(false);
                 $this->setSuccessful(null);
                 break;
         }
