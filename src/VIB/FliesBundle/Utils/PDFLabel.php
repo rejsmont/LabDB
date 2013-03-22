@@ -69,7 +69,7 @@ class PDFLabel {
         $this->pdf->SetAutoPageBreak(false);
         $this->pdf->write2DBarcode(
                 sprintf("%06d",$barcode),
-                'QRCODE,H',
+                'DATAMATRIX',
                 2,2,15,15,
                 $this->get2DBarcodeStyle());
         $this->pdf->setCellPaddings(0, 0, 0, 0);

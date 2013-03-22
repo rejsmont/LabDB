@@ -397,7 +397,6 @@ class VialController extends CRUDController {
      */    
     public function downloadLabels($vials) {
         $em = $this->getDoctrine()->getManager();
-        $pdf = $this->prepareLabels($vials);
         $isVial = ($vials instanceof Vial);
         if ((($vials instanceof Collection)&&(count($vials) > 0))||($isVial)) { 
             $pdf = $this->prepareLabels($vials);
