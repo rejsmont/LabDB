@@ -114,8 +114,8 @@ class CrossVial extends Vial {
      */
     public function setTrashed($trashed) {
         parent::setTrashed($trashed);
-        if ($trashed === false) {
-            $this->sterile = $trashed;
+        if (! $trashed) {
+            $this->setSterile(false);
         }
     }
     
@@ -137,8 +137,8 @@ class CrossVial extends Vial {
         $this->sterile = $sterile;
         if ($sterile) {
             $this->setSuccessful(false);
+            $this->setTrashed(true);
         }
-        $this->setTrashed($sterile);
     }
     
     /**
@@ -161,6 +161,9 @@ class CrossVial extends Vial {
      */
     public function setSuccessful($successful) {
         $this->successful = $successful;
+        if ($successful) {
+            $this->setSterile(false);
+        }
     }
 
         
