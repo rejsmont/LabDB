@@ -274,10 +274,7 @@ class CrossVial extends Vial {
      * @return string
      */
     public function getName() {
-        return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->getVirginName()) .
-               " ☿ ✕ " .
-               preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->getMaleName()) .
-               " ♂";
+        return $this->getVirginName() . " ☿ ✕ " . $this->getMaleName() . " ♂";
     }
     
     /**
@@ -313,7 +310,7 @@ class CrossVial extends Vial {
         if ($this->male != null)
             if (($this->male instanceof StockVial)&&($maleName == ''))
                 $maleName = $this->male->getStock()->getGenotype();
-        $this->maleName = $maleName;
+        $this->maleName = preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$maleName);
     }
 
     /**
@@ -324,6 +321,15 @@ class CrossVial extends Vial {
     public function getMaleName()
     {
         return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->maleName);
+    }
+    
+    /**
+     * Get maleName
+     *
+     * @return string
+     */
+    public function getUnformattedMaleName()
+    {
         return $this->maleName;
     }
 
@@ -371,7 +377,7 @@ class CrossVial extends Vial {
         if ($this->virgin != null)
             if (($this->virgin instanceof StockVial)&&($virginName == ''))
                 $virginName = $this->virgin->getStock()->getGenotype();
-        $this->virginName = $virginName;
+        $this->virginName = preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$virginName);
     }
 
     /**
@@ -382,9 +388,18 @@ class CrossVial extends Vial {
     public function getVirginName()
     {
         return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->virginName);
-        return $this->virginName;
     }
 
+    /**
+     * Get virginName
+     *
+     * @return string
+     */
+    public function getUnformattedVirginName()
+    {
+        return $this->virginName;
+    }
+    
     /**
      * Check if virgin name is specified when virgin source is a cross
      * 

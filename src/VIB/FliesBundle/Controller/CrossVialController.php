@@ -160,8 +160,8 @@ class CrossVialController extends VialController
               ->andWhere('b.setupDate <= :stop_date')
               ->orderBy('b.setupDate', 'ASC')
               ->addOrderBy('b.id', 'ASC')
-              ->setParameter('male_name', $cross->getMaleName())
-              ->setParameter('virgin_name', $cross->getVirginName())
+              ->setParameter('male_name', $cross->getUnformattedMaleName())
+              ->setParameter('virgin_name', $cross->getUnformattedVirginName())
               ->setParameter('start_date', $startDate->format('Y-m-d'))
               ->setParameter('stop_date', $stopDate->format('Y-m-d'));
         
@@ -173,6 +173,10 @@ class CrossVialController extends VialController
         $stocks = new ArrayCollection();
         $crosses = new ArrayCollection();
         $temps = new ArrayCollection();
+        
+        if (count($total) == 0) {
+            throw $this->createNotFoundException();
+        }
         
         foreach ($total as $vial) {
             $temp = $vial->getTemperature();
