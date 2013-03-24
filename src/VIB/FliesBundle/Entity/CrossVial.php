@@ -27,6 +27,7 @@ use JMS\Serializer\Annotation as Serializer;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+use \DateTime;
 use \DateInterval;
 
 /**
@@ -406,14 +407,36 @@ class CrossVial extends Vial {
     }
     
     /**
+     * Get progress
+     * 
+     * @return float
+     */
+    public function getProgress() {
+        $today = new DateTime();
+        $interval = $this->getSetupDate()->diff($today);
+        $devday = $interval->format('%a') - $this->getDelay();
+        $normDevday = ($devday > 0) ? $devday : 0;
+        return $normDevday / $this->getGenerationTime();
+    }
+    
+    /**
      * Get default flip date
      * 
      * @return \DateTime
      */
     public function getDefaultFlipDate() {
-        $interval = new DateInterval('P' . $this->getGenerationTime() . 'D');
+        $interval = new DateInterval('P' . ($this->getGenerationTime() + $this->getDelay()) . 'D');
         $setup = clone $this->getSetupDate();
         $setup->add($interval);
         return $setup;
+    }
+    
+    /**
+     * Delay development by 2 days for new crosses
+     * 
+     * @return integer
+     */
+    protected function getDelay() {
+        return (null !== $this->getParent()) ? 2 : 0;
     }
 }
