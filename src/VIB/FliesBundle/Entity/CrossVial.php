@@ -222,10 +222,7 @@ class CrossVial extends Vial {
      */
     public function getLabelText()
     {
-        return preg_replace(array('/\s?,\s?/','/\s?\;\s?/'),array(', ','; '),$this->getVirginName()) .
-               " ☿ ✕ " .
-               preg_replace(array('/\s?,\s?/','/\s?\;\s?/'),array(', ','; '),$this->getMaleName()) .
-               " ♂";
+        return $this->getName();
     }
     
     /**
@@ -276,7 +273,10 @@ class CrossVial extends Vial {
      * @return string
      */
     public function getName() {
-        return $this->getVirginName() . " ☿ ✕ " . $this->getMaleName() . " ♂";
+        return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->getVirginName()) .
+               " ☿ ✕ " .
+               preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->getMaleName()) .
+               " ♂";
     }
     
     /**
@@ -322,6 +322,7 @@ class CrossVial extends Vial {
      */
     public function getMaleName()
     {
+        return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->maleName);
         return $this->maleName;
     }
 
@@ -379,6 +380,7 @@ class CrossVial extends Vial {
      */
     public function getVirginName()
     {
+        return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->virginName);
         return $this->virginName;
     }
 

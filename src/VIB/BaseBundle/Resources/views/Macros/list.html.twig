@@ -1,6 +1,6 @@
-{% macro link(entity, route, verify = true, nameField, popover) %}{% spaceless %}
-{% if nameField is not empty and entity is not empty%}
-  {% set name = attribute(entity,nameField) %}{% else %}{% set name = entity %}
+{% macro link(entity, route, verify = true, name, popover) %}{% spaceless %}
+{% if name is not empty and entity is not empty %}
+  {% set name = name %}{% else %}{% set name = entity %}
 {% endif %}
 {% if verify %}
   {% if entity is not empty %}

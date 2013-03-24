@@ -1,6 +1,11 @@
-<td>{{ l.link(entity, 'vib_flies_stock_show', false, 'id') }}</td>
+<td>{{ l.link(entity, 'vib_flies_stock_show', false, entity.id) }}</td>
 <td>{{ l.link(entity, 'vib_flies_stock_show', false, null, 'stock') }}</td>
 <td>{{ entity.genotype }}</td>
-<td>{{ l.link(entity.sourceCross, 'vib_flies_crossvial_show', true, 'name', 'vial') }}</td>
+{% if entity.sourceCross is not empty %}
+  {% set sourceCrossName = entity.sourceCross.name %}
+{% else %}
+  {% set sourceCrossName = null %}
+{% endif %}
+<td>{{ l.link(entity.sourceCross, 'vib_flies_crossvial_show', true, sourceCrossName, 'vial') }}</td>
 <td>{{ entity.livingVials | length }}</td>
 <td>{{ status.stock(entity) }}</td>

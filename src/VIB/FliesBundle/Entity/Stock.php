@@ -171,7 +171,7 @@ class Stock extends Entity {
      * @return string
      */
     public function getGenotype() {
-        return $this->genotype;
+        return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->genotype);
     }
     
     /**
