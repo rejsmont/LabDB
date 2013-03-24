@@ -139,8 +139,5 @@
 {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',value) %} 
   <a href="{{ path(name ~ '_edit', { 'id': value.id }) }}" class="btn btn-primary">Edit</a>
 {% endif %}
-{% if is_granted('ROLE_ADMIN') or is_granted('DELETE',value) %} 
-  <a href="{{ path(name ~ '_delete', { 'id': value.id }) }}" class="btn btn-danger">Delete</a>
-{% endif %}
   <a href="{{ path(name ~ '_list') }}" class="btn">List</a>
 {% endmacro %}
