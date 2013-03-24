@@ -11,7 +11,9 @@
            value="{{ entity.id }}" {{ checked }}/></td>
 <td>{{ l.link(entity, 'vib_flies_stockvial_show', false, null, 'vial') }}</td>
 <td>{{ l.link(entity.stock, 'vib_flies_stock_show', true, null, 'stock') }}</td>
-<td>{{ entity.setupDate | date("d‑m‑Y") }}</td>
-<td>{{ entity.realFlipDate | date("d‑m‑Y") }}</td>
+<td class="dates">
+  <div>{{ entity.setupDate | date("d‑m‑Y") }}</div>
+  <div>{{ entity.realFlipDate | date("d‑m‑Y") }}</div>
+</td>
 <td>{{ l.link(entity.parent, 'vib_flies_stockvial_show', true, null, 'vial') }}</td>
 <td>{{ status.vial(entity) }}</td>
