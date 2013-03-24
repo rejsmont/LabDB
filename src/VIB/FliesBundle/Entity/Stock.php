@@ -162,7 +162,7 @@ class Stock extends Entity {
      * @param string $genotype
      */
     public function setGenotype($genotype) {
-        $this->genotype = $genotype;
+        $this->genotype = preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$genotype);
     }
     
     /**
