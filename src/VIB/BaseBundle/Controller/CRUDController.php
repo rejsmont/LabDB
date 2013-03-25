@@ -366,7 +366,9 @@ abstract class CRUDController extends AbstractController {
      * 
      * @return string
      */
-    protected abstract function getEntityName();
+    protected function getEntityName() {
+        return 'entity';
+    }
     
     /**
      * Check if entity is controlled by this controller
