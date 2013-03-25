@@ -54,6 +54,13 @@ class IncubatorController extends CRUDController
     }
     
     /**
+     * {@inheritdoc}
+     */
+    protected function getEntityName() {
+        return "incubator";
+    }
+    
+    /**
      * Generate links for putting stuff into incubator
      * 
      * @Template()

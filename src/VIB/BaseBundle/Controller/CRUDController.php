@@ -153,6 +153,9 @@ abstract class CRUDController extends AbstractController {
 
                 $this->setACL($entity);
                 
+                $this->get('session')->getFlashBag()
+                     ->add('success', ucfirst($this->getEntityName()) . ' ' . $entity . ' was created.');
+                
                 $route = str_replace("_create", "_show", $request->attributes->get('_route'));
                 $url = $this->generateUrl($route,array('id' => $entity->getId()));
                 return $this->redirect($url);
@@ -189,6 +192,9 @@ abstract class CRUDController extends AbstractController {
                 $em->persist($entity);
                 $em->flush();
                 
+                $this->get('session')->getFlashBag()
+                     ->add('success', 'Changes to ' . $this->getEntityName() . ' ' . $entity . ' were saved.');
+                
                 $route = str_replace("_edit", "_show", $request->attributes->get('_route'));
                 $url = $this->generateUrl($route,array('id' => $entity->getId()));
                 return $this->redirect($url);
@@ -216,8 +222,11 @@ abstract class CRUDController extends AbstractController {
         }
         $request = $this->getRequest();
         if ($request->getMethod() == 'POST') {
+            $message = ucfirst($this->getEntityName()) . ' ' . $entity . ' was permanently deleted.';
             $em->remove($entity);
             $em->flush();
+            $this->get('session')->getFlashBag()
+                 ->add('success', $message);
             $request = $this->getRequest();
             $route = str_replace("_delete", "_list", $request->attributes->get('_route'));
             $url = $this->generateUrl($route);
@@ -351,6 +360,13 @@ abstract class CRUDController extends AbstractController {
     protected function getEntityClass() {
         return $this->entityClass;
     }
+    
+    /**
+     * Get managed entity name
+     * 
+     * @return string
+     */
+    protected abstract function getEntityName();
     
     /**
      * Check if entity is controlled by this controller

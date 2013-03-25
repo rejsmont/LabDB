@@ -83,6 +83,9 @@ class StockVialController extends VialController {
                 
                 $this->setACL($vial);
                 
+                $this->get('session')->getFlashBag()
+                     ->add('success', 'Vial ' . $vial . ' was created.');
+                
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {

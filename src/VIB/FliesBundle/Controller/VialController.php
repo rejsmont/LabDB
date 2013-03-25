@@ -64,7 +64,14 @@ class VialController extends CRUDController {
     protected function getEditForm() {
         return new VialType();
     }
-        
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getEntityName() {
+        return "vial";
+    }
+    
     /**
      * List vials
      * 
@@ -202,6 +209,9 @@ class VialController extends CRUDController {
                 
                 $this->setACL($vial);
                 
+                $this->get('session')->getFlashBag()
+                     ->add('success', 'Vial ' . $vial . ' was created.');
+                
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
@@ -281,6 +291,16 @@ class VialController extends CRUDController {
                 
                 foreach($vials as $vial) {
                     $this->setACL($vial);
+                }
+                
+                $count = count($vials);
+        
+                if ($count == 1) {
+                    $this->get('session')->getFlashBag()
+                         ->add('success', 'Vial ' . $source . ' was flipped.');
+                } else {
+                    $this->get('session')->getFlashBag()
+                         ->add('success', 'Vial ' . $source . ' was expanded into ' . $count . ' vials.');
                 }
                 
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
@@ -478,7 +498,7 @@ class VialController extends CRUDController {
                      ->add('success', 'Label for 1 vial was sent to the printer.');
             } else {
                 $this->get('session')->getFlashBag()
-                     ->add('success', 'Labels for ' . $count . ' vials were sent to the printer. ');
+                     ->add('success', 'Labels for ' . $count . ' vials were sent to the printer.');
             }
             return true;
         } else {
@@ -516,6 +536,17 @@ class VialController extends CRUDController {
             parent::setACL($vial);
         }
         
+        $count = count($flippedVials);
+        
+        if ($count == 1) {
+            $this->get('session')->getFlashBag()
+                 ->add('success', '1 vial was flipped.' . ($trash ? ' Source vial was trashed.' : ''));
+        } else {
+            $this->get('session')->getFlashBag()
+                 ->add('success', $count . ' vials were flipped.' .
+                                  ($trash ? ' Source vials were trashed.' : ''));
+        }
+        
         $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
 
         if ($shouldPrint) {
@@ -550,6 +581,16 @@ class VialController extends CRUDController {
         }
         
         $em->flush();
+        
+        $count = count($vials);
+        
+        if ($count == 1) {
+            $this->get('session')->getFlashBag()
+                 ->add('success', '1 vial was trashed.');
+        } else {
+            $this->get('session')->getFlashBag()
+                 ->add('success', $count . ' vials were trashed.');
+        }
     }
     
     /**
@@ -567,6 +608,16 @@ class VialController extends CRUDController {
         }
         
         $em->flush();
+        
+        $count = count($vials);
+        
+        if ($count == 1) {
+            $this->get('session')->getFlashBag()
+                 ->add('success', '1 vial was removed from trash.');
+        } else {
+            $this->get('session')->getFlashBag()
+                 ->add('success', $count . ' vials were removed from trash.');
+        }
     }
     
     /**
@@ -585,6 +636,16 @@ class VialController extends CRUDController {
         }
         
         $em->flush();
+        
+        $count = count($vials);
+        
+        if ($count == 1) {
+            $this->get('session')->getFlashBag()
+                 ->add('success', '1 vial was put in ' . $incubator . '.');
+        } else {
+            $this->get('session')->getFlashBag()
+                 ->add('success', $count . ' vials were put in ' . $incubator . '.');
+        }
     }
     
     /**
