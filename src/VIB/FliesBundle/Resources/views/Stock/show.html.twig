@@ -11,6 +11,7 @@
 {% block modal_body %}
   {{ s.row("Genotype", entity.genotype) }}
   {{ s.row("Source cross", entity.sourceCross , 'vib_flies_crossvial_show', null, 'vial') }}
+  {{ _self.vials("Vials", entity.livingVials, 'vib_flies_stockvial_show') }}
   {{ s.user("Created by", owner) }}
   {{ s.row("Notes", entity.notes) }}
   <div class="control-group">
@@ -42,13 +43,42 @@
     </div>
   </div>
   <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#vials"><strong>Vials</strong></a>
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#myvials"><strong>My vials</strong></a>
   </div>
-  <div id="vials" class="collapse">
-    {{ s.list("Alive", entity.livingVials, 'vib_flies_stockvial_show', null, 'vial') }}
+  <div id="myvials" class="collapse">
+    {{ _self.vials('Small',small,'vib_flies_stockvial_show') }}
+    {{ _self.vials('Medium',medium,'vib_flies_stockvial_show') }}
+    {{ _self.vials('Large',large,'vib_flies_stockvial_show') }}
   </div>
 {% endblock modal_body %}
 
 {% block modal_footer %}
   {{ s.buttons(entity, 'vib_flies_stock') }}
 {% endblock modal_footer %}
+
+{% macro vials(label,items,route) %}
+{% set uuid = random() ~ '_' ~ 'vials'  %}
+<div class="control-group">
+  <a class="control-label collapse-toggle" data-toggle="collapse" href="#{{ uuid }}">{{ label }}</a>
+  <div class="controls">
+    <span class="input-text input-block-level">
+      <strong>{{ items | length }}</strong>
+    </span>
+    <ul id="{{ uuid }}" class="collapse unstyled input-text">
+    {% for item in items %}
+      <li>{% spaceless %}
+        {% if is_granted('ROLE_ADMIN') or is_granted('VIEW',item) %}
+            {% set uuid = random() ~ '_' ~ item.id  %}
+            <span class="popover-trigger" id="span_{{ uuid }}"
+                  data-placement="bottom" data-container="#span_{{ uuid }}"
+                  data-delay="500" data-link="{{ path('vib_flies_ajax_popover')}}"
+                  data-type="vial" data-id="{{ item.id }}">
+              <a href="{{ path(route, { 'id': item.id }) }}">{{ item }}</a>
+            </span>
+        {% else %}{{ item }}{% endif %}
+        {% endspaceless %}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endmacro %}
