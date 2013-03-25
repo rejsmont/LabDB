@@ -2,10 +2,16 @@
 {% use "VIBBaseBundle:Form:form.html.twig" %}
 {% import "VIBBaseBundle:Macros:form.html.twig" as f %}
 
+{% form_theme form _self %} 
+  
+{% block _stock_new_stock_row %}
+  {{ form_widget(form) }}
+{% endblock %}
+
 {% block modal_header %}New stock{% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.get('value'),'vib_flies_stock') }}
+  {{ f.buttons(form.get('value').stock,'vib_flies_stock') }}
 {% endblock modal_footer %}
 
 {% block info_messages %}

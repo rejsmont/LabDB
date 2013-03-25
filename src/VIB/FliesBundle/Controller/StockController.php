@@ -25,13 +25,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use VIB\BaseBundle\Controller\CRUDController;
 
 use VIB\FliesBundle\Utils\PDFLabel;
 
 use VIB\FliesBundle\Form\StockType;
+use VIB\FliesBundle\Form\StockNewType;
 
 use VIB\FliesBundle\Entity\Stock;
+use VIB\FliesBundle\Entity\StockVial;
 
 
 /**
@@ -50,6 +54,13 @@ class StockController extends CRUDController
     public function __construct()
     {
         $this->entityClass = 'VIB\FliesBundle\Entity\Stock';
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getCreateForm() {
+        return new StockNewType();
     }
     
     /**
@@ -74,6 +85,56 @@ class StockController extends CRUDController
     }
     
     /**
+     * Show stock
+     * 
+     * @Route("/show/{id}")
+     * @Template()
+     * 
+     * @param mixed $id
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showAction($id) {
+        $stock = $this->getEntity($id);
+        $response = parent::showAction($stock);
+        $em = $this->getDoctrine()->getManager();
+        $query =  $em->getRepository('VIB\FliesBundle\Entity\StockVial')->createQueryBuilder('b');
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P2M'));
+        $query->where('b.stock = :stock')
+              ->andWhere('b.setupDate > :date')
+              ->andWhere('b.trashed = false')
+              ->orderBy('b.setupDate', 'DESC')
+              ->addOrderBy('b.id', 'DESC')
+              ->setParameter('stock', $stock)
+              ->setParameter('date', $date->format('Y-m-d'));
+        
+        $myVials = $this->get('vib.security.helper.acl')->apply($query);
+        
+        $small = new ArrayCollection();
+        $medium = new ArrayCollection();
+        $large = new ArrayCollection();
+        
+        foreach($myVials as $vial) {
+            switch($vial->getSize()) {
+                case 'small':
+                    $small->add($vial);
+                    break;
+                case 'medium':
+                    $medium->add($vial);
+                    break;
+                case 'large':
+                    $large->add($vial);
+                    break;
+            }
+        }
+        
+        $vials = array('small' => $small, 'medium' => $medium, 'large' => $large);
+        
+        return is_array($response) ? array_merge($response,$vials) : $response;
+    }
+    
+    /**
      * Create stock
      * 
      * @Route("/new")
@@ -86,7 +147,8 @@ class StockController extends CRUDController
         $class = $this->getEntityClass();
         $stock = new $class();
         $existingStock = null;
-        $form = $this->createForm($this->getCreateForm(), $stock);
+        $data = array('stock' => $stock, 'number' => 1, 'size' => 'medium');
+        $form = $this->createForm($this->getCreateForm(), $data);
         $request = $this->getRequest();
         
         if ($request->getMethod() == 'POST') {
@@ -94,6 +156,19 @@ class StockController extends CRUDController
             $form->bindRequest($request);
             
             if ($form->isValid()) {
+                
+                $data = $form->getData();
+                $stock = $data['stock'];
+                $number = $data['number'];
+                $size = $data['size'];
+                
+                $vials = new ArrayCollection();
+                
+                for ($i = 0; $i < $number - 1; $i++) {
+                    $vial = new StockVial();
+                    $stock->addVial($vial);
+                    $vial->setSize($size);
+                }
                 
                 $em->persist($stock);
                 $em->flush();
@@ -107,8 +182,7 @@ class StockController extends CRUDController
                 
                 if ($shouldPrint) {
                     $pdf = $this->get('vibfolks.pdflabel');
-                    $vials = $stock->getVials();
-                    foreach ($vials as $vial) {
+                    foreach ($stock->getVials() as $vial) {
                         $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
                                           $vial->getLabelText(), $this->getOwner($vial));
                     }

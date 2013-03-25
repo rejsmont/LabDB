@@ -20,21 +20,22 @@ namespace VIB\FliesBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+use Symfony\Component\Validator\Constraints\Min;
 
 /**
- * StockVialType class
+ * StockNewType class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialType extends AbstractType
-{  
+class StockNewType extends AbstractType
+{
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return "vial";
+        return "stock_new";
     }
     
     /**
@@ -42,18 +43,7 @@ class VialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
-                ->add('flipDate', 'datepicker', array('label' => 'Flip date'))
-                ->add('notes', 'textarea', array(
-                        'label'     => 'Notes',
-                        'required'  => false))
-                ->add('parent', 'text_entity', array(
-                        'property'  => 'id',
-                        'class'     => 'VIBFliesBundle:StockVial',
-                        'format'    => '%06d',
-                        'required'  => false,
-                        'label'     => 'Flipped from',
-                        'attr'      => array('class' => 'barcode')))
+        $builder->add('stock', new StockType())
                 ->add('size', 'choice', array(
                         'choices'   => array('small' => 'small',
                                              'medium' => 'medium',
@@ -62,19 +52,10 @@ class VialType extends AbstractType
                         'label'     => 'Vial size',
                         'required'  => false,
                         'attr'      => array('class' => 'input-text')))
-                ->add('trashed', 'checkbox', array(
-                        'label'     => '',
-                        'required'  => false));
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => 'VIB\FliesBundle\Entity\Vial',
-        ));
+                ->add('number','number', array(
+                        'label'       => 'Number of vials',
+                        'constraints' => array(
+                            new Min(1))));
     }
 }
 

@@ -51,6 +51,14 @@ class VialExpandType extends AbstractType
                         'attr' => array('class' => 'barcode'),
                         'constraints' => array(
                             new NotNull())))
+                ->add('size', 'choice', array(
+                        'choices'   => array('small' => 'small',
+                                             'medium' => 'medium',
+                                             'large' => 'large'),
+                        'expanded'  => true,
+                        'label'     => 'Destination size',
+                        'required'  => false,
+                        'attr'      => array('class' => 'input-text')))
                 ->add('number','number', array(
                         'label'       => 'Number of vials',
                         'constraints' => array(

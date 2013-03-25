@@ -266,7 +266,7 @@ class VialController extends CRUDController {
 
         $em = $this->getDoctrine()->getManager();
         $source = (null !== $id) ? $this->getEntity($id) : null;
-        $data = array('source' => $source, 'number' => 1);        
+        $data = array('source' => $source, 'number' => 1, 'size' => 'medium');        
         $form = $this->createForm(new VialExpandType(), $data);
         $request = $this->getRequest();
         
@@ -279,11 +279,13 @@ class VialController extends CRUDController {
                 $data = $form->getData();
                 $source = $data['source'];
                 $number = $data['number'];
+                $size = $data['size'];
                 
                 $vials = new ArrayCollection();
                 
                 for ($i = 0; $i < $number; $i++) {
                     $vial = $source->flip();
+                    $vial->setSize($size);
                     $em->persist($vial);
                     $vials->add($vial);
                 }

@@ -1,3 +1,5 @@
+{% import 'VIBBaseBundle:Macros:status.html.twig' as status %}
+
 {% if checked is not defined %}
   {% if entity.labelPrinted %}
     {% set checked = "" %}

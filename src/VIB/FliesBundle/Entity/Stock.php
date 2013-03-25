@@ -253,7 +253,15 @@ class Stock extends Entity {
      * @param \VIB\FliesBundle\Entity\Vial $vial
      */
     public function addVial(Vial $vial = null) {
-        $this->getVials()->add($vial);
+        $vials = $this->getVials();
+        if ($vial instanceof StockVial) {
+            if (! $vials->contains($vial)) {
+                $vials->add($vial);
+            }
+            if ($vial->getStock() != $this) {
+                $vial->setStock($this);
+            }
+        }       
     }
     
     /**

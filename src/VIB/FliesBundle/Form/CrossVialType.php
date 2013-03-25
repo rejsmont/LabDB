@@ -72,6 +72,14 @@ class CrossVialType extends AbstractType
                         'required'  => false,
                         'label'     => 'Flipped from',
                         'attr' => array('class' => 'barcode')))
+                ->add('size', 'choice', array(
+                        'choices'   => array('small' => 'small',
+                                             'medium' => 'medium',
+                                             'large' => 'large'),
+                        'expanded'  => true,
+                        'label'     => 'Vial size',
+                        'required'  => false,
+                        'attr'      => array('class' => 'input-text')))
                 ->add('trashed', 'checkbox', array(
                         'label' => '',
                         'required' => false))

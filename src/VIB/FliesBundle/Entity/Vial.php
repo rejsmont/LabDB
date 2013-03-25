@@ -64,6 +64,12 @@ class Vial extends Entity {
     protected $notes;
     
     /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Serializer\Expose
+     */
+    protected $size;
+    
+    /**
      * @ORM\OneToMany(targetEntity="Vial", mappedBy="parent")
      */
     protected $children;
@@ -176,6 +182,7 @@ class Vial extends Entity {
     protected function inheritFromTemplate(Vial $template = null) {
         $this->setSetupDate($template->getSetupDate());
         $this->setFlipDate($template->getFlipDate());
+        $this->setSize($template->getSize());
         $this->setNotes($template->getNotes());
         $this->setIncubator($template->getIncubator());
     }
@@ -260,6 +267,25 @@ class Vial extends Entity {
     public function getNotes() {
         return $this->notes;
     }
+    
+    /**
+     * Get size
+     * 
+     * @return type
+     */
+    public function getSize() {
+        return (null !== $this->size) ? $this->size : 'medium';
+    }
+
+    /**
+     * Set size
+     * 
+     * @return type
+     */
+    public function setSize($size) {
+        $this->size = $size;
+    }
+
         
     /**
      * Add child
