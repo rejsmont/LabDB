@@ -73,6 +73,14 @@ class VialController extends CRUDController {
     }
     
     /**
+     * {@inheritdoc}
+     */
+    protected function getListQuery() {
+        return parent::getListQuery()->addOrderBy('b.setupDate','DESC')
+                                     ->addOrderBy('b.id','DESC');
+    }
+    
+    /**
      * List vials
      * 
      * @Route("/")
@@ -107,8 +115,6 @@ class VialController extends CRUDController {
             case 'public':
                 $query = $query->where('b.setupDate > :date')
                                ->andWhere('b.trashed = false')
-                               ->orderBy('b.setupDate', 'DESC')
-                               ->addOrderBy('b.id', 'DESC')
                                ->setParameter('date', $date->format('Y-m-d'));
                 if (($this->getUser() !== null)&&(! $securityContext->isGranted('ROLE_ADMIN'))) {
                     return $this->get('vib.security.helper.acl')->apply($query);
@@ -117,8 +123,6 @@ class VialController extends CRUDController {
                 }
                 break;
             case 'all':
-                $query = $query->orderBy('b.setupDate', 'DESC')
-                               ->addOrderBy('b.id', 'DESC');
                 if (($this->getUser() !== null)&&(! $securityContext->isGranted('ROLE_ADMIN'))) {
                     return $this->get('vib.security.helper.acl')->apply($query);
                 } else {
@@ -128,8 +132,6 @@ class VialController extends CRUDController {
             case 'trashed':
                 $query = $query->where('b.setupDate > :date')
                                ->andWhere('b.trashed = true')
-                               ->orderBy('b.setupDate', 'DESC')
-                               ->addOrderBy('b.id', 'DESC')
                                ->setParameter('date', $date->format('Y-m-d'));
                 if ($this->getUser() !== null) {
                     return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
@@ -138,10 +140,8 @@ class VialController extends CRUDController {
                 }                
                 break;
             case 'dead':
-                $query = $query->where('b.setupDate < :date')
+                $query = $query->where('b.setupDate <= :date')
                                ->orWhere('b.trashed = true')
-                               ->orderBy('b.setupDate', 'DESC')
-                               ->addOrderBy('b.id', 'DESC')
                                ->setParameter('date', $date->format('Y-m-d'));
                 if ($this->getUser() !== null) {
                     return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));
@@ -152,8 +152,6 @@ class VialController extends CRUDController {
             default:
                 $query = $query->where('b.setupDate > :date')
                                ->andWhere('b.trashed = false')
-                               ->orderBy('b.setupDate', 'DESC')
-                               ->addOrderBy('b.id', 'DESC')
                                ->setParameter('date', $date->format('Y-m-d'));
                 if ($this->getUser() !== null) {
                     return $this->get('vib.security.helper.acl')->apply($query,array('OWNER'));

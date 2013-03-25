@@ -45,14 +45,14 @@ use VIB\BaseBundle\Entity\Entity;
 class Vial extends Entity {
     
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
      * @Assert\NotBlank(message = "Setup date must be specified")
      * @Serializer\Expose
      */
     protected $setupDate;
     
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      * @Serializer\Expose
      */
     protected $flipDate;
