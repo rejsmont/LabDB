@@ -66,6 +66,13 @@ class CrossVialController extends VialController
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getEntityName() {
+        return "cross";
+    }
+    
+    /**
      * Create cross
      * 
      * @Route("/new")
@@ -101,8 +108,18 @@ class CrossVialController extends VialController
                 }
                 $em->flush();
                 
-                foreach($crosses as $cross) {
-                    $this->setACL($cross);
+                foreach($crosses as $newcross) {
+                    $this->setACL($newcross);
+                }
+                
+                $count = count($crosses);
+        
+                if ($count == 1) {
+                    $this->get('session')->getFlashBag()
+                         ->add('success', 'Cross ' . $cross->getName() . ' was created.');
+                } else {
+                    $this->get('session')->getFlashBag()
+                         ->add('success', $count . ' crosses ' . $cross->getName() . ' were created.');
                 }
                 
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
@@ -260,6 +277,16 @@ class CrossVialController extends VialController
         }
         
         $em->flush();
+        
+        $count = count($vials);
+        
+        if ($count == 1) {
+            $this->get('session')->getFlashBag()
+                 ->add('success', '1 cross was marked as sterile and trashed.');
+        } else {
+            $this->get('session')->getFlashBag()
+                 ->add('success', $count . ' crosses were marked as sterile and trashed.');
+        }
     }
     
     /**
@@ -279,6 +306,16 @@ class CrossVialController extends VialController
         }
 
         $em->flush();
+        
+        $count = count($vials);
+        
+        if ($count == 1) {
+            $this->get('session')->getFlashBag()
+                 ->add('success', '1 cross was marked as successful.');
+        } else {
+            $this->get('session')->getFlashBag()
+                 ->add('success', $count . ' crosses were marked as successful.');
+        }
     }
     
     /**
@@ -298,5 +335,15 @@ class CrossVialController extends VialController
         }
 
         $em->flush();
+        
+        $count = count($vials);
+        
+        if ($count == 1) {
+            $this->get('session')->getFlashBag()
+                 ->add('success', '1 cross was marked as failed.');
+        } else {
+            $this->get('session')->getFlashBag()
+                 ->add('success', $count . ' crosses were marked as failed.');
+        }
     }
 }

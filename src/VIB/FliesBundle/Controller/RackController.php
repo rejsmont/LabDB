@@ -58,6 +58,13 @@ class RackController extends CRUDController
     }
     
     /**
+     * {@inheritdoc}
+     */
+    protected function getEntityName() {
+        return "rack";
+    }
+    
+    /**
      * Show rack
      * 
      * @Route("/show/{id}")
@@ -129,6 +136,9 @@ class RackController extends CRUDController
 
                 $this->setACL($rack);
                 
+                $this->get('session')->getFlashBag()
+                     ->add('success', 'Rack ' . $rack . ' was created.');
+                
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
                 if ($shouldPrint) {
@@ -181,6 +191,9 @@ class RackController extends CRUDController
                 
                 $em->persist($rack);
                 $em->flush();
+                
+                $this->get('session')->getFlashBag()
+                     ->add('success', 'Changes to rack ' . $rack . ' were saved.');
                 
                 $url = $this->generateUrl('vib_flies_rack_show',array('id' => $rack->getId())); 
                 return $this->redirect($url);
@@ -269,6 +282,9 @@ class RackController extends CRUDController
         $em->persist($rack);
         
         $em->flush();
+        
+        $this->get('session')->getFlashBag()
+             ->add('success', 'Rack ' . $rack . ' was put in ' . $incubator . '.');
     }
     
 }

@@ -30,10 +30,8 @@ use VIB\BaseBundle\Controller\CRUDController;
 use VIB\FliesBundle\Utils\PDFLabel;
 
 use VIB\FliesBundle\Form\StockType;
-use VIB\FliesBundle\Form\StockVialType;
 
 use VIB\FliesBundle\Entity\Stock;
-use VIB\FliesBundle\Entity\StockVial;
 
 
 /**
@@ -69,6 +67,13 @@ class StockController extends CRUDController
     }
     
     /**
+     * {@inheritdoc}
+     */
+    protected function getEntityName() {
+        return "stock";
+    }
+    
+    /**
      * Create stock
      * 
      * @Route("/new")
@@ -94,6 +99,9 @@ class StockController extends CRUDController
                 $em->flush();
                 
                 $this->setACL($stock);
+                
+                $this->get('session')->getFlashBag()
+                     ->add('success', 'Stock ' . $stock . ' was created.');
                 
                 $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
                 
