@@ -1,0 +1,61 @@
+{% extends 'VIBBaseBundle::layout.html.twig' %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="{{ path('default') }}">LNG FlyDB</a>
+      <div class="nav-collapse">
+      {% render "VIBFliesBundle:Search:form" %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock navbar %}
+
+{% block container %}
+<div class="{% block container_class %}container{% endblock container_class %}">
+    {% block header %}
+    {% endblock header %}
+    <div class="content">
+      <div class="row">
+        {% block main_row %}
+        <div class="span12">
+          {% block content_row %}
+          <div class="row-fluid no-header">
+              {{ block('content') }}
+          </div>
+          {% endblock content_row %}
+        </div>
+        {% endblock main_row %}
+      </div>
+    </div>
+    <footer>
+    {% block footer %}
+    {% endblock footer %}
+    </footer>
+</div>
+{% endblock container %}
+
+{% block content %}
+<div class="pull-left" style="font-size: 200px; margin-right: 50px;">
+  <i class="icon-warning-sign text-error"></i>
+</div>
+<div>
+  {% block error_content %}
+  <h1>Oops! An Error Occurred</h1>
+  <h2>The server returned a "{{ status_code }} {{ status_text }}".</h2>
+
+  <div>
+      Something is broken. Please e-mail us at [email] and let us know
+      what you were doing when this error occurred. We will fix it as soon
+      as possible. Sorry for any inconvenience caused.
+  </div>
+  {% endblock error_content %}
+</div>
+{% endblock content %}
