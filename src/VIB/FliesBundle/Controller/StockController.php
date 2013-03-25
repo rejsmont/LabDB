@@ -109,7 +109,7 @@ class StockController extends CRUDController
               ->setParameter('stock', $stock)
               ->setParameter('date', $date->format('Y-m-d'));
         
-        $myVials = $this->get('vib.security.helper.acl')->apply($query)->getResult();
+        $myVials = $this->get('vib.security.helper.acl')->apply($query,array('OWNER'))->getResult();
         
         $small = new ArrayCollection();
         $medium = new ArrayCollection();
