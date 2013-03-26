@@ -43,7 +43,7 @@ class VialType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
-                ->add('flipDate', 'datepicker', array('label' => 'Flip date'))
+                ->add('flipDate', 'datepicker', array('label' => 'Flip date', 'required'  => false))
                 ->add('notes', 'textarea', array(
                         'label'     => 'Notes',
                         'required'  => false))
