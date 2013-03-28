@@ -240,7 +240,6 @@ class CrossVialController extends VialController
         
         $action = $data['action'];
         $vials = new ArrayCollection($data['items']);
-
         $response = $this->getDefaultBatchResponse();
         
         switch($action) {

@@ -355,7 +355,6 @@ class VialController extends CRUDController {
         
         $action = $data['action'];
         $vials = new ArrayCollection($data['items']);
-                
         $response = $this->getDefaultBatchResponse();
         
         switch($action) {
@@ -431,8 +430,9 @@ class VialController extends CRUDController {
                 }
             }
             $em->flush();
+            return $pdf->output();
         }
-        return $pdf->output();
+        return $this->getDefaultBatchResponse();
     }
     
     /**
