@@ -34,6 +34,7 @@ class AppKernel extends Kernel
             new VIB\SecurityBundle\VIBSecurityBundle(),
             new VIB\UserBundle\VIBUserBundle(),
             new VIB\WelcomeBundle\VIBWelcomeBundle(),
+            new VIB\CalendarBundle\VIBCalendarBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

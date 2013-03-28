@@ -55,7 +55,7 @@
                 </ul>
               </li>
               <li class="last"><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
-              {% render "VIBFliesBundle:Incubator:menu" %}
+              {% render(controller("VIBFliesBundle:Incubator:menu")) %}
             </ul>
           </li>
         </ul>
@@ -78,7 +78,7 @@
           </li>
         </ul>
         {% endif %}
-        {% render "VIBFliesBundle:Search:form" %}
+        {% render(controller("VIBFliesBundle:Search:form")) %}
       </div>
     </div>
   </div>
@@ -99,7 +99,7 @@
           {% endif %}
           {% endblock flashes %}
           {% block msie_info %}
-          {% render "VIBBaseBundle:Messages:msie" %}
+          {% render(controller("VIBBaseBundle:Messages:msie")) %}
           {% endblock msie_info %}
           {% block info_messages %}{% endblock info_messages %}
         </div>
@@ -119,7 +119,7 @@
         <div id="sidebar" class="span3">
           {% block content_sidebar %}
           {% endblock content_sidebar %}
-          {% render "VIBFliesBundle:AutoPrint:autoprint" %}
+          {% render(controller("VIBFliesBundle:AutoPrint:autoprint")) %}
         </div>
         <div class="span9">
           {% block content_row %}

@@ -103,5 +103,5 @@
 {% endspaceless %}{% endmacro %}
 
 {% macro incubate_button() %}
-  {% render "VIBFliesBundle:Incubator:incubate" %}
+  {% render(controller("VIBFliesBundle:Incubator:incubate")) %}
 {% endmacro incubate_button %}
