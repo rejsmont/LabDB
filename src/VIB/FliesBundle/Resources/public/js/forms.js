@@ -38,7 +38,7 @@ function checkVial(filter) {
         $('#barcode').focus();
         return;
     }
-  
+    
     var checkboxName;
     var checkbox;
     
@@ -64,11 +64,12 @@ function checkVial(filter) {
     } else {
 
         url = $('#barcode').data('link');
-          
+        order = $('#select').children('tbody').children('tr').length;
+        
         var request = $.ajax({
             type: "GET",
             url: url,
-            data: {id: id, filter: filter, format: 'html'}
+            data: {id: id, filter: filter, format: 'html', order: order}
         });
         
         request.done(
@@ -139,11 +140,12 @@ function checkRackVial() {
     } else if(position.length) {
 
         var emptyPositions = $('.rack-display').find('td.empty');
-        var url = $('#barcode').data('link');
+        url = $('#barcode').data('link');
+        order = $('.rack-display').find('td').index(position);
         var request = $.ajax({
             type: "GET",
             url: url,
-            data: { vialID: vialID, positionID: positionID, rackID: rackID }
+            data: { vialID: vialID, positionID: positionID, rackID: rackID, order: order }
         });
         request.done(
             function(response) {

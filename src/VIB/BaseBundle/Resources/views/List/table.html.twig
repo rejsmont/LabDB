@@ -10,8 +10,10 @@
     </thead>
     <tbody>
     {% if entities is defined %}
+      {% set order = 0 %}
       {% for entity in entities %}
         <tr>{% block list_item %}{% endblock list_item %}</tr>
+        {% set order = order + 1 %}
       {% endfor %}
     {% endif %}
     </tbody>

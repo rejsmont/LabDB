@@ -3,11 +3,11 @@
 {% if entity is not empty %}
 <tr>
   {% if type == 'cross' %}
-    {% include 'VIBFliesBundle:CrossVial:list_row.html.twig' with {'entity': entity} %}
+    {% include 'VIBFliesBundle:CrossVial:list_row.html.twig' with {'entity': entity, 'order': order} %}
   {% elseif type == 'stock' %}
-    {% include 'VIBFliesBundle:StockVial:list_row.html.twig' with {'entity': entity} %}
+    {% include 'VIBFliesBundle:StockVial:list_row.html.twig' with {'entity': entity, 'order': order} %}
   {% else %}
-    {% include 'VIBFliesBundle:Vial:list_row.html.twig' with {'entity': entity} %}
+    {% include 'VIBFliesBundle:Vial:list_row.html.twig' with {'entity': entity, 'order': order} %}
   {% endif %}
 </tr>
 {% endif %}

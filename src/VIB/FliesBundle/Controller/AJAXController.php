@@ -58,6 +58,7 @@ class AJAXController extends Controller {
         $id = $request->query->get('id');
         $filter = $request->query->get('filter');
         $format = $request->query->get('format');
+        $order = $request->query->get('order',null);
         
         $em = $this->get('doctrine.orm.entity_manager');
         $securityContext = $this->get('security.context');
@@ -75,7 +76,7 @@ class AJAXController extends Controller {
         if ($format == 'json') {
             return new Response($serializer->serialize($vial, 'json')); 
         } else {
-            return array('entity' => $vial, 'checked' => 'checked', 'type' => $filter);
+            return array('entity' => $vial, 'checked' => 'checked', 'type' => $filter, 'order' => $order);
         }
     }
     
@@ -92,6 +93,7 @@ class AJAXController extends Controller {
         $vialID = $request->query->get('vialID');
         $positionID = $request->query->get('positionID');
         $rackID = $request->query->get('rackID');
+        $order = $request->query->get('order',null);
         
         $em = $this->get('doctrine.orm.entity_manager');
         $securityContext = $this->get('security.context');
@@ -114,7 +116,7 @@ class AJAXController extends Controller {
         $em->persist($vial);
         $em->flush();
         
-        return array('contents' => $vial, 'rackID' => $rackID);
+        return array('contents' => $vial, 'rackID' => $rackID, 'order' => $order);
     }
     
     /**

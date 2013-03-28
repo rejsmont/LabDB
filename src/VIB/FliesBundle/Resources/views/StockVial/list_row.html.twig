@@ -8,9 +8,14 @@
   {% endif %}
 {% endif %}
 
+{% if order is not defined or order is empty %}
+  {% set order = entity.id %}
+{% endif %}
+
 <td><input type="checkbox" id="select_items_{{ entity.id }}" 
-           name="select[items][{{ entity.id }}]" 
-           value="{{ entity.id }}" {{ checked }}/></td>
+           name="select[items][{{ order }}]"
+           value="{{ entity.id }}" {{ checked }}/>
+</td>
 <td>{{ l.link(entity, 'vib_flies_stockvial_show', false, null, 'vial') }}</td>
 <td>{{ l.link(entity.stock, 'vib_flies_stock_show', true, null, 'stock') }}</td>
 <td class="dates">

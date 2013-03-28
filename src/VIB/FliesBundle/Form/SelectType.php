@@ -63,70 +63,15 @@ class SelectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('action', 'hidden')
+                ->add('items', 'collection', array(
+                      'type'   => 'entity',
+                      'allow_add' => true,
+                      'options' => array(
+                          'class' =>  $this->entityClass)))
                 ->add('incubator', 'hidden_entity', array(
                       'property'     => 'name',
                       'class' => 'VIBFliesBundle:Incubator',
                       'attr' => array('class' => 'input-medium')));
-        
-        $factory = $builder->getFormFactory();
-        $class = $this->entityClass;
-        
-        $refreshEntities = function ($form, $selections) use ($factory, $class) {
-            
-            $queryBuilder = function (EntityRepository $repository) use ($selections) {
-                if (count($selections) < 1)
-                    $selections = array(0);
-                $qb = $repository->createQueryBuilder('e')
-                        ->where('e.id in (:values)')
-                        ->setParameter('values', $selections);
-                return $qb;
-            };
-            
-            $form->add($factory->createNamed('items', 'entity', null, array(
-                'class'         =>  $class,
-                'multiple'      =>  true,
-                'expanded'      =>  true,
-                'required'      =>  false,
-                'query_builder' =>  $queryBuilder
-            )));
-        };
- 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (DataEvent $event) use ($refreshEntities) {
-            
-            $form = $event->getForm();
-            $data = $event->getData();
- 
-            if($data == null)
-                $refreshEntities($form, array());
- 
-            if($data instanceof ArrayCollection) {
-                $values = array();
-                foreach ($data as $key => $item) {
-                    $values[] = $item->getId();
-                }
-                                
-                $refreshEntities($form, $values);
-            }
-        });
- 
-        $builder->addEventListener(FormEvents::PRE_BIND, function (DataEvent $event) use ($refreshEntities) {
-            
-            $form = $event->getForm();
-            $data = $event->getData();
-                
-            if (is_array($data)) {
-                if (isset($data['items'])) {
-                    
-                    $values = array();
-                    
-                    foreach ($data['items'] as $item) {
-                        $values[] = $item;
-                    }
-                    
-                    $refreshEntities($form, $values);
-                }
-            }
-        });
     }
     
     /**

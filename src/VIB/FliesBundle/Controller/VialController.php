@@ -354,8 +354,8 @@ class VialController extends CRUDController {
     public function handleBatchAction($data) {
         
         $action = $data['action'];
-        $vials = $data['items'];
-        
+        $vials = new ArrayCollection($data['items']);
+                
         $response = $this->getDefaultBatchResponse();
         
         switch($action) {

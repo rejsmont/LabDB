@@ -15,7 +15,7 @@
 {% endblock list_header %}
 
 {% block list_item %}
-  {% include 'VIBFliesBundle:StockVial:list_row.html.twig' with {'entity': entity} %}
+  {% include 'VIBFliesBundle:StockVial:list_row.html.twig' with {'entity': entity, 'order': order} %}
 {% endblock list_item %}
 
 {% block list_buttons %}

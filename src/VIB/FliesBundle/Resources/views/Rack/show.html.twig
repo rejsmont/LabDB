@@ -30,6 +30,7 @@
       {% endfor %}
       </tr>
     {% set first = true %}
+    {% set order = 0 %}
     {% for i in 1..entity.rows %}
       <tr>
         <th>
@@ -47,7 +48,8 @@
           {% else %}
             {% set contents = entity.position(i,j).contents %}
             <td id="position_{{ entity.position(i,j).id }}" class="success">
-              {% include 'VIBFliesBundle:Rack:position.html.twig' with {'contents': contents, 'rackID': entity.id} %}
+              {% include 'VIBFliesBundle:Rack:position.html.twig' with {'contents': contents, 'rackID': entity.id, 'order': order} %}
+              {% set order = order + 1 %}
             </td>
           {% endif %}
         {% endfor %}
