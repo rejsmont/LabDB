@@ -127,9 +127,12 @@ class Vial extends Entity {
     
     
     /**
-     * Construct Vial
+     * Construct a new vial
+     * 
+     * If $template is set, inherit properties from the template.
+     * If $flip is true, become a child of the template.
      *
-     * @param \VIB\FliesBundle\Entity\Vial $parent
+     * @param \VIB\FliesBundle\Entity\Vial $template
      * @param boolean $flip
      */
     public function __construct(Vial $template = null, $flip = true) {
@@ -161,11 +164,14 @@ class Vial extends Entity {
     
     /**
      * Reset dates
+     * 
+     * @param \VIB\FliesBundle\Entity\Vial $template
      */
     private function resetDates(Vial $template = null) {
-        $setupDate = new DateTime();
-        $this->setSetupDate($setupDate);
-        if ((null !== $template)&&(null !== $template->getFlipDate()&&(null !== $template->getSetupDate()))) {
+        $this->setSetupDate(new DateTime());
+        if ((null !== $template)&&
+            (null !== $template->getFlipDate())&&
+            (null !== $template->getSetupDate())) {
             $flipDate = new DateTime();
             $flipDate->add($template->getSetupDate()->diff($template->getFlipDate()));
             $this->setFlipDate($flipDate);
@@ -180,11 +186,13 @@ class Vial extends Entity {
      * @param \VIB\FliesBundle\Entity\Vial $template
      */
     protected function inheritFromTemplate(Vial $template = null) {
-        $this->setSetupDate($template->getSetupDate());
-        $this->setFlipDate($template->getFlipDate());
-        $this->setSize($template->getSize());
-        $this->setNotes($template->getNotes());
-        $this->setIncubator($template->getIncubator());
+        if (null !== $template) {
+            $this->setSetupDate($template->getSetupDate());
+            $this->setFlipDate($template->getFlipDate());
+            $this->setSize($template->getSize());
+            $this->setNotes($template->getNotes());
+            $this->setIncubator($template->getIncubator());
+        }
     }
     
     /**
@@ -593,6 +601,7 @@ class Vial extends Entity {
     /**
      * Flip vial
      * 
+     * @deprecated since version v0.4.0
      * @return \VIB\FliesBundle\Entity\Vial 
      */
     public final function flip() {

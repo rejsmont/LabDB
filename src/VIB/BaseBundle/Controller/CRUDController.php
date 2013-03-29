@@ -234,21 +234,6 @@ abstract class CRUDController extends AbstractController {
         }
         return array('entity' => $entity);
     }
-    
-    /**
-     * 
-     * @Route("/test/{id}")
-     * @Template
-     * 
-     * @param mixed $id
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function testAclAction($id) {
-        $entity = $this->getEntity($id);
-        echo "<pre>";
-        return new \Symfony\Component\HttpFoundation\Response($this->getOwner($entity),200);
-        echo "</pre>";
-    }    
         
     /**
      * Get query returning entities to list
@@ -275,7 +260,7 @@ abstract class CRUDController extends AbstractController {
         }
         
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository($this->getEntityClass())->find($id);
+        $entity = $em->find($this->getEntityClass(),$id);
         
         if ($entity instanceof $class) {
             return $entity;
