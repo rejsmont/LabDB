@@ -66,7 +66,6 @@ class ObjectManager extends ObjectManagerDecorator {
      * 
      * @param object $object
      * @param array $acl
-     * @throws \ErrorException
      */
     public function createACL($object, array $acl) {
         $objectIdentity = ObjectIdentity::fromDomainObject($object);
