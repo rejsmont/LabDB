@@ -78,7 +78,7 @@ class AbstractController extends Controller {
      * @return \VIB\SecurityBundle\Bridge\Doctrine\AclHelper
      */
     protected function getAclFilter() {
-        $this->get('vib.security.helper.acl');
+        return $this->get('vib.security.helper.acl');
     }
     
     /**

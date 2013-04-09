@@ -19,7 +19,7 @@
 namespace VIB\BaseBundle\Doctrine;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Persistence\ObjectManager as BaseObjectManager;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManagerDecorator;
 
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -52,14 +52,14 @@ class ObjectManager extends ObjectManagerDecorator {
     /**
      * Construct ObjectManager
      * 
-     * @param Doctrine\Common\Persistence\ObjectManager $om
+     * @param Doctrine\Common\Persistence\ManagerRegistry $mr
      * @param Symfony\Component\Security\Core\User\UserProviderInterface $userManager
      * @param Symfony\Component\Security\Acl\Model\AclProviderInterface $aclProvider
      */
-    public function __construct(BaseObjectManager $om,
+    public function __construct(ManagerRegistry $mr,
                                 UserProviderInterface $userProvider,
                                 MutableAclProviderInterface $aclProvider) {
-        $this->wrapped = $om;
+        $this->wrapped = $mr->getManager();
         $this->userProvider = $userProvider;
         $this->aclProvider = $aclProvider;
     }
