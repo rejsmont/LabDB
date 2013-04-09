@@ -91,7 +91,7 @@ class SearchController extends AbstractController {
      */    
     public function resultAction() {
         
-        $em = $this->getDoctrine();
+        $om = $this->getObjectManager();
         $form = $this->createForm(new SearchType());
         $request = $this->get('request');
         $session = $request->getSession();
@@ -124,8 +124,8 @@ class SearchController extends AbstractController {
         
         switch ($filter) {
             case 'crosses':
-                $queryBuilder = $em->getRepository('VIB\FliesBundle\Entity\CrossVial')->search($query);
-                $result = $this->get('vib.security.helper.acl')->apply($queryBuilder);
+                $queryBuilder = $om->getRepository('VIB\FliesBundle\Entity\CrossVial')->search($query);
+                $result = $this->getAclFilter()->apply($queryBuilder);
                 break;
             case 'vial':
                 $url = $this->generateUrl('vib_flies_vial_show', array('id' => $query));
@@ -137,13 +137,13 @@ class SearchController extends AbstractController {
                 break;
             case 'stocks':
             default:
-                $queryBuilder = $em->getRepository('VIB\FliesBundle\Entity\Stock')->search($query);
-                $result = $this->get('vib.security.helper.acl')->apply($queryBuilder);
+                $queryBuilder = $om->getRepository('VIB\FliesBundle\Entity\Stock')->search($query);
+                $result = $this->getAclFilter()->apply($queryBuilder);
                 break;
         }
         
-        $paginator  = $this->get('knp_paginator');
-        $page = $this->get('request')->query->get('page', 1);
+        $paginator  = $this->getPaginator();
+        $page = $this->getCurrentPage();
         $entities = $paginator->paginate($result, $page, 10);
         return array('entities' => $entities,
                      'query' => $query,

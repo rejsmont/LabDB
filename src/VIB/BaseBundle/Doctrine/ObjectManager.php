@@ -18,12 +18,15 @@
 
 namespace VIB\BaseBundle\Doctrine;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Persistence\ObjectManager as BaseObjectManager;
 use Doctrine\Common\Persistence\ObjectManagerDecorator;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
@@ -53,7 +56,7 @@ class ObjectManager extends ObjectManagerDecorator {
      * @param Symfony\Component\Security\Core\User\UserProviderInterface $userManager
      * @param Symfony\Component\Security\Acl\Model\AclProviderInterface $aclProvider
      */
-    public function __construct(ObjectManager $om,
+    public function __construct(BaseObjectManager $om,
                                 UserProviderInterface $userProvider,
                                 MutableAclProviderInterface $aclProvider) {
         $this->wrapped = $om;
@@ -62,21 +65,30 @@ class ObjectManager extends ObjectManagerDecorator {
     }
     
     /**
-     * Create ACL for an object
+     * Create ACL for object(s)
      * 
-     * @param object $object
+     * @param object $objects
      * @param array $acl
      */
-    public function createACL($object, array $acl) {
-        $objectIdentity = ObjectIdentity::fromDomainObject($object);
-        $aclProvider = $this->aclProvider;
-        $acl = $aclProvider->createAcl($objectIdentity);
-        foreach ($acl as $identity => $permissions) {
-            foreach ($permissions as $permission) {
+    public function createACL($objects, array $acl) {
+        if ($objects instanceof Collection) {
+            foreach ($objects as $object) {
+                $this->createACL($object, $acl);
+            }
+        } else {
+            $objectIdentity = ObjectIdentity::fromDomainObject($objects);
+            $aclProvider = $this->aclProvider;
+            $acl = $aclProvider->createAcl($objectIdentity);
+            foreach ($acl as $identity => $permission) {
+                if ($identity instanceof UserInterface) {
+                    $identity = UserSecurityIdentity::fromAccount($identity);
+                } elseif (is_string($identity)) {
+                    $identity = new RoleSecurityIdentity($identity);
+                }
                 $acl->insertObjectAce($identity, $permission);
             }
+            $aclProvider->updateAcl($acl);
         }
-        $aclProvider->updateAcl($acl);
     }
     
     /**

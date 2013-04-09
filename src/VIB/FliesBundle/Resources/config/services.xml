@@ -7,6 +7,8 @@
     <parameters>
         <parameter key="vibfolks.pdflabel.class">VIB\FliesBundle\Utils\PDFLabel</parameter>
         <parameter key="vibfolks.twig.printing_extension.class">VIB\FliesBundle\Twig\PrintingExtension</parameter>
+        <parameter key="vib.doctrine.vial_manager.class">VIB\FliesBundle\Doctrine\VialManager</parameter>
+        <parameter key="vib.doctrine.crossvial_manager.class">VIB\FliesBundle\Doctrine\CrossVialManager</parameter>
         <parameter key="print_host">localhost</parameter>
         <parameter key="print_queue"></parameter>
     </parameters>
@@ -21,6 +23,16 @@
             <tag name="twig.extension" />
             <argument>%print_host%</argument>
             <argument>%print_queue%</argument>
+        </service>
+        <service id="vib.doctrine.vial_manager" class="%vib.doctrine.vial_manager.class%">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="user_provider"/>
+            <argument type="service" id="security.acl.provider"/>
+        </service>
+        <service id="vib.doctrine.crossvial_manager" class="%vib.doctrine.crossvial_manager.class%">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="user_provider"/>
+            <argument type="service" id="security.acl.provider"/>
         </service>
     </services>
 </container>

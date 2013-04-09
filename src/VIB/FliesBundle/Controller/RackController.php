@@ -48,6 +48,7 @@ class RackController extends CRUDController
     public function __construct()
     {
         $this->entityClass = 'VIB\FliesBundle\Entity\Rack';
+        $this->entityName  = 'rack';
     }
     
     /**
@@ -55,13 +56,6 @@ class RackController extends CRUDController
      */
     protected function getEditForm() {
         return new RackType();
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    protected function getEntityName() {
-        return "rack";
     }
     
     /**
@@ -110,38 +104,28 @@ class RackController extends CRUDController
      * @return array|\Symfony\Component\HttpFoundation\Response
      */
     public function createAction() {
-        
+        $om = $this->getObjectManager();
         $rack = new Rack();
         $data = array('rack' => $rack, 'rows' => 10, 'columns' => 10);
-        
-        $em = $this->getDoctrine()->getManager();
         $form = $this->createForm($this->getCreateForm(), $data);
         $request = $this->getRequest();
         
         if ($request->getMethod() == 'POST') {
-            
             $form->bindRequest($request);
-            
             if ($form->isValid()) {
-                
                 $data = $form->getData();
                 $rack = $data['rack'];
                 $rows = $data['rows'];
                 $columns = $data['columns'];
                 
                 $rack->setGeometry($rows, $columns);
+                $om->persist($rack);
+                $om->flush();
+                $om->createACL($rack,$this->getDefaultACL());
                 
-                $em->persist($rack);
-                $em->flush();
-
-                $this->setACL($rack);
-                
-                $this->get('session')->getFlashBag()
-                     ->add('success', 'Rack ' . $rack . ' was created.');
-                
-                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
-                
-                if ($shouldPrint) {
+                $this->addSessionFlash('success', 'Rack ' . $rack . ' was created.');
+                                
+                if ($this->getSession()->get('autoprint') == 'enabled') {
                     return $this->printLabelAction($rack);
                 } else {
                     $url = $this->generateUrl('vib_flies_rack_show',array('id' => $rack->getId())); 
@@ -163,7 +147,7 @@ class RackController extends CRUDController
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function editAction($id) {
-        $em = $this->getDoctrine()->getManager();
+        $om = $this->getObjectManager();
         $rack = $this->getEntity($id);
         $securityContext = $this->get('security.context');
         
@@ -172,28 +156,22 @@ class RackController extends CRUDController
         }        
         
         $data = array('rack' => $rack, 'rows' => $rack->getRows(), 'columns' => $rack->getColumns());
-        
         $form = $this->createForm($this->getCreateForm(), $data);
         $request = $this->getRequest();
         
         if ($request->getMethod() == 'POST') {
-            
             $form->bindRequest($request);
-            
             if ($form->isValid()) {
-                
                 $data = $form->getData();
                 $rack = $data['rack'];
                 $rows = $data['rows'];
                 $columns = $data['columns'];
                 
                 $rack->setGeometry($rows, $columns);
+                $om->persist($rack);
+                $om->flush();
                 
-                $em->persist($rack);
-                $em->flush();
-                
-                $this->get('session')->getFlashBag()
-                     ->add('success', 'Changes to rack ' . $rack . ' were saved.');
+                $this->addSessionFlash('success', 'Changes to rack ' . $rack . ' were saved.');
                 
                 $url = $this->generateUrl('vib_flies_rack_show',array('id' => $rack->getId())); 
                 return $this->redirect($url);
@@ -257,11 +235,9 @@ class RackController extends CRUDController
         $pdf = $this->prepareLabel($rack);
         $jobStatus = $pdf->printPDF();
         if ($jobStatus == 'successfull-ok') {
-            $this->get('session')->getFlashBag()
-                 ->add('success', 'Label was sent to the printer. ');
+            $this->addSessionFlash('success', 'Label was sent to the printer. ');
         } else {
-            $this->get('session')->getFlashBag()
-                 ->add('error', 'There was an error printing labels. The print server said: ' . $jobStatus);
+            $this->addSessionFlash('error', 'There was an error printing labels. The print server said: ' . $jobStatus);
         }
         
         $url = $this->generateUrl('vib_flies_rack_show',array('id' => $rack->getId()));
@@ -275,16 +251,11 @@ class RackController extends CRUDController
      * @param \VIB\FliesBundle\Entity\Incubator $incubator
      */  
     public function incubateRack(Rack $rack, Incubator $incubator) {
-        
-        $em = $this->getDoctrine()->getManager();
-        
+        $om = $this->getObjectManager();
         $rack->setIncubator($incubator);
-        $em->persist($rack);
-        
-        $em->flush();
-        
-        $this->get('session')->getFlashBag()
-             ->add('success', 'Rack ' . $rack . ' was put in ' . $incubator . '.');
+        $om->persist($rack);
+        $om->flush();
+        $this->addSessionFlash('success', 'Rack ' . $rack . ' was put in ' . $incubator . '.');
     }
     
 }

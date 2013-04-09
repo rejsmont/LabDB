@@ -42,7 +42,8 @@ class StockVialController extends VialController {
      */
     public function __construct()
     {
-        $this->entityClass  = 'VIB\FliesBundle\Entity\StockVial';
+        $this->entityClass = 'VIB\FliesBundle\Entity\StockVial';
+        $this->entityName  = 'stock';
     }
     
     /**
@@ -62,7 +63,7 @@ class StockVialController extends VialController {
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function createAction($id = null) {
-        $em = $this->getDoctrine()->getManager();
+        $om = $this->getObjectManager();
         $class = $this->getEntityClass();
         $vial = new $class;
         if (null !== $id) {
@@ -71,34 +72,14 @@ class StockVialController extends VialController {
         }
         $form = $this->createForm($this->getCreateForm(), $vial);
         $request = $this->getRequest();
-        
         if ($request->getMethod() == 'POST') {
-            
             $form->bindRequest($request);
-            
             if ($form->isValid()) {
-                
-                $em->persist($vial);
-                $em->flush();
-                
-                $this->setACL($vial);
-                
-                $this->get('session')->getFlashBag()
-                     ->add('success', 'Vial ' . $vial . ' was created.');
-                
-                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
-                
-                if ($shouldPrint) {
-                    $pdf = $this->get('vibfolks.pdflabel');
-                    $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
-                                      $vial->getLabelText(), $this->getOwner($vial));
-                    if ($this->submitPrintJob($pdf)) {
-                        $vial->setLabelPrinted(true);
-                        $em->persist($vial);
-                        $em->flush();
-                    }
-                }
-                
+                $om->persist($vial);
+                $om->flush();
+                $om->createACL($vial,$this->getDefaultACL());
+                $this->addSessionFlash('success', 'Vial ' . $vial . ' was created.');
+                $this->autoPrint($vial);
                 $url = $this->generateUrl('vib_flies_stockvial_show',array('id' => $vial->getId()));
                 return $this->redirect($url);
             }
@@ -115,20 +96,16 @@ class StockVialController extends VialController {
      */
     protected function getStockEntity($id) {
         $class = 'VIB\FliesBundle\Entity\Stock';        
-        
         if ($id instanceof $class) {
             return $id;
         }
-        
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository($class)->find($id);
-        
+        $om = $this->$this->get('vib.doctrine.manager');
+        $entity = $om->getRepository($class)->find($id);
         if ($entity instanceof $class) {
             return $entity;
         } else {
             throw new NotFoundHttpException();
         }
-        
         return null;
     }
 }

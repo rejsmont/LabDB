@@ -26,7 +26,7 @@ use \VIB\FliesBundle\Entity\Vial;
 use \VIB\FliesBundle\Entity\Incubator;
 
 /**
- * VialManager is a class used to manage common operations on Vials
+ * VialManager is a class used to manage common operations on vials
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
@@ -36,14 +36,15 @@ class VialManager extends ObjectManager {
      * Flip vial(s)
      * 
      * @param \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
+     * @param boolean $setSource
      * @param boolean $trashSource
      * @return \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection
      * @throws \ErrorException
      */
-    public function flip($vials, $trashSource = false) {
+    public function flip($vials, $setSource = true, $trashSource = false) {
         if (($vial = $vials) instanceof Vial) {
             $vialClass = get_class($vial);
-            $newVial = new $vialClass($vial,true);
+            $newVial = new $vialClass($vial,$setSource);
             if ($trashSource) {
                 $newVial->setPosition($vial->getPosition());
                 $vial->setTrashed(true);
@@ -159,13 +160,14 @@ class VialManager extends ObjectManager {
      * 
      * @param \VIB\FliesBundle\Doctrine\Vial $vial
      * @param integer $count
+     * @param boolean $setSource
      * @param string $size
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function expand(Vial $vial, $count = 1, $size = null) {
+    public function expand(Vial $vial, $count = 1, $setSource = true, $size = null) {
         $newVials = new ArrayCollection();
         for($i = 0; $i < $count; $i++) {
-            $newVial = $this->flip($vial);
+            $newVial = $this->flip($vial, $setSource);
             if (null !== $size) {
                 $newVial->setSize($size);
             }

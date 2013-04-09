@@ -44,6 +44,7 @@ class IncubatorController extends CRUDController
     public function __construct()
     {
         $this->entityClass = 'VIB\FliesBundle\Entity\Incubator';
+        $this->entityName  = 'incubator';
     }
     
     /**
@@ -51,13 +52,6 @@ class IncubatorController extends CRUDController
      */
     protected function getEditForm() {
         return new IncubatorType();
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    protected function getEntityName() {
-        return "incubator";
     }
     
     /**

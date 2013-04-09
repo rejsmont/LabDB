@@ -26,23 +26,69 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class AbstractController extends Controller {
-    
-    /**
-     * Get ACL provider
-     * 
-     * @return type
-     */
-    public function getAclProvider() {
-        return $this->get('security.acl.provider');
-    }
 
     /**
      * Get security context
      * 
-     * @return type
+     * @return \Symfony\Component\Security\Core\SecurityContextInterface
      */
-    public function getSecurityContext() {
+    protected function getSecurityContext() {
         return $this->get('security.context');
+    }
+    
+    /**
+     * Get object manager
+     * 
+     * @return \VIB\BaseBundle\Doctrine\ObjectManager
+     */
+    protected function getObjectManager() {
+        return $this->get('vib.doctrine.manager');
+    }
+    
+    /**
+     * Get session
+     * 
+     * @return \Symfony\Component\HttpFoundation\Session\SessionInterface
+     */
+    protected function getSession() {
+        return $this->get('session');
+    }
+    
+    /**
+     * Get paginator
+     * 
+     * @return \Knp\Component\Pager\Paginator
+     */
+    protected function getPaginator() {
+        return $this->get('knp_paginator');
+    }
+    
+    /**
+     * Get current page
+     * 
+     * @return integer
+     */
+    protected function getCurrentPage() {
+        return $this->getRequest()->query->get('page', 1);
+    }
+    
+    /**
+     * Get ACL filter
+     * 
+     * @return \VIB\SecurityBundle\Bridge\Doctrine\AclHelper
+     */
+    protected function getAclFilter() {
+        $this->get('vib.security.helper.acl');
+    }
+    
+    /**
+     * Adds a flash message for type.
+     *
+     * @param string $type
+     * @param string $message
+     */
+    protected function addSessionFlash($type, $message) {
+        $this->getSession()->getFlashBag()->add($type, $message);
     }
 }
 ?>

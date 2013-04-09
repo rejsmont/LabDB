@@ -49,6 +49,16 @@ class CrossVialController extends VialController
      */ 
     public function __construct() {
         $this->entityClass = 'VIB\FliesBundle\Entity\CrossVial';
+        $this->entityName = 'cross';
+    }
+    
+    /**
+     * Get object manager
+     * 
+     * @return \VIB\FliesBundle\Doctrine\CrossVialManager
+     */
+    protected function getObjectManager() {
+        return $this->get('vib.doctrine.crossvial_manager');
     }
     
     /**
@@ -64,13 +74,6 @@ class CrossVialController extends VialController
     protected function getEditForm() {
         return new CrossVialType();
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getEntityName() {
-        return "cross";
-    }
     
     /**
      * Create cross
@@ -81,73 +84,38 @@ class CrossVialController extends VialController
      * @return array|\Symfony\Component\HttpFoundation\Response
      */
     public function createAction() {
-        
         $cross = new CrossVial();
         $data = array('cross' => $cross, 'number' => 1);
         
-        $em = $this->getDoctrine()->getManager();
+        $om = $this->getObjectManager();
         $form = $this->createForm($this->getCreateForm(), $data);
         $request = $this->getRequest();
         
         if ($request->getMethod() == 'POST') {
-            
             $form->bindRequest($request);
-            
             if ($form->isValid()) {
-                
                 $data = $form->getData();
                 $cross = $data['cross'];
                 $number = $data['number'];
                 
-                $crosses = new ArrayCollection();
+                $crosses = $om->expand($cross, $number, false);
+                $om->flush();
+                $om->createACL($crosses,$this->getDefaultACL());
                 
-                for ($i = 0; $i < $number; $i++) {
-                    $newcross = new CrossVial($cross);
-                    $em->persist($newcross);
-                    $crosses->add($newcross);
-                }
-                $em->flush();
-                
-                foreach($crosses as $newcross) {
-                    $this->setACL($newcross);
-                }
-                
-                $count = count($crosses);
-        
-                if ($count == 1) {
-                    $this->get('session')->getFlashBag()
-                         ->add('success', 'Cross ' . $cross->getName() . ' was created.');
+                if (($count = count($crosses)) == 1) {
+                    $this->addSessionFlash('success', 'Cross ' . $cross->getName() . ' was created.');
                 } else {
-                    $this->get('session')->getFlashBag()
-                         ->add('success', $count . ' crosses ' . $cross->getName() . ' were created.');
+                    $this->addSessionFlash('success', $count . ' crosses ' . $cross->getName() . ' were created.');
                 }
                 
-                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
-                
-                if ($shouldPrint) {
-                    $pdf = $this->get('vibfolks.pdflabel');
-                    
-                    foreach($crosses as $cross) {
-                        $pdf->addFlyLabel($cross->getId(), $cross->getSetupDate(),
-                                          $cross->getLabelText(), $this->getOwner($cross));
-                    }
-                    if ($this->submitPrintJob($pdf, count($crosses))) {
-                        foreach($crosses as $cross) {
-                            $cross->setLabelPrinted(true);
-                            $em->persist($cross);
-                        }
-                        $em->flush();
-                    }
-                }
+                $this->autoPrint($crosses);
                 
                 $url = $number == 1 ? 
-                    $this->generateUrl('vib_flies_crossvial_show',array('id' => $cross->getId())) : 
+                    $this->generateUrl('vib_flies_crossvial_show',array('id' => $crosses[0]->getId())) : 
                     $this->generateUrl('vib_flies_crossvial_list');
-
                 return $this->redirect($url);
             }
         }
-        
         return array('form' => $form->createView());
     }
     
@@ -265,26 +233,13 @@ class CrossVialController extends VialController
      * @param \Doctrine\Common\Collections\Collection $vials
      */  
     public function markSterile(Collection $vials) {
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        foreach ($vials as $vial) {
-            if ($vial instanceof CrossVial) {
-                $vial->setSterile(true);
-                $em->persist($vial);
-            }
-        }
-        
-        $em->flush();
-        
-        $count = count($vials);
-        
-        if ($count == 1) {
-            $this->get('session')->getFlashBag()
-                 ->add('success', '1 cross was marked as sterile and trashed.');
+        $om = $this->getObjectManager();
+        $om->markSterile($vials);
+        $om->flush();
+        if (($count = count($vials)) == 1) {
+            $this->addSessionFlash('success', '1 cross was marked as sterile and trashed.');
         } else {
-            $this->get('session')->getFlashBag()
-                 ->add('success', $count . ' crosses were marked as sterile and trashed.');
+            $this->addSessionFlash('success', $count . ' crosses were marked as sterile and trashed.');
         }
     }
     
@@ -294,26 +249,13 @@ class CrossVialController extends VialController
      * @param \Doctrine\Common\Collections\Collection $vials
      */  
     public function markSuccessful(Collection $vials) {
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        foreach ($vials as $vial) {
-            if ($vial instanceof CrossVial) {
-                $vial->setSuccessful(true);
-                $em->persist($vial);
-            }
-        }
-
-        $em->flush();
-        
-        $count = count($vials);
-        
-        if ($count == 1) {
-            $this->get('session')->getFlashBag()
-                 ->add('success', '1 cross was marked as successful.');
+        $om = $this->getObjectManager();
+        $om->markSuccessful($vials);
+        $om->flush();
+        if (($count = count($vials)) == 1) {
+            $this->addSessionFlash('success', '1 cross was marked as successful.');
         } else {
-            $this->get('session')->getFlashBag()
-                 ->add('success', $count . ' crosses were marked as successful.');
+            $this->addSessionFlash('success', $count . ' crosses were marked as successful.');
         }
     }
     
@@ -323,26 +265,13 @@ class CrossVialController extends VialController
      * @param \Doctrine\Common\Collections\Collection $vials
      */  
     public function markFailed(Collection $vials) {
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        foreach ($vials as $vial) {
-            if ($vial instanceof CrossVial) {
-                $vial->setSuccessful(false);
-                $em->persist($vial);
-            }
-        }
-
-        $em->flush();
-        
-        $count = count($vials);
-        
-        if ($count == 1) {
-            $this->get('session')->getFlashBag()
-                 ->add('success', '1 cross was marked as failed.');
+        $om = $this->getObjectManager();
+        $om->markFailed($vials);
+        $om->flush();
+        if (($count = count($vials)) == 1) {
+            $this->addSessionFlash('success', '1 cross was marked as failed.');
         } else {
-            $this->get('session')->getFlashBag()
-                 ->add('success', $count . ' crosses were marked as failed.');
+            $this->addSessionFlash('success', $count . ' crosses were marked as failed.');
         }
     }
 }

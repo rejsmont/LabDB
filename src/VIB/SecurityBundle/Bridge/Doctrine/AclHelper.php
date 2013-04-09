@@ -24,7 +24,7 @@ class AclHelper
      */
     function __construct($doctrine, $securityContext, $options = array())
     {
-        $this->em = $doctrine->getEntityManager();
+        $this->em = $doctrine->getManager();
         $this->securityContext = $securityContext;
         $this->aclConnection = $doctrine->getConnection('default');
         $this->aclWalker = $options[0];

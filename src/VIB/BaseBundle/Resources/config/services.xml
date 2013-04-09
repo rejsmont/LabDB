@@ -7,6 +7,7 @@
     <parameters>
         <parameter key="vib.base.converter.doctrine.class">VIB\BaseBundle\Request\ParamConverter\DoctrineParamConverter</parameter>
         <parameter key="vib.base.utils.inflector.class">VIB\BaseBundle\Utils\Inflector</parameter>
+        <parameter key="vib.doctrine.manager.class">VIB\BaseBundle\Doctrine\ObjectManager</parameter>
     </parameters>
     
     <services>
@@ -15,5 +16,10 @@
             <argument type="service" id="doctrine" on-invalid="ignore" />
         </service>
         <service id="vib.base.utils.inflector" class="%vib.base.utils.inflector.class%" />
+        <service id="vib.doctrine.manager" class="%vib.doctrine.manager.class%">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="user_provider"/>
+            <argument type="service" id="security.acl.provider"/>
+        </service>
     </services>
 </container>

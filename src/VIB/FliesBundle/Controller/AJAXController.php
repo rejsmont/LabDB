@@ -21,14 +21,11 @@ namespace VIB\FliesBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
-use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
+use VIB\BaseBundle\Controller\AbstractController;
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\StockVial;
 use VIB\FliesBundle\Entity\CrossVial;
@@ -43,7 +40,7 @@ use VIB\FliesBundle\Entity\RackPosition;
  * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class AJAXController extends Controller {
+class AJAXController extends AbstractController {
     
     /**
      * Handle vial AJAX request
@@ -60,9 +57,9 @@ class AJAXController extends Controller {
         $format = $request->query->get('format');
         $order = $request->query->get('order',null);
         
-        $em = $this->get('doctrine.orm.entity_manager');
-        $securityContext = $this->get('security.context');
-        $vial = $em->find('VIBFliesBundle:Vial', $id);
+        $om = $this->getObjectManager();
+        $securityContext = $this->getSecurityContext();
+        $vial = $om->find('VIBFliesBundle:Vial', $id);
         $type = $filter !== null ? ' ' . $filter : '';
         
         if((! $vial instanceof Vial)||(($filter !== null)&&($vial->getType() != $filter))) {
@@ -95,10 +92,10 @@ class AJAXController extends Controller {
         $rackID = $request->query->get('rackID');
         $order = $request->query->get('order',null);
         
-        $em = $this->get('doctrine.orm.entity_manager');
-        $securityContext = $this->get('security.context');
-        $vial = $em->find('VIBFliesBundle:Vial', $vialID);
-        $position = $em->find('VIBFliesBundle:RackPosition', $positionID);
+        $om = $this->getObjectManager();
+        $securityContext = $this->getSecurityContext();
+        $vial = $om->find('VIBFliesBundle:Vial', $vialID);
+        $position = $om->find('VIBFliesBundle:RackPosition', $positionID);
         
         if(($vialID != null)&&(! $vial instanceof Vial)) {
             return new Response('The vial ' . sprintf("%06d",$vialID) . ' does not exist', 404);
@@ -113,8 +110,8 @@ class AJAXController extends Controller {
         }
         
         $vial->setPosition($position);
-        $em->persist($vial);
-        $em->flush();
+        $om->persist($vial);
+        $om->flush();
         
         return array('contents' => $vial, 'rackID' => $rackID, 'order' => $order);
     }
@@ -132,15 +129,15 @@ class AJAXController extends Controller {
         $vialID = $request->query->get('vialID');
         $rackID = $request->query->get('rackID');
         
-        $em = $this->get('doctrine.orm.entity_manager');
-        $securityContext = $this->get('security.context');
-        $vial = (null !== $vialID) ? $em->find('VIBFliesBundle:Vial', $vialID) : null;
-        $rack = (null !== $rackID) ? $em->find('VIBFliesBundle:Rack', $rackID) : null;
+        $om = $this->getObjectManager();
+        $securityContext = $this->getSecurityContext();
+        $vial = (null !== $vialID) ? $om->find('VIBFliesBundle:Vial', $vialID) : null;
+        $rack = (null !== $rackID) ? $om->find('VIBFliesBundle:Rack', $rackID) : null;
         
         if(($vialID != null)&&(! $vial instanceof Vial)) {
             return new Response('The vial ' . sprintf("%06d",$vialID) . ' does not exist', 404);
         } elseif (!($securityContext->isGranted('ROLE_ADMIN') || $securityContext->isGranted('VIEW', $vial))) {
-            return new Response('Access to' . $type . ' vial ' . sprintf("%06d",$id) . ' denied', 401);
+            return new Response('Access to vial ' . sprintf("%06d",$vialID) . ' denied', 401);
         }
         
         if(($rackID != null)&&(! $rack instanceof Rack)) {
@@ -151,13 +148,13 @@ class AJAXController extends Controller {
         
         if ($vialID !== null) { 
             $vial->setPosition(null);
-            $em->persist($vial);
-            $em->flush();
+            $om->persist($vial);
+            $om->flush();
             return new Response('The vial'. sprintf("%06d",$rackID) . ' was removed from rack R'. sprintf("%06d",$rackID), 200);
         } else {
             $rack->clearVials();
-            $em->persist($rack);
-            $em->flush();
+            $om->persist($rack);
+            $om->flush();
             return new Response('The rack R'. sprintf("%06d",$rackID) . ' was cleared', 200);
         }
     }
@@ -173,15 +170,10 @@ class AJAXController extends Controller {
     public function stockSearchAction(Request $request) {
         
         $query = $request->query->get('query');
-        $qb = $this->getDoctrine()
-                   ->getRepository('VIBFliesBundle:Stock')
-                   ->search($query);
-        $found = $this->get('vib.security.helper.acl')
-                      ->apply($qb)
-                      ->getResult();
+        $qb = $this->getObjectManager()->getRepository('VIBFliesBundle:Stock')->search($query);
+        $found = $this->getAclFilter()->apply($qb)->getResult();
         
         $stockNames = array();
-        
         foreach ($found as $stock) {
             $stockNames[] = $stock->getName();
         }
@@ -205,18 +197,15 @@ class AJAXController extends Controller {
         $type = $request->query->get('type');
         $id = $request->query->get('id');
         $rack = $request->query->get('rack');
+        $om = $this->getObjectManager();
         
         switch($type) {
             case 'vial':
-                $entity =  $this->getDoctrine()
-                                ->getRepository('VIBFliesBundle:Vial')
-                                ->find($id);
+                $entity =  $om->getRepository('VIBFliesBundle:Vial')->find($id);
                 $etype = "Vial";
                 break;
             case 'stock':
-                $entity =  $this->getDoctrine()
-                                ->getRepository('VIBFliesBundle:Stock')
-                                ->find($id);
+                $entity =  $om->getRepository('VIBFliesBundle:Stock')->find($id);
                 $etype = "Stock";
                 break;
             default:
@@ -224,7 +213,6 @@ class AJAXController extends Controller {
         }
         
         $status = '<div class="status">';
-        
         if ($entity instanceof Vial) {
             if($entity->isTrashed()) {
                 $status .= '<span title="trashed" class="label status label-inverse"><i class="icon-trash"></i></span>';
@@ -270,11 +258,8 @@ class AJAXController extends Controller {
         } else {
              return new Response('Not found', 404);
         }
-        
         $status .= '</div>';
-        
-        $owner = $this->getOwner($entity);
-
+        $owner = $om->getOwner($entity);
         $html = $this->render('VIBFliesBundle:AJAX:popover.html.twig',
                 array('type' => $type, 'entity' => $entity, 'owner' => $owner, 'rack' => $rack))->getContent();
         $title = "<b>" . $etype . " " . $entity . "</b>" . $status;
@@ -283,27 +268,6 @@ class AJAXController extends Controller {
         $response->setData(array('title' => $title, 'html' => $html));
         
         return $response;
-    }
-    
-    /**
-     * Get owner of entity
-     * 
-     * @param object $entity
-     */
-    protected function getOwner($entity) {
-        $objectIdentity = ObjectIdentity::fromDomainObject($entity);
-        $aclProvider = $this->get('security.acl.provider');
-        $acl = $aclProvider->findAcl($objectIdentity);
-        foreach($acl->getObjectAces() as $ace) {
-            if ($ace->getMask() == MaskBuilder::MASK_OWNER) {
-                $securityIdentity = $ace->getSecurityIdentity();
-                if ($securityIdentity instanceof UserSecurityIdentity) {
-                    $userManager = $this->get('fos_user.user_manager');
-                    return $userManager->findUserByUsername($securityIdentity->getUsername());
-                }
-            }
-        }
-        return null;
     }
 }
 

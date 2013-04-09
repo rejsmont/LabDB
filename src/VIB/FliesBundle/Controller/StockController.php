@@ -54,6 +54,7 @@ class StockController extends CRUDController
     public function __construct()
     {
         $this->entityClass = 'VIB\FliesBundle\Entity\Stock';
+        $this->entityName  = 'stock';
     }
     
     /**
@@ -78,13 +79,6 @@ class StockController extends CRUDController
     }
     
     /**
-     * {@inheritdoc}
-     */
-    protected function getEntityName() {
-        return "stock";
-    }
-    
-    /**
      * Show stock
      * 
      * @Route("/show/{id}")
@@ -97,8 +91,8 @@ class StockController extends CRUDController
     public function showAction($id) {
         $stock = $this->getEntity($id);
         $response = parent::showAction($stock);
-        $em = $this->getDoctrine()->getManager();
-        $query =  $em->getRepository('VIB\FliesBundle\Entity\StockVial')->createQueryBuilder('b');
+        $om = $this->getObjectManager();
+        $query =  $om->getRepository('VIB\FliesBundle\Entity\StockVial')->createQueryBuilder('b');
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
         $query->where('b.stock = :stock')
@@ -143,7 +137,8 @@ class StockController extends CRUDController
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function createAction() {
-        $em = $this->getDoctrine()->getManager();
+        $om = $this->getObjectManager();
+        $vm = $this->get('vib.doctrine.vial_manager');
         $class = $this->getEntityClass();
         $stock = new $class();
         $existingStock = null;
@@ -152,46 +147,36 @@ class StockController extends CRUDController
         $request = $this->getRequest();
         
         if ($request->getMethod() == 'POST') {
-            
             $form->bindRequest($request);
-            
             if ($form->isValid()) {
-                
                 $data = $form->getData();
                 $stock = $data['stock'];
                 $number = $data['number'];
                 $size = $data['size'];
-                
-                $vials = new ArrayCollection();
                 
                 for ($i = 0; $i < $number - 1; $i++) {
                     $vial = new StockVial();
                     $stock->addVial($vial);
                     $vial->setSize($size);
                 }
+                $om->persist($stock);
+                $om->flush();
+                $om->createACL($stock,$this->getDefaultACL());
                 
-                $em->persist($stock);
-                $em->flush();
+                $vials = $stock->getVials();
+                $vm->createACL($vials,$this->getDefaultACL());
                 
-                $this->setACL($stock);
-                
-                $this->get('session')->getFlashBag()
-                     ->add('success', 'Stock ' . $stock . ' was created.');
-                
-                $shouldPrint = $this->get('request')->getSession()->get('autoprint') == 'enabled';
-                
-                if ($shouldPrint) {
+                $this->addSessionFlash('success', 'Stock ' . $stock . ' was created.');
+                                
+                if ($this->getSession()->get('autoprint') == 'enabled') {
                     $pdf = $this->get('vibfolks.pdflabel');
-                    foreach ($stock->getVials() as $vial) {
+                    foreach ($vials as $vial) {
                         $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
-                                          $vial->getLabelText(), $this->getOwner($vial));
+                                          $vial->getLabelText(), $vm->getOwner($vial));
                     }
                     if ($this->submitPrintJob($pdf)) {
-                        foreach ($vials as $vial) {
-                            $vial->setLabelPrinted(true);
-                            $em->persist($vial);
-                        }
-                        $em->flush();
+                        $vm->markPrinted($vials);
+                        $vm->flush();
                     }
                 }
                 
@@ -199,8 +184,8 @@ class StockController extends CRUDController
                 $url = $this->generateUrl($route,array('id' => $stock->getId()));
                 return $this->redirect($url);
             } elseif ($stock instanceof Stock) {
-                $existingStock = $em->getRepository($this->getEntityClass())
-                        ->findOneBy(array('name' => $stock->getName()));
+                $existingStock = $om->getRepository($this->getEntityClass())
+                                    ->findOneBy(array('name' => $stock->getName()));
             }
         }
         return array('form' => $form->createView(), 'existingStock' => $existingStock);
@@ -213,7 +198,7 @@ class StockController extends CRUDController
      * @param integer $count
      * @return boolean
      */
-    public function submitPrintJob(PDFLabel $pdf, $count = 1) {
+    protected function submitPrintJob(PDFLabel $pdf, $count = 1) {
         $jobStatus = $pdf->printPDF();
         if ($jobStatus == 'successfull-ok') {
             if ($count == 1) {
@@ -228,22 +213,6 @@ class StockController extends CRUDController
             $this->get('session')->getFlashBag()
                  ->add('error', 'There was an error printing labels. The print server said: ' . $jobStatus);
             return false;
-        }
-    }
-    
-    /**
-     * Cascade ACL setting for stock vials
-     * 
-     * @param Object $entity
-     * @param \Symfony\Component\Security\Core\User\UserInterface|null $user
-     * @param integer $mask
-     */
-    protected function setACL($entity, UserInterface $user = null, $mask = MaskBuilder::MASK_OWNER) {
-        
-        parent::setACL($entity, $user, $mask);
-        
-        foreach ($entity->getVials() as $vial) {
-            parent::setACL($vial, $user, $mask);
         }
     }
 }

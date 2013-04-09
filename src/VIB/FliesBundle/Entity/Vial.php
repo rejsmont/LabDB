@@ -597,14 +597,4 @@ class Vial extends Entity {
     public function getType() {
         return '';
     }
-    
-    /**
-     * Flip vial
-     * 
-     * @deprecated since version v0.4.0
-     * @return \VIB\FliesBundle\Entity\Vial 
-     */
-    public final function flip() {
-        return new static($this,true);
-    }
 }
