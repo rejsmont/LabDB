@@ -21,7 +21,8 @@ namespace VIB\FormsBundle\Form\DataTransformer;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Symfony\Component\Form\Util\PropertyPath;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -83,8 +84,9 @@ class EntityToTextTransformer implements DataTransformerInterface
             throw new UnexpectedTypeException($entity, 'object');
         }
  
-        if ($this->propertyPath) {
-            $value = (string)($this->propertyPath->getValue($entity));
+        if (null !== $this->propertyPath) {
+            $propertyAccessor = PropertyAccess::getPropertyAccessor();
+            $value = (string)($propertyAccessor->getValue($entity, $this->propertyPath));
         } else {
             $value = (string)($entity);
         }
