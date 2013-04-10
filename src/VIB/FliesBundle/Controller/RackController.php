@@ -24,8 +24,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use VIB\BaseBundle\Controller\CRUDController;
 
-use VIB\FliesBundle\Label\PDFLabel;
-
 use VIB\FliesBundle\Form\RackType;
 use VIB\FliesBundle\Form\SelectType;
 

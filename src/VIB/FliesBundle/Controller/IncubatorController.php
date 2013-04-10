@@ -26,7 +26,6 @@ use VIB\BaseBundle\Controller\CRUDController;
 
 use VIB\FliesBundle\Form\IncubatorType;
 
-use VIB\FliesBundle\Entity\Incubator;
 
 /**
  * IncubatorController class
