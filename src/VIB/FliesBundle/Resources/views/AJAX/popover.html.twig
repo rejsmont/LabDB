@@ -6,11 +6,9 @@
 <div class="popover-foot">
   {{ s.user(owner) }}
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_crossvial_show',{'id': entity.id }) }}">Show</a>
-  <a class="btn btn-mini" href="{{ path('vib_flies_crossvial_stats', { 'id': entity.id }) }}">Stats</a>
-  {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
+  {% if (is_granted('ROLE_ADMIN') or is_granted('EDIT',entity)) and rack == 0 %}
     <a class="btn btn-mini" href="{{ path('vib_flies_crossvial_edit',{'id': entity.id }) }}">Edit</a>
-  {% endif %}
-  {% if rack > 0 %}
+  {% elseif rack > 0 %}
     <a class="btn btn-mini btn-danger" href="#"
        onclick="removeVial(this,{{ entity.id }},{{ rack }})"
        data-link="{{ path('vib_flies_ajax_rackvialremove') }}">Remove</a>
@@ -28,10 +26,9 @@
 <div class="popover-foot">
   {{ s.user(owner) }}
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_stockvial_show',{'id': entity.id }) }}">Show</a>
-  {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
+  {% if (is_granted('ROLE_ADMIN') or is_granted('EDIT',entity)) and rack == 0 %}
     <a class="btn btn-mini" href="{{ path('vib_flies_stockvial_edit',{'id': entity.id }) }}">Edit</a>
-  {% endif %}
-  {% if rack > 0 %}
+  {% elseif rack > 0 %}
     <a class="btn btn-mini btn-danger" href="#"
        onclick="removeVial(this,{{ entity.id }},{{ rack }})"
        data-link="{{ path('vib_flies_ajax_rackvialremove') }}">Remove</a>
@@ -42,10 +39,9 @@
 <div class="popover-foot">
 {{ s.user(owner) }}
   <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_vial_show',{'id': entity.id }) }}">Show</a>
-  {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
+  {% if (is_granted('ROLE_ADMIN') or is_granted('EDIT',entity)) and rack == 0 %}
     <a class="btn btn-mini" href="{{ path('vib_flies_vial_edit',{'id': entity.id }) }}">Edit</a>
-  {% endif %}
-  {% if rack > 0 %}
+  {% elseif rack > 0 %}
     <a class="btn btn-mini btn-danger" href="#"
        onclick="removeVial(this,{{ entity.id }},{{ rack }})"
        data-link="{{ path('vib_flies_ajax_rackvialremove') }}">Remove</a>
