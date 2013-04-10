@@ -29,7 +29,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\BaseBundle\Controller\CRUDController;
 
-use VIB\FliesBundle\Utils\PDFLabel;
+use VIB\FliesBundle\Label\PDFLabel;
 
 use VIB\FliesBundle\Form\StockType;
 use VIB\FliesBundle\Form\StockNewType;
@@ -170,10 +170,7 @@ class StockController extends CRUDController
                                 
                 if ($this->getSession()->get('autoprint') == 'enabled') {
                     $pdf = $this->get('vibfolks.pdflabel');
-                    foreach ($vials as $vial) {
-                        $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
-                                          $vial->getLabelText(), $vm->getOwner($vial));
-                    }
+                    $pdf->addLabel($vials);
                     if ($this->submitPrintJob($pdf)) {
                         $vm->markPrinted($vials);
                         $vm->flush();

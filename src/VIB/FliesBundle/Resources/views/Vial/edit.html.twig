@@ -2,8 +2,8 @@
 {% use "VIBBaseBundle:Form:form.html.twig" %}
 {% import "VIBBaseBundle:Macros:form.html.twig" as f %}
 
-{% block modal_header %}Edit vial {{ form.get('value') }}{% endblock modal_header %}
+{% block modal_header %}Edit vial {{ form.vars.value }}{% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.get('value'),'vib_flies_vial') }}
+  {{ f.buttons(form.vars.value,'vib_flies_vial') }}
 {% endblock modal_footer %}

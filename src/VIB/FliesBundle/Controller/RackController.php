@@ -24,7 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use VIB\BaseBundle\Controller\CRUDController;
 
-use VIB\FliesBundle\Utils\PDFLabel;
+use VIB\FliesBundle\Label\PDFLabel;
 
 use VIB\FliesBundle\Form\RackType;
 use VIB\FliesBundle\Form\SelectType;
@@ -204,7 +204,7 @@ class RackController extends CRUDController
      */    
     public function prepareLabel(Rack $rack) {
         $pdf = $this->get('vibfolks.pdflabel');
-        $pdf->addRackLabel($rack->getId(), $rack->getLabelText());
+        $pdf->addLabel($rack);
         return $pdf;
     }
 
@@ -219,7 +219,7 @@ class RackController extends CRUDController
     public function downloadLabelAction($id) {
         $rack = $this->getEntity($id);        
         $pdf = $this->prepareLabel($rack);
-        return $pdf->output();
+        return $pdf->outputPDF();
     }
     
     /**

@@ -11,7 +11,7 @@
 {% block modal_header %}New stock{% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.get('value').stock,'vib_flies_stock') }}
+  {{ f.buttons(form.vars.value.stock,'vib_flies_stock') }}
 {% endblock modal_footer %}
 
 {% block info_messages %}

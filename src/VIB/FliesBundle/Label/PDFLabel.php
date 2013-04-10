@@ -16,8 +16,10 @@
  * limitations under the License.
  */
 
-namespace VIB\FliesBundle\Utils;
+namespace VIB\FliesBundle\Label;
 
+use VIB\BaseBundle\Doctrine\ObjectManager;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Response;
 use WhiteOctober\TCPDFBundle\Controller\TCPDFController;
 use PHP_IPP\IPP\CupsPrintIPP;
@@ -30,7 +32,12 @@ use PHP_IPP\IPP\CupsPrintIPP;
 class PDFLabel {
     
     /**
-     * @var Tecnick\TCPDF\TCPDF $pdf
+     * @var \VIB\BaseBundle\Doctrine\ObjectManager $om
+     */
+    private $om;
+    
+    /**
+     * @var \Tecnick\TCPDF\TCPDF $pdf
      */
     private $pdf;
     
@@ -51,59 +58,52 @@ class PDFLabel {
      * @param string $printHost
      * @param string $printQueue
      */ 
-    public function __construct(TCPDFController $TCPDF,$printHost,$printQueue) {
+    public function __construct(ObjectManager $om, TCPDFController $TCPDF, $printHost, $printQueue) {
+        $this->om = $om;
         $this->pdf = $this->prepareLabelPDF($TCPDF);
         $this->printHost = $printHost;
         $this->printQueue = $printQueue;
     }
     
     /**
-     * Add vial label to PDF
+     * Add label(s) to PDF
      * 
-     * @param integer $barcode
-     * @param datetime $date
-     * @param string $text
+     * @param mixed $entities
      */    
-    public function addFlyLabel($barcode,$date,$text,$owner = '') {
-        $this->pdf->AddPage();
-        $this->pdf->SetAutoPageBreak(false);
-        $this->pdf->write2DBarcode(
-                sprintf("%06d",$barcode),
-                'DATAMATRIX',
-                2,2,15,15,
-                $this->get2DBarcodeStyle());
-        $this->pdf->setCellPaddings(0, 0, 0, 0);
-        $this->pdf->setCellMargins(0, 0, 0, 0);
-        $this->pdf->SetFont('DejaVuSans', 'B', 12);
-        $this->pdf->MultiCell(30, 12.5, $text,0,'C',0,1,20,2,true,0,false,true,18.5,'T',true);
-        $this->pdf->SetFont('DejaVuSans', '', 7);
-        $this->pdf->MultiCell(30,6,$date->format("d.m.Y"),0,'C',0,1,20,18,true,0,false,true,6,'B',true);
-        $this->pdf->MultiCell(15,6,sprintf("%06d",$barcode),0,'C',0,1,2,15,true,0,false,true,6,'B',true);
-        $this->pdf->MultiCell(25,6,sprintf($owner),0,'L',0,1,2,18,true,0,false,true,6,'B',true);
+    public function addLabel($entities) {
+        if (($entity = $entities) instanceof LabelInterface) {
+            $barcode = $entity->getLabelBarcode();
+            $text = $entity->getLabelText();
+            $owner = $this->om->getOwner($entity);
+            $date = ($entity instanceof LabelDateInterface) ? $entity->getLabelDate()->format("d.m.Y") : null;
+            $this->pdf->AddPage();
+            $this->pdf->SetAutoPageBreak(false);
+            $this->pdf->write2DBarcode($barcode,'DATAMATRIX',2,2,15,15,$this->get2DBarcodeStyle());
+            $this->pdf->setCellPaddings(0, 0, 0, 0);
+            $this->pdf->setCellMargins(0, 0, 0, 0);
+            $this->pdf->SetFont('DejaVuSans', 'B', 12);
+            $this->pdf->MultiCell(30, 12.5, $text,0,'C',0,1,20,2,true,0,false,true,18.5,'T',true);
+            $this->pdf->SetFont('DejaVuSans', '', 7);
+            $this->pdf->MultiCell(15,6,$barcode,0,'C',0,1,2,15,true,0,false,true,6,'B',true);
+            if (null !== $date) {
+                $this->pdf->MultiCell(30,6,$date,0,'C',0,1,20,18,true,0,false,true,6,'B',true);
+            }
+            if (null !== $owner) {
+                $this->pdf->MultiCell(25,6,$owner,0,'L',0,1,2,18,true,0,false,true,6,'B',true);
+            }
+        } elseif ($entities instanceof Collection) {
+            foreach ($entities as $entity) {
+                $this->addLabel($entity);
+            }
+        } elseif (null === $entities) {
+            throw new \ErrorException('Argument 1 must not be null');
+        } else {
+            throw new \ErrorException('Argument 1 must be an object of class
+                VIB\FliesBundle\Label\LabelInterface or Doctrine\Common\Collections\Collection');
+        }
     }
     
-    /**
-     * Add vial label to PDF
-     * 
-     * @param integer $barcode
-     * @param string $text
-     */    
-    public function addRackLabel($barcode,$text) {
-        $this->pdf->AddPage();
-        $this->pdf->write2DBarcode(
-                sprintf("R%06d",$barcode),
-                'QRCODE,H',
-                2,2,15,15,
-                $this->get2DBarcodeStyle());
-        $this->pdf->setCellPaddings(0, 0, 0, 0);
-        $this->pdf->setCellMargins(0, 0, 0, 0);
-        $this->pdf->SetFont('DejaVuSans', 'B', 12);
-        $this->pdf->MultiCell(30, 12.5, $text,0,'C',0,1,20,2,true,0,false,true,16.5,'T',true);
-        $this->pdf->SetFont('DejaVuSans', '', 7);
-        $this->pdf->MultiCell(15,6,sprintf("R%06d",$barcode),0,'C',0,1,2,17.5,true,0,false,true,6,'B',true);
-    }
-    
-    public function output() {
+    public function outputPDF() {
         return new Response($this->pdf->Output('', 'S'),200,
                 array(
                     'Content-Type' => 'application/pdf',
@@ -142,29 +142,6 @@ class PDFLabel {
         $pdf->SetAutoPageBreak(false);
         
         return $pdf;
-    }
-    
-    /**
-     * Generate style for 1D barcode
-     * 
-     * @return array
-     */ 
-    private function get1DBarcodeStyle() {
-        
-        $style = array(
-            'position' => '',
-            'align' => '',
-            'stretch' => false,
-            'fitwidth' => true,
-            'cellfitalign' => false,
-            'border' => false,
-            'hpadding' => '0',
-            'vpadding' => '0',
-            'fgcolor' => array(0,0,0),
-            'bgcolor' => false,
-            'text' => false);
-        
-        return $style;
     }
     
     /**

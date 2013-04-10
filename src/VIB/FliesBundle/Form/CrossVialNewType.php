@@ -5,7 +5,7 @@ namespace VIB\FliesBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-use Symfony\Component\Validator\Constraints\Min;
+use Symfony\Component\Validator\Constraints\Range;
 
 
 class CrossVialNewType extends AbstractType
@@ -27,7 +27,7 @@ class CrossVialNewType extends AbstractType
                 ->add('number','number', array(
                         'label'       => 'Number of crosses',
                         'constraints' => array(
-                            new Min(1))));
+                            new Range(array('min' => 1)))));
     }
 }
 

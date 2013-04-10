@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\BaseBundle\Controller\CRUDController;
 
-use VIB\FliesBundle\Utils\PDFLabel;
+use VIB\FliesBundle\Label\PDFLabel;
 
 use VIB\FliesBundle\Form\VialType;
 use VIB\FliesBundle\Form\VialExpandType;
@@ -354,17 +354,8 @@ class VialController extends CRUDController {
      * @return \Symfony\Component\HttpFoundation\Response
      */    
     protected function prepareLabels($vials) {
-        $om = $this->getObjectManager();
         $pdf = $this->get('vibfolks.pdflabel');
-        if ($vials instanceof Collection) {
-            foreach ($vials as $vial) {
-                $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
-                                  $vial->getLabelText(), $om->getOwner($vial));
-            }
-        } elseif (($vial = $vials) instanceof Vial) {
-            $pdf->addFlyLabel($vial->getId(), $vial->getSetupDate(),
-                              $vial->getLabelText(), $om->getOwner($vial));
-        }
+        $pdf->addLabel($vials);
         return $pdf;
     }
     
@@ -406,7 +397,7 @@ class VialController extends CRUDController {
         } else {
             return $this->getDefaultBatchResponse();
         }
-        return $pdf->output();
+        return $pdf->outputPDF();
     }
     
     /**

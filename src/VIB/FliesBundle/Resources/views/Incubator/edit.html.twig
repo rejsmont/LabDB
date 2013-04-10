@@ -3,8 +3,8 @@
 {% import "VIBBaseBundle:Macros:form.html.twig" as f %}
 
 {% block headline %}Incubators{% endblock headline %}
-{% block modal_header %}Edit incubator {{ form.get('value') }}{% endblock modal_header %}
+{% block modal_header %}Edit incubator {{ form.vars.value }}{% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.get('value'),'vib_flies_incubator') }}
+  {{ f.buttons(form.vars.value,'vib_flies_incubator') }}
 {% endblock modal_footer %}

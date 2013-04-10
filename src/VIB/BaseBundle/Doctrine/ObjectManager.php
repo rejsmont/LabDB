@@ -79,7 +79,9 @@ class ObjectManager extends ObjectManagerDecorator {
             $objectIdentity = ObjectIdentity::fromDomainObject($objects);
             $aclProvider = $this->aclProvider;
             $acl = $aclProvider->createAcl($objectIdentity);
-            foreach ($acl as $identity => $permission) {
+            foreach ($acl as $ace) {
+                $identity = $ace['identity'];
+                $permission = $ace['permission'];
                 if ($identity instanceof UserInterface) {
                     $identity = UserSecurityIdentity::fromAccount($identity);
                 } elseif (is_string($identity)) {

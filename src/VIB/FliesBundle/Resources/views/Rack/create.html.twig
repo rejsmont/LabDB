@@ -13,7 +13,7 @@
 
 {% block modal_footer %}
   <button type="submit" class="btn btn-primary">Save</button>
-  {% set value = form.get('value').rack %}
+  {% set value = form.vars.value.rack %}
   {% if value.id is not null %}
     {% if is_granted('ROLE_ADMIN') or is_granted('DELETE',value) %}
     <a href="{{ path(name ~ '_delete', { 'id': value.id }) }}" class="btn btn-danger">Delete</a>

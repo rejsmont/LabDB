@@ -21,7 +21,7 @@ namespace VIB\FliesBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-use Symfony\Component\Validator\Constraints\Min;
+use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
@@ -62,7 +62,7 @@ class VialExpandType extends AbstractType
                 ->add('number','number', array(
                         'label'       => 'Number of vials',
                         'constraints' => array(
-                            new Min(1))));
+                            new Range(array('min' => 1)))));
     }
 }
 

@@ -21,7 +21,7 @@ namespace VIB\FliesBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-use Symfony\Component\Validator\Constraints\Min;
+use Symfony\Component\Validator\Constraints\Range;
 
 
 /**
@@ -48,11 +48,11 @@ class RackType extends AbstractType
                 ->add('rows','number', array(
                         'label'       => 'Rows',
                         'constraints' => array(
-                            new Min(1))))
+                            new Range(array('min' => 1)))))
                 ->add('columns','number', array(
                         'label'       => 'Columns',
                         'constraints' => array(
-                            new Min(1))));
+                            new Range(array('min' => 1)))));
     }
 }
 

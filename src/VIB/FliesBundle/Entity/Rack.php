@@ -19,16 +19,12 @@
 namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-
 use JMS\Serializer\Annotation as Serializer;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity as UniqueEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\BaseBundle\Entity\Entity;
+use \VIB\FliesBundle\Label\LabelInterface;
 
 
 /**
@@ -39,7 +35,7 @@ use VIB\BaseBundle\Entity\Entity;
  * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Rack extends Entity {
+class Rack extends Entity implements LabelInterface {
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -84,6 +80,20 @@ class Rack extends Entity {
     }
     
     /**
+     * {@inheritdoc}
+     */
+    public function getLabelBarcode() {
+        return sprintf("R%06d",$this->getId());
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getLabelText() {
+        return $this->getDescription();
+    }
+    
+    /**
      * Return string representation of Rack
      *
      * @return string
@@ -108,15 +118,6 @@ class Rack extends Entity {
      */
     public function getDescription() {
         return $this->description;
-    }
-    
-    /**
-     * Get label
-     *
-     * @return string
-     */
-    public function getLabelText() {
-        return $this->getDescription();
     }
     
     /**

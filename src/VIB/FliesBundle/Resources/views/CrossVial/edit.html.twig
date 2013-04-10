@@ -9,9 +9,9 @@
 {% endblock %}
 
 {% block modal_header %}
-  Edit cross {{ form.get('value').name }} ({{ form.get('value') }})
+  Edit cross {{ form.vars.value.name }} ({{ form.vars.value }})
 {% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.get('value'),'vib_flies_crossvial') }}
+  {{ f.buttons(form.vars.value,'vib_flies_crossvial') }}
 {% endblock modal_footer %}

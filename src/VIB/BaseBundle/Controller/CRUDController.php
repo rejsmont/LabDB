@@ -119,8 +119,9 @@ abstract class CRUDController extends AbstractController {
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function showAction($id) {
+        $om = $this->getObjectManager();
         $entity = $this->getEntity($id);
-        $owner = $this->getOwner($entity);
+        $owner = $om->getOwner($entity);
         $securityContext = $this->getSecurityContext();
         if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('VIEW', $entity))) {
             throw new AccessDeniedException();
@@ -260,8 +261,10 @@ abstract class CRUDController extends AbstractController {
      */
     protected function getDefaultACL() {
         return array(
-            $this->getUser() => MaskBuilder::MASK_OWNER,
-            'ROLE_USER'      => MaskBuilder::MASK_VIEW);
+            array('identity' => $this->getUser(),
+                  'permission' => MaskBuilder::MASK_OWNER),
+            array('identity' => 'ROLE_USER',
+                  'permission' => MaskBuilder::MASK_VIEW));
     }
     
     /**

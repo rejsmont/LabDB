@@ -29,6 +29,7 @@ use \DateTime;
 use \DateInterval;
 
 use VIB\BaseBundle\Entity\Entity;
+use VIB\FliesBundle\Label\LabelDateInterface;
 
 
 /**
@@ -42,7 +43,7 @@ use VIB\BaseBundle\Entity\Entity;
  * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Vial extends Entity {
+class Vial extends Entity implements LabelDateInterface {
     
     /**
      * @ORM\Column(type="date")
@@ -154,6 +155,27 @@ class Vial extends Entity {
     }
     
     /**
+     * {@inheritdoc}
+     */
+    public function getLabelBarcode() {
+        return sprintf("%06d",$this->getId());
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getLabelText() {
+        return $this->getName();
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getLabelDate() {
+        return $this->getSetupDate();
+    }
+    
+    /**
      * Get id
      *
      * @return integer
@@ -211,15 +233,6 @@ class Vial extends Entity {
      */
     public function getName() {
         return $this->getId();
-    }
-    
-    /**
-     * Get labelText
-     *
-     * @return string
-     */
-    public function getLabelText() {
-        return $this->getName();
     }
     
     /**
