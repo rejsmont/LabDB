@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use VIB\FliesBundle\Form\StockVialType;
+use VIB\FliesBundle\Form\StockVialNewType;
 
 
 /**
@@ -43,7 +44,14 @@ class StockVialController extends VialController {
     public function __construct()
     {
         $this->entityClass = 'VIB\FliesBundle\Entity\StockVial';
-        $this->entityName  = 'stock';
+        $this->entityName  = 'stock vial|stock vials';
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getCreateForm() {
+        return new StockVialNewType();
     }
     
     /**
@@ -63,28 +71,20 @@ class StockVialController extends VialController {
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function createAction($id = null) {
-        $om = $this->getObjectManager();
-        $class = $this->getEntityClass();
-        $vial = new $class;
-        if (null !== $id) {
-            $stock = $this->getStockEntity($id);
-            $vial->setStock($stock);
-        }
-        $form = $this->createForm($this->getCreateForm(), $vial);
         $request = $this->getRequest();
-        if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
-            if ($form->isValid()) {
-                $om->persist($vial);
-                $om->flush();
-                $om->createACL($vial,$this->getDefaultACL());
-                $this->addSessionFlash('success', 'Vial ' . $vial . ' was created.');
-                $this->autoPrint($vial);
-                $url = $this->generateUrl('vib_flies_stockvial_show',array('id' => $vial->getId()));
-                return $this->redirect($url);
+        if ($request->getMethod() != 'POST') {
+            $class = $this->getEntityClass();
+            $vial = new $class();
+            if (null !== $id) {
+                $stock = $this->getStockEntity($id);
+                $vial->setStock($stock);
             }
+            $data = array('vial' => $vial, 'number' => 1);
+            $form = $this->createForm($this->getCreateForm(), $data);
+            return array('form' => $form->createView());
+        } else {
+            return parent::createAction();
         }
-        return array('form' => $form->createView());
     }
     
     /**

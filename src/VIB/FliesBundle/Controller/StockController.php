@@ -22,9 +22,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-
 use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\BaseBundle\Controller\CRUDController;
@@ -54,7 +51,7 @@ class StockController extends CRUDController
     public function __construct()
     {
         $this->entityClass = 'VIB\FliesBundle\Entity\Stock';
-        $this->entityName  = 'stock';
+        $this->entityName  = 'stock|stocks';
     }
     
     /**

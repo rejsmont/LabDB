@@ -33,6 +33,7 @@ use VIB\BaseBundle\Controller\CRUDController;
 use VIB\FliesBundle\Label\PDFLabel;
 
 use VIB\FliesBundle\Form\VialType;
+use VIB\FliesBundle\Form\VialNewType;
 use VIB\FliesBundle\Form\VialExpandType;
 use VIB\FliesBundle\Form\SelectType;
 
@@ -56,7 +57,7 @@ class VialController extends CRUDController {
     public function __construct()
     {
         $this->entityClass  = 'VIB\FliesBundle\Entity\Vial';
-        $this->entityName   = 'vial';
+        $this->entityName   = 'vial|vials';
     }
     
     /**
@@ -66,6 +67,13 @@ class VialController extends CRUDController {
      */
     protected function getObjectManager() {
         return $this->get('vib.doctrine.vial_manager');
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getCreateForm() {
+        return new VialNewType();
     }
     
     /**
@@ -192,19 +200,35 @@ class VialController extends CRUDController {
         $om = $this->getObjectManager();
         $class = $this->getEntityClass();
         $vial = new $class();
-        $form = $this->createForm($this->getCreateForm(), $vial);
+        $data = array('vial' => $vial, 'number' => 1);
+        $form = $this->createForm($this->getCreateForm(), $data);
         $request = $this->getRequest();
+        
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
             if ($form->isValid()) {
-                $om->persist($vial);
+                $data = $form->getData();
+                $vial = $data['vial'];
+                $number = $data['number'];
+                
+                $vials = $om->expand($vial, $number, false);
                 $om->flush();
-                $om->createACL($vial,$this->getDefaultACL());
-                $message = 'Vial ' . $vial . ' was created.';
+                $om->createACL($vials,$this->getDefaultACL());
+                
+                $message = (($count = count($vials)) == 1) ?
+                    ucfirst($this->getEntityName()) . ' ' . reset($vials) . ' was created.' :
+                    ucfirst($count . ' ' . $this->getEntityPluralName()) . ' were created.';
                 $this->addSessionFlash('success', $message);
-                $this->autoPrint($vial);
-                $route = str_replace("_create", "_show", $request->attributes->get('_route'));
-                $url = $this->generateUrl($route,array('id' => $vial->getId()));
+                
+                $this->autoPrint($vials);
+                                
+                if ($count == 1) {
+                    $route = str_replace("_create", "_show", $request->attributes->get('_route'));
+                    $url = $this->generateUrl($route,array('id' => reset($vials)->getId()));
+                } else {
+                    $route = str_replace("_create", "_list", $request->attributes->get('_route'));
+                    $url = $this->generateUrl($route);
+                }
                 return $this->redirect($url);
             }
         }
@@ -256,12 +280,11 @@ class VialController extends CRUDController {
                 $vials = $om->expand($source, $number, true, $size);
                 $om->flush();
                 $om->createACL($vials, $this->getDefaultACL());
-                
-                if (($count = count($vials)) == 1) {
-                    $this->addSessionFlash('success', 'Vial ' . $source . ' was flipped.');
-                } else {
-                    $this->addSessionFlash('success', 'Vial ' . $source . ' was expanded into ' . $count . ' vials.');
-                }
+
+                $message = (($count = count($vials)) == 1) ?
+                    ucfirst($this->getEntityName()) . ' ' . $source . ' was flipped.' :
+                    ucfirst($this->getEntityName()) . ' ' . $source . ' was expanded into ' . $count . ' vials.';
+                $this->addSessionFlash('success', $message);
                 
                 $this->autoPrint($vials);
                 
@@ -389,7 +412,7 @@ class VialController extends CRUDController {
      */    
     protected function downloadLabels($vials) {
         $om = $this->getObjectManager();
-        $count = ($vials instanceof Collection) ? count($vials) : ($vials instanceof Vial) ? 1 : 0;
+        $count = ($vials instanceof Collection) ? count($vials) : (($vials instanceof Vial) ? 1 : 0);
         $pdf = $this->prepareLabels($vials);
         if ($count > 0) {
             $om->markPrinted($vials);
@@ -407,7 +430,7 @@ class VialController extends CRUDController {
      */    
     protected function printLabels($vials) {
         $om = $this->getObjectManager();
-        $count = ($vials instanceof Collection) ? count($vials) : ($vials instanceof Vial) ? 1 : 0;
+        $count = ($vials instanceof Collection) ? count($vials) : (($vials instanceof Vial) ? 1 : 0);
         $pdf = $this->prepareLabels($vials);
         if (($count > 0)&&($this->submitPrintJob($pdf, $count))) {
             $om->markPrinted($vials);

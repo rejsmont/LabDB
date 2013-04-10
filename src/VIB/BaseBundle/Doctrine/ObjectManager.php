@@ -70,18 +70,18 @@ class ObjectManager extends ObjectManagerDecorator {
      * @param object $objects
      * @param array $acl
      */
-    public function createACL($objects, array $acl) {
+    public function createACL($objects, array $acl_array) {
         if ($objects instanceof Collection) {
             foreach ($objects as $object) {
-                $this->createACL($object, $acl);
+                $this->createACL($object, $acl_array);
             }
         } else {
             $objectIdentity = ObjectIdentity::fromDomainObject($objects);
             $aclProvider = $this->aclProvider;
             $acl = $aclProvider->createAcl($objectIdentity);
-            foreach ($acl as $ace) {
-                $identity = $ace['identity'];
-                $permission = $ace['permission'];
+            foreach ($acl_array as $acl_entry) {
+                $identity = $acl_entry['identity'];
+                $permission = $acl_entry['permission'];
                 if ($identity instanceof UserInterface) {
                     $identity = UserSecurityIdentity::fromAccount($identity);
                 } elseif (is_string($identity)) {

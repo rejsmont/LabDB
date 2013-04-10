@@ -4,12 +4,12 @@
 
 {% form_theme form _self %} 
   
-{% block _crossvial_new_cross_row %}
+{% block _crossvial_new_vial_row %}
   {{ form_widget(form) }}
 {% endblock %}
 
 {% block modal_header %}New cross{% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.vars.value.cross,'vib_flies_crossvial') }}
+  {{ f.buttons(form.vars.value.vial,'vib_flies_crossvial') }}
 {% endblock modal_footer %}

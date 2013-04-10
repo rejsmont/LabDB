@@ -15,7 +15,7 @@ class CrossVialNewType extends AbstractType
      */
     public function getName()
     {
-        return "crossvial_new";
+        return "vial_new";
     }
     
     /**
@@ -23,9 +23,9 @@ class CrossVialNewType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('vial', new CrossVialSimpleType())
+        $builder->add('vial', new VialType())
                 ->add('number','number', array(
-                        'label'       => 'Number of crosses',
+                        'label'       => 'Number of vials',
                         'constraints' => array(
                             new Range(array('min' => 1)))));
     }

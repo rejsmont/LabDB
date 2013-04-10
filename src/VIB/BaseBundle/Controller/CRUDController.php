@@ -58,7 +58,7 @@ abstract class CRUDController extends AbstractController {
      */ 
     public function __construct() {
         $this->entityClass = null;
-        $this->entityName = 'entity';
+        $this->entityName = 'entity|entities';
     }
         
     /**
@@ -300,7 +300,18 @@ abstract class CRUDController extends AbstractController {
      * @return string
      */
     protected function getEntityName() {
-        return $this->entityName;
+        $names = explode('|',$this->entityName);
+        return $names[0];
+    }
+    
+    /**
+     * Get managed entity plural name
+     * 
+     * @return string
+     */
+    protected function getEntityPluralName() {
+        $names = explode('|',$this->entityName);
+        return $names[1];
     }
     
     /**

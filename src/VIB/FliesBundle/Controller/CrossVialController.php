@@ -49,7 +49,7 @@ class CrossVialController extends VialController
      */ 
     public function __construct() {
         $this->entityClass = 'VIB\FliesBundle\Entity\CrossVial';
-        $this->entityName = 'cross';
+        $this->entityName = 'cross|crosses';
     }
     
     /**
@@ -73,50 +73,6 @@ class CrossVialController extends VialController
      */
     protected function getEditForm() {
         return new CrossVialType();
-    }
-    
-    /**
-     * Create cross
-     * 
-     * @Route("/new")
-     * @Template()
-     * 
-     * @return array|\Symfony\Component\HttpFoundation\Response
-     */
-    public function createAction() {
-        $cross = new CrossVial();
-        $data = array('cross' => $cross, 'number' => 1);
-        
-        $om = $this->getObjectManager();
-        $form = $this->createForm($this->getCreateForm(), $data);
-        $request = $this->getRequest();
-        
-        if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
-            if ($form->isValid()) {
-                $data = $form->getData();
-                $cross = $data['cross'];
-                $number = $data['number'];
-                
-                $crosses = $om->expand($cross, $number, false);
-                $om->flush();
-                $om->createACL($crosses,$this->getDefaultACL());
-                
-                if (($count = count($crosses)) == 1) {
-                    $this->addSessionFlash('success', 'Cross ' . $cross->getName() . ' was created.');
-                } else {
-                    $this->addSessionFlash('success', $count . ' crosses ' . $cross->getName() . ' were created.');
-                }
-                
-                $this->autoPrint($crosses);
-                
-                $url = $number == 1 ? 
-                    $this->generateUrl('vib_flies_crossvial_show',array('id' => $crosses[0]->getId())) : 
-                    $this->generateUrl('vib_flies_crossvial_list');
-                return $this->redirect($url);
-            }
-        }
-        return array('form' => $form->createView());
     }
     
     /**

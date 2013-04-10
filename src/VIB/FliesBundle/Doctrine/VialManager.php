@@ -170,8 +170,8 @@ class VialManager extends ObjectManager {
             $newVial = $this->flip($vial, $setSource);
             if (null !== $size) {
                 $newVial->setSize($size);
+                $this->persist($newVial);
             }
-            $this->persist($newVial);
             $newVials->add($newVial);
         }
         return $newVials;

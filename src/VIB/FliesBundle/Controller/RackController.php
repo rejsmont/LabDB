@@ -48,7 +48,7 @@ class RackController extends CRUDController
     public function __construct()
     {
         $this->entityClass = 'VIB\FliesBundle\Entity\Rack';
-        $this->entityName  = 'rack';
+        $this->entityName  = 'rack|racks';
     }
     
     /**
