@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,10 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
+
 /**
+ * VIBSecurityExtension
+ * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class VIBSecurityExtension extends Extension
@@ -31,15 +34,13 @@ class VIBSecurityExtension extends Extension
     /**
      * {@inheritDoc}
      */
-    public function load(array $configs, ContainerBuilder $container) {
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
         
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
-        
-        $config = array();
-        foreach($configs as $c) {
-            $config = array_merge($config, $c);
-        }
         
         if (isset($config['acl_walker'])) {
             $container->setParameter('vib.security.acl_walker', $config['acl_walker']);
@@ -57,7 +58,10 @@ class VIBSecurityExtension extends Extension
     /**
      * {@inheritDoc}
      */    
-    public function getAlias() {
+    public function getAlias()
+    {
         return 'vib_security';
     }
 }
+
+?>

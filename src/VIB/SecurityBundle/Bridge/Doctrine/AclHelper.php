@@ -1,23 +1,44 @@
 <?php
 
+/*
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * Original code by mailaneel is available at
+ * https://gist.github.com/mailaneel/1363377
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 namespace VIB\SecurityBundle\Bridge\Doctrine;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 
 /**
- * Description of ACLHelper
+ * Doctrine filter that applies ACL to fetched of entities
  *
  * @link https://gist.github.com/mailaneel/1363377 Original code on gist
  * 
- * @author mailaneel
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * @author mailaneel
  */
 class AclHelper
 {
     /**
+     * Construct AclHelper
      * 
      * @param type $doctrine
      * @param type $securityContext
@@ -33,6 +54,7 @@ class AclHelper
     }
  
     /**
+     * Clone query
      * 
      * @param \Doctrine\ORM\Query $query
      * @return \Doctrine\ORM\Query
@@ -49,12 +71,13 @@ class AclHelper
     }
  
     /**
-     * Get parent roles of specified role
+     * Get parent roles of the specified role
      * 
      * @param string $role
      * @return array
      */
-    protected function resolveRoles($role) {
+    protected function resolveRoles($role)
+    {
         $hierarchy = $this->roleHierarchy;
         $roles = array();
         if (array_key_exists($role, $hierarchy)) {
@@ -67,13 +90,15 @@ class AclHelper
     }
     
     /**
+     * Apply SQL filter
      * 
      * @param \Doctrine\ORM\QueryBuilder $queryBuilder
      * @param array $permissions
+     * @param \Symfony\Component\Security\Core\User\UserInterface $user
      * @return \Doctrine\ORM\Query
      */
     public function apply(QueryBuilder $queryBuilder,
-            array $permissions = array("VIEW"), $user = null)
+            array $permissions = array("VIEW"), UserInterface $user = null)
     {
  
         $whereQueryParts = $queryBuilder->getDQLPart('where');
@@ -98,7 +123,7 @@ class AclHelper
         $query->setHint('acl.root.entities', $entities);
  
         $query->setHint('acl.extra.query',
-                $this->getPermittedIdsACLSQLForUser($query, $queryBuilder, $user));
+                $this->getPermittedIdsACLSQLForUser($query, $user));
  
         $class = $this->em->getClassMetadata($entities[0]);
         $entityRootTableName = $class->getQuotedTableName($this->em->getConnection()->getDatabasePlatform());
@@ -111,13 +136,13 @@ class AclHelper
     }
  
     /**
+     * Get ACL filter SQL for the specified user
      * 
      * @param \Doctrine\ORM\Query $query
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param \Symfony\Component\Security\Core\User\UserInterface $user
      * @return string
      */
-    private function getPermittedIdsACLSQLForUser(Query $query,
-            QueryBuilder $queryBuilder, $user = null)
+    private function getPermittedIdsACLSQLForUser(Query $query, UserInterface $user = null)
     {
         $database = $this->aclConnection->getDatabase();
         $mask = $query->getHint('acl.mask');
@@ -146,9 +171,9 @@ class AclHelper
                 $uR[] = '"' . $role . '"';
                 $uR = array_merge($uR,$this->resolveRoles($role));
             }
-            $uR = array_unique($uR);
-            $uR[] = '"' . str_replace('\\', '\\\\', get_class($user)) . '-' . $user->getUserName() . '"';
-            $INroles = implode(',', $uR);
+            $uRU = array_unique($uR);
+            $uRU[] = '"' . str_replace('\\', '\\\\', get_class($user)) . '-' . $user->getUserName() . '"';
+            $INroles = implode(',', $uRU);
         }
         
         $selectQuery = <<<SELECTQUERY

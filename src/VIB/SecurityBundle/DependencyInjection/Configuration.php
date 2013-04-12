@@ -16,12 +16,29 @@
  * limitations under the License.
  */
 
-namespace VIB\SecurityBundle;
+namespace VIB\SecurityBundle\DependencyInjection;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-class VIBSecurityBundle extends Bundle
+
+/**
+ * This is the class that validates and merges configuration from app/config files
+ *
+ * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ */
+class Configuration implements ConfigurationInterface
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('vib_forms');
+
+        return $treeBuilder;
+    }
 }
 
 ?>
