@@ -20,6 +20,11 @@ namespace VIB\SecurityBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * VIBSecurityBundle
+ *
+ * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ */
 class VIBSecurityBundle extends Bundle
 {
 }

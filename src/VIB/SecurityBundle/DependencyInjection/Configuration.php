@@ -35,7 +35,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('vib_forms');
+        $rootNode = $treeBuilder->root('vib_security');
 
         return $treeBuilder;
     }
