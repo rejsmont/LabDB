@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
+
 /**
+ * This is the class that loads and manages bundle configuration
+ *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class VIBFormsExtension extends Extension
@@ -33,8 +36,11 @@ class VIBFormsExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-         $loader->load('services.xml');
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+        
+        $xmlLoader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $xmlLoader->load('services.xml');
     }
 }
 

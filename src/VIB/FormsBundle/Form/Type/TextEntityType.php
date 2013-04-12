@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 
 namespace VIB\FormsBundle\Form\Type;
 
-
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Symfony\Component\Form\AbstractType;
@@ -30,6 +29,8 @@ use VIB\FormsBundle\Form\DataTransformer\EntityToTextTransformer;
 
 
 /**
+ * Entity as text input control
+ * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class TextEntityType extends AbstractType
@@ -41,17 +42,20 @@ class TextEntityType extends AbstractType
 
     
     /**
+     * Construct TextEntityType
      * 
      * @param Doctrine\Common\Persistence\ManagerRegistry $registry
      */
-    public function __construct(ManagerRegistry $registry) {
+    public function __construct(ManagerRegistry $registry)
+    {
         $this->registry = $registry;
     }
     
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $transformer = new EntityToTextTransformer(
                 $options['em'],
                 $options['class'],

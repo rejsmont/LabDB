@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,22 +26,24 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 /**
- * Description of AJAXController
+ * This controller generates choices list for EntityTypeaheadType
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class AJAXController extends Controller {
-        
+class AJAXController extends Controller
+{        
     /**
-     * Handle stock search AJAX request
+     * Search for the specified entity by its property
      * 
      * @Route("/_ajax/choices/{class}/{property}", name="VIBFormsBundle_ajax_choices")
      * 
      * @param Symfony\Component\HttpFoundation\Request $request
+     * @param string $class Entity class to search for
+     * @param string $property Property to lookup in search
      * @return Symfony\Component\HttpFoundation\Response
      */    
-    public function choicesAction(Request $request, $class, $property) {
-        
+    public function choicesAction(Request $request, $class, $property)
+    {
         $query = $request->query->get('query');
         
         $qb = $this->getDoctrine()
@@ -49,22 +51,18 @@ class AJAXController extends Controller {
                    ->createQueryBuilder('b');
                               
         $terms = explode(" ",$query);
-        
         foreach ($terms as $term) {
           $qb = $qb->andWhere("b." . $property . " like '%" . $term . "%'");
         }
-        
         $found = $qb->getQuery()->getResult();
         
         $stockNames = array();
-        
         foreach ($found as $stock) {
             $stockNames[] = $stock->getName();
         }
         
         $response = new JsonResponse();
         $response->setData(array('options' => $stockNames));
-        
         return $response;
     }
 }

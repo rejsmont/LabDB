@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 
 namespace VIB\FormsBundle\Form\DataTransformer;
 
-
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -27,8 +26,9 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
+
 /**
- * Description of EntityToTextTransformer
+ * Transforms entity into its string representation
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
@@ -57,11 +57,13 @@ class EntityToTextTransformer implements DataTransformerInterface
     /**
      * Construct EntityToTextTransformer
      * 
-     * @param Doctrine\Common\Persistence\ObjectManager $om
-     * @param Doctrine\ORM\Mapping\ClassMetadata $class
-     * @param string $property 
+     * @param Doctrine\Common\Persistence\ObjectManager $om The object manager to use
+     * @param string $class Class of the entity
+     * @param string $property Property to lookup
+     * @param string $format sprintf-compatible format string
      */
-    public function __construct(ObjectManager $om, $class, $property = null, $format = null) {
+    public function __construct(ObjectManager $om, $class, $property = null, $format = null)
+    {
         $this->om = $om;
         $this->class = $class;
         $this->propertyPath = (null !== $property) ? new PropertyPath($property) : null;
@@ -74,7 +76,8 @@ class EntityToTextTransformer implements DataTransformerInterface
      * @param object $entity
      * @return string 
      */
-    public function transform($entity) {
+    public function transform($entity)
+    {
         
         if (null === $entity || '' === $entity) {
             return '';

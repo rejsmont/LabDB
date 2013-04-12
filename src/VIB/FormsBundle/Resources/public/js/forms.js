@@ -1,5 +1,5 @@
 /* 
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+
+/*
+ * Initialize AJAX typeahead controls
+ */
 $(document).ready(function () {
   $('.ajax-typeahead').typeahead({
     source: function(query, process) {
