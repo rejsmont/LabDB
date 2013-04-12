@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,22 @@ namespace VIB\BaseBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+
 /**
  * Base class for controllers
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class AbstractController extends Controller {
+class AbstractController extends Controller
+{
 
     /**
      * Get security context
      * 
      * @return \Symfony\Component\Security\Core\SecurityContextInterface
      */
-    protected function getSecurityContext() {
+    protected function getSecurityContext()
+    {
         return $this->get('security.context');
     }
     
@@ -41,7 +44,8 @@ class AbstractController extends Controller {
      * 
      * @return \VIB\BaseBundle\Doctrine\ObjectManager
      */
-    protected function getObjectManager() {
+    protected function getObjectManager()
+    {
         return $this->get('vib.doctrine.manager');
     }
     
@@ -50,7 +54,8 @@ class AbstractController extends Controller {
      * 
      * @return \Symfony\Component\HttpFoundation\Session\SessionInterface
      */
-    protected function getSession() {
+    protected function getSession()
+    {
         return $this->get('session');
     }
     
@@ -59,7 +64,8 @@ class AbstractController extends Controller {
      * 
      * @return \Knp\Component\Pager\Paginator
      */
-    protected function getPaginator() {
+    protected function getPaginator()
+    {
         return $this->get('knp_paginator');
     }
     
@@ -68,7 +74,8 @@ class AbstractController extends Controller {
      * 
      * @return integer
      */
-    protected function getCurrentPage() {
+    protected function getCurrentPage()
+    {
         return $this->getRequest()->query->get('page', 1);
     }
     
@@ -77,18 +84,21 @@ class AbstractController extends Controller {
      * 
      * @return \VIB\SecurityBundle\Bridge\Doctrine\AclHelper
      */
-    protected function getAclFilter() {
+    protected function getAclFilter()
+    {
         return $this->get('vib.security.helper.acl');
     }
     
     /**
-     * Adds a flash message for type.
+     * Adds a flash message for type
      *
      * @param string $type
      * @param string $message
      */
-    protected function addSessionFlash($type, $message) {
+    protected function addSessionFlash($type, $message)
+    {
         $this->getSession()->getFlashBag()->add($type, $message);
     }
 }
+
 ?>

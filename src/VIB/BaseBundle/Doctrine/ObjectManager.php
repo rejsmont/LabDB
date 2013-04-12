@@ -31,12 +31,14 @@ use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
+
 /**
  * ACL aware implementation of Doctrine\Common\Persistence\ObjectManagerDecorator
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class ObjectManager extends ObjectManagerDecorator {
+class ObjectManager extends ObjectManagerDecorator
+{
 
     /**
      * @var \Symfony\Component\Security\Core\User\UserProviderInterface
@@ -58,7 +60,8 @@ class ObjectManager extends ObjectManagerDecorator {
      */
     public function __construct(ManagerRegistry $mr,
                                 UserProviderInterface $userProvider,
-                                MutableAclProviderInterface $aclProvider) {
+                                MutableAclProviderInterface $aclProvider)
+    {
         $this->wrapped = $mr->getManager();
         $this->userProvider = $userProvider;
         $this->aclProvider = $aclProvider;
@@ -70,7 +73,8 @@ class ObjectManager extends ObjectManagerDecorator {
      * @param object $objects
      * @param array $acl
      */
-    public function createACL($objects, array $acl_array) {
+    public function createACL($objects, array $acl_array)
+    {
         if ($objects instanceof Collection) {
             foreach ($objects as $object) {
                 $this->createACL($object, $acl_array);
@@ -99,7 +103,8 @@ class ObjectManager extends ObjectManagerDecorator {
      * @param object $object
      * @return Symfony\Component\Security\Core\User\UserInterface
      */
-    public function getOwner($object) {
+    public function getOwner($object)
+    {
         $objectIdentity = ObjectIdentity::fromDomainObject($object);
         $aclProvider = $this->aclProvider;
         try {

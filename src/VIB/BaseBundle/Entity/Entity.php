@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ use JMS\Serializer\Annotation as Serializer;
  * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Entity {
+class Entity
+{
     
     /**
      * @ORM\Id
@@ -47,7 +48,10 @@ class Entity {
      *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 }
+
+?>

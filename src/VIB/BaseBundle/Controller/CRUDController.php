@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
-use \ReflectionClass;
 
 
 /**
@@ -35,7 +32,8 @@ use \ReflectionClass;
  * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-abstract class CRUDController extends AbstractController {
+abstract class CRUDController extends AbstractController
+{
     
     /**
      * Entity class for this controller
@@ -56,7 +54,8 @@ abstract class CRUDController extends AbstractController {
      * Construct CRUDController
      *
      */ 
-    public function __construct() {
+    public function __construct()
+    {
         $this->entityClass = null;
         $this->entityName = 'entity|entities';
     }
@@ -69,10 +68,11 @@ abstract class CRUDController extends AbstractController {
      * @Template()
      * @Secure(roles="ROLE_USER, ROLE_ADMIN")
      * 
-     * @param integer $page
+     * @param string $filter 
      * @return array
      */
-    public function listAction($filter = null) {
+    public function listAction($filter = null)
+    {
         $paginator  = $this->getPaginator();
         $page = $this->getCurrentPage();
         $query = $this->applyFilter($this->getListQuery(), $filter);
@@ -87,7 +87,8 @@ abstract class CRUDController extends AbstractController {
      * @param type $filter
      * @return type
      */
-    protected function applyFilter($query, $filter = null) {
+    protected function applyFilter($query, $filter = null)
+    {
         $securityContext = $this->getSecurityContext();
         switch($filter) {
             case 'public':
@@ -118,7 +119,8 @@ abstract class CRUDController extends AbstractController {
      * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($id) {
+    public function showAction($id)
+    {
         $om = $this->getObjectManager();
         $entity = $this->getEntity($id);
         $owner = $om->getOwner($entity);
@@ -137,7 +139,8 @@ abstract class CRUDController extends AbstractController {
      * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function createAction() {
+    public function createAction()
+    {
         $om = $this->getObjectManager();
         $class = $this->getEntityClass();
         $entity = new $class();
@@ -168,7 +171,8 @@ abstract class CRUDController extends AbstractController {
      * @param mixed $id
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($id) {
+    public function editAction($id)
+    {
         $om = $this->getObjectManager();
         $entity = $this->getEntity($id);
         $securityContext = $this->getSecurityContext();
@@ -201,7 +205,8 @@ abstract class CRUDController extends AbstractController {
      * @param mixed $id
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($id) {
+    public function deleteAction($id)
+    {
         $om = $this->getObjectManager();
         $entity = $this->getEntity($id);
         $securityContext = $this->getSecurityContext();
@@ -227,7 +232,8 @@ abstract class CRUDController extends AbstractController {
      * 
      * @return \Doctrine\ORM\QueryBuilder
      */
-    protected function getListQuery() {
+    protected function getListQuery()
+    {
         $om = $this->getObjectManager();
         return $om->getRepository($this->getEntityClass())->createQueryBuilder('b');
     }
@@ -239,7 +245,8 @@ abstract class CRUDController extends AbstractController {
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @return \VIB\BaseBundle\Entity\Entity
      */
-    protected function getEntity($id) {
+    protected function getEntity($id)
+    {
         $class = $this->getEntityClass();        
         if ($id instanceof $class) {
             return $id;
@@ -259,7 +266,8 @@ abstract class CRUDController extends AbstractController {
      * 
      * @return array
      */
-    protected function getDefaultACL() {
+    protected function getDefaultACL()
+    {
         return array(
             array('identity' => $this->getUser(),
                   'permission' => MaskBuilder::MASK_OWNER),
@@ -272,7 +280,8 @@ abstract class CRUDController extends AbstractController {
      * 
      * @return \Symfony\Component\Form\AbstractType
      */
-    protected function getCreateForm() {
+    protected function getCreateForm()
+    {
         return $this->getEditForm();
     }
     
@@ -281,7 +290,8 @@ abstract class CRUDController extends AbstractController {
      * 
      * @return \Symfony\Component\Form\AbstractType
      */
-    protected function getEditForm() {
+    protected function getEditForm()
+    {
         return null;
     }
     
@@ -290,7 +300,8 @@ abstract class CRUDController extends AbstractController {
      * 
      * @return string
      */
-    protected function getEntityClass() {
+    protected function getEntityClass()
+    {
         return $this->entityClass;
     }
     
@@ -299,7 +310,8 @@ abstract class CRUDController extends AbstractController {
      * 
      * @return string
      */
-    protected function getEntityName() {
+    protected function getEntityName()
+    {
         $names = explode('|',$this->entityName);
         return $names[0];
     }
@@ -309,7 +321,8 @@ abstract class CRUDController extends AbstractController {
      * 
      * @return string
      */
-    protected function getEntityPluralName() {
+    protected function getEntityPluralName()
+    {
         $names = explode('|',$this->entityName);
         return $names[1];
     }
@@ -320,9 +333,11 @@ abstract class CRUDController extends AbstractController {
      * @param object $entity
      * @return boolean
      */
-    protected function controls($entity) {
-        $reflectionClass = new ReflectionClass($entity);
+    protected function controls($entity)
+    {
+        $reflectionClass = new \ReflectionClass($entity);
         return $this->getEntityClass() == $reflectionClass->getName();
     }
 }
+
 ?>

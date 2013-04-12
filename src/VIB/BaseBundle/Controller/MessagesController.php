@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,21 +21,24 @@ namespace VIB\BaseBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+
 /**
- * Messages controller
+ * Controller for displaying general messages
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class MessagesController extends Controller {
+class MessagesController extends Controller
+{
     
     /**
-     * Get ACL provider
+     * Display MSIE information
      * 
      * @Template
      * 
-     * @return type
+     * @return array
      */
-    public function msieAction() {
+    public function msieAction()
+    {
         $msie_version = 10;
         $request = $this->get('request');
         $user_agent = $request->headers->get('User-Agent');
@@ -60,4 +63,5 @@ class MessagesController extends Controller {
         return array('display' => $display, 'version' => $msie_version, 'compat' => $compat);
     }
 }
+
 ?>

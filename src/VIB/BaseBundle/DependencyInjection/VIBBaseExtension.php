@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@
 
 namespace VIB\BaseBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+
 
 /**
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
@@ -33,10 +34,12 @@ class VIBBaseExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
+        $xmlLoader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $xmlLoader->load('services.xml');
         
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('config.yml');
+        $yamlLoader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $yamlLoader->load('config.yml');
     }
 }
+
+?>
