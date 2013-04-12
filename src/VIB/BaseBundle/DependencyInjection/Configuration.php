@@ -16,31 +16,28 @@
  * limitations under the License.
  */
 
-namespace VIB\CalendarBundle\DependencyInjection;
+namespace VIB\BaseBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 
 /**
- * This is the class that loads and manages bundle configuration
+ * This is the class that validates and merges configuration from app/config files
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VIBCalendarExtension extends Extension
+class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function getConfigTreeBuilder()
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('vib_base');
 
-        $xmlLoader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $xmlLoader->load('services.xml');
+        return $treeBuilder;
     }
 }
 

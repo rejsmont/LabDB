@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,28 +19,31 @@
 namespace VIB\CalendarBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Sabre\VObject;
 
+
 /**
- * Description of CalendarController
+ * Controller for online ics calendars
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class CalendarController extends Controller {
-    
+class CalendarController extends Controller
+{
     /**
+     * Create online calendar for user
      * 
      * @Route("/calendar/{username}.ics")
      * 
+     * @param string $username User to create the calendar for
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function calendarAction($username) {        
-        $user = $this->get('vib.user_provider.shibboleth')->loadUserByUsername($username);
+    public function calendarAction($username)
+    {        
+        $user = $this->get('user_provider')->loadUserByUsername($username);
         $em = $this->getDoctrine()->getManager();
         $calendar = VObject\Component::create('VCALENDAR');
         $calendar->VERSION = '2.0';
