@@ -24,6 +24,7 @@ use Doctrine\Common\Persistence\ObjectManagerDecorator;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
@@ -114,13 +115,13 @@ class ObjectManager extends ObjectManagerDecorator
                     $securityIdentity = $ace->getSecurityIdentity();
                     if ($securityIdentity instanceof UserSecurityIdentity) {
                         $userProvider = $this->userProvider;
-                        return $userProvider->loadUserByUsername($securityIdentity->getUsername());
+                        try {
+                            return $userProvider->loadUserByUsername($securityIdentity->getUsername());
+                        } catch (UsernameNotFoundException $e) {}
                     }
                 }
             }
-        } catch (AclNotFoundException $e) {
-            return null;
-        }
+        } catch (AclNotFoundException $e) {}
         return null;
     }
 }
