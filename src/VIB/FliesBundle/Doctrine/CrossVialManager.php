@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,6 @@
 namespace VIB\FliesBundle\Doctrine;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 
 use \VIB\FliesBundle\Entity\CrossVial;
 
@@ -28,15 +27,17 @@ use \VIB\FliesBundle\Entity\CrossVial;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class CrossVialManager extends VialManager {
-    
+class CrossVialManager extends VialManager
+{
+
     /**
      * Mark cross(es) as sterile and trash it (them)
-     * 
-     * @param \VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
+     *
+     * @param  \VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
-    public function markSterile($vials) {
+    public function markSterile($vials)
+    {
         if (($vial = $vials) instanceof CrossVial) {
             $vial->setSterile(true);
             $this->persist($vial);
@@ -51,14 +52,15 @@ class CrossVialManager extends VialManager {
                 VIB\FliesBundle\Entity\CrossVial or Doctrine\Common\Collections\Collection');
         }
     }
-        
+
     /**
      * Mark cross(es) as successful
-     * 
-     * @param \VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
+     *
+     * @param  \VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
-    public function markSuccessful($vials) {
+    public function markSuccessful($vials)
+    {
         if (($vial = $vials) instanceof CrossVial) {
             $vial->setSuccessful(true);
             $this->persist($vial);
@@ -73,14 +75,15 @@ class CrossVialManager extends VialManager {
                 VIB\FliesBundle\Entity\CrossVial or Doctrine\Common\Collections\Collection');
         }
     }
-    
+
     /**
      * Mark cross(es) as failed
-     * 
-     * @param \VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
+     *
+     * @param  \VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
-    public function markFailed($vials) {
+    public function markFailed($vials)
+    {
         if (($vial = $vials) instanceof CrossVial) {
             $vial->setSuccessful(false);
             $this->persist($vial);
@@ -96,5 +99,3 @@ class CrossVialManager extends VialManager {
         }
     }
 }
-
-?>

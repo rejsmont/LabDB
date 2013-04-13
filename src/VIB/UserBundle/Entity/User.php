@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,13 +21,12 @@ namespace VIB\UserBundle\Entity;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * User entity
- * 
+ *
  * @ORM\Entity
  * @ORM\Table(name="kuleuven_user")
- * 
+ *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class User extends BaseUser
@@ -41,47 +40,47 @@ class User extends BaseUser
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * 
+     *
      * @var string
      */
     protected $givenName;
-    
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * 
+     *
      * @var string
      */
     protected $surname;
-    
-    
+
     /**
      * Get given name
-     * 
+     *
      * @return string
      */
     public function getGivenName()
     {
         return $this->givenName;
     }
-    
+
     /**
      * Get given name
-     * 
+     *
      * @return string
      */
     public function getInitials()
     {
         $names = explode(" ", $this->getGivenName());
         $initials = "";
-        foreach($names as $name) {
+        foreach ($names as $name) {
             $initials .= substr($name,0,1);
         }
+
         return $initials;
     }
 
     /**
      * Set given name
-     * 
+     *
      * @param string $givenName
      */
     public function setGivenName($givenName)
@@ -91,17 +90,17 @@ class User extends BaseUser
 
     /**
      * Get surname
-     * 
+     *
      * @return string
      */
     public function getSurname()
     {
         return $this->surname;
     }
-    
+
     /**
      * Get full name
-     * 
+     *
      * @return string
      */
     public function getFullName()
@@ -112,10 +111,10 @@ class User extends BaseUser
             return $this->getUsername();;
         }
     }
-    
+
     /**
      * Get full name
-     * 
+     *
      * @return string
      */
     public function getShortName()
@@ -129,17 +128,17 @@ class User extends BaseUser
 
     /**
      * Set surname
-     * 
+     *
      * @param string $surname
      */
     public function setSurname($surname)
     {
         $this->surname = $surname;
     }
-    
+
     /**
      * Convert user object to string
-     * 
+     *
      * @return string
      */
     public function __toString()
@@ -151,5 +150,3 @@ class User extends BaseUser
         }
     }
 }
-
-?>

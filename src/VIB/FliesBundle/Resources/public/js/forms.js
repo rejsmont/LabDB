@@ -1,5 +1,5 @@
 /* 
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
  * Handles vial barcode input for vial selection form
  * 
  * @param filter
- * 
  */
 function checkVial(filter) {
     
@@ -97,7 +96,6 @@ function checkVial(filter) {
 
 /**
  * Handles vial barcode input for rack vial selection form
- * 
  */
 function checkRackVial() {
   
@@ -186,6 +184,9 @@ function checkRackVial() {
 /**
  * Remove vial from the rack
  * 
+ * @param e
+ * @param vialID
+ * @param rackID
  */
 function removeVial(e,vialID,rackID) {
     var element = $(e);
@@ -206,6 +207,8 @@ function removeVial(e,vialID,rackID) {
 /**
  * Clear rack
  * 
+ * @param e
+ * @param rackID
  */
 function clearRack(e,rackID) {
     var element = $(e);
@@ -226,6 +229,7 @@ function clearRack(e,rackID) {
 /**
  * Set autoprint
  * 
+ * @param e
  */
 function setAutoPrint(e) {
   var element = $(e);
@@ -238,6 +242,11 @@ function setAutoPrint(e) {
     });
 }
 
+/**
+ * Setup popover
+ * 
+ * @param e
+ */
 function setupPopover(e) {
   var element = e;
   var timeout = element.data('delay') != null ? element.data('delay') : 0;
@@ -264,6 +273,11 @@ function setupPopover(e) {
   },timeout));
 }
 
+/**
+ * Prevent form submission on barcode inputs
+ * 
+ * @param e
+ */
 function preventEnterSubmit(e) {
     if (e.which == 13) {
         var targ = $(e.target);
@@ -278,8 +292,14 @@ function preventEnterSubmit(e) {
         }
         return true;
     }
+    return null;
 }
 
+/**
+ * Generate form error html
+ * 
+ * @param message
+ */
 function form_error(message) {
     var error_html = "";
     error_html += '<div class="ui-widget">';
@@ -291,6 +311,9 @@ function form_error(message) {
     return error_html;
 }
 
+/*
+ * The following code is executed on page load
+ */
 $(document).ready(function() {
     $('form').bind("keypress", function(e) {
         return preventEnterSubmit(e);
@@ -311,17 +334,17 @@ $(document).ready(function() {
     });
 
     $('.popover-trigger').hover(function() {
-      setupPopover($(this));
+        setupPopover($(this));
     }, function() {
-      clearTimeout($(this).data('timeout'));
+        clearTimeout($(this).data('timeout'));
     });
 
     $('.rack-display').find('td').click(function() {
-      if($(this).hasClass('empty')) {
-        $('.rack-display').find('td.info').removeClass('info');
-        $(this).addClass('info');
-      }
-      $('#barcode').focus();
+        if($(this).hasClass('empty')) {
+            $('.rack-display').find('td.info').removeClass('info');
+            $(this).addClass('info');
+        }
+        $('#barcode').focus();
     });
     
     $('.control-group').children('.collapse-toggle').click(function() {

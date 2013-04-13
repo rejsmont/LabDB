@@ -16,36 +16,26 @@
  * limitations under the License.
  */
 
-namespace VIB\FliesBundle\Form;
+namespace VIB\FliesBundle\DependencyInjection;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * SearchType class
+ * This is the class that validates and merges configuration from app/config files
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class SearchType extends AbstractType
+class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function getName()
+    public function getConfigTreeBuilder()
     {
-        return "search_form";
-    }
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('vib_flies');
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->add('query', 'text', array(
-                        'required' => false,
-                        'attr' => array(
-                          'class' => 'span2 search-query',
-                          'placeholder' => 'Search')))
-                ->add('filter','hidden',array('required' => false));
+        return $treeBuilder;
     }
 }

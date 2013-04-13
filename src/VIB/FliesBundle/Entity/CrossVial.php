@@ -1,14 +1,14 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,87 +19,79 @@
 namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-
 use JMS\Serializer\Annotation as Serializer;
-
 use Symfony\Component\Validator\Constraints as Assert;
-
-use \DateTime;
-use \DateInterval;
 
 /**
  * CrossVial class
- * 
+ *
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\CrossVialRepository")
  * @Serializer\ExclusionPolicy("all")
- * 
+ *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class CrossVial extends Vial {
-    
+class CrossVial extends Vial
+{
     /**
      * @ORM\Column(type="boolean")
      * @Serializer\Expose
      */
     protected $sterile;
-    
+
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Serializer\Expose
      */
     protected $successful;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Vial", inversedBy="maleCrosses")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotBlank(message = "Male must be specified")
      */
     protected $male;
-        
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Serializer\Expose
      */
     protected $maleName;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Vial", inversedBy="virginCrosses")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotBlank(message = "Virgin must be specified")
      */
     protected $virgin;
-        
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Serializer\Expose
      */
     protected $virginName;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Stock", mappedBy="sourceCross")
      */
     protected $stocks;
 
-    
-
     /**
      * Construct CrossVial
      *
      * @param \VIB\FliesBundle\Entity\CrossVial $parent
-     * @param boolean $flip
+     * @param boolean                           $flip
      */
-    public function __construct(Vial $template = null, $flip = false) {
+    public function __construct(Vial $template = null, $flip = false)
+    {
         parent::__construct($template, $flip);
         $this->setSuccessful(null);
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    protected function inheritFromTemplate(Vial $template = null) {
+    protected function inheritFromTemplate(Vial $template = null)
+    {
         parent::inheritFromTemplate($template);
         if ($template instanceof CrossVial) {
             $this->setMale($template->getMale());
@@ -108,54 +100,59 @@ class CrossVial extends Vial {
             $this->setVirginName($template->getVirginName());
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function setTrashed($trashed) {
+    public function setTrashed($trashed)
+    {
         parent::setTrashed($trashed);
         if ((! $trashed)&&($this->isSterile())) {
             $this->setSuccessful(null);
         }
     }
-    
+
     /**
      * If cross sterile
-     * 
+     *
      * @return boolean
      */
-    public function isSterile() {
+    public function isSterile()
+    {
         return $this->hasProduced() ? false : $this->sterile;
     }
 
     /**
      * Set sterile
-     * 
+     *
      * @param boolean $sterile
      */
-    public function setSterile($sterile) {
+    public function setSterile($sterile)
+    {
         $this->sterile = $this->hasProduced() ? false : $sterile;
         if ($this->sterile) {
             $this->setSuccessful(false);
             $this->setTrashed(true);
         }
     }
-    
+
     /**
      * Has this cross produced stocks or crosses
-     * 
+     *
      * @return boolean
      */
-    public function hasProduced() {
+    public function hasProduced()
+    {
         return ((count($this->getStocks()) > 0)||(count($this->getCrosses()) > 0));
     }
-    
+
     /**
      * Is cross successful
-     * 
+     *
      * @return boolean|null
      */
-    public function isSuccessful() {
+    public function isSuccessful()
+    {
         if ($this->isAlive()) {
             return $this->hasProduced() ? true : $this->successful;
         } else {
@@ -169,10 +166,11 @@ class CrossVial extends Vial {
 
     /**
      * Set successful
-     * 
+     *
      * @param boolean|null $successful
      */
-    public function setSuccessful($successful) {
+    public function setSuccessful($successful)
+    {
         $this->successful = $this->hasProduced() ? true : $successful;
         if (($this->successful === true)||($this->successful === null)) {
             $this->setSterile(false);
@@ -181,10 +179,11 @@ class CrossVial extends Vial {
 
     /**
      * Set outcome
-     * 
+     *
      * @param string $outcome
      */
-    public function setOutcome($outcome) {
+    public function setOutcome($outcome)
+    {
         switch ($outcome) {
             case 'successful':
                 $this->setSuccessful(true);
@@ -200,13 +199,14 @@ class CrossVial extends Vial {
                 break;
         }
     }
-    
+
     /**
      * Get outcome
-     * 
-     * @return $string
+     *
+     * @return string
      */
-    public function getOutcome() {
+    public function getOutcome()
+    {
         if ($this->isSterile()) {
             return 'sterile';
         } elseif ($this->isSuccessful() === true) {
@@ -217,7 +217,7 @@ class CrossVial extends Vial {
             return 'undefined';
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -225,11 +225,12 @@ class CrossVial extends Vial {
     {
         return $this->getName();
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function addChild(Vial $child = null) {
+    public function addChild(Vial $child = null)
+    {
         parent::addChild($child);
         if ($child instanceof CrossVial) {
             $this->setMale($child->getMale());
@@ -238,11 +239,12 @@ class CrossVial extends Vial {
             $this->setVirginName($child->getVirginName());
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function setParent(Vial $parent = null) {
+    public function setParent(Vial $parent = null)
+    {
         parent::setParent($parent);
         if ($parent instanceof CrossVial) {
             $this->setMale($parent->getMale());
@@ -251,36 +253,39 @@ class CrossVial extends Vial {
             $this->setVirginName($parent->getVirginName());
         }
     }
-    
+
     /**
      * {@inheritdoc}
-     * 
+     *
      * @Assert\True(message = "Parent vial must hold a cross")
      */
-    public function isParentValid() {
+    public function isParentValid()
+    {
         return (null === $this->getParent())||($this->getType() == $this->getParent()->getType());
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function getType() {
+    public function getType()
+    {
         return 'cross';
     }
-    
+
     /**
      * Get name
      *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->getVirginName() . " ☿ ✕ " . $this->getMaleName() . " ♂";
     }
-    
+
     /**
      * Set male
      *
-     * @param VIB\FliesBundle\Entity\Vial $male
+     * @param \VIB\FliesBundle\Entity\Vial $male
      */
     public function setMale(Vial $male = null)
     {
@@ -293,13 +298,13 @@ class CrossVial extends Vial {
     /**
      * Get male
      *
-     * @return VIB\FliesBundle\Entity\Vial
+     * @return \VIB\FliesBundle\Entity\Vial
      */
     public function getMale()
     {
         return $this->male;
     }
-    
+
     /**
      * Set maleName
      *
@@ -322,7 +327,7 @@ class CrossVial extends Vial {
     {
         return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->maleName);
     }
-    
+
     /**
      * Get maleName
      *
@@ -335,19 +340,20 @@ class CrossVial extends Vial {
 
     /**
      * Check if male name is specified when male source is a cross
-     * 
+     *
      * @Assert\True(message = "Male genotype must be specified")
-     * 
+     *
      * @return boolean
      */
-    public function isMaleValid() {
+    public function isMaleValid()
+    {
         return ! (($this->getMale() instanceof CrossVial)&&(trim($this->getMaleName()) == ""));
     }
-    
+
     /**
      * Set virgin
      *
-     * @param VIB\FliesBundle\Entity\Vial $virgin
+     * @param \VIB\FliesBundle\Entity\Vial $virgin
      */
     public function setVirgin(Vial $virgin = null)
     {
@@ -360,13 +366,13 @@ class CrossVial extends Vial {
     /**
      * Get virgin
      *
-     * @return VIB\FliesBundle\Entity\Vial
+     * @return \VIB\FliesBundle\Entity\Vial
      */
     public function getVirgin()
     {
         return $this->virgin;
     }
-    
+
     /**
      * Set virginName
      *
@@ -399,18 +405,19 @@ class CrossVial extends Vial {
     {
         return $this->virginName;
     }
-    
+
     /**
      * Check if virgin name is specified when virgin source is a cross
-     * 
+     *
      * @Assert\True(message = "Virgin genotype must be specified")
-     * 
+     *
      * @return boolean
      */
-    public function isVirginValid() {
+    public function isVirginValid()
+    {
         return ! (($this->getVirgin() instanceof CrossVial)&&(trim($this->getVirginName()) == ""));
     }
-    
+
     /**
      * Get stocks
      *
@@ -420,38 +427,43 @@ class CrossVial extends Vial {
     {
         return $this->stocks;
     }
-    
+
     /**
      * Get progress
-     * 
+     *
      * @return float
      */
-    public function getProgress() {
-        $today = new DateTime();
+    public function getProgress()
+    {
+        $today = new \DateTime();
         $interval = $this->getSetupDate()->diff($today);
         $devday = $interval->format('%a') - $this->getDelay();
         $normDevday = ($devday > 0) ? $devday : 0;
+
         return $normDevday / $this->getGenerationTime();
     }
-    
+
     /**
      * Get default flip date
-     * 
+     *
      * @return \DateTime
      */
-    public function getDefaultFlipDate() {
-        $interval = new DateInterval('P' . ($this->getGenerationTime() + $this->getDelay()) . 'D');
+    public function getDefaultFlipDate()
+    {
+        $interval = new \DateInterval('P' . ($this->getGenerationTime() + $this->getDelay()) . 'D');
         $setup = clone $this->getSetupDate();
         $setup->add($interval);
+
         return $setup;
     }
-    
+
     /**
      * Delay development by 2 days for new crosses
-     * 
+     *
      * @return integer
      */
-    protected function getDelay() {
+    protected function getDelay()
+    {
         return (null !== $this->getParent()) ? 2 : 0;
     }
 }

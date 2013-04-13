@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,6 @@ namespace VIB\FliesBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\SecurityExtraBundle\Annotation\SatisfiesParentSecurityPolicy;
 
 use Symfony\Component\Form\AbstractType;
@@ -40,86 +39,92 @@ use VIB\FliesBundle\Form\SelectType;
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\Incubator;
 
-
 /**
  * VialController class
  *
  * @Route("/vials")
- * 
+ *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialController extends CRUDController {
-    
+class VialController extends CRUDController
+{
     /**
      * Construct StockVialController
-     * 
+     *
      */
     public function __construct()
     {
         $this->entityClass  = 'VIB\FliesBundle\Entity\Vial';
         $this->entityName   = 'vial|vials';
     }
-    
+
     /**
      * Get object manager
-     * 
+     *
      * @return \VIB\FliesBundle\Doctrine\VialManager
      */
-    protected function getObjectManager() {
+    protected function getObjectManager()
+    {
         return $this->get('vib.doctrine.vial_manager');
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    protected function getCreateForm() {
+    protected function getCreateForm()
+    {
         return new VialNewType();
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    protected function getEditForm() {
+    protected function getEditForm()
+    {
         return new VialType();
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    protected function getListQuery() {
+    protected function getListQuery()
+    {
         return parent::getListQuery()->addOrderBy('b.setupDate','DESC')
                                      ->addOrderBy('b.id','DESC');
     }
-    
+
     /**
      * List vials
-     * 
+     *
      * @Route("/")
      * @Route("/list/{filter}")
      * @Template()
      * @SatisfiesParentSecurityPolicy
-     * 
-     * @param integer $page
+     *
+     * @param  integer                                    $page
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction($filter = null) {
+    public function listAction($filter = null)
+    {
         $response = parent::listAction($filter);
         $formResponse = $this->handleSelectForm(new SelectType($this->getEntityClass()));
+
         return is_array($formResponse) ? array_merge($response, $formResponse) : $formResponse;
     }
-    
+
     /**
      * Filter query
-     * 
-     * @param \Doctrine\ORM\QueryBuilder $query
-     * @param string $filter
+     *
+     * @param  \Doctrine\ORM\QueryBuilder $query
+     * @param  string                     $filter
      * @return \Doctrine\ORM\Query
      */
-    public function applyFilter($query, $filter = null) {
+    public function applyFilter($query, $filter = null)
+    {
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
         $securityContext = $this->getSecurityContext();
-        switch($filter) {
+        switch ($filter) {
             case 'public':
                 $query = $query->where('b.setupDate > :date')
                                ->andWhere('b.trashed = false')
@@ -145,7 +150,7 @@ class VialController extends CRUDController {
                     return $this->getAclFilter()->apply($query,array('OWNER'));
                 } else {
                     return $query->getQuery();
-                }                
+                }
                 break;
             case 'dead':
                 $query = $query->where('b.setupDate <= :date')
@@ -155,7 +160,7 @@ class VialController extends CRUDController {
                     return $this->getAclFilter()->apply($query,array('OWNER'));
                 } else {
                     return $query->getQuery();
-                }                
+                }
                 break;
             default:
                 $query = $query->where('b.setupDate > :date')
@@ -165,21 +170,22 @@ class VialController extends CRUDController {
                     return $this->getAclFilter()->apply($query,array('OWNER'));
                 } else {
                     return $query->getQuery();
-                }                
+                }
                 break;
         }
     }
-    
+
     /**
      * Show vial
-     * 
+     *
      * @Route("/show/{id}")
      * @Template()
-     * 
-     * @param mixed $id
+     *
+     * @param  mixed                                      $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($id) {
+    public function showAction($id)
+    {
         $vial = $this->getEntity($id);
         if ($this->controls($vial)) {
             return parent::showAction($vial);
@@ -190,38 +196,39 @@ class VialController extends CRUDController {
 
     /**
      * Create vial
-     * 
+     *
      * @Route("/new")
      * @Template()
-     * 
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function createAction() {
+    public function createAction()
+    {
         $om = $this->getObjectManager();
         $class = $this->getEntityClass();
         $vial = new $class();
         $data = array('vial' => $vial, 'number' => 1);
         $form = $this->createForm($this->getCreateForm(), $data);
         $request = $this->getRequest();
-        
+
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
             if ($form->isValid()) {
                 $data = $form->getData();
                 $vial = $data['vial'];
                 $number = $data['number'];
-                
+
                 $vials = $om->expand($vial, $number, false);
                 $om->flush();
                 $om->createACL($vials,$this->getDefaultACL());
-                
+
                 $message = (($count = count($vials)) == 1) ?
                     ucfirst($this->getEntityName()) . ' ' . reset($vials) . ' was created.' :
                     ucfirst($count . ' ' . $this->getEntityPluralName()) . ' were created.';
                 $this->addSessionFlash('success', $message);
-                
+
                 $this->autoPrint($vials);
-                                
+
                 if ($count == 1) {
                     $route = str_replace("_create", "_show", $request->attributes->get('_route'));
                     $url = $this->generateUrl($route,array('id' => reset($vials)->getId()));
@@ -229,22 +236,25 @@ class VialController extends CRUDController {
                     $route = str_replace("_create", "_list", $request->attributes->get('_route'));
                     $url = $this->generateUrl($route);
                 }
+
                 return $this->redirect($url);
             }
         }
+
         return array('form' => $form->createView());
     }
-    
+
     /**
      * Edit vial
-     * 
+     *
      * @Route("/edit/{id}")
      * @Template()
-     * 
-     * @param mixed $id
+     *
+     * @param  mixed                                      $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($id) {
+    public function editAction($id)
+    {
         $vial = $this->getEntity($id);
         if ($this->controls($vial)) {
             return parent::editAction($vial);
@@ -252,23 +262,24 @@ class VialController extends CRUDController {
             return $this->getVialRedirect($vial);
         }
     }
-     
+
     /**
      * Expand vial
-     * 
+     *
      * @Route("/expand/{id}", defaults={"id" = null})
      * @Template()
-     * 
-     * @param mixed $id
+     *
+     * @param  mixed                                            $id
      * @return array|\Symfony\Component\HttpFoundation\Response
      */
-    public function expandAction($id = null) {
+    public function expandAction($id = null)
+    {
         $om = $this->getObjectManager();
         $source = (null !== $id) ? $this->getEntity($id) : null;
-        $data = array('source' => $source, 'number' => 1, 'size' => 'medium');        
+        $data = array('source' => $source, 'number' => 1, 'size' => 'medium');
         $form = $this->createForm(new VialExpandType(), $data);
         $request = $this->getRequest();
-        
+
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
             if ($form->isValid()) {
@@ -276,7 +287,7 @@ class VialController extends CRUDController {
                 $source = $data['source'];
                 $number = $data['number'];
                 $size = $data['size'];
-                
+
                 $vials = $om->expand($source, $number, true, $size);
                 $om->flush();
                 $om->createACL($vials, $this->getDefaultACL());
@@ -285,46 +296,48 @@ class VialController extends CRUDController {
                     ucfirst($this->getEntityName()) . ' ' . $source . ' was flipped.' :
                     ucfirst($this->getEntityName()) . ' ' . $source . ' was expanded into ' . $count . ' vials.';
                 $this->addSessionFlash('success', $message);
-                
+
                 $this->autoPrint($vials);
-                
+
                 $route = str_replace("_expand", "_list", $request->attributes->get('_route'));
                 $url = $this->generateUrl($route);
+
                 return $this->redirect($url);
             }
         }
-        
+
         return array('form' => $form->createView(), 'cancel' => 'vib_flies_vial_list');
     }
-    
+
     /**
      * Select vials
-     * 
+     *
      * @Route("/select")
      * @Template()
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function selectAction() {
+    public function selectAction()
+    {
         $response = array();
         $formResponse = $this->handleSelectForm(new SelectType('VIB\FliesBundle\Entity\Vial'));
-        
+
         return is_array($formResponse) ? array_merge($response, $formResponse) : $formResponse;
     }
-    
+
     /**
      * Handle batch action
-     * 
-     * @param array $data
+     *
+     * @param  array                                      $data
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function handleBatchAction($data) {
-        
+    protected function handleBatchAction($data)
+    {
         $action = $data['action'];
         $vials = new ArrayCollection($data['items']);
         $response = $this->getDefaultBatchResponse();
-        
-        switch($action) {
+
+        switch ($action) {
             case 'label':
                 $response = $this->downloadLabels($vials);
                 break;
@@ -348,17 +361,18 @@ class VialController extends CRUDController {
                 $this->incubateVials($vials, $incubator);
                 break;
         }
-        
+
         return $response;
     }
-    
+
     /**
      * Handle selection form
-     * 
-     * @param \Symfony\Component\Form\AbstractType $formType
+     *
+     * @param  \Symfony\Component\Form\AbstractType             $formType
      * @return array|\Symfony\Component\HttpFoundation\Response
-     */   
-    protected function handleSelectForm(AbstractType $formType) {
+     */
+    protected function handleSelectForm(AbstractType $formType)
+    {
         $form = $this->createForm($formType);
         $request = $this->getRequest();
         if ($request->getMethod() == 'POST') {
@@ -367,29 +381,33 @@ class VialController extends CRUDController {
                 return $this->handleBatchAction($form->getData());
             }
         }
+
         return array('form' => $form->createView());
     }
-    
+
     /**
      * Prepare vial labels
-     * 
-     * @param mixed $vials
+     *
+     * @param  mixed                                      $vials
      * @return \Symfony\Component\HttpFoundation\Response
-     */    
-    protected function prepareLabels($vials) {
+     */
+    protected function prepareLabels($vials)
+    {
         $pdf = $this->get('vibfolks.pdflabel');
         $pdf->addLabel($vials);
+
         return $pdf;
     }
-    
+
     /**
      * Submit print job
-     * 
-     * @param VIB\FliesBundle\Utils\PDFLabel $pdf
-     * @param integer $count
+     *
+     * @param  VIB\FliesBundle\Utils\PDFLabel $pdf
+     * @param  integer                        $count
      * @return boolean
      */
-    protected function submitPrintJob(PDFLabel $pdf, $count = 1) {
+    protected function submitPrintJob(PDFLabel $pdf, $count = 1)
+    {
         $jobStatus = $pdf->printPDF();
         if ($jobStatus == 'successfull-ok') {
             if ($count == 1) {
@@ -397,20 +415,23 @@ class VialController extends CRUDController {
             } else {
                 $this->addSessionFlash('success', 'Labels for ' . $count . ' vials were sent to the printer.');
             }
+
             return true;
         } else {
             $this->addSessionFlash('error', 'There was an error printing labels. The print server said: ' . $jobStatus);
+
             return false;
         }
     }
-    
+
     /**
      * Generate vial labels
-     * 
-     * @param mixed $vials
+     *
+     * @param  mixed                                      $vials
      * @return \Symfony\Component\HttpFoundation\Response
-     */    
-    protected function downloadLabels($vials) {
+     */
+    protected function downloadLabels($vials)
+    {
         $om = $this->getObjectManager();
         $count = ($vials instanceof Collection) ? count($vials) : (($vials instanceof Vial) ? 1 : 0);
         $pdf = $this->prepareLabels($vials);
@@ -420,15 +441,17 @@ class VialController extends CRUDController {
         } else {
             return $this->getDefaultBatchResponse();
         }
+
         return $pdf->outputPDF();
     }
-    
+
     /**
      * Print vial labels
-     * 
+     *
      * @param mixed $vials
-     */    
-    protected function printLabels($vials) {
+     */
+    protected function printLabels($vials)
+    {
         $om = $this->getObjectManager();
         $count = ($vials instanceof Collection) ? count($vials) : (($vials instanceof Vial) ? 1 : 0);
         $pdf = $this->prepareLabels($vials);
@@ -437,25 +460,27 @@ class VialController extends CRUDController {
             $om->flush();
         }
     }
-    
+
     /**
-     * Automatically print vial labels if requested 
-     * 
+     * Automatically print vial labels if requested
+     *
      * @param mixed $vials
      */
-    protected function autoPrint($vials) {
+    protected function autoPrint($vials)
+    {
         if ($this->getSession()->get('autoprint') == 'enabled') {
             $this->printLabels($vials);
         }
     }
-    
+
     /**
      * Flip vials
-     * 
+     *
      * @param \Doctrine\Common\Collections\Collection $vials
-     * @param boolean $trash
-     */     
-    public function flipVials(Collection $vials, $trash = false) {
+     * @param boolean                                 $trash
+     */
+    public function flipVials(Collection $vials, $trash = false)
+    {
         $om = $this->getObjectManager();
         $flippedVials = $om->flip($vials, true, $trash);
         $om->flush();
@@ -469,13 +494,14 @@ class VialController extends CRUDController {
         }
         $this->autoPrint($vials);
     }
-    
+
     /**
      * Trash vials
-     * 
+     *
      * @param \Doctrine\Common\Collections\Collection $vials
-     */  
-    public function trashVials(Collection $vials) {
+     */
+    public function trashVials(Collection $vials)
+    {
         $om = $this->getObjectManager();
         $om->trash($vials);
         $om->flush();
@@ -485,13 +511,14 @@ class VialController extends CRUDController {
             $this->addSessionFlash('success', $count . ' vials were trashed.');
         }
     }
-    
+
     /**
      * Untrash vials
-     * 
+     *
      * @param \Doctrine\Common\Collections\Collection $vials
-     */  
-    public function untrashVials(Collection $vials) {
+     */
+    public function untrashVials(Collection $vials)
+    {
         $om = $this->getObjectManager();
         $om->untrash($vials);
         $om->flush();
@@ -501,14 +528,15 @@ class VialController extends CRUDController {
             $this->addSessionFlash('success', $count . ' vials were removed from trash.');
         }
     }
-    
+
     /**
      * Incubate vials
-     * 
+     *
      * @param \Doctrine\Common\Collections\Collection $vials
-     * @param \VIB\FliesBundle\Entity\Incubator $incubator
-     */  
-    public function incubateVials(Collection $vials, Incubator $incubator) {
+     * @param \VIB\FliesBundle\Entity\Incubator       $incubator
+     */
+    public function incubateVials(Collection $vials, Incubator $incubator)
+    {
         $om = $this->getObjectManager();
         $om->incubate($vials, $incubator);
         $om->flush();
@@ -518,41 +546,46 @@ class VialController extends CRUDController {
             $this->addSessionFlash('success', $count . ' vials were put in ' . $incubator . '.');
         }
     }
-    
+
     /**
      * Get default batch action response
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function getDefaultBatchResponse() {
+    protected function getDefaultBatchResponse()
+    {
         $request = $this->getRequest();
         $currentRoute = $request->attributes->get('_route');
-        
+
         if ($currentRoute == '') {
             $url = $this->generateUrl('vib_flies_vial_list');
+
             return $this->redirect($url);
         }
-        
+
         $pieces = explode('_',$currentRoute);
-        
+
         if (is_numeric($pieces[count($pieces) - 1])) {
             array_pop($pieces);
         }
         $pieces[count($pieces) - 1] = 'list';
         $route = ($currentRoute == 'default') ? 'default' : implode('_', $pieces);
         $url = $this->generateUrl($route);
+
         return $this->redirect($url);
     }
-    
+
     /**
-     * 
-     * @param \VIB\FliesBundle\Entity\Vial $vial
+     *
+     * @param  \VIB\FliesBundle\Entity\Vial               $vial
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function getVialRedirect(Vial $vial) {
+    private function getVialRedirect(Vial $vial)
+    {
         $request = $this->getRequest();
         $route = str_replace("_vial_", "_" . $vial->getType() . "vial_", $request->attributes->get('_route'));
         $url = $this->generateUrl($route, array('id' => $vial->getId()));
+
         return $this->redirect($url);
     }
 }

@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 
-
 /**
  * DoctrineParamConverter
  *
@@ -33,9 +32,9 @@ class DoctrineParamConverter extends SensioDoctrineParamConverter
 {
     /**
      * Apply the converter
-     * 
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface $configuration
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request                                $request
+     * @param  \Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface $configuration
      * @return boolean
      * @throws NotFoundHttpException
      */
@@ -44,24 +43,24 @@ class DoctrineParamConverter extends SensioDoctrineParamConverter
         $name    = $configuration->getName();
         $options = $this->getOptions($configuration);
         $id      = $this->getIdentifier($request, $options, $name);
-        
+
         if (is_array($id)) {
             $id = implode (":",$id);
         }
-        
+
         try {
             return parent::apply($request, $configuration);
-        } catch(NotFoundHttpException $exeption) {
+        } catch (NotFoundHttpException $exeption) {
             throw new NotFoundHttpException(sprintf($options['error_message'],$id));
         }
-        
+
         return true;
     }
-    
+
     /**
      * Get options
-     * 
-     * @param \Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface $configuration
+     *
+     * @param  \Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface $configuration
      * @return array
      */
     protected function getOptions(ConfigurationInterface $configuration)
@@ -71,5 +70,3 @@ class DoctrineParamConverter extends SensioDoctrineParamConverter
         ), parent::getOptions($configuration));
     }
 }
-
-?>

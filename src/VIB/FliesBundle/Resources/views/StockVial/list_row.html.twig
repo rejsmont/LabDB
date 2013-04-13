@@ -12,7 +12,7 @@
   {% set order = entity.id %}
 {% endif %}
 
-<td><input type="checkbox" id="select_items_{{ entity.id }}" 
+<td><input type="checkbox" id="select_items_{{ entity.id }}"
            name="select[items][{{ order }}]"
            value="{{ entity.id }}" {{ checked }}/>
 </td>

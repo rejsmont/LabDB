@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,10 +27,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use VIB\FormsBundle\Form\DataTransformer\EntityToTextTransformer;
 
-
 /**
  * Entity as text input control
- * 
+ *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class TextEntityType extends AbstractType
@@ -40,17 +39,16 @@ class TextEntityType extends AbstractType
      */
     protected $registry;
 
-    
     /**
      * Construct TextEntityType
-     * 
+     *
      * @param Doctrine\Common\Persistence\ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
     {
         $this->registry = $registry;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -64,7 +62,7 @@ class TextEntityType extends AbstractType
 
         $builder->addModelTransformer($transformer);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -104,7 +102,7 @@ class TextEntityType extends AbstractType
             'em' => $emNormalizer,
         ));
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -121,5 +119,3 @@ class TextEntityType extends AbstractType
         return 'text_entity';
     }
 }
-
-?>

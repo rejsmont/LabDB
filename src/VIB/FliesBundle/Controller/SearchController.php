@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,16 +29,15 @@ use VIB\FliesBundle\Entity\CrossVial;
 
 use VIB\FliesBundle\Form\SearchType;
 
-
 /**
  * Description of SearchController
- * 
+ *
  * @Route("/search")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class SearchController extends AbstractController {
-    
+class SearchController extends AbstractController
+{
     /**
      * Handle search request
      *
@@ -47,17 +46,19 @@ class SearchController extends AbstractController {
      * @Template()
      *
      * @return Symfony\Component\HttpFoundation\Response
-     */    
-    public function searchAction() {
+     */
+    public function searchAction()
+    {
         return $this->render('VIBFliesBundle:Search:search.html.twig');
     }
-    
+
     /**
      * Render search form
      *
      * @return Symfony\Component\HttpFoundation\Response
-     */  
-    public function formAction() {
+     */
+    public function formAction()
+    {
         $form = $this->createForm(new SearchType());
         $msie_version = 10;
         $request = $this->get('request');
@@ -75,31 +76,31 @@ class SearchController extends AbstractController {
         } else {
             $msie = false;
         }
-        
+
         return $this->render('VIBFliesBundle:Search:form.html.twig', array(
             'form' => $form->createView(),
             'msie' => $msie ));
     }
-    
+
     /**
      * Handle search result
-     * 
+     *
      * @Route("/result/")
      * @Template()
-     * 
+     *
      * @return array
-     */    
-    public function resultAction() {
-        
+     */
+    public function resultAction()
+    {
         $om = $this->getObjectManager();
         $form = $this->createForm(new SearchType());
         $request = $this->get('request');
         $session = $request->getSession();
-                
+
         if ($request->getMethod() == 'POST') {
-            
+
             $form->bindRequest($request);
-            
+
             if ($form->isValid()) {
                 $data = $form->getData();
                 $query = $data['query'];
@@ -117,11 +118,11 @@ class SearchController extends AbstractController {
                 $session->set('search_query',$query);
                 $session->set('search_filter',$filter);
             }
-        } else {          
+        } else {
             $query = $session->get('search_query');
             $filter = $session->get('search_filter');
         }
-        
+
         switch ($filter) {
             case 'crosses':
                 $queryBuilder = $om->getRepository('VIB\FliesBundle\Entity\CrossVial')->search($query);
@@ -129,10 +130,12 @@ class SearchController extends AbstractController {
                 break;
             case 'vial':
                 $url = $this->generateUrl('vib_flies_vial_show', array('id' => $query));
+
                 return $this->redirect($url);
                 break;
             case 'rack':
-                $url = $this->generateUrl('vib_flies_rack_show', array('id' => (integer)str_replace('R','',$query)));
+                $url = $this->generateUrl('vib_flies_rack_show', array('id' => (integer) str_replace('R','',$query)));
+
                 return $this->redirect($url);
                 break;
             case 'stocks':
@@ -141,14 +144,13 @@ class SearchController extends AbstractController {
                 $result = $this->getAclFilter()->apply($queryBuilder);
                 break;
         }
-        
+
         $paginator  = $this->getPaginator();
         $page = $this->getCurrentPage();
         $entities = $paginator->paginate($result, $page, 10);
+
         return array('entities' => $entities,
                      'query' => $query,
                      'filter' => $filter);
     }
 }
-
-?>

@@ -1,14 +1,14 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,48 +29,52 @@ use PHP_IPP\IPP\CupsPrintIPP;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class PDFLabel {
-    
+class PDFLabel
+{
+
     /**
      * @var \VIB\BaseBundle\Doctrine\ObjectManager $om
      */
     private $om;
-    
+
     /**
      * @var \Tecnick\TCPDF\TCPDF $pdf
      */
     private $pdf;
-    
+
     /**
      * @var string $printHost
      */
     private $printHost;
-    
+
     /**
      * @var string $printQueue
      */
     private $printQueue;
-    
+
     /**
      * Construct PDFLabel
-     * 
-     * @param WhiteOctober\TCPDFBundle\Controller\TCPDFController $TCPDF
-     * @param string $printHost
-     * @param string $printQueue
-     */ 
-    public function __construct(ObjectManager $om, TCPDFController $TCPDF, $printHost, $printQueue) {
+     *
+     * @param \VIB\BaseBundle\Doctrine\ObjectManager               $om
+     * @param \WhiteOctober\TCPDFBundle\Controller\TCPDFController $TCPDF
+     * @param string                                               $printHost
+     * @param string                                               $printQueue
+     */
+    public function __construct(ObjectManager $om, TCPDFController $TCPDF, $printHost, $printQueue)
+    {
         $this->om = $om;
         $this->pdf = $this->prepareLabelPDF($TCPDF);
         $this->printHost = $printHost;
         $this->printQueue = $printQueue;
     }
-    
+
     /**
      * Add label(s) to PDF
-     * 
+     *
      * @param mixed $entities
-     */    
-    public function addLabel($entities) {
+     */
+    public function addLabel($entities)
+    {
         if (($entity = $entities) instanceof LabelInterface) {
             $barcode = $entity->getLabelBarcode();
             $text = $entity->getLabelText();
@@ -102,31 +106,45 @@ class PDFLabel {
                 VIB\FliesBundle\Label\LabelInterface or Doctrine\Common\Collections\Collection');
         }
     }
-    
-    public function outputPDF() {
+
+    /**
+     * Output generated PDF
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function outputPDF()
+    {
         return new Response($this->pdf->Output('', 'S'),200,
                 array(
                     'Content-Type' => 'application/pdf',
                     'Content-Disposition' => 'attachment; filename="labels.pdf"'));
     }
-    
-    public function printPDF() {
+
+    /**
+     * Print generated PDF
+     *
+     * @return string|boolean
+     */
+    public function printPDF()
+    {
         $ipp = new CupsPrintIPP();
         $ipp->setLog('', 0, 0);
         $ipp->setHost($this->printHost);
         $ipp->setPrinterURI($this->printQueue);
         $ipp->setSides(1);
         $ipp->setData($this->pdf->Output('', 'S'));
+
         return $ipp->printJob();
     }
-    
+
     /**
      * Generate label PDF
-     * 
+     *
+     * @param  \WhiteOctober\TCPDFBundle\Controller\TCPDFController $TCPDF
      * @return Tecnick\TCPDF\TCPDF
-     */ 
-    private function prepareLabelPDF(TCPDFController $TCPDF) {
-        
+     */
+    private function prepareLabelPDF(TCPDFController $TCPDF)
+    {
         $pdf = $TCPDF->create('L', 'mm', array(50.8,25.4), true, 'UTF-8', false);
 
         $pdf->SetCreator(false);
@@ -140,17 +158,18 @@ class PDFLabel {
 
         $pdf->SetMargins(2,2);
         $pdf->SetAutoPageBreak(false);
-        
+
         return $pdf;
     }
-    
+
     /**
      * Generate style for 2D barcode
-     * 
+     *
      * @return array
-     */     
-    private function get2DBarcodeStyle() {
-        
+     */
+    private function get2DBarcodeStyle()
+    {
+
         $style = array(
             'border' => 0,
             'vpadding' => '0',
@@ -159,9 +178,7 @@ class PDFLabel {
             'bgcolor' => false,
             'module_width' => 1,
             'module_height' => 1);
-        
+
         return $style;
     }
 }
-
-?>

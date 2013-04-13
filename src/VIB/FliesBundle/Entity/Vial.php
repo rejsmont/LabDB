@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,124 +19,119 @@
 namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-
 use JMS\Serializer\Annotation as Serializer;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
-use \DateTime;
-use \DateInterval;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\BaseBundle\Entity\Entity;
 use VIB\FliesBundle\Label\LabelDateInterface;
 
-
 /**
  * Vial class
- * 
+ *
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\VialRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"vial" = "Vial", "stock" = "StockVial", "cross" = "CrossVial"})
  * @Serializer\ExclusionPolicy("all")
- * 
+ *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Vial extends Entity implements LabelDateInterface {
-    
+class Vial extends Entity implements LabelDateInterface
+{
     /**
      * @ORM\Column(type="date")
      * @Assert\NotBlank(message = "Setup date must be specified")
      * @Serializer\Expose
      */
     protected $setupDate;
-    
+
     /**
      * @ORM\Column(type="date", nullable=true)
      * @Serializer\Expose
      */
     protected $flipDate;
-    
+
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Expose
      */
     protected $notes;
-    
+
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Serializer\Expose
      */
     protected $size;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Vial", mappedBy="parent")
      */
     protected $children;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Vial", inversedBy="children")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $parent;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="CrossVial", mappedBy="virgin")
      */
     protected $virginCrosses;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="CrossVial", mappedBy="male")
      */
     protected $maleCrosses;
-    
+
     /**
      * @ORM\Column(type="boolean")
      * @Serializer\Expose
      */
     protected $labelPrinted;
-    
+
     /**
      * @ORM\Column(type="boolean")
      * @Serializer\Expose
      */
     protected $trashed;
-    
+
     /**
      * @ORM\OneToOne(targetEntity="RackPosition", inversedBy="contents")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $position;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="RackPosition", inversedBy="prevContents")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $prevPosition;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Incubator", inversedBy="vials")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $incubator;
-    
+
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     protected $temperature;
-    
-    
+
     /**
      * Construct a new vial
-     * 
+     *
      * If $template is set, inherit properties from the template.
      * If $flip is true, become a child of the template.
      *
      * @param \VIB\FliesBundle\Entity\Vial $template
-     * @param boolean $flip
+     * @param boolean                      $flip
      */
-    public function __construct(Vial $template = null, $flip = true) {
+    public function __construct(Vial $template = null, $flip = true)
+    {
         $this->temperature = 21.00;
         $this->children = new ArrayCollection();
         $this->virginCrosses = new ArrayCollection();
@@ -153,61 +148,67 @@ class Vial extends Entity implements LabelDateInterface {
             $this->resetDates();
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function getLabelBarcode() {
+    public function getLabelBarcode()
+    {
         return sprintf("%06d",$this->getId());
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function getLabelText() {
+    public function getLabelText()
+    {
         return $this->getName();
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function getLabelDate() {
+    public function getLabelDate()
+    {
         return $this->getSetupDate();
     }
-    
+
     /**
      * Get id
      *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
-    
+
     /**
      * Reset dates
-     * 
+     *
      * @param \VIB\FliesBundle\Entity\Vial $template
      */
-    private function resetDates(Vial $template = null) {
-        $this->setSetupDate(new DateTime());
+    private function resetDates(Vial $template = null)
+    {
+        $this->setSetupDate(new \DateTime());
         if ((null !== $template)&&
             (null !== $template->getFlipDate())&&
             (null !== $template->getSetupDate())) {
-            $flipDate = new DateTime();
+            $flipDate = new \DateTime();
             $flipDate->add($template->getSetupDate()->diff($template->getFlipDate()));
             $this->setFlipDate($flipDate);
         } else {
             $this->setFlipDate(null);
         }
     }
-    
+
     /**
      * Inherit properties from template
-     * 
+     *
      * @param \VIB\FliesBundle\Entity\Vial $template
      */
-    protected function inheritFromTemplate(Vial $template = null) {
+    protected function inheritFromTemplate(Vial $template = null)
+    {
         if (null !== $template) {
             $this->setSetupDate($template->getSetupDate());
             $this->setFlipDate($template->getFlipDate());
@@ -216,31 +217,34 @@ class Vial extends Entity implements LabelDateInterface {
             $this->setIncubator($template->getIncubator());
         }
     }
-    
+
     /**
      * Return string representation of Vial
-     * 
+     *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return sprintf("%06d",$this->getId());
     }
-    
+
     /**
      * Get name
      *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->getId();
     }
-    
+
     /**
      * Set setupDate
      *
      * @param \DateTime $setupDate
      */
-    public function setSetupDate($setupDate) {
+    public function setSetupDate($setupDate)
+    {
         $this->setupDate = $setupDate;
     }
 
@@ -249,7 +253,8 @@ class Vial extends Entity implements LabelDateInterface {
      *
      * @return \DateTime
      */
-    public function getSetupDate() {
+    public function getSetupDate()
+    {
         return $this->setupDate;
     }
 
@@ -258,7 +263,8 @@ class Vial extends Entity implements LabelDateInterface {
      *
      * @param \DateTime $flipDate
      */
-    public function setFlipDate($flipDate) {
+    public function setFlipDate($flipDate)
+    {
         $this->flipDate = $flipDate;
     }
 
@@ -267,62 +273,68 @@ class Vial extends Entity implements LabelDateInterface {
      *
      * @return \DateTime
      */
-    public function getFlipDate() {
+    public function getFlipDate()
+    {
         return $this->flipDate;
     }
 
     /**
      * Set notes
-     * 
+     *
      * @param string $notes
      */
-    public function setNotes($notes) {
+    public function setNotes($notes)
+    {
         $this->notes = $notes;
     }
-    
+
     /**
      * Get notes
-     * 
+     *
      * @return type
      */
-    public function getNotes() {
+    public function getNotes()
+    {
         return $this->notes;
     }
-    
+
     /**
      * Get size
-     * 
+     *
      * @return type
      */
-    public function getSize() {
+    public function getSize()
+    {
         return (null !== $this->size) ? $this->size : 'medium';
     }
 
     /**
      * Set size
-     * 
+     *
      * @return type
      */
-    public function setSize($size) {
+    public function setSize($size)
+    {
         $this->size = $size;
     }
 
-        
     /**
      * Add child
      *
      * @param \VIB\FliesBundle\Entity\Vial $child
      */
-    public function addChild(Vial $child = null) {
+    public function addChild(Vial $child = null)
+    {
         $this->getChildren()->add($child);
     }
-    
+
     /**
      * Remove child
      *
      * @param \VIB\FliesBundle\Entity\Vial $child
      */
-    public function removeChild(Vial $child = null) {
+    public function removeChild(Vial $child = null)
+    {
         $this->getChildren()->removeElement($child);
     }
 
@@ -331,7 +343,8 @@ class Vial extends Entity implements LabelDateInterface {
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getChildren() {
+    public function getChildren()
+    {
         return $this->children;
     }
 
@@ -340,28 +353,31 @@ class Vial extends Entity implements LabelDateInterface {
      *
      * @param \VIB\FliesBundle\Entity\Vial $parent
      */
-    public function setParent(Vial $parent = null) {
+    public function setParent(Vial $parent = null)
+    {
         $this->parent = $parent;
     }
-    
+
     /**
      * Get parent
      *
      * @return \VIB\FliesBundle\Entity\Vial
      */
-    public function getParent() {
+    public function getParent()
+    {
         return $this->parent;
     }
-    
+
     /**
      * Check if parent vial is of matching type
-     * 
+     *
      * @return boolean
      */
-    public function isParentValid() {
+    public function isParentValid()
+    {
         return true;
     }
-    
+
     /**
      * Get maleCrosses
      *
@@ -371,7 +387,7 @@ class Vial extends Entity implements LabelDateInterface {
     {
         return $this->maleCrosses;
     }
-    
+
     /**
      * Get virginCrosses
      *
@@ -381,7 +397,7 @@ class Vial extends Entity implements LabelDateInterface {
     {
         return $this->virginCrosses;
     }
-    
+
     /**
      * Get crosses
      *
@@ -390,91 +406,93 @@ class Vial extends Entity implements LabelDateInterface {
     public function getCrosses()
     {
         $crosses = new ArrayCollection();
-        
-        foreach($this->maleCrosses as $cross) {
+        foreach ($this->maleCrosses as $cross) {
             $crosses->add($cross);
         }
-        
-        foreach($this->virginCrosses as $cross) {
+        foreach ($this->virginCrosses as $cross) {
             $crosses->add($cross);
         }
-        
+
         return $crosses;
     }
-    
-        
+
     /**
      * Get living crosses
      *
      * @return Doctrine\Common\Collections\Collection
      */
-    public function getLivingCrosses() {
-        
+    public function getLivingCrosses()
+    {
         $livingCrosses = new ArrayCollection();
-        
         foreach ($this->getCrosses() as $cross) {
             if ($cross->isAlive())
                 $livingCrosses->add($cross);
         }
-        
+
         return $livingCrosses;
     }
-    
+
     /**
      * Is label printed
-     * 
+     *
      * @return boolean
      */
-    public function isLabelPrinted() {
+    public function isLabelPrinted()
+    {
         return $this->labelPrinted;
     }
 
     /**
      * Set labelPrinted
      *
-     * @param boolean $labelPrinted 
+     * @param boolean $labelPrinted
      */
-    public function setLabelPrinted($labelPrinted) {
+    public function setLabelPrinted($labelPrinted)
+    {
         $this->labelPrinted = $labelPrinted;
     }
-    
+
     /**
      * Is vial trashed
-     * 
+     *
      * @return boolean
      */
-    public function isTrashed() {
+    public function isTrashed()
+    {
         return $this->trashed;
     }
 
     /**
      * Set trashed
-     * 
-     * @param boolean $trashed 
+     *
+     * @param boolean $trashed
      */
-    public function setTrashed($trashed) {
+    public function setTrashed($trashed)
+    {
         $this->trashed = $trashed;
         if ($trashed) {
             $this->temperature = $this->getTemperature();
             $this->setPosition(null);
         }
     }
-    
+
     /**
      * Get position
-     * 
+     *
      * @return \VIB\FliesBundle\Entity\RackPosition
      */
-    public function getPosition() {
+    public function getPosition()
+    {
         return $this->position;
     }
 
     /**
      * Set position
-     * 
+     *
      * @param \VIB\FliesBundle\Entity\RackPosition $position
      */
-    public function setPosition(RackPosition $position = null) {
+    public function setPosition(RackPosition $position = null)
+    {
         $this->setPrevPosition($this->getPosition());
         $this->position = $position;
         if ((null !== $position)&&($position->getContents() !== $this)) {
@@ -484,28 +502,31 @@ class Vial extends Entity implements LabelDateInterface {
 
     /**
      * Get previous position
-     * 
+     *
      * @return \VIB\FliesBundle\Entity\RackPosition
      */
-    public function getPrevPosition() {
+    public function getPrevPosition()
+    {
         return $this->prevPosition;
     }
 
     /**
      * Set previous position
-     * 
+     *
      * @param \VIB\FliesBundle\Entity\RackPosition $prevPosition
      */
-    public function setPrevPosition(RackPosition $prevPosition = null) {
+    public function setPrevPosition(RackPosition $prevPosition = null)
+    {
         $this->prevPosition = $prevPosition;
     }
 
     /**
      * Get incubator
-     * 
+     *
      * @return \VIB\FliesBundle\Entity\Incubator
      */
-    public function getIncubator() {
+    public function getIncubator()
+    {
         if ((($position = $this->getPosition()) instanceof RackPosition)&&
             (($rack = $position->getRack()) instanceof Rack)) {
             return $rack->getIncubator();
@@ -516,32 +537,35 @@ class Vial extends Entity implements LabelDateInterface {
 
     /**
      * Set incubator
-     * 
+     *
      * @param \VIB\FliesBundle\Entity\Incubator $incubator
      */
-    public function setIncubator(Incubator $incubator = null) {
+    public function setIncubator(Incubator $incubator = null)
+    {
         $this->incubator = $incubator;
     }
 
     /**
      * Get position
-     * 
+     *
      * @return \VIB\FliesBundle\Entity\RackPosition
      */
-    public function getLocation() {
-        $incubator = (string)$this->getIncubator();
-        $position = (string)$this->getPosition();
+    public function getLocation()
+    {
+        $incubator = (string) $this->getIncubator();
+        $position = (string) $this->getPosition();
         $glue = (null !== $incubator)&&(null !== $position) ? " " : "";
-        
+
         return $this->isAlive() ? $incubator . $glue . $position : null;
     }
-    
+
     /**
      * Get temperature
-     * 
+     *
      * @return float The temperature vial is kept in
      */
-    public function getTemperature() {
+    public function getTemperature()
+    {
         $incubator = $this->getIncubator();
         if (($incubator instanceof Incubator)&&(! $this->isTrashed())) {
             return $incubator->getTemperature();
@@ -549,65 +573,74 @@ class Vial extends Entity implements LabelDateInterface {
             return ($this->temperature !== null) ? $this->temperature : 21.00;
         }
     }
-    
+
     /**
      * Get generation time
-     * 
+     *
      * @return integer
      */
-    public function getGenerationTime() {
+    public function getGenerationTime()
+    {
         return round(7346.7 * pow($this->getTemperature(),-2.079));
     }
-    
+
     /**
      * Get progress
-     * 
+     *
      * @return float
      */
-    public function getProgress() {
-        $today = new DateTime();
+    public function getProgress()
+    {
+        $today = new \DateTime();
         $interval = $this->getSetupDate()->diff($today);
+
         return $interval->format('%a') / $this->getGenerationTime();
     }
-    
+
     /**
      * Get default flip date
-     * 
+     *
      * @return \DateTime
      */
-    public function getDefaultFlipDate() {
-        $interval = new DateInterval('P' . 2 * $this->getGenerationTime() . 'D');
+    public function getDefaultFlipDate()
+    {
+        $interval = new \DateInterval('P' . 2 * $this->getGenerationTime() . 'D');
         $setup = clone $this->getSetupDate();
         $setup->add($interval);
+
         return $setup;
     }
-    
+
     /**
      * Get set or calculated value for flip date
-     * 
+     *
      * @return \DateTime
      */
-    public function getRealFlipDate() {
+    public function getRealFlipDate()
+    {
         return (null !== $this->getFlipDate()) ? $this->getFlipDate() : $this->getDefaultFlipDate();
     }
-    
+
     /**
-     * Is alive
+     * Is vial alive
      *
      * @return boolean
      */
-    public function isAlive() {
-        $currentDate = new DateTime();
-        $date = $currentDate->sub(new DateInterval('P2M'));
+    public function isAlive()
+    {
+        $currentDate = new \DateTime();
+        $date = $currentDate->sub(new \DateInterval('P2M'));
+
         return (($this->getSetupDate() > $date ? true : false) && (! $this->isTrashed()));
     }
-    
+
     /**
      * Get vial type
-     * 
+     *
      * @return string
      */
-    public function getType() {
+    public function getType()
+    {
         return '';
     }
 }

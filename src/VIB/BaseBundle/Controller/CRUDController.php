@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,49 +26,47 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-
 /**
  * Base class for CRUD operations CRUDController
- * 
+ *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 abstract class CRUDController extends AbstractController
 {
-    
+
     /**
      * Entity class for this controller
-     * 
+     *
      * @var string
      */
     protected $entityClass;
-    
+
     /**
      * Entity name for this controller
-     * 
+     *
      * @var string
      */
     protected $entityName;
 
-    
     /**
      * Construct CRUDController
      *
-     */ 
+     */
     public function __construct()
     {
         $this->entityClass = null;
         $this->entityName = 'entity|entities';
     }
-        
+
     /**
      * List entities
-     * 
+     *
      * @Route("/")
      * @Route("/list/{filter}")
      * @Template()
      * @Secure(roles="ROLE_USER, ROLE_ADMIN")
-     * 
-     * @param string $filter 
+     *
+     * @param  string $filter
      * @return array
      */
     public function listAction($filter = null)
@@ -77,20 +75,21 @@ abstract class CRUDController extends AbstractController
         $page = $this->getCurrentPage();
         $query = $this->applyFilter($this->getListQuery(), $filter);
         $entities = $paginator->paginate($query, $page, 10);
+
         return array('entities' => $entities, 'filter' => $filter);
     }
-    
+
     /**
      * Filter query
-     * 
-     * @param type $query
-     * @param type $filter
+     *
+     * @param  type $query
+     * @param  type $filter
      * @return type
      */
     protected function applyFilter($query, $filter = null)
     {
         $securityContext = $this->getSecurityContext();
-        switch($filter) {
+        switch ($filter) {
             case 'public':
             case 'all':
                 if (($this->getUser() !== null)&&(! $securityContext->isGranted('ROLE_ADMIN'))) {
@@ -108,15 +107,15 @@ abstract class CRUDController extends AbstractController
                 break;
         }
     }
-    
+
     /**
      * Show entity
-     * 
+     *
      * @Route("/show/{id}")
      * @Template()
-     * 
+     *
      * @param mixed $id
-     * 
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function showAction($id)
@@ -128,15 +127,16 @@ abstract class CRUDController extends AbstractController
         if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('VIEW', $entity))) {
             throw new AccessDeniedException();
         }
+
         return array('entity' => $entity, 'owner' => $owner);
     }
-    
+
     /**
      * Create entity
-     * 
+     *
      * @Route("/new")
      * @Template()
-     * 
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function createAction()
@@ -156,19 +156,21 @@ abstract class CRUDController extends AbstractController
                 $this->addSessionFlash('success', $message);
                 $route = str_replace("_create", "_show", $request->attributes->get('_route'));
                 $url = $this->generateUrl($route,array('id' => $entity->getId()));
+
                 return $this->redirect($url);
             }
         }
+
         return array('form' => $form->createView());
     }
 
     /**
      * Edit entity
-     * 
+     *
      * @Route("/edit/{id}")
      * @Template()
-     * 
-     * @param mixed $id
+     *
+     * @param  mixed                                     $id
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function editAction($id)
@@ -190,19 +192,21 @@ abstract class CRUDController extends AbstractController
                 $this->addSessionFlash('success', $message);
                 $route = str_replace("_edit", "_show", $request->attributes->get('_route'));
                 $url = $this->generateUrl($route,array('id' => $entity->getId()));
+
                 return $this->redirect($url);
             }
         }
+
         return array('form' => $form->createView());
     }
 
     /**
      * Delete entity
-     * 
+     *
      * @Route("/delete/{id}")
      * @Template()
-     * 
-     * @param mixed $id
+     *
+     * @param  mixed                                     $id
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -222,32 +226,35 @@ abstract class CRUDController extends AbstractController
             $request = $this->getRequest();
             $route = str_replace("_delete", "_list", $request->attributes->get('_route'));
             $url = $this->generateUrl($route);
+
             return $this->redirect($url);
         }
+
         return array('entity' => $entity);
     }
-        
+
     /**
      * Get query returning entities to list
-     * 
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     protected function getListQuery()
     {
         $om = $this->getObjectManager();
+
         return $om->getRepository($this->getEntityClass())->createQueryBuilder('b');
     }
-        
+
     /**
      * Get entity
-     * 
-     * @param mixed $id
+     *
+     * @param  mixed                                                         $id
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @return \VIB\BaseBundle\Entity\Entity
      */
     protected function getEntity($id)
     {
-        $class = $this->getEntityClass();        
+        $class = $this->getEntityClass();
         if ($id instanceof $class) {
             return $id;
         }
@@ -258,12 +265,13 @@ abstract class CRUDController extends AbstractController
         } else {
             throw new NotFoundHttpException();
         }
+
         return null;
     }
-    
+
     /**
      * Get default ACL
-     * 
+     *
      * @return array
      */
     protected function getDefaultACL()
@@ -274,70 +282,71 @@ abstract class CRUDController extends AbstractController
             array('identity' => 'ROLE_USER',
                   'permission' => MaskBuilder::MASK_VIEW));
     }
-    
+
     /**
      * Get create form
-     * 
+     *
      * @return \Symfony\Component\Form\AbstractType
      */
     protected function getCreateForm()
     {
         return $this->getEditForm();
     }
-    
+
     /**
      * Get edit form
-     * 
+     *
      * @return \Symfony\Component\Form\AbstractType
      */
     protected function getEditForm()
     {
         return null;
     }
-    
+
     /**
      * Get managed entity class
-     * 
+     *
      * @return string
      */
     protected function getEntityClass()
     {
         return $this->entityClass;
     }
-    
+
     /**
      * Get managed entity name
-     * 
+     *
      * @return string
      */
     protected function getEntityName()
     {
         $names = explode('|',$this->entityName);
+
         return $names[0];
     }
-    
+
     /**
      * Get managed entity plural name
-     * 
+     *
      * @return string
      */
     protected function getEntityPluralName()
     {
         $names = explode('|',$this->entityName);
+
         return $names[1];
     }
-    
+
     /**
      * Check if entity is controlled by this controller
-     * 
-     * @param object $entity
+     *
+     * @param  object  $entity
      * @return boolean
      */
     protected function controls($entity)
     {
         $reflectionClass = new \ReflectionClass($entity);
+
         return $this->getEntityClass() == $reflectionClass->getName();
     }
 }
-
-?>

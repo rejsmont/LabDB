@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,6 @@ namespace VIB\FliesBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,67 +27,71 @@ use Doctrine\Common\Collections\ArrayCollection;
 use VIB\FliesBundle\Form\CrossVialType;
 use VIB\FliesBundle\Form\CrossVialNewType;
 
-
 /**
  * StockVialController class
- * 
+ *
  * @Route("/crosses")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class CrossVialController extends VialController
 {
-    
+
     /**
      * Construct CrossVialController
-     */ 
-    public function __construct() {
+     */
+    public function __construct()
+    {
         $this->entityClass = 'VIB\FliesBundle\Entity\CrossVial';
         $this->entityName = 'cross|crosses';
     }
-    
+
     /**
      * Get object manager
-     * 
+     *
      * @return \VIB\FliesBundle\Doctrine\CrossVialManager
      */
-    protected function getObjectManager() {
+    protected function getObjectManager()
+    {
         return $this->get('vib.doctrine.crossvial_manager');
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    protected function getCreateForm() {
+    protected function getCreateForm()
+    {
         return new CrossVialNewType();
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    protected function getEditForm() {
+    protected function getEditForm()
+    {
         return new CrossVialType();
     }
-    
+
     /**
      * Statistics for cross
-     * 
+     *
      * @Route("/stats/{id}")
      * @Template()
-     * 
+     *
      * @param mixed $id
-     * 
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function statsAction($id) {
+    public function statsAction($id)
+    {
         $cross = $this->getEntity($id);
-        $owner = $this->getOwner($cross);
-        
+        $owner = $this->getObjectManager()->getOwner($cross);
+
         $startDate = clone $cross->getSetupDate();
         $stopDate = clone $cross->getSetupDate();
         $startDate->sub(new \DateInterval('P2W'));
         $stopDate->add(new \DateInterval('P2W'));
-        
+
         $query = $this->getListQuery();
         $query->andWhere('b.maleName = :male_name')
               ->andWhere('b.virginName = :virgin_name')
@@ -100,7 +103,7 @@ class CrossVialController extends VialController
               ->setParameter('virgin_name', $cross->getUnformattedVirginName())
               ->setParameter('start_date', $startDate->format('Y-m-d'))
               ->setParameter('stop_date', $stopDate->format('Y-m-d'));
-        
+
         $total = $this->get('vib.security.helper.acl')->apply($query,array('OWNER'),$owner)->getResult();
         $sterile = new ArrayCollection();
         $success = new ArrayCollection();
@@ -109,11 +112,11 @@ class CrossVialController extends VialController
         $stocks = new ArrayCollection();
         $crosses = new ArrayCollection();
         $temps = new ArrayCollection();
-        
+
         if (count($total) == 0) {
             throw $this->createNotFoundException();
         }
-        
+
         foreach ($total as $vial) {
             $temp = $vial->getTemperature();
             if (! $temps->contains($temp)) {
@@ -138,9 +141,9 @@ class CrossVialController extends VialController
             } else {
                 $ongoing->add($vial);
             }
-            
+
         }
-        
+
         return array('cross' => $cross,
                      'total' => $total,
                      'sterile' => $sterile,
@@ -151,17 +154,17 @@ class CrossVialController extends VialController
                      'crosses' => $crosses,
                      'temps' => $temps);
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function handleBatchAction($data) {
-        
+    public function handleBatchAction($data)
+    {
         $action = $data['action'];
         $vials = new ArrayCollection($data['items']);
         $response = $this->getDefaultBatchResponse();
-        
-        switch($action) {
+
+        switch ($action) {
             case 'marksterile':
                 $this->markSterile($vials);
                 break;
@@ -174,16 +177,17 @@ class CrossVialController extends VialController
             default:
                 return parent::handleBatchAction($data);
         }
-        
+
         return $response;
     }
-    
+
     /**
      * Mark crosses as sterile and trash them
-     * 
+     *
      * @param \Doctrine\Common\Collections\Collection $vials
-     */  
-    public function markSterile(Collection $vials) {
+     */
+    public function markSterile(Collection $vials)
+    {
         $om = $this->getObjectManager();
         $om->markSterile($vials);
         $om->flush();
@@ -193,13 +197,14 @@ class CrossVialController extends VialController
             $this->addSessionFlash('success', $count . ' crosses were marked as sterile and trashed.');
         }
     }
-    
+
     /**
      * Mark crosses as successful
-     * 
+     *
      * @param \Doctrine\Common\Collections\Collection $vials
-     */  
-    public function markSuccessful(Collection $vials) {
+     */
+    public function markSuccessful(Collection $vials)
+    {
         $om = $this->getObjectManager();
         $om->markSuccessful($vials);
         $om->flush();
@@ -209,13 +214,14 @@ class CrossVialController extends VialController
             $this->addSessionFlash('success', $count . ' crosses were marked as successful.');
         }
     }
-    
+
     /**
      * Mark crosses as successful
-     * 
+     *
      * @param \Doctrine\Common\Collections\Collection $vials
-     */  
-    public function markFailed(Collection $vials) {
+     */
+    public function markFailed(Collection $vials)
+    {
         $om = $this->getObjectManager();
         $om->markFailed($vials);
         $om->flush();

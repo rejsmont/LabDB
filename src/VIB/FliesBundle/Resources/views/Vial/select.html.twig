@@ -6,8 +6,8 @@
 
 {% block list_selector %}
   <div class="form-inline control-group well">
-    <input id="barcode" class="barcode" type="text" 
-           placeholder="Scan your barcodes here" value="" 
+    <input id="barcode" class="barcode" type="text"
+           placeholder="Scan your barcodes here" value=""
            onchange="checkVial()" data-link="{{ path('vib_flies_ajax_vial')}}"
            data-rack-redirect="{{ path('vib_flies_rack_show',{'id': 0}) | replace({'/0': '/'}) }}" />
     <span class="help-inline"></span>

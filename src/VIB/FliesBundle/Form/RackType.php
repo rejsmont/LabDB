@@ -1,14 +1,14 @@
 <?php
 
 /*
- * Copyright 2011 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,9 +20,7 @@ namespace VIB\FliesBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-
 use Symfony\Component\Validator\Constraints\Range;
-
 
 /**
  * RackType class
@@ -38,7 +36,7 @@ class RackType extends AbstractType
     {
         return "rack";
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -55,5 +53,3 @@ class RackType extends AbstractType
                             new Range(array('min' => 1)))));
     }
 }
-
-?>

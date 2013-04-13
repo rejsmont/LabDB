@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,6 @@ use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
-
 /**
  * ACL aware implementation of Doctrine\Common\Persistence\ObjectManagerDecorator
  *
@@ -45,19 +44,18 @@ class ObjectManager extends ObjectManagerDecorator
      * @var \Symfony\Component\Security\Core\User\UserProviderInterface
      */
     protected $userProvider;
-    
+
     /**
      * @var \Symfony\Component\Security\Acl\Model\AclProviderInterface
      */
     protected $aclProvider;
-    
-    
+
     /**
      * Construct ObjectManager
-     * 
-     * @param Doctrine\Common\Persistence\ManagerRegistry $mr
+     *
+     * @param Doctrine\Common\Persistence\ManagerRegistry                $mr
      * @param Symfony\Component\Security\Core\User\UserProviderInterface $userManager
-     * @param Symfony\Component\Security\Acl\Model\AclProviderInterface $aclProvider
+     * @param Symfony\Component\Security\Acl\Model\AclProviderInterface  $aclProvider
      */
     public function __construct(ManagerRegistry $mr,
                                 UserProviderInterface $userProvider,
@@ -67,12 +65,12 @@ class ObjectManager extends ObjectManagerDecorator
         $this->userProvider = $userProvider;
         $this->aclProvider = $aclProvider;
     }
-    
+
     /**
      * Create ACL for object(s)
-     * 
+     *
      * @param object $objects
-     * @param array $acl
+     * @param array  $acl
      */
     public function createACL($objects, array $acl_array)
     {
@@ -97,11 +95,11 @@ class ObjectManager extends ObjectManagerDecorator
             $aclProvider->updateAcl($acl);
         }
     }
-    
+
     /**
      * Get object's owner
-     * 
-     * @param object $object
+     *
+     * @param  object                                             $object
      * @return Symfony\Component\Security\Core\User\UserInterface
      */
     public function getOwner($object)
@@ -110,7 +108,7 @@ class ObjectManager extends ObjectManagerDecorator
         $aclProvider = $this->aclProvider;
         try {
             $acl = $aclProvider->findAcl($objectIdentity);
-            foreach($acl->getObjectAces() as $ace) {
+            foreach ($acl->getObjectAces() as $ace) {
                 if ($ace->getMask() == MaskBuilder::MASK_OWNER) {
                     $securityIdentity = $ace->getSecurityIdentity();
                     if ($securityIdentity instanceof UserSecurityIdentity) {
@@ -122,8 +120,7 @@ class ObjectManager extends ObjectManagerDecorator
                 }
             }
         } catch (AclNotFoundException $e) {}
+
         return null;
     }
 }
-
-?>

@@ -2,13 +2,13 @@
 
 /*
  * Copyright 2013 Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,18 +30,20 @@ use \VIB\FliesBundle\Entity\Incubator;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialManager extends ObjectManager {
+class VialManager extends ObjectManager
+{
 
     /**
      * Flip vial(s)
-     * 
-     * @param \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
-     * @param boolean $setSource
-     * @param boolean $trashSource
+     *
+     * @param  \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
+     * @param  boolean                                                              $setSource
+     * @param  boolean                                                              $trashSource
      * @return \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection
      * @throws \ErrorException
      */
-    public function flip($vials, $setSource = true, $trashSource = false) {
+    public function flip($vials, $setSource = true, $trashSource = false)
+    {
         if (($vial = $vials) instanceof Vial) {
             $vialClass = get_class($vial);
             $newVial = new $vialClass($vial,$setSource);
@@ -51,12 +53,14 @@ class VialManager extends ObjectManager {
                 $this->persist($vial);
             }
             $this->persist($newVial);
+
             return $newVial;
         } elseif ($vials instanceof Collection) {
             $newVials = new ArrayCollection();
             foreach ($vials as $vial) {
                 $newVials->add($this->flip($vial));
             }
+
             return $newVials;
         } elseif (null === $vials) {
             throw new \ErrorException('Argument 1 must not be null');
@@ -65,14 +69,15 @@ class VialManager extends ObjectManager {
                 VIB\FliesBundle\Entity\Vial or Doctrine\Common\Collections\Collection');
         }
     }
-    
+
     /**
      * Trash vial(s)
-     * 
-     * @param \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
+     *
+     * @param  \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
-    public function trash($vials) {
+    public function trash($vials)
+    {
         if (($vial = $vials) instanceof Vial) {
             $vial->setTrashed(true);
             $this->persist($vial);
@@ -87,14 +92,15 @@ class VialManager extends ObjectManager {
                 VIB\FliesBundle\Entity\Vial or Doctrine\Common\Collections\Collection');
         }
     }
-    
+
     /**
      * UnTrash vial(s)
-     * 
-     * @param \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
+     *
+     * @param  \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
-    public function untrash($vials) {
+    public function untrash($vials)
+    {
         if (($vial = $vials) instanceof Vial) {
             $vial->setTrashed(false);
             $this->persist($vial);
@@ -109,14 +115,15 @@ class VialManager extends ObjectManager {
                 VIB\FliesBundle\Entity\Vial or Doctrine\Common\Collections\Collection');
         }
     }
-    
+
     /**
      * Mark vial(s) as having their label printed
-     * 
-     * @param \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
+     *
+     * @param  \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
-    public function markPrinted($vials) {
+    public function markPrinted($vials)
+    {
         if (($vial = $vials) instanceof Vial) {
             $vial->setLabelPrinted(true);
             $this->persist($vial);
@@ -131,15 +138,16 @@ class VialManager extends ObjectManager {
                 VIB\FliesBundle\Entity\Vial or Doctrine\Common\Collections\Collection');
         }
     }
-    
+
     /**
      * Put vials into $incubator
-     * 
+     *
      * @param \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
      * @param \VIB\FliesBundle\Entity\Incubator
      * @throws \ErrorException
      */
-    public function incubate($vials, Incubator $incubator) {
+    public function incubate($vials, Incubator $incubator)
+    {
         if (($vial = $vials) instanceof Vial) {
             $vial->setIncubator($incubator);
             $this->persist($vial);
@@ -154,19 +162,20 @@ class VialManager extends ObjectManager {
                 VIB\FliesBundle\Entity\Vial or Doctrine\Common\Collections\Collection');
         }
     }
-    
+
     /**
      * Expand a vial into multiple vials of arbitrary size
-     * 
-     * @param \VIB\FliesBundle\Doctrine\Vial $vial
-     * @param integer $count
-     * @param boolean $setSource
-     * @param string $size
+     *
+     * @param  \VIB\FliesBundle\Doctrine\Vial          $vial
+     * @param  integer                                 $count
+     * @param  boolean                                 $setSource
+     * @param  string                                  $size
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function expand(Vial $vial, $count = 1, $setSource = true, $size = null) {
+    public function expand(Vial $vial, $count = 1, $setSource = true, $size = null)
+    {
         $newVials = new ArrayCollection();
-        for($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $newVial = $this->flip($vial, $setSource);
             if (null !== $size) {
                 $newVial->setSize($size);
@@ -174,8 +183,7 @@ class VialManager extends ObjectManager {
             }
             $newVials->add($newVial);
         }
+
         return $newVials;
     }
 }
-
-?>

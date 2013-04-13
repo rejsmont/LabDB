@@ -29,6 +29,6 @@
 {% endif %}
   {{ form_rest(form) }}
 </form>
-{% form_theme form _self %} 
+{% form_theme form _self %}
 {% block form_widget_compound %}{{ form_rest(form) }}{% endblock form_widget_compound %}
 {% block form_row %}{{ form_widget(form) }}{% endblock %}
