@@ -21,7 +21,7 @@ namespace VIB\FliesBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use VIB\BaseBundle\Controller\CRUDController;
+use VIB\CoreBundle\Controller\CRUDController;
 
 use VIB\FliesBundle\Form\IncubatorType;
 

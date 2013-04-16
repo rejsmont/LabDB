@@ -23,7 +23,7 @@ use JMS\Serializer\Annotation as Serializer;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use VIB\BaseBundle\Entity\Entity;
+use VIB\CoreBundle\Entity\Entity;
 use \VIB\FliesBundle\Label\LabelInterface;
 
 /**

@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use VIB\BaseBundle\Entity\Entity;
+use VIB\CoreBundle\Entity\Entity;
 use VIB\FliesBundle\Label\LabelDateInterface;
 
 /**

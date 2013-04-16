@@ -23,7 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use VIB\BaseBundle\Controller\CRUDController;
+use VIB\CoreBundle\Controller\CRUDController;
 
 use VIB\FliesBundle\Label\PDFLabel;
 

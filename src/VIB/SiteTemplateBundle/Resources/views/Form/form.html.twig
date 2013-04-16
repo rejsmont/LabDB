@@ -1,0 +1,17 @@
+{% use "VIBSiteTemplateBundle:Form:modal.html.twig" %}
+
+{% block form_header %}
+<form action="{{ app.request.requestUri }}"
+      method="post" {{ form_enctype(form) }}
+      class="form-horizontal">
+{% endblock form_header %}
+
+{% block modal_body %}
+  {{ form_errors(form) }}
+  {{ form_rest(form) }}
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  <button type="submit" class="btn btn-primary">Save</button>
+  <button type="reset" class="btn">Reset</button>
+{% endblock modal_footer %}

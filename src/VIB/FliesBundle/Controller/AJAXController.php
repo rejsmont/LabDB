@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use VIB\BaseBundle\Controller\AbstractController;
+use VIB\CoreBundle\Controller\AbstractController;
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\StockVial;
 use VIB\FliesBundle\Entity\CrossVial;

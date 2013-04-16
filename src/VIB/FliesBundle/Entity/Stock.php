@@ -25,7 +25,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity as UniqueEntity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use VIB\BaseBundle\Entity\Entity;
+use VIB\CoreBundle\Entity\Entity;
 
 /**
  * Stock class

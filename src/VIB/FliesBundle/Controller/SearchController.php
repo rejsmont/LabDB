@@ -22,7 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use VIB\BaseBundle\Controller\AbstractController;
+use VIB\CoreBundle\Controller\AbstractController;
 
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\CrossVial;

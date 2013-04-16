@@ -18,7 +18,7 @@
 
 namespace VIB\FliesBundle\Label;
 
-use VIB\BaseBundle\Doctrine\ObjectManager;
+use VIB\CoreBundle\Doctrine\ObjectManager;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Response;
 use WhiteOctober\TCPDFBundle\Controller\TCPDFController;
@@ -33,7 +33,7 @@ class PDFLabel
 {
 
     /**
-     * @var \VIB\BaseBundle\Doctrine\ObjectManager $om
+     * @var \VIB\CoreBundle\Doctrine\ObjectManager $om
      */
     private $om;
 
@@ -55,7 +55,7 @@ class PDFLabel
     /**
      * Construct PDFLabel
      *
-     * @param \VIB\BaseBundle\Doctrine\ObjectManager               $om
+     * @param \VIB\CoreBundle\Doctrine\ObjectManager               $om
      * @param \WhiteOctober\TCPDFBundle\Controller\TCPDFController $TCPDF
      * @param string                                               $printHost
      * @param string                                               $printQueue

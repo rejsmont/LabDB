@@ -94,7 +94,7 @@ class StockVialController extends VialController
      *
      * @param  mixed                                                         $id
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     * @return \VIB\BaseBundle\Entity\Entity
+     * @return \VIB\CoreBundle\Entity\Entity
      */
     protected function getStockEntity($id)
     {

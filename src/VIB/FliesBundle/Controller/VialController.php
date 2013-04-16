@@ -27,7 +27,7 @@ use Symfony\Component\Form\AbstractType;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use VIB\BaseBundle\Controller\CRUDController;
+use VIB\CoreBundle\Controller\CRUDController;
 
 use VIB\FliesBundle\Label\PDFLabel;
 

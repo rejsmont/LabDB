@@ -18,7 +18,7 @@
 
 namespace VIB\FliesBundle\Doctrine;
 
-use VIB\BaseBundle\Doctrine\ObjectManager;
+use VIB\CoreBundle\Doctrine\ObjectManager;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 

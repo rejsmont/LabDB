@@ -1,7 +1,7 @@
 {% extends "VIBFliesBundle:CrossVial:layout.html.twig" %}
-{% use "VIBBaseBundle:Show:modal.html.twig" %}
-{% import "VIBBaseBundle:Macros:show.html.twig" as s %}
-{% import 'VIBBaseBundle:Macros:status.html.twig' as status %}
+{% use "VIBSiteTemplateBundle:Show:modal.html.twig" %}
+{% import "VIBSiteTemplateBundle:Macros:show.html.twig" as s %}
+{% import 'VIBSiteTemplateBundle:Macros:status.html.twig' as status %}
 
 {% block modal_header %}
   {{ status.vial(entity) }}
