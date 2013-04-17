@@ -47,6 +47,10 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
     public function testShowAction()
     {
         $result = $this->controller->showAction(1);
+        $this->assertArrayHasKey('entity', $result);
+        $this->assertArrayHasKey('owner', $result);
+        $this->assertEquals(new Entity(), $result['entity']);
+        $this->assertNull($result['owner']);
     }
     
     public function testShowActionNotFound()
