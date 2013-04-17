@@ -221,9 +221,9 @@ class VialController extends CRUDController
                 $vials = $om->expand($vial, $number, false);
                 $om->flush();
                 $om->createACL($vials,$this->getDefaultACL());
-
+                
                 $message = (($count = count($vials)) == 1) ?
-                    ucfirst($this->getEntityName()) . ' ' . reset($vials) . ' was created.' :
+                    ucfirst($this->getEntityName()) . ' ' . $vials[0] . ' was created.' :
                     ucfirst($count . ' ' . $this->getEntityPluralName()) . ' were created.';
                 $this->addSessionFlash('success', $message);
 
@@ -231,7 +231,7 @@ class VialController extends CRUDController
 
                 if ($count == 1) {
                     $route = str_replace("_create", "_show", $request->attributes->get('_route'));
-                    $url = $this->generateUrl($route,array('id' => reset($vials)->getId()));
+                    $url = $this->generateUrl($route,array('id' => $vials[0]->getId()));
                 } else {
                     $route = str_replace("_create", "_list", $request->attributes->get('_route'));
                     $url = $this->generateUrl($route);

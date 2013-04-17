@@ -36,7 +36,7 @@ class DoctrineParamConverter extends SensioDoctrineParamConverter
      * @param  \Symfony\Component\HttpFoundation\Request                                $request
      * @param  \Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface $configuration
      * @return boolean
-     * @throws NotFoundHttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
