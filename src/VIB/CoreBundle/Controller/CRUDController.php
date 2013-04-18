@@ -223,7 +223,6 @@ abstract class CRUDController extends AbstractController
             $om->remove($entity);
             $om->flush();
             $this->addSessionFlash('success', $message);
-            $request = $this->getRequest();
             $route = str_replace("_delete", "_list", $request->attributes->get('_route'));
             $url = $this->generateUrl($route);
 
