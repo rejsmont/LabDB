@@ -64,7 +64,6 @@ class ShibbolethLoginListener implements EventSubscriberInterface
      */
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
-
         $token = $event->getAuthenticationToken();
         if ($token instanceof ShibbolethUserToken) {
             $this->userProvider->updateUser($token);
