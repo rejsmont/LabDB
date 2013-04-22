@@ -26,6 +26,8 @@ use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use VIB\CoreBundle\Doctrine\ObjectManager;
 use VIB\CoreBundle\Entity\Entity;
 
@@ -55,7 +57,36 @@ class ObjectManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($acl));
         $this->aclProvider->expects($this->once())->method('updateAcl')->with($acl);
         
-        $this->om->createACL(new FakeEntity(),array(
+        $this->om->createACL(new FakeEntity(), array(
+            array('identity' => $user,
+                  'permission' => MaskBuilder::MASK_OWNER),
+            array('identity' => 'ROLE_TEST',
+                  'permission' => MaskBuilder::MASK_VIEW)));
+    }
+    
+    public function testCreateACLCollection()
+    {
+        $user = new FakeUser();
+        $entity = new FakeEntity();
+        $collection = new ArrayCollection();
+        $collection->add($entity);
+        
+        $acl = $this->getMock('Symfony\Component\Security\Acl\Model\MutableAclInterface');
+        
+        $acl->expects($this->at(0))
+            ->method('insertObjectAce')
+            ->with(UserSecurityIdentity::fromAccount($user),MaskBuilder::MASK_OWNER);
+        $acl->expects($this->at(1))
+            ->method('insertObjectAce')
+            ->with(new RoleSecurityIdentity('ROLE_TEST'),MaskBuilder::MASK_VIEW);
+        
+        $this->aclProvider->expects($this->once())
+            ->method('createACL')
+            ->with($this->isInstanceOf('Symfony\Component\Security\Acl\Domain\ObjectIdentity'))
+            ->will($this->returnValue($acl));
+        $this->aclProvider->expects($this->once())->method('updateAcl')->with($acl);
+        
+        $this->om->createACL($collection, array(
             array('identity' => $user,
                   'permission' => MaskBuilder::MASK_OWNER),
             array('identity' => 'ROLE_TEST',

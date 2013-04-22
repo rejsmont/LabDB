@@ -146,14 +146,14 @@ class VialManager extends ObjectManager
      * @param \VIB\FliesBundle\Entity\Incubator
      * @throws \ErrorException
      */
-    public function incubate($vials, Incubator $incubator)
+    public function incubate($vials, Incubator $incubator = null)
     {
         if (($vial = $vials) instanceof Vial) {
             $vial->setIncubator($incubator);
             $this->persist($vial);
         } elseif ($vials instanceof Collection) {
             foreach ($vials as $vial) {
-                $this->incubate($vial);
+                $this->incubate($vial, $incubator);
             }
         } elseif (null === $vials) {
             throw new \ErrorException('Argument 1 must not be null');

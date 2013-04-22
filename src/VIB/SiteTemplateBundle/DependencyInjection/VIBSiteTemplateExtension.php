@@ -28,7 +28,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VIBBaseExtension extends Extension
+class VIBSiteTemplateExtension extends Extension
 {
     /**
      * {@inheritDoc}
