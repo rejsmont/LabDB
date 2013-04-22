@@ -21,6 +21,7 @@
 
 namespace VIB\SecurityBundle\Bridge\Doctrine;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
@@ -55,10 +56,10 @@ class AclHelper
     /**
      * Clone query
      *
-     * @param  \Doctrine\ORM\Query $query
-     * @return \Doctrine\ORM\Query
+     * @param  \Doctrine\ORM\AbstractQuery $query
+     * @return \Doctrine\ORM\AbstractQuery
      */
-    protected function cloneQuery(Query $query)
+    protected function cloneQuery(AbstractQuery $query)
     {
         $aclAppliedQuery = clone $query;
         $params = $query->getParameters();
@@ -137,15 +138,16 @@ class AclHelper
     /**
      * Get ACL filter SQL for the specified user
      *
-     * @param  \Doctrine\ORM\Query                                 $query
+     * @param  \Doctrine\ORM\AbstractQuery                         $query
      * @param  \Symfony\Component\Security\Core\User\UserInterface $user
      * @return string
      */
-    private function getPermittedIdsACLSQLForUser(Query $query, UserInterface $user = null)
+    private function getPermittedIdsACLSQLForUser(AbstractQuery $query, UserInterface $user = null)
     {
         $database = $this->aclConnection->getDatabase();
         $mask = $query->getHint('acl.mask');
         $rootEntities = $query->getHint('acl.root.entities');
+        $rE = array();
         foreach ($rootEntities as $rootEntity) {
             $rE[] = '"' . str_replace('\\', '\\\\', $rootEntity) . '"';
             if (array_key_exists($rootEntity, $this->aclClassMapping)) {

@@ -493,8 +493,12 @@ class Vial extends Entity implements LabelDateInterface
      */
     public function setPosition(RackPosition $position = null)
     {
-        $this->setPrevPosition($this->getPosition());
+        $prevPosition = $this->getPosition();
+        $this->setPrevPosition($prevPosition);
         $this->position = $position;
+        if ((null !== $prevPosition)&&(null === $position)) {
+            $prevPosition->setContents(null);
+        }
         if ((null !== $position)&&($position->getContents() !== $this)) {
             $position->setContents($this);
         }

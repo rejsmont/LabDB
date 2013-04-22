@@ -492,7 +492,7 @@ class VialController extends CRUDController
             $this->addSessionFlash('success', $count . ' vials were flipped.' .
                                    ($trash ? ' Source vials were trashed.' : ''));
         }
-        $this->autoPrint($vials);
+        $this->autoPrint($flippedVials);
     }
 
     /**

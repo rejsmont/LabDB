@@ -58,7 +58,7 @@ class VialManager extends ObjectManager
         } elseif ($vials instanceof Collection) {
             $newVials = new ArrayCollection();
             foreach ($vials as $vial) {
-                $newVials->add($this->flip($vial));
+                $newVials->add($this->flip($vial,$setSource,$trashSource));
             }
 
             return $newVials;
