@@ -235,7 +235,7 @@ class Vial extends Entity implements LabelDateInterface
      */
     public function getName()
     {
-        return $this->getId();
+        return (string) $this->getId();
     }
 
     /**
@@ -609,10 +609,10 @@ class Vial extends Entity implements LabelDateInterface
     public function getDefaultFlipDate()
     {
         $interval = new \DateInterval('P' . 2 * $this->getGenerationTime() . 'D');
-        $setup = clone $this->getSetupDate();
-        $setup->add($interval);
+        $flipDate = clone $this->getSetupDate();
+        $flipDate->add($interval);
 
-        return $setup;
+        return $flipDate;
     }
 
     /**
