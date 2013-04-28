@@ -193,7 +193,7 @@ class ImportCommand extends Command
                             } else {
                                 $om->persist($stock);
                                 $stocks->add($stock);
-                                fprintf($logfile,"%s\n",$stocks->getName());
+                                fprintf($logfile,"%s\n",$stock->getName());
                                 foreach ($stock->getVials() as $vial) {
                                     $vials->add($vial);
                                 }
@@ -202,7 +202,7 @@ class ImportCommand extends Command
                     } else {
                         $om->persist($stock);
                         $stocks->add($stock);
-                        fprintf($logfile,"%s\n",$stocks->getName());
+                        fprintf($logfile,"%s\n",$stock->getName());
                         foreach ($stock->getVials() as $vial) {
                             $vials->add($vial);
                         }
