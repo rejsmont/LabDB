@@ -73,9 +73,9 @@ abstract class CRUDController extends AbstractController
     {
         $paginator  = $this->getPaginator();
         $page = $this->getCurrentPage();
-        $count = $this->applyFilter($this->getListQuery()->select('count(b.id)'), $filter)->getSingleScalarResult();
-        $query = $this->applyFilter($this->getListQuery(), $filter)->setHint('knp_paginator.count', $count);
-        $entities = $paginator->paginate($query, $page, 25, array('distinct' => false));
+        //$count = $this->applyFilter($this->getListQuery()->select('count(b.id)'), $filter)->getSingleScalarResult();
+        $query = $this->applyFilter($this->getListQuery(), $filter);//->setHint('knp_paginator.count', $count);
+        $entities = $paginator->paginate($query, $page, 25);
 
         return array('entities' => $entities, 'filter' => $filter);
     }
