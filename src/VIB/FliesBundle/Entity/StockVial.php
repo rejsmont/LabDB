@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class StockVial extends Vial
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Stock", inversedBy="vials", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Stock", inversedBy="vials")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotBlank(message = "Stock must be specified")
      * @Serializer\Expose
