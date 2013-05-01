@@ -85,15 +85,6 @@ class VialController extends CRUDController
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function getListQuery()
-    {
-        return parent::getListQuery()->addOrderBy('b.setupDate','DESC')
-                                     ->addOrderBy('b.id','DESC');
-    }
-
-    /**
      * List vials
      *
      * @Route("/")
@@ -113,66 +104,25 @@ class VialController extends CRUDController
     }
 
     /**
-     * Filter query
-     *
-     * @param  \Doctrine\ORM\QueryBuilder $query
-     * @param  string                     $filter
-     * @return \Doctrine\ORM\Query
+     * {@inheritdoc}
      */
-    public function applyFilter($query, $filter = null)
+    protected function getListOptions($filter = null)
     {
-        $date = new \DateTime();
-        $date->sub(new \DateInterval('P2M'));
         $securityContext = $this->getSecurityContext();
+        $options = array();
+        $options['filter'] = $filter;
+        $options['user'] = $this->getUser();
         switch ($filter) {
             case 'public':
-                $query = $query->where('b.setupDate > :date')
-                               ->andWhere('b.trashed = false')
-                               ->setParameter('date', $date->format('Y-m-d'));
-                if (($this->getUser() !== null)&&(! $securityContext->isGranted('ROLE_ADMIN'))) {
-                    return $this->getAclFilter()->apply($query);
-                } else {
-                    return $query->getQuery();
-                }
-                break;
             case 'all':
-                if (($this->getUser() !== null)&&(! $securityContext->isGranted('ROLE_ADMIN'))) {
-                    return $this->getAclFilter()->apply($query);
-                } else {
-                    return $query->getQuery();
-                }
-                break;
-            case 'trashed':
-                $query = $query->where('b.setupDate > :date')
-                               ->andWhere('b.trashed = true')
-                               ->setParameter('date', $date->format('Y-m-d'));
-                if ($this->getUser() !== null) {
-                    return $this->getAclFilter()->apply($query,array('OWNER'));
-                } else {
-                    return $query->getQuery();
-                }
-                break;
-            case 'dead':
-                $query = $query->where('b.setupDate <= :date')
-                               ->orWhere('b.trashed = true')
-                               ->setParameter('date', $date->format('Y-m-d'));
-                if ($this->getUser() !== null) {
-                    return $this->getAclFilter()->apply($query,array('OWNER'));
-                } else {
-                    return $query->getQuery();
-                }
+                $options['permissions'] = $securityContext->isGranted('ROLE_ADMIN') ? false : array('VIEW');
                 break;
             default:
-                $query = $query->where('b.setupDate > :date')
-                               ->andWhere('b.trashed = false')
-                               ->setParameter('date', $date->format('Y-m-d'));
-                if ($this->getUser() !== null) {
-                    return $this->getAclFilter()->apply($query,array('OWNER'));
-                } else {
-                    return $query->getQuery();
-                }
+                $options['permissions'] = array('OWNER');
                 break;
         }
+        
+        return $options;
     }
 
     /**

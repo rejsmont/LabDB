@@ -32,6 +32,9 @@ use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
+use VIB\CoreBundle\Repository\EntityRepository;
+use VIB\SecurityBundle\Bridge\Doctrine\AclHelper;
+
 /**
  * ACL aware implementation of Doctrine\Common\Persistence\ObjectManagerDecorator
  *
@@ -51,19 +54,28 @@ class ObjectManager extends ObjectManagerDecorator
     protected $aclProvider;
 
     /**
+     * @var \VIB\SecurityBundle\Bridge\Doctrine\AclHelper
+     */
+    protected $aclFilter;
+    
+    /**
      * Construct ObjectManager
      *
-     * @param Doctrine\Common\Persistence\ManagerRegistry                $mr
-     * @param Symfony\Component\Security\Core\User\UserProviderInterface $userManager
-     * @param Symfony\Component\Security\Acl\Model\AclProviderInterface  $aclProvider
+     * @param \Doctrine\Common\Persistence\ManagerRegistry                $mr
+     * @param \Symfony\Component\Security\Core\User\UserProviderInterface $userManager
+     * @param \Symfony\Component\Security\Acl\Model\AclProviderInterface  $aclProvider
+     * @param \VIB\SecurityBundle\Bridge\Doctrine\AclHelper               $aclFilter
      */
     public function __construct(ManagerRegistry $mr,
                                 UserProviderInterface $userProvider,
-                                MutableAclProviderInterface $aclProvider)
+                                MutableAclProviderInterface $aclProvider,
+                                AclHelper $aclFilter)
     {
         $this->wrapped = $mr->getManager();
         $this->userProvider = $userProvider;
         $this->aclProvider = $aclProvider;
+        $this->aclFilter = $aclFilter;
+        
     }
 
     /**
@@ -122,5 +134,48 @@ class ObjectManager extends ObjectManagerDecorator
         } catch (AclNotFoundException $e) {}
 
         return null;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getRepository($className)
+    {
+        $repository = $this->wrapped->getRepository($className);
+        
+        if (! $repository instanceof EntityRepository) {
+            throw new \ErrorException('Repository must be an instance of VIB\CoreBundle\Repository\EntityRepository');
+        } else {
+            $repository->setAclFilter($this->aclFilter);
+        }
+        
+        return $repository;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function find($className, $id, $options = array())
+    {
+        $repository = $this->getRepository($className);
+        return $repository->getEntity($id, $options);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function findAll($className, $options = array())
+    {
+        $repository = $this->getRepository($className);
+        return $repository->getList($options);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function countAll($className, $options = array())
+    {
+        $repository = $this->getRepository($className);
+        return $repository->getListCount($options);
     }
 }

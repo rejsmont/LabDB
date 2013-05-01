@@ -60,6 +60,11 @@ class ImportCommand extends Command
                 InputArgument::REQUIRED,
                 'Log file'
             )
+            ->addArgument(
+                'listfile',
+                InputArgument::OPTIONAL,
+                'List of stocks to import'
+            )
             ->addOption(
                'print',
                null,
@@ -76,6 +81,17 @@ class ImportCommand extends Command
         
         $logfilename = $input->getArgument('logfile');
         $logfile = fopen($logfilename,'w');
+        
+        $listfilename = $input->getArgument('listfile');
+        $importlist = array();
+        if ($listfilename) {
+            $listfile = fopen($listfilename,'r');
+            if ($listfile) {
+                while ($data = fgetcsv($listfile,0,"\t")) {
+                    $importlist[] = $data[0];
+                }
+            }
+        }
         
         $dialog = $this->getHelperSet()->get('dialog');
         $this->container = $this->getApplication()->getKernel()->getContainer();
@@ -104,7 +120,8 @@ class ImportCommand extends Command
                 $numberInProject = trim($data[11]);
                 $verified = (boolean) trim($data[12]);
                 $lab = strtoupper(trim($data[14]));
-                if (($stockName != "")&&($stockName != "unknown")&&($lab == "LNG")) {
+                if ((count($importlist) == 0)&&(($stockName != "")&&($stockName != "unknown")&&($lab == "LNG"))||
+                    (in_array($stockName, $importlist))) {
                     if (! isset($acronyms[$projectName])) {
                         $matches = array();
                         preg_match('/^[[:alpha:]]*/', $stockName, $matches);
@@ -148,7 +165,7 @@ class ImportCommand extends Command
                     if (($url != '')&&($url != '\N')) {
                         $stock->setInfoURL($url);
                     }
-                 
+                                     
                     $qb = $om->getRepository('VIB\FliesBundle\Entity\Stock')->createQueryBuilder('b');
                     $qb->where('b.name like :term_1')
                        ->orWhere('b.name like :term_2')

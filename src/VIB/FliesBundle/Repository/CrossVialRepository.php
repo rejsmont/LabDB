@@ -18,14 +18,13 @@
 
 namespace VIB\FliesBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 
 /**
  * FlyCrossRepository
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class CrossVialRepository extends EntityRepository
+class CrossVialRepository extends VialRepository
 {
     /**
      * Search stocks

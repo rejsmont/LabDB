@@ -18,14 +18,13 @@
 
 namespace VIB\FliesBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 
 /**
  * FlyVialRepository
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class StockVialRepository extends EntityRepository
+class StockVialRepository extends VialRepository
 {
     /**
      * Return QueryBuilder object finding all living vials

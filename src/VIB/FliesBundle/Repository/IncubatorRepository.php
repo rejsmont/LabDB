@@ -18,7 +18,7 @@
 
 namespace VIB\FliesBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use VIB\CoreBundle\Repository\EntityRepository;
 
 /**
  * IncubatorRepository

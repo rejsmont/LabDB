@@ -73,40 +73,36 @@ abstract class CRUDController extends AbstractController
     {
         $paginator  = $this->getPaginator();
         $page = $this->getCurrentPage();
-        $count = $this->applyFilter($this->getListQuery()->select('count(b.id)'), $filter)->getSingleScalarResult();
-        $query = $this->applyFilter($this->getListQuery(), $filter)->setHint('knp_paginator.count', $count);
+        $repository = $this->getObjectManager()->getRepository($this->getEntityClass());
+        $options = $this->getListOptions($filter);
+        $count = $repository->getListCount($options);
+        $query = $repository->getListQuery($options)->setHint('knp_paginator.count', $count);
         $entities = $paginator->paginate($query, $page, 25, array('distinct' => false));
 
         return array('entities' => $entities, 'filter' => $filter);
     }
 
     /**
-     * Filter query
-     *
-     * @param  type $query
-     * @param  type $filter
-     * @return type
+     * 
+     * @param string $filter
+     * @return array
      */
-    protected function applyFilter($query, $filter = null)
+    protected function getListOptions($filter = null)
     {
         $securityContext = $this->getSecurityContext();
+        $options = array();
+        $options['user'] = $this->getUser();
         switch ($filter) {
             case 'public':
             case 'all':
-                if (($this->getUser() !== null)&&(! $securityContext->isGranted('ROLE_ADMIN'))) {
-                    return $this->getAclFilter()->apply($query);
-                } else {
-                    return $query->getQuery();
-                }
+                $options['permissions'] = $securityContext->isGranted('ROLE_ADMIN') ? false : array('VIEW');
                 break;
             default:
-                if ($this->getUser() !== null) {
-                    return $this->getAclFilter()->apply($query,array('OWNER'));
-                } else {
-                    return $query->getQuery();
-                }
+                $options['permissions'] = array('OWNER');
                 break;
         }
+        
+        return $options;
     }
 
     /**
@@ -231,18 +227,6 @@ abstract class CRUDController extends AbstractController
         }
 
         return array('entity' => $entity);
-    }
-
-    /**
-     * Get query returning entities to list
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    protected function getListQuery()
-    {
-        $om = $this->getObjectManager();
-
-        return $om->getRepository($this->getEntityClass())->createQueryBuilder('b');
     }
 
     /**

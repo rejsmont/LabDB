@@ -18,7 +18,7 @@
 
 namespace VIB\FliesBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use VIB\CoreBundle\Repository\EntityRepository;
 
 /**
  * FlyVialRepository
@@ -28,36 +28,59 @@ use Doctrine\ORM\EntityRepository;
 class VialRepository extends EntityRepository
 {
     /**
-     * Return QueryBuilder object finding all living vials
-     *
-     * @return Doctrine\ORM\QueryBuilder
+     * {@inheritdoc}
      */
-    public function findAllLivingQuery()
+    protected function getListQueryBuilder($options = array())
+    {
+        $builder = $this->createQueryBuilder('e')
+                        ->orderBy('e.setupDate','DESC')
+                        ->addOrderBy('e.id','DESC');
+        
+        return $this->applyQueryBuilderFilter($builder, $options);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getCountQueryBuilder($options = array())
+    {
+        $builder =  $this->createQueryBuilder('e')
+                         ->select('count(e.id)');
+        
+        return $this->applyQueryBuilderFilter($builder, $options);
+    }
+    
+    /**
+     * 
+     * @param \Doctrine\ORM\QueryBuilder $builder
+     * @param array $options
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function applyQueryBuilderFilter($builder, $options = array())
     {
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
-
-        $query = $this->createQueryBuilder('b')
-            ->where('b.setupDate > :date')
-            ->andWhere('b.trashed = false')
-            ->orderBy('b.setupDate', 'DESC')
-            ->addOrderBy('b.id', 'DESC')
-            ->setParameter('date', $date->format('Y-m-d'));
-
-        return $query;
-    }
-
-    /**
-     * Return QueryBuilder object finding all vials
-     *
-     * @return Doctrine\ORM\QueryBuilder
-     */
-    public function findAllQuery()
-    {
-        $query = $this->createQueryBuilder('b')
-            ->orderBy('b.setupDate', 'DESC')
-            ->addOrderBy('b.id', 'DESC');
-
-        return $query;
+        $filter = isset($options['filter']) ? $options['filter'] : null;
+        switch ($filter) {
+            case 'all':
+                break;
+            case 'dead':
+                $builder = $builder->where('e.setupDate <= :date')
+                                   ->orWhere('e.trashed = true')
+                                   ->setParameter('date', $date->format('Y-m-d'));
+                break;
+            case 'trashed':
+                $builder = $builder->where('e.setupDate > :date')
+                                   ->andWhere('e.trashed = true')
+                                   ->setParameter('date', $date->format('Y-m-d'));
+                break;
+            default:
+                $builder = $builder->where('e.setupDate > :date')
+                                   ->andWhere('e.trashed = false')
+                                   ->setParameter('date', $date->format('Y-m-d'));
+                break;
+        }
+        
+        return $builder;
     }
 }

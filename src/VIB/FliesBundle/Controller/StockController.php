@@ -69,14 +69,6 @@ class StockController extends CRUDController
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function getListQuery()
-    {
-        return parent::getListQuery()->addOrderBy('b.name');
-    }
-
-    /**
      * Show stock
      *
      * @Route("/show/{id}")

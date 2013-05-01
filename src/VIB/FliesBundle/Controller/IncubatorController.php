@@ -61,10 +61,7 @@ class IncubatorController extends CRUDController
      */
     public function incubateAction()
     {
-        $query = $this->applyFilter($this->getListQuery(),'all');
-        $entities = $query->getResult();
-
-        return array('entities' => $entities);
+        return $this->menuAction();
     }
 
     /**
@@ -76,8 +73,7 @@ class IncubatorController extends CRUDController
      */
     public function menuAction()
     {
-        $query = $this->applyFilter($this->getListQuery(),'all');
-        $entities = $query->getResult();
+        $entities = $this->getObjectManager()->findAll($this->getEntityClass());
 
         return array('entities' => $entities);
     }

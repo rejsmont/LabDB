@@ -18,7 +18,7 @@
 
 namespace VIB\FliesBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use VIB\CoreBundle\Repository\EntityRepository;
 
 /**
  * StockRepository
@@ -28,6 +28,14 @@ use Doctrine\ORM\EntityRepository;
 class StockRepository extends EntityRepository
 {
     /**
+     * {@inheritdoc}
+     */
+    protected function getListQueryBuilder($options = array()) {
+        return $this->createQueryBuilder('e')
+                    ->orderBy('e.name');
+    }
+    
+    /**
      * Return stocks
      *
      * @return mixed
@@ -35,8 +43,8 @@ class StockRepository extends EntityRepository
     public function findStocksByName($term)
     {
         $query = $this->createQueryBuilder('b')
-            ->andWhere('b.name like :term')
-            ->setParameter('term', '%' . $term .'%');
+                      ->andWhere('b.name like :term')
+                      ->setParameter('term', '%' . $term .'%');
 
         return $query;
     }
