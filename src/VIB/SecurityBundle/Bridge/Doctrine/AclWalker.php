@@ -40,15 +40,24 @@ class AclWalker extends SqlWalker
     public function walkFromClause($fromClause)
     {
         $sql = parent::walkFromClause($fromClause);
-        $tableAlias = $this->getSQLTableAlias($this->getQuery()->getHint('acl.entityRootTableName'),
-                                              $this->getQuery()->getHint('acl.entityRootTableDqlAlias'));
-        $extraQuery = $this->getQuery()->getHint('acl.extra.query');
-
-        $tempAclView = <<<tempAclView
-        JOIN ({$extraQuery}) ta_ ON {$tableAlias}.id = ta_.id
-tempAclView;
-
-        return $sql . $tempAclView;
+        $aclMetadata = $this->getQuery()->getHint('acl.metadata');
+        
+        if ($aclMetadata) {
+            foreach ($aclMetadata as $key => $metadata) {
+                $alias = $metadata['alias'];
+                $query = $metadata['query'];
+                $table = $metadata['table'];
+                $tableAlias = $this->getSQLTableAlias($table, $alias);
+                $aclAlias = 'ta' . $key . '_';
+                                
+                $aclSql = <<<ACL_SQL
+INNER JOIN ({$query}) {$aclAlias} ON {$tableAlias}.id = {$aclAlias}.id
+ACL_SQL;
+                $sql .= ' ' . $aclSql;
+            }
+        }
+        
+        return $sql;
     }
 
 }

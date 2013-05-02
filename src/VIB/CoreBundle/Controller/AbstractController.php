@@ -81,11 +81,11 @@ class AbstractController extends Controller
     /**
      * Get ACL filter
      *
-     * @return \VIB\SecurityBundle\Bridge\Doctrine\AclHelper
+     * @return \VIB\SecurityBundle\Bridge\Doctrine\AclFilter
      */
     protected function getAclFilter()
     {
-        return $this->get('vib.security.helper.acl');
+        return $this->get('vib.security.filter.acl');
     }
 
     /**

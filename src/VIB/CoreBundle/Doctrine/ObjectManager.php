@@ -33,7 +33,7 @@ use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\CoreBundle\Repository\EntityRepository;
-use VIB\SecurityBundle\Bridge\Doctrine\AclHelper;
+use VIB\SecurityBundle\Bridge\Doctrine\AclFilter;
 
 /**
  * ACL aware implementation of Doctrine\Common\Persistence\ObjectManagerDecorator
@@ -54,7 +54,7 @@ class ObjectManager extends ObjectManagerDecorator
     protected $aclProvider;
 
     /**
-     * @var \VIB\SecurityBundle\Bridge\Doctrine\AclHelper
+     * @var \VIB\SecurityBundle\Bridge\Doctrine\AclFilter
      */
     protected $aclFilter;
     
@@ -64,12 +64,12 @@ class ObjectManager extends ObjectManagerDecorator
      * @param \Doctrine\Common\Persistence\ManagerRegistry                $mr
      * @param \Symfony\Component\Security\Core\User\UserProviderInterface $userManager
      * @param \Symfony\Component\Security\Acl\Model\AclProviderInterface  $aclProvider
-     * @param \VIB\SecurityBundle\Bridge\Doctrine\AclHelper               $aclFilter
+     * @param \VIB\SecurityBundle\Bridge\Doctrine\AclFilter               $aclFilter
      */
     public function __construct(ManagerRegistry $mr,
                                 UserProviderInterface $userProvider,
                                 MutableAclProviderInterface $aclProvider,
-                                AclHelper $aclFilter)
+                                AclFilter $aclFilter)
     {
         $this->wrapped = $mr->getManager();
         $this->userProvider = $userProvider;

@@ -18,7 +18,7 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="user_provider"/>
             <argument type="service" id="security.acl.provider"/>
-            <argument type="service" id="vib.security.helper.acl"/>
+            <argument type="service" id="vib.security.filter.acl"/>
         </service>
     </services>
 </container>

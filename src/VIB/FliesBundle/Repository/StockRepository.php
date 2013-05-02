@@ -32,7 +32,7 @@ class StockRepository extends EntityRepository
      */
     protected function getListQueryBuilder($options = array()) {
         return $this->createQueryBuilder('e')
-                    ->orderBy('e.name');
+                ->orderBy('e.name');
     }
     
     /**

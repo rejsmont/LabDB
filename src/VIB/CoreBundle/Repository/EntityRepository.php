@@ -20,7 +20,7 @@ namespace VIB\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository as BaseEntityRepository;
 
-use VIB\SecurityBundle\Bridge\Doctrine\AclHelper;
+use VIB\SecurityBundle\Bridge\Doctrine\AclFilter;
 
 /**
  * EntityRepository
@@ -30,15 +30,15 @@ use VIB\SecurityBundle\Bridge\Doctrine\AclHelper;
 class EntityRepository extends BaseEntityRepository
 {
     /**
-     * @var aclFilter \VIB\SecurityBundle\Bridge\Doctrine\AclHelper
+     * @var aclFilter VIB\SecurityBundle\Bridge\Doctrine\AclFilter
      */
-    private $aclFilter;
+    protected $aclFilter;
     
     
     /**
      * 
      * @param array $options
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function getList($options = array()) {
         return $this->getListQuery($options)->getResult();
@@ -47,7 +47,7 @@ class EntityRepository extends BaseEntityRepository
     /**
      * 
      * @param array $options
-     * @return \Doctrine\ORM\Query
+     * @return Doctrine\ORM\Query
      */
     public function getListQuery($options = array()) {
         $qb = $this->getListQueryBuilder($options);
@@ -63,7 +63,7 @@ class EntityRepository extends BaseEntityRepository
     /**
      * 
      * @param array $options
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return Doctrine\ORM\QueryBuilder
      */
     protected function getListQueryBuilder($options = array()) {
         return $this->createQueryBuilder('e');
@@ -88,7 +88,7 @@ class EntityRepository extends BaseEntityRepository
     /**
      * 
      * @param array $options
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return Doctrine\ORM\QueryBuilder
      */
     protected function getCountQueryBuilder($options = array()) {
         return $this->createQueryBuilder('e')
@@ -98,7 +98,7 @@ class EntityRepository extends BaseEntityRepository
     /**
      * 
      * @param array $options
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return Doctrine\ORM\QueryBuilder
      */
     public function getEntity($id, $options = array()) {
         return $this->getEntityQueryBuilder($id, $options)->getQuery()->getSingleResult();
@@ -107,7 +107,7 @@ class EntityRepository extends BaseEntityRepository
     /**
      * 
      * @param array $options
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return Doctrine\ORM\QueryBuilder
      */
     protected function getEntityQueryBuilder($id, $options = array()) {
         return $this->createQueryBuilder('e')
@@ -119,9 +119,9 @@ class EntityRepository extends BaseEntityRepository
     /**
      * Set the ACL filter service
      * 
-     * @param \VIB\SecurityBundle\Bridge\Doctrine\AclHelper
+     * @param VIB\SecurityBundle\Bridge\Doctrine\AclFilter
      */
-    public function setAclFilter(AclHelper $aclFilter) {
+    public function setAclFilter(AclFilter $aclFilter) {
         $this->aclFilter = $aclFilter;
     }
 }
