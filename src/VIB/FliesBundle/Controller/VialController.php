@@ -104,28 +104,6 @@ class VialController extends CRUDController
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function getListOptions($filter = null)
-    {
-        $securityContext = $this->getSecurityContext();
-        $options = array();
-        $options['filter'] = $filter;
-        $options['user'] = $this->getUser();
-        switch ($filter) {
-            case 'public':
-            case 'all':
-                $options['permissions'] = $securityContext->isGranted('ROLE_ADMIN') ? false : array('VIEW');
-                break;
-            default:
-                $options['permissions'] = array('OWNER');
-                break;
-        }
-        
-        return $options;
-    }
-
-    /**
      * Show vial
      *
      * @Route("/show/{id}")

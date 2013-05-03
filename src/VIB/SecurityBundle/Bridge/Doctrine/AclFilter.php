@@ -40,9 +40,9 @@ class AclFilter
     /**
      * Construct AclFilter
      *
-     * @param type  $doctrine
-     * @param type  $securityContext
-     * @param array $options
+     * @param Doctrine\Common\Persistence\ManagerRegistry              $doctrine
+     * @param Symfony\Component\Security\Core\SecurityContextInterface $securityContext
+     * @param array                                                    $options
      */
     public function __construct($doctrine, $securityContext, $options = array())
     {
@@ -56,14 +56,14 @@ class AclFilter
     /**
      * Apply ACL filter
      *
-     * @param  Doctrine\ORM\QueryBuilder                          $queryBuilder
+     * @param  Doctrine\ORM\QueryBuilder | Doctrine\ORM\Query     $query
      * @param  array                                              $permissions
      * @param  string |
-     *         Symfony\Component\Security\Core\User\UserInterface $user
+     *         Symfony\Component\Security\Core\User\UserInterface $identity
+     * @param  string                                             $alias
      * @return Doctrine\ORM\Query
      */
-    public function apply($query,
-            array $permissions = array("VIEW"), $identity = null, $alias = null)
+    public function apply($query, array $permissions = array("VIEW"), $identity = null, $alias = null)
     {
         if (null === $identity) {
             $token = $this->securityContext->getToken();

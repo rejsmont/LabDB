@@ -75,13 +75,22 @@ class EntityRepository extends BaseEntityRepository
      * @return integer
      */
     public function getListCount($options = array()) {
+        return $this->getCountQuery($options)->getSingleScalarResult();
+    }
+    
+    /**
+     * 
+     * @param array $options
+     * @return integer
+     */
+    public function getCountQuery($options = array()) {
         $qb = $this->getCountQueryBuilder($options);
         $permissions = isset($options['permissions']) ? $options['permissions'] : null;
         $user = isset($options['user']) ? $options['user'] : null;
         if (false === $permissions) {
-            return $qb->getQuery()->getSingleScalarResult();
+            return $qb->getQuery();
         } else {
-            return $this->aclFilter->apply($qb, $permissions, $user)->getSingleScalarResult();
+            return $this->aclFilter->apply($qb, $permissions, $user);
         }
     }
     

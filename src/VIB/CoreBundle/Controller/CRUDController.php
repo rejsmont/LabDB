@@ -91,6 +91,7 @@ abstract class CRUDController extends AbstractController
     {
         $securityContext = $this->getSecurityContext();
         $options = array();
+        $options['filter'] = $filter;
         $options['user'] = $this->getUser();
         switch ($filter) {
             case 'public':

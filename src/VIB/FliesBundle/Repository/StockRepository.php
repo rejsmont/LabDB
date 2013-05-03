@@ -30,9 +30,68 @@ class StockRepository extends EntityRepository
     /**
      * {@inheritdoc}
      */
+    public function getListQuery($options = array()) {
+        $query = parent::getListQuery($options);
+        if ($options['filter'] == '') {
+            $qb = $this->getListQueryBuilder($options);
+            $permissions = array('OWNER');
+            $user = isset($options['user']) ? $options['user'] : null;
+            return $this->aclFilter->apply($qb, $permissions, $user, 'v');
+        } else {
+            return $query;
+        }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
     protected function getListQueryBuilder($options = array()) {
-        return $this->createQueryBuilder('e')
-                ->orderBy('e.name');
+        $qb = $this->createQueryBuilder('e')
+                   ->orderBy('e.name');
+        if ($options['filter'] == '') {
+            $date = new \DateTime();
+            $date->sub(new \DateInterval('P2M'));
+            return $qb->distinct()
+                      ->distinct()
+                      ->join('e.vials','v')
+                      ->andWhere('v.setupDate > :date')
+                      ->andWhere('v.trashed = false')
+                      ->setParameter('date', $date->format('Y-m-d'));
+        }
+        return $qb;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getCountQuery($options = array()) {
+        $query = parent::getCountQuery($options);
+        if ($options['filter'] == '') {
+            $qb = $this->getCountQueryBuilder($options);
+            $permissions = array('OWNER');
+            $user = isset($options['user']) ? $options['user'] : null;
+            return $this->aclFilter->apply($qb, $permissions, $user, 'v');
+        } else {
+            return $query;
+        }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getCountQueryBuilder($options = array()) {
+        $qb = $this->createQueryBuilder('e')
+                   ->select('count(e.id)');
+        if ($options['filter'] == '') {
+            $date = new \DateTime();
+            $date->sub(new \DateInterval('P2M'));
+            return $qb->distinct()
+                      ->join('e.vials','v')
+                      ->andWhere('v.setupDate > :date')
+                      ->andWhere('v.trashed = false')
+                      ->setParameter('date', $date->format('Y-m-d'));
+        }
+        return $qb;
     }
     
     /**
