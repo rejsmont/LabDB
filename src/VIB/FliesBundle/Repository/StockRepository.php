@@ -81,12 +81,11 @@ class StockRepository extends EntityRepository
      */
     protected function getCountQueryBuilder($options = array()) {
         $qb = $this->createQueryBuilder('e')
-                   ->select('count(e.id)');
+                   ->select('count(DISTINCT e.id)');
         if ($options['filter'] == '') {
             $date = new \DateTime();
             $date->sub(new \DateInterval('P2M'));
-            return $qb->distinct()
-                      ->join('e.vials','v')
+            return $qb->join('e.vials','v')
                       ->andWhere('v.setupDate > :date')
                       ->andWhere('v.trashed = false')
                       ->setParameter('date', $date->format('Y-m-d'));
