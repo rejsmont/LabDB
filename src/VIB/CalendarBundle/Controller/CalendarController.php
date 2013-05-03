@@ -61,7 +61,7 @@ class CalendarController extends Controller
                        ->orderBy('b.setupDate', 'DESC')
                        ->setParameter('date', $date->format('Y-m-d'));
 
-        $stockVials = $this->get('vib.security.helper.acl')->apply($stockVialQuery,array('OWNER'),$user)->getResult();
+        $stockVials = $this->get('vib.security.filter.acl')->apply($stockVialQuery,array('OWNER'),$user)->getResult();
         $stockDates = array();
 
         foreach ($stockVials as $stockVial) {
@@ -90,7 +90,7 @@ class CalendarController extends Controller
                        ->orderBy('b.setupDate', 'DESC')
                        ->setParameter('date', $date->format('Y-m-d'));
 
-        $crossVials = $this->get('vib.security.helper.acl')->apply($crossVialQuery,array('OWNER'),$user)->getResult();
+        $crossVials = $this->get('vib.security.filter.acl')->apply($crossVialQuery,array('OWNER'),$user)->getResult();
         $crossDates = array();
 
         foreach ($crossVials as $crossVial) {

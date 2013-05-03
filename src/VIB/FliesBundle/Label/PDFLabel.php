@@ -73,11 +73,15 @@ class PDFLabel
      *
      * @param mixed $entities
      */
-    public function addLabel($entities)
+    public function addLabel($entities, $alternative = false)
     {
         if (($entity = $entities) instanceof LabelInterface) {
             $barcode = $entity->getLabelBarcode();
-            $text = $entity->getLabelText();
+            if (($entity instanceof AltLabelInterface)&&($alternative)) {
+                $text = $entity->getAltLabelText();
+            } else {
+                $text = $entity->getLabelText();
+            }
             $owner = $this->om->getOwner($entity);
             $date = ($entity instanceof LabelDateInterface) ? $entity->getLabelDate()->format("d.m.Y") : null;
             $this->pdf->AddPage();

@@ -22,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use VIB\FliesBundle\Label\AltLabelInterface;
+
 /**
  * StockVial class
  *
@@ -30,7 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class StockVial extends Vial
+class StockVial extends Vial implements AltLabelInterface
 {
     /**
      * @ORM\ManyToOne(targetEntity="Stock", inversedBy="vials")
@@ -58,6 +60,18 @@ class StockVial extends Vial
     {
         if (null !== $this->getStock()) {
             return $this->getStock()->getLabel();
+        } else {
+            return parent::getLabelText();
+        }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getAltLabelText()
+    {
+        if (null !== $this->getStock()) {
+            return $this->getStock()->getGenotype();
         } else {
             return parent::getLabelText();
         }
