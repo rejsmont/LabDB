@@ -18,36 +18,31 @@
 
 namespace VIB\SecurityBundle\Tests\Bridge\Doctrine;
 
-use VIB\SecurityBundle\Bridge\Doctrine\AclHelper;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query\AST\SelectStatement;
+use Doctrine\ORM\Query\AST\FromClause;
+use Doctrine\ORM\Query\AST\IdentificationVariableDeclaration;
+use Doctrine\ORM\Query\AST\RangeVariableDeclaration;
+use VIB\SecurityBundle\Bridge\Doctrine\AclFilter;
 
 
-class AclHelperTest extends \PHPUnit_Framework_TestCase
+class AclFilterTest extends \PHPUnit_Framework_TestCase
 {
     private $helper;
     
     public function testApply()
     {
-        $query = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')
-            ->setMethods(array('getParameters'))
-            ->disableOriginalConstructor()->getMockForAbstractClass();
-        $query->expects($this->once())->method('getParameters')
-            ->will($this->returnValue(array()));
         $queryBuilder = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
             ->disableOriginalConstructor()->getMock();
-        $queryBuilder->expects($this->once())->method('getDQLPart')
-            ->with('where')
-            ->will($this->returnValue('somewhere'));
         $queryBuilder->expects($this->once())->method('getQuery')
-            ->will($this->returnValue($query));
-        $queryBuilder->expects($this->once())->method('getRootEntities')
-            ->will($this->returnValue(array('TestClass')));
+            ->will($this->returnValue($this->query));
         $user = $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
         $user->expects($this->once())->method('getRoles')
             ->will($this->returnValue(array()));
         $resultQuery = $this->helper->apply($queryBuilder, array('VIEW'), $user);
-        $sql = $resultQuery->getHint('acl.extra.query');
-        $this->assertContains('WHERE  c.class_type IN ("TestClass")', $sql);
-        $this->assertContains('AND s.identifier IN ("Mock_UserInterface', $sql);
+        $metadata = $resultQuery->getHint('acl.metadata');
+        $this->assertContains('WHERE c.class_type IN ("")', $metadata[0]['query']);
+        $this->assertContains('AND s.identifier IN ("Mock_UserInterface', $metadata[0]['query']);
     }
     
     protected function setUp()
@@ -71,6 +66,28 @@ class AclHelperTest extends \PHPUnit_Framework_TestCase
         $doctrine->expects($this->once())->method('getConnection')
             ->will($this->returnValue($connection));
         $options = array(0 => null, 1 => array(), 2 => null);
-        $this->helper = new AclHelper($doctrine, $context, $options);
+        $this->helper = new AclFilter($doctrine, $context, $options);
+        $this->query = new FakeQuery($entityManager);
+    }
+}
+
+class FakeQuery extends AbstractQuery
+{
+    protected function _doExecute() {
+        
+    }
+
+    public function getSQL() {
+        
+    }
+    
+    public function getAST() {
+        $rangeVarDef = new RangeVariableDeclaration('Entity','e');
+        $idVariableDef = new IdentificationVariableDeclaration($rangeVarDef,null,array());
+        return new SelectStatement(null,new FromClause(array($idVariableDef)));
+    }
+    
+    public function getParameters() {
+        
     }
 }

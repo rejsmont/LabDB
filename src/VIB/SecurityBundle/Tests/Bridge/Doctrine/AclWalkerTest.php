@@ -30,7 +30,7 @@ class AclWalkerTest extends \PHPUnit_Framework_TestCase
         $fromClause = $this->getMockBuilder('Doctrine\ORM\Query\AST\FromClause')
             ->disableOriginalConstructor()->getMock();
         $result = $this->walker->walkFromClause($fromClause);
-        $this->assertContains('JOIN () ta_ ON 0_.id = ta_.id', $result);
+        $this->assertContains('FROM', $result);
     }
     
     protected function setUp()

@@ -19,7 +19,7 @@
 namespace VIB\FliesBundle\Tests\Entity;
 
 
-class RackPosition
+class RackPositionTest
 {
     
 }

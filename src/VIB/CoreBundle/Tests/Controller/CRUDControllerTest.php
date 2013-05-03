@@ -178,7 +178,6 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
     {
         $this->entityRepository = $this->getFakeEntityRepository();
         $this->securityContext = $this->getFakeSecurityContext();
-        $this->aclFilter = $this->getFakeAclFilter();
         $this->request = $this->getFakeRequest();
         $this->form = $this->getFakeForm();
         $this->objectManager = $this->getFakeObjectManager();
@@ -210,9 +209,6 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
             ->method('getUser')
             ->will($this->returnValue($this->getMock('Symfony\Component\Security\Core\User\UserInterface')));
         $controller->expects($this->any())
-            ->method('getAclFilter')
-            ->will($this->returnValue($this->aclFilter));
-        $controller->expects($this->any())
             ->method('getEntityClass')
             ->will($this->returnValue('VIB\CoreBundle\Entity\Entity'));
         $controller->expects($this->any())
@@ -224,16 +220,21 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
     
     private function getFakeEntityRepository()
     {
+        $query = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
         $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
             ->disableOriginalConstructor()
             ->getMock();
-        
         $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
+            ->disableOriginalConstructor()->setMethods(array('getListCount','getListQuery'))
             ->getMock();
         $repository->expects($this->any())
-            ->method('createQueryBuilder')
-            ->will($this->returnValue($qb));
+            ->method('getListCount')
+            ->will($this->returnValue(25));
+        $repository->expects($this->any())
+            ->method('getListQuery')
+            ->will($this->returnValue($query));
         
         return $repository;
     }
@@ -241,8 +242,8 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
     private function getFakeObjectManager()
     {
         $map = array(
-          array('VIB\CoreBundle\Entity\Entity', 0, null),
-          array('VIB\CoreBundle\Entity\Entity', 1, new Entity())
+          array('VIB\CoreBundle\Entity\Entity', 0, array(), null),
+          array('VIB\CoreBundle\Entity\Entity', 1, array(), new Entity())
         );
         
         $om = $this->getMockBuilder('VIB\CoreBundle\Doctrine\ObjectManager')
@@ -266,15 +267,6 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
         
         return $context;
-    }
-    
-    private function getFakeAclFilter()
-    {
-        $aclFilter = $this->getMockBuilder('VIB\SecurityBundle\Bridge\Doctrine\AclHelper')
-            ->disableOriginalConstructor()
-            ->getMock();
-        
-        return $aclFilter;
     }
     
     private function getFakeForm()

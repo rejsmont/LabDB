@@ -26,7 +26,12 @@ use VIB\FliesBundle\Entity\Incubator;
 
 
 class VialTest extends \PHPUnit_Framework_TestCase
-{    
+{
+    /**
+     * @var DateTime 
+     */
+    private $date;
+    
     /**
      * @dataProvider vialProvider
      */
@@ -40,7 +45,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Doctrine\Common\Collections\Collection',$vial->getMaleCrosses());
         $this->assertFalse($vial->isLabelPrinted());
         $this->assertFalse($vial->isTrashed());
-        $this->assertEquals(new \DateTime(),$vial->getSetupDate());
+        $this->assertEquals($this->date,$vial->getSetupDate());
         $this->assertNull($vial->getFlipDate());
         $this->assertNull($vial->getNotes());
         $this->assertEquals('medium', $vial->getSize());
@@ -86,7 +91,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLabelDate($vial)
     {
-        $this->assertEquals(new \DateTime(), $vial->getLabelDate());
+        $this->assertEquals($this->date, $vial->getLabelDate());
     }
 
     /**
@@ -102,7 +107,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetupDate($vial)
     {
-        $vial->setSetupDate($date = new \DateTime());
+        $vial->setSetupDate($date = $this->date);
         $this->assertEquals($date, $vial->getSetupDate());
     }
     
@@ -111,7 +116,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
      */
     public function testFlipDate($vial)
     {
-        $vial->setFlipDate($date = new \DateTime());
+        $vial->setFlipDate($date = $this->date);
         $this->assertEquals($date, $vial->getFlipDate());
     }
 
@@ -214,6 +219,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
     public function testPosition()
     {
         $vial = new FakeVial();
+        $vial->setSetupDate(new \DateTime());
         $this->assertNull($vial->getPosition());
         $position = new RackPosition(new Rack(1,1),1,1);
         $vial->setPosition($position);
@@ -264,7 +270,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLocation($vial)
     {
-         $this->assertEquals('Test R000000 A01',$vial->getLocation());
+        $this->assertEquals('Test R000000 A01',$vial->getLocation());
     }
 
     /**
@@ -304,8 +310,9 @@ class VialTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetProgress($vial)
     {
-        $this->assertEquals(0,$vial->getProgress());
         $date = new \DateTime();
+        $vial->setSetupDate($date);
+        $this->assertEquals(0,$vial->getProgress());
         $date->sub(new \DateInterval('P13D'));
         $vial->setSetupDate($date);
         $this->assertEquals(1,$vial->getProgress());
@@ -316,7 +323,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDefaultFlipDate($vial)
     {
-        $date = new \DateTime();
+        $date = clone $this->date;
         $date->add(new \DateInterval('P26D'));
         $this->assertEquals($date,$vial->getDefaultFlipDate());
     }
@@ -327,7 +334,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
     public function testGetRealFlipDate($vial)
     {
         $this->assertEquals($vial->getDefaultFlipDate(),$vial->getRealFlipDate());
-        $vial->setFlipDate($date = new \DateTime());
+        $vial->setFlipDate($date = $this->date);
         $this->assertEquals($date, $vial->getRealFlipDate());
     }
 
@@ -336,11 +343,13 @@ class VialTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsAlive($vial)
     {
+        $date = new \DateTime();
+        $vial->setSetupDate($date);
         $this->assertTrue($vial->isAlive());
         $vial->setTrashed(true);
         $this->assertFalse($vial->isAlive());
         $vial->setTrashed(false);
-        $date = new \DateTime();
+        $date = clone $this->date;
         $date->sub(new \DateInterval('P2M'));
         $vial->setSetupDate($date);
         $this->assertFalse($vial->isAlive());
@@ -360,6 +369,11 @@ class VialTest extends \PHPUnit_Framework_TestCase
         return array(array($vial));
     }
     
+    protected function setUp()
+    {
+        $this->date = new \DateTime('2000-01-01 00:00:00');
+    }
+    
     protected function getPosition()
     {
         $incubator = new Incubator();
@@ -377,6 +391,7 @@ class FakeVial extends Vial
     {
         parent::__construct($template, $flip);
         $this->id = 1;
+        $this->setupDate = new \DateTime('2000-01-01 00:00:00');
         $maleCross = new CrossVial();
         $virginCross = new CrossVial();
         $this->maleCrosses->add($maleCross);

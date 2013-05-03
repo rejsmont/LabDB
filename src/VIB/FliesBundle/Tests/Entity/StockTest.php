@@ -18,7 +18,7 @@
 
 namespace VIB\FliesBundle\Tests\Entity;
 
-class Stock
+class StockTest
 {
     
 }

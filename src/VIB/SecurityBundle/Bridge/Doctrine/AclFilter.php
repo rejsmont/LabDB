@@ -24,6 +24,7 @@ namespace VIB\SecurityBundle\Bridge\Doctrine;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -138,8 +139,8 @@ SELECTQUERY;
     /**
      * Resolve DQL alias into class metadata
      * 
-     * @param Doctrine\ORM\AbstractQuery $query
-     * @param string                     $alias
+     * @param Doctrine\ORM\Query $query
+     * @param string             $alias
      * @return array | null
      */
     protected function getEntityFromAlias($query, $alias = null)
@@ -175,10 +176,10 @@ SELECTQUERY;
     /**
      * Get ACL compatible classes for specified class metadata 
      * 
-     * @param Doctrine\ORM\Mapping\ClassMetadata $metadata
+     * @param Doctrine\Common\Persistence\Mapping $metadata
      * @return array
      */
-    protected function getClasses($metadata)
+    protected function getClasses(ClassMetadata $metadata)
     {
         $classes = array();
         foreach ($metadata->subClasses as $subClass) {
@@ -226,11 +227,9 @@ SELECTQUERY;
     {
         $aclAppliedQuery = clone $query;
         $params = $query->getParameters();
-        foreach ($params as $key => $param) {
-            $aclAppliedQuery->setParameter($key, $param);
-        }
+        $aclAppliedQuery->setParameters($params);
 
-        return $query;
+        return $aclAppliedQuery;
     }
 
     /**
