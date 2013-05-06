@@ -21,5 +21,67 @@ namespace VIB\FliesBundle\Tests\Entity;
 
 class RackTest
 {
+    public function testConstruct()
+    {
+    }
 
+    public function testGetLabelBarcode()
+    {
+    }
+
+    public function testGetLabelText()
+    {
+    }
+
+    public function testToString()
+    {
+    }
+
+    public function testDescription()
+    {
+    }
+
+    protected function testGetPositions()
+    {
+    }
+
+    public function testGetPosition()
+    {
+    }
+
+    public function testGetRows()
+    {
+    }
+
+    public function testGetColumns()
+    {
+    }
+
+    public function testGeometry()
+    {
+    }
+
+    public function testGetVial()
+    {
+    }
+
+    public function testVials()
+    {
+    }
+
+    public function testReplaceVial()
+    {
+    }
+
+    public function testHasVial()
+    {
+    }
+
+    public function testIncubator()
+    {
+    }
+
+    public function testGetTemperature()
+    {
+    }
 }

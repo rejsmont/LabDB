@@ -21,5 +21,35 @@ namespace VIB\FliesBundle\Tests\Entity;
 
 class StockVialTest
 {
+    public function testConstruct()
+    {
+    }
     
+    public function testGetLabelText()
+    {
+    }
+
+    public function testGetAltLabelText()
+    {
+    }
+
+    public function testAddChild()
+    {
+    }
+
+    public function testSetParent()
+    {
+    }
+
+    public function testIsParentValid()
+    {
+    }
+
+    public function testGetType()
+    {
+    }
+
+    public function testStock()
+    {
+    }
 }

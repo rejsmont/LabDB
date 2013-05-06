@@ -21,5 +21,47 @@ namespace VIB\FliesBundle\Tests\Entity;
 
 class RackPositionTest
 {
-    
+    public function testConstruct()
+    {
+    }
+
+    public function testToString()
+    {
+    }
+
+    public function testRackRow()
+    {
+    }
+
+    public function testRow()
+    {
+    }
+
+    public function testRackColumn()
+    {
+    }
+
+    public function testColumn()
+    {
+    }
+
+    public function testIsAt()
+    {
+    }
+
+    public function testRack()
+    {
+    }
+
+    public function testContents()
+    {
+    }
+
+    public function testIsEmpty()
+    {
+    }
+
+    public function testSetPrevContents()
+    {
+    }
 }

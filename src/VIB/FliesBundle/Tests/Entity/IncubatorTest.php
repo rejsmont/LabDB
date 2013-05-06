@@ -22,6 +22,14 @@ namespace VIB\FliesBundle\Tests\Entity;
 class IncubatorTest extends \PHPUnit_Framework_TestCase
 {
 
+    public function testConstruct()
+    {
+    }
+
+    public function testToString()
+    {
+    }
+    
     public function testName()
     {
         

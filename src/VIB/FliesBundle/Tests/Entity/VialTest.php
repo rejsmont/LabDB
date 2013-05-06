@@ -99,7 +99,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetName($vial)
     {
-        $this->assertSame('1',$vial->getLabelText());
+        $this->assertSame('1',$vial->getName());
     }
 
     /**

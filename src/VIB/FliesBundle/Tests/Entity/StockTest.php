@@ -18,7 +18,54 @@
 
 namespace VIB\FliesBundle\Tests\Entity;
 
+
 class StockTest
 {
-    
+    public function testConstruct()
+    {
+    }
+
+    public function testToString()
+    {
+    }
+
+    public function testName()
+    {
+    }
+
+    public function testGetLabel()
+    {
+    }
+
+    public function testGenotype()
+    {
+    }
+
+    public function testNotes()
+    {
+    }
+
+    public function testVendor()
+    {
+    }
+
+    public function testInfoURL()
+    {
+    }
+
+    public function testVerified()
+    {
+    }
+
+    public function testVials()
+    {
+    }
+
+    public function testLivingVials()
+    {
+    }
+
+    public function testSourceCross()
+    {
+    }
 }
