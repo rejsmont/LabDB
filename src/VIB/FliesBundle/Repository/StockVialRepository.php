@@ -27,84 +27,21 @@ namespace VIB\FliesBundle\Repository;
 class StockVialRepository extends VialRepository
 {
     /**
-     * Return QueryBuilder object finding all living vials
-     *
-     * @return Doctrine\ORM\QueryBuilder
+     * 
+     * @param type $stock
+     * @return Doctrine\Common\Collections\Collection
      */
-    public function findAllLivingQuery($qb = null)
+    public function findLivingVialsByStock($stock, $options = array())
     {
-        $date = new \DateTime();
-        $date->sub(new \DateInterval('P2M'));
-
-        if ($qb == null)
-            $queryBuilder = $this->createQueryBuilder('b');
-        else
-            $queryBuilder = $qb;
-
-        $query = $queryBuilder
-            ->where('b.setupDate > :date')
-            ->andWhere('b.trashed = false')
-            ->orderBy('b.setupDate', 'DESC')
-            ->addOrderBy('b.id', 'DESC')
-            ->setParameter('date', $date->format('Y-m-d'))
-        ;
-
-        return $query;
-    }
-
-    /**
-     * Return QueryBuilder object finding all vials
-     *
-     * @return Doctrine\ORM\QueryBuilder
-     */
-    public function findAllQuery()
-    {
-        $query = $this->createQueryBuilder('b')
-            ->orderBy('b.setupDate', 'DESC')
-            ->addOrderBy('b.id', 'DESC');
-
-        return $query;
-    }
-
-    /**
-     * Return living stock vials
-     *
-     * @return mixed
-     */
-    public function findAllLivingStocksQuery()
-    {
-        $query = $this->findAllLivingQuery()
-            ->andWhere('b.stock is not null');
-
-        return $query;
-    }
-
-    /**
-     * Return living cross vials
-     *
-     * @return mixed
-     */
-    public function findAllLivingCrossesQuery()
-    {
-        $query = $this->findAllLivingQuery()
-            ->andWhere('b.cross is not null');
-
-        return $query;
-    }
-
-    /**
-     * Return living cross vials
-     *
-     * @return mixed
-     */
-    public function findLivingStocksByName($term)
-    {
-        $query = $this->findAllLivingQuery()
-            ->join('b.stock', 's')
-            ->andWhere('s.name like :term')
-            ->setParameter('term', '%' . $term .'%');
-
-        return $query;
-    }
-
+        $qb = $this->getListQueryBuilder($options)
+                   ->andWhere('e.stock = :stock')
+                   ->setParameter('stock', $stock);
+        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
+        $user = isset($options['user']) ? $options['user'] : null;
+        if (false === $permissions) {
+            return $qb->getQuery()->useResultCache(true)->getResult(); 
+        } else {
+            return $this->aclFilter->apply($qb, $permissions, $user)->getResult();
+        }
+    }   
 }

@@ -24,6 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity as UniqueEntity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 use VIB\CoreBundle\Entity\Entity;
 
@@ -88,7 +89,7 @@ class Stock extends Entity
     protected $verified;
 
     /**
-     * @ORM\OneToMany(targetEntity="StockVial", mappedBy="stock", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="StockVial", mappedBy="stock", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      *
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -258,7 +259,7 @@ class Stock extends Entity
     /**
      * Add vial
      *
-     * @param \VIB\FliesBundle\Entity\Vial $vial
+     * @param VIB\FliesBundle\Entity\Vial $vial
      */
     public function addVial(Vial $vial = null)
     {
@@ -276,7 +277,7 @@ class Stock extends Entity
     /**
      * Remove vial
      *
-     * @param \VIB\FliesBundle\Entity\Vial $vial
+     * @param VIB\FliesBundle\Entity\Vial $vial
      */
     public function removeVial(Vial $vial = null)
     {
@@ -286,7 +287,7 @@ class Stock extends Entity
     /**
      * Get vials
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function getVials()
     {
@@ -296,23 +297,23 @@ class Stock extends Entity
     /**
      * Get living vials
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function getLivingVials()
     {
-        $livingVials = new ArrayCollection();
-        foreach ($this->vials as $vial) {
-            if ($vial->isAlive())
-                $livingVials->add($vial);
-        }
-
-        return $livingVials;
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P2M'));
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("trashed", "false"))
+            ->andWhere(Criteria::expr()->gt("setupDate", $date));
+        
+        return $this->getVials()->matching($criteria);
     }
 
     /**
      * Set sourceCross
      *
-     * @param \VIB\FliesBundle\Entity\CrossVial $sourceCross
+     * @param VIB\FliesBundle\Entity\CrossVial $sourceCross
      */
     public function setSourceCross(CrossVial $sourceCross = null)
     {
@@ -322,7 +323,7 @@ class Stock extends Entity
     /**
      * Get sourceCross
      *
-     * @return \VIB\FliesBundle\Entity\CrossVial
+     * @return VIB\FliesBundle\Entity\CrossVial
      */
     public function getSourceCross()
     {

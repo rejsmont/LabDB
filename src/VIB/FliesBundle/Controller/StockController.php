@@ -76,25 +76,17 @@ class StockController extends CRUDController
      *
      * @param mixed $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function showAction($id)
     {
         $stock = $this->getEntity($id);
         $response = parent::showAction($stock);
         $om = $this->getObjectManager();
-        $query =  $om->getRepository('VIB\FliesBundle\Entity\StockVial')->createQueryBuilder('b');
-        $date = new \DateTime();
-        $date->sub(new \DateInterval('P2M'));
-        $query->where('b.stock = :stock')
-              ->andWhere('b.setupDate > :date')
-              ->andWhere('b.trashed = false')
-              ->orderBy('b.setupDate', 'DESC')
-              ->addOrderBy('b.id', 'DESC')
-              ->setParameter('stock', $stock)
-              ->setParameter('date', $date->format('Y-m-d'));
-
-        $myVials = $this->get('vib.security.filter.acl')->apply($query,array('OWNER'))->getResult();
+        
+        $options = array('user' => $this->getUser(), 'permissions' => array('OWNER'));
+        $myVials = $om->getRepository('VIB\FliesBundle\Entity\StockVial')
+                      ->findLivingVialsByStock($stock, $options);
 
         $small = new ArrayCollection();
         $medium = new ArrayCollection();
@@ -116,7 +108,7 @@ class StockController extends CRUDController
 
         $vials = array('small' => $small, 'medium' => $medium, 'large' => $large);
 
-        return is_array($response) ? array_merge($response,$vials) : $response;
+        return is_array($response) ? array_merge($response, $vials) : $response;
     }
 
     /**

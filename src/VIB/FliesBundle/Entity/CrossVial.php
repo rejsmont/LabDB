@@ -71,7 +71,7 @@ class CrossVial extends Vial
     protected $virginName;
 
     /**
-     * @ORM\OneToMany(targetEntity="Stock", mappedBy="sourceCross")
+     * @ORM\OneToMany(targetEntity="Stock", mappedBy="sourceCross", fetch="EXTRA_LAZY")
      */
     protected $stocks;
 
@@ -421,7 +421,7 @@ class CrossVial extends Vial
     /**
      * Get stocks
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getStocks()
     {

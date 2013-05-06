@@ -26,6 +26,7 @@ namespace VIB\FliesBundle\Repository;
  */
 class CrossVialRepository extends VialRepository
 {
+    
     /**
      * Search stocks
      *

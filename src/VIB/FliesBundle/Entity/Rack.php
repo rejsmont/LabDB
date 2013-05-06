@@ -45,9 +45,9 @@ class Rack extends Entity implements LabelInterface
     protected $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="RackPosition", mappedBy="rack", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="RackPosition", mappedBy="rack", cascade={"persist", "remove"}, orphanRemoval=true, fetch="EXTRA_LAZY")
      *
-     * @var \Doctrine\Common\Collections\Collection
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $positions;
 
@@ -279,7 +279,7 @@ class Rack extends Entity implements LabelInterface
     /**
      * Get vials
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getVials()
     {
@@ -306,6 +306,7 @@ class Rack extends Entity implements LabelInterface
 
             return true;
         } else {
+            
             return false;
         }
     }

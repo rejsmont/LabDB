@@ -38,76 +38,44 @@ class CalendarController extends Controller
      * @Route("/calendar/{username}.ics")
      *
      * @param  string                                     $username User to create the calendar for
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function calendarAction($username)
     {
         $user = $this->get('user_provider')->loadUserByUsername($username);
-        $em = $this->getDoctrine()->getManager();
+        $om = $this->get('vib.doctrine.manager');
         $calendar = VObject\Component::create('VCALENDAR');
         $calendar->VERSION = '2.0';
         $field = 'X-WR-CALNAME';
         $calendar->$field = $user->getShortName() . '\'s flywork';
 
-        $date = new \DateTime();
-        $date->sub(new \DateInterval('P2M'));
-
-        $stockVialQuery =  $em->getRepository('VIB\FliesBundle\Entity\StockVial')->createQueryBuilder('b');
-        $stockVialQuery->where('b.setupDate > :date')
-                       ->andWhere('b.trashed = false')
-                       ->groupBy('b.setupDate')
-                       ->addGroupBy('b.incubator')
-                       ->addGroupBy('b.flipDate')
-                       ->orderBy('b.setupDate', 'DESC')
-                       ->setParameter('date', $date->format('Y-m-d'));
-
-        $stockVials = $this->get('vib.security.filter.acl')->apply($stockVialQuery,array('OWNER'),$user)->getResult();
-        $stockDates = array();
-
-        foreach ($stockVials as $stockVial) {
-            $stockDate = $stockVial->getRealFlipDate();
-            if (! in_array($stockDate,$stockDates)) {
-                $stockDates[] = $stockDate;
-                $event = VObject\Component::create('VEVENT');
-                $calendar->add($event);
-                $event->SUMMARY = 'Transfer stocks';
-                $dtstart = VObject\Property::create('DTSTART');
-                $dtstart->setDateTime($stockDate, VObject\Property\DateTime::DATE);
-                $event->DTSTART = $dtstart;
-                $alarm = VObject\Component::create('VALARM');
-                $event->add($alarm);
-                $alarm->TRIGGER = 'PT8H';
-                $alarm->ACTION = 'DISPLAY';
-            }
+        $stockDates =  $om->getRepository('VIB\FliesBundle\Entity\StockVial')->getFlipDates($user);
+        foreach ($stockDates as $stockDate) {
+            $event = VObject\Component::create('VEVENT');
+            $calendar->add($event);
+            $event->SUMMARY = 'Transfer stocks';
+            $dtstart = VObject\Property::create('DTSTART');
+            $dtstart->setDateTime($stockDate, VObject\Property\DateTime::DATE);
+            $event->DTSTART = $dtstart;
+            $alarm = VObject\Component::create('VALARM');
+            $event->add($alarm);
+            $alarm->TRIGGER = 'PT8H';
+            $alarm->ACTION = 'DISPLAY';
         }
 
-        $crossVialQuery =  $em->getRepository('VIB\FliesBundle\Entity\CrossVial')->createQueryBuilder('b');
-        $crossVialQuery->where('b.setupDate > :date')
-                       ->andWhere('b.trashed = false')
-                       ->groupBy('b.setupDate')
-                       ->addGroupBy('b.incubator')
-                       ->addGroupBy('b.flipDate')
-                       ->orderBy('b.setupDate', 'DESC')
-                       ->setParameter('date', $date->format('Y-m-d'));
-
-        $crossVials = $this->get('vib.security.filter.acl')->apply($crossVialQuery,array('OWNER'),$user)->getResult();
-        $crossDates = array();
-
-        foreach ($crossVials as $crossVial) {
-            $crossDate = $crossVial->getRealFlipDate();
-            if (! in_array($crossDate,$crossDates)) {
-                $crossDates[] = $crossDate;
-                $event = VObject\Component::create('VEVENT');
-                $calendar->add($event);
-                $event->SUMMARY = 'Check crosses';
-                $dtstart = VObject\Property::create('DTSTART');
-                $dtstart->setDateTime($crossDate, VObject\Property\DateTime::DATE);
-                $event->DTSTART = $dtstart;
-                $alarm = VObject\Component::create('VALARM');
-                $event->add($alarm);
-                $alarm->TRIGGER = 'PT8H';
-                $alarm->ACTION = 'DISPLAY';
-            }
+        $crossDates =  $om->getRepository('VIB\FliesBundle\Entity\CrossVial')->getFlipDates($user);
+        foreach ($crossDates as $crossDate) {
+            $crossDates[] = $crossDate;
+            $event = VObject\Component::create('VEVENT');
+            $calendar->add($event);
+            $event->SUMMARY = 'Check crosses';
+            $dtstart = VObject\Property::create('DTSTART');
+            $dtstart->setDateTime($crossDate, VObject\Property\DateTime::DATE);
+            $event->DTSTART = $dtstart;
+            $alarm = VObject\Component::create('VALARM');
+            $event->add($alarm);
+            $alarm->TRIGGER = 'PT8H';
+            $alarm->ACTION = 'DISPLAY';
         }
 
         return new Response($calendar->serialize(),200,

@@ -38,7 +38,7 @@ class EntityRepository extends BaseEntityRepository
     /**
      * 
      * @param array $options
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getList($options = array()) {
         return $this->getListQuery($options)->getResult();

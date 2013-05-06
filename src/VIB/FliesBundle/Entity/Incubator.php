@@ -44,16 +44,16 @@ class Incubator extends Entity
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="Rack", mappedBy="incubator")
+     * @ORM\OneToMany(targetEntity="Rack", mappedBy="incubator", fetch="EXTRA_LAZY")
      *
-     * @var \Doctrine\Common\Collections\Collection
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $racks;
 
     /**
-     * @ORM\OneToMany(targetEntity="Vial", mappedBy="incubator")
+     * @ORM\OneToMany(targetEntity="Vial", mappedBy="incubator", fetch="EXTRA_LAZY")
      *
-     * @var \Doctrine\Common\Collections\Collection
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $vials;
 
@@ -111,7 +111,7 @@ class Incubator extends Entity
     /**
      * Get racks
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getRacks()
     {
@@ -121,7 +121,7 @@ class Incubator extends Entity
     /**
      * Get vials
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getVials()
     {

@@ -23,6 +23,7 @@ use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 use VIB\CoreBundle\Entity\Entity;
 use VIB\FliesBundle\Label\LabelDateInterface;
@@ -66,7 +67,7 @@ class Vial extends Entity implements LabelDateInterface
     protected $size;
 
     /**
-     * @ORM\OneToMany(targetEntity="Vial", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Vial", mappedBy="parent", fetch="EXTRA_LAZY")
      */
     protected $children;
 
@@ -77,12 +78,12 @@ class Vial extends Entity implements LabelDateInterface
     protected $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="CrossVial", mappedBy="virgin")
+     * @ORM\OneToMany(targetEntity="CrossVial", mappedBy="virgin", fetch="EXTRA_LAZY")
      */
     protected $virginCrosses;
 
     /**
-     * @ORM\OneToMany(targetEntity="CrossVial", mappedBy="male")
+     * @ORM\OneToMany(targetEntity="CrossVial", mappedBy="male", fetch="EXTRA_LAZY")
      */
     protected $maleCrosses;
 
@@ -127,7 +128,7 @@ class Vial extends Entity implements LabelDateInterface
      * If $template is set, inherit properties from the template.
      * If $flip is true, become a child of the template.
      *
-     * @param \VIB\FliesBundle\Entity\Vial $template
+     * @param VIB\FliesBundle\Entity\Vial $template
      * @param boolean                      $flip
      */
     public function __construct(Vial $template = null, $flip = true)
@@ -186,7 +187,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Reset dates
      *
-     * @param \VIB\FliesBundle\Entity\Vial $template
+     * @param VIB\FliesBundle\Entity\Vial $template
      */
     private function resetDates(Vial $template = null)
     {
@@ -205,7 +206,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Inherit properties from template
      *
-     * @param \VIB\FliesBundle\Entity\Vial $template
+     * @param VIB\FliesBundle\Entity\Vial $template
      */
     protected function inheritFromTemplate(Vial $template = null)
     {
@@ -241,7 +242,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Set setupDate
      *
-     * @param \DateTime $setupDate
+     * @param DateTime $setupDate
      */
     public function setSetupDate($setupDate)
     {
@@ -251,7 +252,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get setupDate
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getSetupDate()
     {
@@ -261,7 +262,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Set flipDate
      *
-     * @param \DateTime $flipDate
+     * @param DateTime $flipDate
      */
     public function setFlipDate($flipDate)
     {
@@ -271,7 +272,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get flipDate
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getFlipDate()
     {
@@ -321,7 +322,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Add child
      *
-     * @param \VIB\FliesBundle\Entity\Vial $child
+     * @param VIB\FliesBundle\Entity\Vial $child
      */
     public function addChild(Vial $child = null)
     {
@@ -331,7 +332,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Remove child
      *
-     * @param \VIB\FliesBundle\Entity\Vial $child
+     * @param VIB\FliesBundle\Entity\Vial $child
      */
     public function removeChild(Vial $child = null)
     {
@@ -341,7 +342,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getChildren()
     {
@@ -351,7 +352,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Set parent
      *
-     * @param \VIB\FliesBundle\Entity\Vial $parent
+     * @param VIB\FliesBundle\Entity\Vial $parent
      */
     public function setParent(Vial $parent = null)
     {
@@ -361,7 +362,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get parent
      *
-     * @return \VIB\FliesBundle\Entity\Vial
+     * @return VIB\FliesBundle\Entity\Vial
      */
     public function getParent()
     {
@@ -381,7 +382,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get maleCrosses
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function getMaleCrosses()
     {
@@ -391,7 +392,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get virginCrosses
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function getVirginCrosses()
     {
@@ -401,15 +402,15 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get crosses
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function getCrosses()
     {
         $crosses = new ArrayCollection();
-        foreach ($this->maleCrosses as $cross) {
+        foreach ($this->getMaleCrosses() as $cross) {
             $crosses->add($cross);
         }
-        foreach ($this->virginCrosses as $cross) {
+        foreach ($this->getVirginCrosses() as $cross) {
             $crosses->add($cross);
         }
 
@@ -419,14 +420,22 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get living crosses
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function getLivingCrosses()
     {
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P2M'));
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("trashed", "false"))
+            ->andWhere(Criteria::expr()->gt("setupDate", $date));
+        
         $livingCrosses = new ArrayCollection();
-        foreach ($this->getCrosses() as $cross) {
-            if ($cross->isAlive())
-                $livingCrosses->add($cross);
+        foreach ($this->getMaleCrosses()->matching($criteria) as $cross) {
+            $livingCrosses->add($cross);
+        }
+        foreach ($this->getVirginCrosses()->matching($criteria) as $cross) {
+            $livingCrosses->add($cross);
         }
 
         return $livingCrosses;
@@ -479,7 +488,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get position
      *
-     * @return \VIB\FliesBundle\Entity\RackPosition
+     * @return VIB\FliesBundle\Entity\RackPosition
      */
     public function getPosition()
     {
@@ -489,7 +498,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Set position
      *
-     * @param \VIB\FliesBundle\Entity\RackPosition $position
+     * @param VIB\FliesBundle\Entity\RackPosition $position
      */
     public function setPosition(RackPosition $position = null)
     {
@@ -507,7 +516,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get previous position
      *
-     * @return \VIB\FliesBundle\Entity\RackPosition
+     * @return VIB\FliesBundle\Entity\RackPosition
      */
     public function getPrevPosition()
     {
@@ -517,7 +526,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Set previous position
      *
-     * @param \VIB\FliesBundle\Entity\RackPosition $prevPosition
+     * @param VIB\FliesBundle\Entity\RackPosition $prevPosition
      */
     public function setPrevPosition(RackPosition $prevPosition = null)
     {
@@ -527,7 +536,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get incubator
      *
-     * @return \VIB\FliesBundle\Entity\Incubator
+     * @return VIB\FliesBundle\Entity\Incubator
      */
     public function getIncubator()
     {
@@ -542,7 +551,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Set incubator
      *
-     * @param \VIB\FliesBundle\Entity\Incubator $incubator
+     * @param VIB\FliesBundle\Entity\Incubator $incubator
      */
     public function setIncubator(Incubator $incubator = null)
     {
@@ -552,7 +561,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get position
      *
-     * @return \VIB\FliesBundle\Entity\RackPosition
+     * @return VIB\FliesBundle\Entity\RackPosition
      */
     public function getLocation()
     {
@@ -604,7 +613,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get default flip date
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDefaultFlipDate()
     {
@@ -618,7 +627,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get set or calculated value for flip date
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getRealFlipDate()
     {
@@ -632,8 +641,8 @@ class Vial extends Entity implements LabelDateInterface
      */
     public function isAlive()
     {
-        $currentDate = new \DateTime();
-        $date = $currentDate->sub(new \DateInterval('P2M'));
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P2M'));
 
         return (($this->getSetupDate() > $date ? true : false) && (! $this->isTrashed()));
     }

@@ -52,9 +52,9 @@ class VialRepository extends EntityRepository
     
     /**
      * 
-     * @param \Doctrine\ORM\QueryBuilder $builder
+     * @param Doctrine\ORM\QueryBuilder $builder
      * @param array $options
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return Doctrine\ORM\QueryBuilder
      */
     protected function applyQueryBuilderFilter($builder, $options = array())
     {
@@ -82,5 +82,28 @@ class VialRepository extends EntityRepository
         }
         
         return $builder;
+    }
+    
+    /**
+     * Return dates when $user should flip vials
+     * 
+     * @param Symfony\Component\Security\Core\User\UserInterface $user
+     * @return array
+     */
+    public function getFlipDates($user)
+    {
+        $qb = $this->getListQueryBuilder();
+        $qb->groupBy('e.setupDate')
+           ->addGroupBy('e.incubator')
+           ->addGroupBy('e.flipDate')
+           ->orderBy('e.setupDate', 'DESC');
+        
+        $vials = $this->aclFilter->apply($qb, array('OWNER'), $user)->getResult();
+        $dates = array();
+        foreach ($vials as $vial) {
+            $dates[] = $vial->getRealFlipDate();
+        }
+        
+        return array_unique($dates, SORT_REGULAR);
     }
 }
