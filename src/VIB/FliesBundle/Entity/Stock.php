@@ -304,8 +304,8 @@ class Stock extends Entity
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("trashed", "false"))
-            ->andWhere(Criteria::expr()->gt("setupDate", $date));
+            ->where(Criteria::expr()->eq('trashed', false))
+            ->andWhere(Criteria::expr()->gt('setupDate', $date));
         
         return $this->getVials()->matching($criteria);
     }

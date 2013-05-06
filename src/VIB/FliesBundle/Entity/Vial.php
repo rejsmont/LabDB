@@ -427,8 +427,8 @@ class Vial extends Entity implements LabelDateInterface
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("trashed", "false"))
-            ->andWhere(Criteria::expr()->gt("setupDate", $date));
+            ->where(Criteria::expr()->eq('trashed', false))
+            ->andWhere(Criteria::expr()->gt('setupDate', $date));
         
         $livingCrosses = new ArrayCollection();
         foreach ($this->getMaleCrosses()->matching($criteria) as $cross) {
