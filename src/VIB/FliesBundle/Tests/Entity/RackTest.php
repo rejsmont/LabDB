@@ -41,10 +41,6 @@ class RackTest extends \PHPUnit_Framework_TestCase
     {
     }
 
-    protected function testGetPositions()
-    {
-    }
-
     public function testGetPosition()
     {
     }
