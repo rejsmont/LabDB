@@ -19,7 +19,7 @@
 namespace VIB\FliesBundle\Tests\Entity;
 
 
-class StockTest
+class StockTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct()
     {
