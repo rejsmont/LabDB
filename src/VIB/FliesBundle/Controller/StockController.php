@@ -153,8 +153,9 @@ class StockController extends CRUDController
                 $this->addSessionFlash('success', 'Stock ' . $stock . ' was created.');
 
                 if ($this->getSession()->get('autoprint') == 'enabled') {
+                    $labelMode = ($this->getSession()->get('labelmode','std') == 'alt');
                     $pdf = $this->get('vibfolks.pdflabel');
-                    $pdf->addLabel($vials);
+                    $pdf->addLabel($vials, $labelMode);
                     if ($this->submitPrintJob($pdf)) {
                         $vm->markPrinted($vials);
                         $vm->flush();

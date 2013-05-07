@@ -52,7 +52,6 @@ class StockRepository extends EntityRepository
             $date = new \DateTime();
             $date->sub(new \DateInterval('P2M'));
             return $qb->distinct()
-                      ->distinct()
                       ->join('e.vials','v')
                       ->andWhere('v.setupDate > :date')
                       ->andWhere('v.trashed = false')

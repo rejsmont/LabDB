@@ -237,8 +237,23 @@ function setAutoPrint(e) {
   var setting = checked ? 'enabled' : 'disabled'
   $.ajax({
           url: element.data('link'),
-          type: 'get',
+          type: 'post',
           data: {setting: setting}
+    });
+}
+
+/**
+ * Set labelmode
+ * 
+ * @param e
+ */
+function setLabelMode(e) {
+  var element = $(e);
+  var mode = element.prop("value");
+  $.ajax({
+          url: element.data('link'),
+          type: 'post',
+          data: {labelmode: mode}
     });
 }
 

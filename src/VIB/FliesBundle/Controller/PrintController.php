@@ -19,6 +19,7 @@
 namespace VIB\FliesBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,16 +33,16 @@ use PHP_IPP\IPP\CupsPrintIPP;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class AutoPrintController extends Controller
+class PrintController extends Controller
 {
     /**
-     * Autoprint panel
+     * Print panel
      *
      * @Template()
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function autoPrintAction()
+    public function printPanelAction()
     {
         $ipp = new CupsPrintIPP();
         $ipp->setLog('', 0, 0);
@@ -51,15 +52,16 @@ class AutoPrintController extends Controller
         $canPrint = (implode('\n',$ipp->status) == 'successfull-ok');
         $setting = $this->get('request')->getSession()->get('autoprint') == 'enabled';
         $autoprint = ($canPrint) ? $setting : $canPrint;
-
-        return array('autoprint' => $autoprint);
+        $labelmode = $this->get('request')->getSession()->get('labelmode');
+        return array('autoprint' => $autoprint, 'labelmode' => $labelmode);
     }
 
     /**
      * Autoprint panel
      *
      * @Route("/ajax/autoprint/")
-     *
+     * @Method("POST")
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function setAutoPrintAction(Request $request)
@@ -70,10 +72,27 @@ class AutoPrintController extends Controller
         $ipp->setPrinterURI($this->container->getParameter('print_queue'));
         $ipp->getPrinterAttributes();
         $canPrint = (implode('\n',$ipp->status) == 'successfull-ok');
-        $setting = ($request->query->get('setting') == 'enabled');
+        $setting = ($request->request->get('setting') == 'enabled');
         $session = $request->getSession();
         $autoprint = ($canPrint) ? $setting : $canPrint;
         $session->set('autoprint', $autoprint ? 'enabled' : 'disabled');
+
+        return new Response();
+    }
+    
+    /**
+     * Autoprint panel
+     *
+     * @Route("/ajax/labelmode/")
+     * @Method("POST")
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function setLabelModeAction(Request $request)
+    {
+        $mode = $request->request->get('labelmode');
+        $session = $request->getSession();
+        $session->set('labelmode', $mode);
 
         return new Response();
     }

@@ -1,0 +1,22 @@
+<div class="nav-list well">
+  <span class="nav-header">Printer settings</span>
+  <label class="checkbox">
+    <input type="checkbox" id="autoprint"
+           {% if autoprint %}checked {% elseif not can_print() %}disabled {% endif %}
+           data-link="{{ path('vib_flies_print_setautoprint') }}" onchange="setAutoPrint(this)"/>
+    Automagic label printing
+  </label>
+  <span class="nav-header">Label settings</span>
+  <label class="radio">
+    <input type="radio" name="labelmode" id="labelmode_std" value="std"
+           {% if labelmode != "alt" %}checked {% endif %}
+           data-link="{{ path('vib_flies_print_setlabelmode') }}" onclick="setLabelMode(this)"/>
+    Standard labels
+  </label>
+  <label class="radio">
+    <input type="radio" name="labelmode" id="labelmode_alt" value="alt"
+           {% if labelmode == "alt" %}checked {% endif %}
+           data-link="{{ path('vib_flies_print_setlabelmode') }}" onclick="setLabelMode(this)"/>
+    Alternative labels
+  </label>
+</div>

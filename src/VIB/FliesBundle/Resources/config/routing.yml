@@ -30,6 +30,6 @@ search:
     resource: "@VIBFliesBundle/Controller/SearchController.php"
     type:     annotation
 
-autoprint:
-    resource: "@VIBFliesBundle/Controller/AutoPrintController.php"
+print:
+    resource: "@VIBFliesBundle/Controller/PrintController.php"
     type:     annotation

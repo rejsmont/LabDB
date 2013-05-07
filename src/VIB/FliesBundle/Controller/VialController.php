@@ -321,8 +321,9 @@ class VialController extends CRUDController
      */
     protected function prepareLabels($vials)
     {
+        $labelMode = ($this->getSession()->get('labelmode','std') == 'alt');
         $pdf = $this->get('vibfolks.pdflabel');
-        $pdf->addLabel($vials);
+        $pdf->addLabel($vials, $labelMode);
 
         return $pdf;
     }
