@@ -1,6 +1,5 @@
+[![Build Status](https://travis-ci.org/rejsmont/LabDB.png)](https://travis-ci.org/rejsmont/LabDB)
 FlyDB
-=========================
-"!https://travis-ci.org/rejsmont/LabDB.png!":https://travis-ci.org/rejsmont/LabDB
 =========================
 
 To install FlyDB, do the following:
