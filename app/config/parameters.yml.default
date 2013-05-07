@@ -16,3 +16,5 @@ parameters:
 
     print_host:        localhost
     print_queue:       /printers/default
+
+    knp_paginator.template.pagination: MopaBootstrapBundle:Pagination:sliding.html.twig
