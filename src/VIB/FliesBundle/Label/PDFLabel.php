@@ -101,7 +101,7 @@ class PDFLabel
             }
         } elseif ($entities instanceof Collection) {
             foreach ($entities as $entity) {
-                $this->addLabel($entity);
+                $this->addLabel($entity, $alternative);
             }
         } elseif (null === $entities) {
             throw new \ErrorException('Argument 1 must not be null');
