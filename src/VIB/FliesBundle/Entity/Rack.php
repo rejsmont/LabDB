@@ -285,7 +285,9 @@ class Rack extends Entity implements LabelInterface
     {
         $vials = new ArrayCollection();
         foreach ($this->getPositions() as $position) {
-            $vials[] = $position->getContents();
+            if (($vial = $position->getContents()) !== null) {
+                $vials[] = $position->getContents();
+            }
         }
 
         return $vials;
