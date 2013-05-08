@@ -18,54 +18,138 @@
 
 namespace VIB\FliesBundle\Tests\Entity;
 
+use VIB\FliesBundle\Entity\Stock;
+use VIB\FliesBundle\Entity\StockVial;
+use VIB\FliesBundle\Entity\CrossVial;
+
 
 class StockTest extends \PHPUnit_Framework_TestCase
 {
-    public function testConstruct()
+    
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testConstruct($stock)
     {
+        $this->assertFalse($stock->isVerified());
+        $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $stock->getVials());
+        $this->assertEquals(1,count($stock->getVials()));
     }
 
-    public function testToString()
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testToString($stock)
     {
+        $this->assertEquals($stock->getName(), (string) $stock);
     }
 
-    public function testName()
-    {
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testName($stock)
+    {        
+        $this->assertEmpty($stock->getName());
+        $stock->setName('test');
+        $this->assertEquals('test', $stock->getName());
     }
 
-    public function testGetLabel()
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testGetLabel($stock)
     {
+        $this->assertEquals($stock->getName(), $stock->getLabel());
     }
 
-    public function testGenotype()
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testGenotype($stock)
     {
+        $this->assertEmpty($stock->getGenotype());
+        $stock->setGenotype('test/test');
+        $this->assertEquals('test / test', $stock->getGenotype());
     }
 
-    public function testNotes()
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testNotes($stock)
     {
+        $this->assertEmpty($stock->getNotes());
+        $stock->setNotes('test');
+        $this->assertEquals('test', $stock->getNotes());
     }
 
-    public function testVendor()
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testVendor($stock)
     {
+        $this->assertEmpty($stock->getVendor());
+        $stock->setVendor('test');
+        $this->assertEquals('test', $stock->getVendor());
     }
 
-    public function testInfoURL()
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testInfoURL($stock)
     {
+        $this->assertEmpty($stock->getInfoURL());
+        $stock->setInfoURL('test');
+        $this->assertEquals('test', $stock->getInfoURL());
     }
 
-    public function testVerified()
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testVerified($stock)
     {
+        $this->assertFalse($stock->isVerified());
+        $stock->setVerified(true);
+        $this->assertTrue($stock->isVerified());
     }
 
-    public function testVials()
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testVials($stock)
     {
+        $vial = new StockVial();
+        $stock->addVial($vial);
+        $this->assertContains($vial, $stock->getVials());
+        $stock->removeVial($vial);
+        $this->assertNotContains($vial, $stock->getVials());
     }
 
-    public function testLivingVials()
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testGetLivingVials($stock)
     {
+        $vial = new StockVial();
+        $stock->addVial($vial);
+        $this->assertContains($vial, $stock->getLivingVials());
+        $vial->getSetupDate()->sub(new \DateInterval('P6M'));
+        $this->assertNotContains($vial, $stock->getLivingVials());
     }
 
-    public function testSourceCross()
+    /**
+     * @dataProvider stockProvider
+     */
+    public function testSourceCross($stock)
     {
+        $this->assertNull($stock->getSourceCross());
+        $cross = new CrossVial();
+        $stock->setSourceCross($cross);
+        $this->assertEquals($cross, $stock->getSourceCross());
+    }
+    
+    public function stockProvider()
+    {
+        $stock = new Stock();
+        return array(array($stock));
     }
 }
