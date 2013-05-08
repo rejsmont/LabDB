@@ -18,35 +18,59 @@
 
 namespace VIB\FliesBundle\Tests\Entity;
 
+use VIB\FliesBundle\Entity\Incubator;
+
 
 class IncubatorTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testConstruct()
+    /**
+     * @dataProvider incubatorProvider
+     */
+    public function testToString($incubator)
     {
-    }
-
-    public function testToString()
-    {
-    }
-    
-    public function testName()
-    {
-        
-    }
-
-    public function testGetRacks()
-    {
-        
+        $this->assertEquals('New incubator', (string) $incubator);
     }
     
-    public function testGetVials()
+    /**
+     * @dataProvider incubatorProvider
+     */
+    public function testName($incubator)
     {
-        
+        $this->assertEquals('New incubator', $incubator->getName());
+        $incubator->setName('Test');
+        $this->assertEquals('Test', $incubator->getName());
     }
 
-    public function testTemperature()
+    /**
+     * @dataProvider incubatorProvider
+     */
+    public function testGetRacks($incubator)
     {
-        
+        $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $incubator->getRacks());
+    }
+    
+    /**
+     * @dataProvider incubatorProvider
+     */
+    public function testGetVials($incubator)
+    {
+        $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $incubator->getVials());
+    }
+
+    /**
+     * @dataProvider incubatorProvider
+     */
+    public function testTemperature($incubator)
+    {
+        $this->assertEquals(25, $incubator->getTemperature());
+        $incubator->setTemperature(28);
+        $this->assertEquals(28, $incubator->getTemperature());
+    }
+    
+    public function incubatorProvider()
+    {
+        $incubator = new Incubator();
+        return array(array($incubator));
     }
 }
