@@ -22,6 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
+
 /**
  * CrossVial class
  *
@@ -85,6 +88,7 @@ class CrossVial extends Vial
     {
         parent::__construct($template, $flip);
         $this->setSuccessful(null);
+        $this->stocks = new ArrayCollection();
     }
 
     /**
@@ -233,10 +237,10 @@ class CrossVial extends Vial
     {
         parent::addChild($child);
         if ($child instanceof CrossVial) {
-            $this->setMale($child->getMale());
-            $this->setMaleName($child->getMaleName());
-            $this->setVirgin($child->getVirgin());
-            $this->setVirginName($child->getVirginName());
+            $child->setMale($this->getMale());
+            $child->setMaleName($this->getMaleName());
+            $child->setVirgin($this->getVirgin());
+            $child->setVirginName($this->getVirginName());
         }
     }
 
@@ -290,9 +294,13 @@ class CrossVial extends Vial
     public function setMale(Vial $male = null)
     {
         $this->male = $male;
-        if ($this->male != null)
-            if (($this->male instanceof StockVial)&&($this->maleName == ''))
-                $this->maleName = $this->male->getStock()->getName();
+        if ($this->male != null) {
+            if (($this->male instanceof StockVial)&&($this->maleName == '')) {
+                $this->maleName = $this->male->getStock()->getGenotype();
+            }
+        } else {
+            $this->maleName = '';
+        }
     }
 
     /**
@@ -358,9 +366,13 @@ class CrossVial extends Vial
     public function setVirgin(Vial $virgin = null)
     {
         $this->virgin = $virgin;
-        if ($this->virgin != null)
-            if (($this->virgin instanceof StockVial)&&($this->virginName == ''))
+        if ($this->virgin != null) {
+            if (($this->virgin instanceof StockVial)&&($this->virginName == '')) {
                 $this->virginName = $this->virgin->getStock()->getGenotype();
+            }
+        } else {
+            $this->virginName = '';
+        }
     }
 
     /**
@@ -464,6 +476,6 @@ class CrossVial extends Vial
      */
     protected function getDelay()
     {
-        return (null !== $this->getParent()) ? 2 : 0;
+        return (null === $this->getParent()) ? 2 : 0;
     }
 }

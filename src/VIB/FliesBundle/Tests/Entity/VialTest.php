@@ -38,14 +38,14 @@ class VialTest extends \PHPUnit_Framework_TestCase
     public function testConstruct($vial)
     {
         $this->assertEquals(21,$vial->getTemperature());
-        $this->assertInstanceOf('Doctrine\Common\Collections\Collection',$vial->getChildren());
+        $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $vial->getChildren());
         $this->assertEquals(0,count($vial->getChildren()));
         $this->assertNull($vial->getParent());
-        $this->assertInstanceOf('Doctrine\Common\Collections\Collection',$vial->getVirginCrosses());
-        $this->assertInstanceOf('Doctrine\Common\Collections\Collection',$vial->getMaleCrosses());
+        $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $vial->getVirginCrosses());
+        $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $vial->getMaleCrosses());
         $this->assertFalse($vial->isLabelPrinted());
         $this->assertFalse($vial->isTrashed());
-        $this->assertEquals($this->date,$vial->getSetupDate());
+        $this->assertEquals($this->date, $vial->getSetupDate());
         $this->assertNull($vial->getFlipDate());
         $this->assertNull($vial->getNotes());
         $this->assertEquals('medium', $vial->getSize());
@@ -143,7 +143,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
      */
     public function testChildren($vial)
     {
-        $child = new FakeVial();
+        $child = new Vial();
         $vial->addChild($child);
         $this->assertEquals(1,count($vial->getChildren()));
         $this->assertEquals($child,$vial->getChildren()->first());
@@ -156,7 +156,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
      */
     public function testParent($vial)
     {
-        $parent = new FakeVial();
+        $parent = new Vial();
         $vial->setParent($parent);
         $this->assertEquals($parent,$vial->getParent());
         $this->assertTrue($vial->isParentValid());
