@@ -73,11 +73,13 @@ class RackTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPosition($rack)
     {
-        for ($i = 'A'; $i <= 'E'; $i++) {
+        for ($i = 'A', $k = 1; $i <= 'E'; $i++, $k++) {
             for ($j = 1; $j <= 3; $j++) {
-                $position = $rack->getPosition($i,$j);
+                $position = $rack->getPosition($i, $j);
+                $numPosition = $rack->getPosition($k, $j);
                 $this->assertEquals($i, $position->getRow());
                 $this->assertEquals($j, $position->getColumn());
+                $this->assertEquals($position, $numPosition);
             }
         }
     }
