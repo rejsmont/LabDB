@@ -18,8 +18,8 @@ doctrine:
         driver:   pdo_sqlite
         host:     ~
         port:     ~
-        dbname:   ~
+        dbname:   "%kernel.root_dir%/Resources/db/test.db"
         user:     ~
         password: ~
         charset:  UTF8
-        memory:   true
+        path:     "%kernel.root_dir%/Resources/db/test.db"
