@@ -1,10 +1,7 @@
 imports:
     - { resource: parameters.yml }
-    - { resource: security.yml }
 
 framework:
-    #esi:             ~
-    #translator:      { fallback: %locale% }
     secret:          %secret%
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
     form:            true
@@ -86,4 +83,3 @@ fos_user:
     db_driver: orm
     firewall_name: secured_area
     user_class: VIB\UserBundle\Entity\User
-

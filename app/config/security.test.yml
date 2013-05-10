@@ -23,7 +23,7 @@ security:
                 target: /
 
     access_control:
-        - { path: ^/secure, roles: ROLE_USER, requires_channel: https }
+        - { path: ^/secure, roles: ROLE_USER }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     
     acl:

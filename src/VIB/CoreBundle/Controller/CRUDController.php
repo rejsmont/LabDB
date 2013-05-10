@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
+use Doctrine\ORM\NoResultException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -244,10 +245,13 @@ abstract class CRUDController extends AbstractController
             return $id;
         }
         $om = $this->getObjectManager();
-        $entity = $om->find($this->getEntityClass(),$id);
-        if ($entity instanceof $class) {
-            return $entity;
-        } else {
+        try {
+            $entity = $om->find($this->getEntityClass(),$id);
+            if ($entity instanceof $class) {
+                return $entity;
+            }
+            throw new NotFoundHttpException();
+        } catch (NoResultException $e) {
             throw new NotFoundHttpException();
         }
 

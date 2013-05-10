@@ -1,7 +1,10 @@
 imports:
-    - { resource: config_dev.yml }
+    - { resource: config.yml }
+    - { resource: security.test.yml }
 
 framework:
+    router:   { resource: "%kernel.root_dir%/config/routing_dev.yml" }
+    profiler: { only_exceptions: false }
     test: ~
     session:
         storage_id: session.storage.mock_file
@@ -13,13 +16,38 @@ web_profiler:
 swiftmailer:
     disable_delivery: true
 
+monolog:
+    handlers:
+        main:
+            type:  stream
+            path:  %kernel.logs_dir%/%kernel.environment%.log
+            level: debug
+        firephp:
+            type:  firephp
+            level: info
+
+assetic:
+    debug:          %kernel.debug%
+    use_controller: true
+
+services:
+    twig.extension.debug:
+        class: Twig_Extensions_Extension_Debug
+        tags: [{ name: 'twig.extension' }]
+
+doctrine:
+    orm:
+        metadata_cache_driver: apc
+        result_cache_driver: apc
+        query_cache_driver: apc
+
 doctrine:
     dbal:
         driver:   pdo_sqlite
         host:     ~
         port:     ~
-        dbname:   "%kernel.root_dir%/Resources/db/test.db"
+        dbname:   test.db
         user:     ~
         password: ~
         charset:  UTF8
-        path:     "%kernel.root_dir%/Resources/db/test.db"
+        path:     %kernel.root_dir%/Resources/db/test.db
