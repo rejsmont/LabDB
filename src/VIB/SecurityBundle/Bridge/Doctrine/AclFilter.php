@@ -24,6 +24,7 @@ namespace VIB\SecurityBundle\Bridge\Doctrine;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -115,7 +116,8 @@ class AclFilter
      */
     private function getExtraQuery($classes, $identifiers, $mask)
     {
-        $database = $this->aclConnection->getDatabase();
+        $database = ($this->aclConnection->getDatabasePlatform() instanceof SqlitePlatform) ? 
+                    'main' : $this->aclConnection->getDatabase();
         $inClasses = implode(",", $classes);
         $inIdentifiers = implode(",", $identifiers);
         
