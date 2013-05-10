@@ -27,7 +27,9 @@ class VialControllerTest extends WebTestCase
         $client = $this->getAuthenticatedClient();
 
         $crawler = $client->request('GET', '/secure/vials/');
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $response = $client->getResponse();
+        print_r($response);
+        $this->assertTrue($response->isSuccessful());
         $this->assertEquals(4, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
                 'tbody > tr:first-child > td:contains("yw ☿ ✕ yw; Sp / CyO ♂")')->count());
