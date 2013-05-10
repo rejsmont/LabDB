@@ -33,11 +33,6 @@ web/.htaccess
 app/config/parameters.yml
 app/config/security.yml
 
-# ignore MopaRemoteUpdateBundle bin files
-bin/post-composer.sh
-bin/envvars.default
-app/Resources/mopa_remote_update.sqlite
-
 # ignore files dumped by assetic
 web/css
 web/js
