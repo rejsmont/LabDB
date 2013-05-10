@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use PHP_IPP\IPP\CupsPrintIPP;
+use PHP_IPP\IPP\IPPException;
 
 /**
  * Description of AutoPrintController
@@ -44,14 +45,9 @@ class PrintController extends Controller
      */
     public function printPanelAction()
     {
-        $ipp = new CupsPrintIPP();
-        $ipp->setLog('', 0, 0);
-        $ipp->setHost($this->container->getParameter('print_host'));
-        $ipp->setPrinterURI($this->container->getParameter('print_queue'));
-        $ipp->getPrinterAttributes();
-        $canPrint = (implode('\n',$ipp->status) == 'successfull-ok');
         $setting = $this->get('request')->getSession()->get('autoprint') == 'enabled';
-        $autoprint = ($canPrint) ? $setting : $canPrint;
+        $canPrint = $this->canPrint();
+        $autoprint = $canPrint ? $setting : $canPrint;
         $labelmode = $this->get('request')->getSession()->get('labelmode');
         return array('autoprint' => $autoprint, 'labelmode' => $labelmode);
     }
@@ -66,12 +62,7 @@ class PrintController extends Controller
      */
     public function setAutoPrintAction(Request $request)
     {
-        $ipp = new CupsPrintIPP();
-        $ipp->setLog('', 0, 0);
-        $ipp->setHost($this->container->getParameter('print_host'));
-        $ipp->setPrinterURI($this->container->getParameter('print_queue'));
-        $ipp->getPrinterAttributes();
-        $canPrint = (implode('\n',$ipp->status) == 'successfull-ok');
+        $canPrint = $this->canPrint();
         $setting = ($request->request->get('setting') == 'enabled');
         $session = $request->getSession();
         $autoprint = ($canPrint) ? $setting : $canPrint;
@@ -95,5 +86,29 @@ class PrintController extends Controller
         $session->set('labelmode', $mode);
 
         return new Response();
+    }
+    
+    /**
+     * Check if printer is available
+     * 
+     * @return boolean
+     */
+    protected function canPrint()
+    {
+        $host = $this->container->getParameter('print_host', null);
+        $queue = $this->container->getParameter('print_queue', null);
+        if ((null !== $host)&&(null !== $queue)) {
+            try {
+                $ipp = new CupsPrintIPP();
+                $ipp->setLog('', 0, 0);
+                $ipp->setHost($host);
+                $ipp->setPrinterURI($queue);
+                $ipp->getPrinterAttributes();
+                
+                return (implode('\n',$ipp->status) == 'successfull-ok');
+            } catch (IPPException $e) {}
+        }
+        
+        return false;
     }
 }

@@ -14,7 +14,7 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    print_host:        localhost
-    print_queue:       /printers/default
+    print_host:        ~
+    print_queue:       ~
 
     knp_paginator.template.pagination: MopaBootstrapBundle:Pagination:sliding.html.twig

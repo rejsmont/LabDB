@@ -19,6 +19,7 @@
 namespace VIB\FliesBundle\Twig;
 
 use PHP_IPP\IPP\CupsPrintIPP;
+use PHP_IPP\IPP\IPPException;
 
 /**
  * Printing extension
@@ -67,16 +68,21 @@ class PrintingExtension extends \Twig_Extension
      */
     public function canPrintFunction()
     {
-        $ipp = new CupsPrintIPP();
-        $ipp->setLog('', 0, 0);
-        $ipp->setHost($this->printHost);
-        $ipp->setPrinterURI($this->printQueue);
-        $ipp->getPrinterAttributes();
-        if (implode('\n',$ipp->status) == 'successfull-ok') {
-            return true;
-        } else {
-            return false;
+        $host = $this->printHost;
+        $queue = $this->printQueue;
+        if ((null !== $host)&&(null !== $queue)) {
+            try {
+                $ipp = new CupsPrintIPP();
+                $ipp->setLog('', 0, 0);
+                $ipp->setHost($host);
+                $ipp->setPrinterURI($queue);
+                $ipp->getPrinterAttributes();
+                
+                return (implode('\n',$ipp->status) == 'successfull-ok');
+            } catch (IPPException $e) {}
         }
+        
+        return false;
     }
 
     /**
