@@ -10,17 +10,17 @@ security:
 
     providers:
         fos_userbundle:
-            id: vib.user_provider.shibboleth
+            id: fos_user.user_provider.username
 
     firewalls:
         secured_area:
             pattern:    ^/
             anonymous:  ~
-            shibboleth: ~
+            http_basic:
+                realm: "Secured Area"
             logout:
                 path: /secure/logout
                 target: /
-                success_handler: security.logout.handler.shibboleth
 
     access_control:
         - { path: ^/secure, roles: ROLE_USER, requires_channel: https }
@@ -28,3 +28,7 @@ security:
     
     acl:
         connection: default
+
+services:
+    user_provider:
+        alias: fos_user.user_provider.username

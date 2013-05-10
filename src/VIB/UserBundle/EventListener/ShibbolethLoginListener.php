@@ -19,6 +19,7 @@
 namespace VIB\UserBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 
@@ -40,11 +41,15 @@ class ShibbolethLoginListener implements EventSubscriberInterface
     /**
      * Construct ShibbolethLoginListener
      *
-     * @param \VIB\UserBundle\Security\ShibbolethUserProvider $userProvider
+     * @param Symfony\Component\Security\Core\User\UserProviderInterface $userProvider
      */
-    public function __construct(ShibbolethUserProvider $userProvider)
+    public function __construct(UserProviderInterface $userProvider)
     {
-        $this->userProvider = $userProvider;
+        if ($userProvider instanceof ShibbolethUserProvider) {
+            $this->userProvider = $userProvider;
+        } else {
+            $this->userProvider = null;
+        }
     }
 
     /**
@@ -65,7 +70,7 @@ class ShibbolethLoginListener implements EventSubscriberInterface
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
         $token = $event->getAuthenticationToken();
-        if ($token instanceof ShibbolethUserToken) {
+        if (($token instanceof ShibbolethUserToken)&&(null !== $this->userProvider)) {
             $this->userProvider->updateUser($token);
         }
     }
