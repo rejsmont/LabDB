@@ -116,10 +116,15 @@ class AclFilter
      */
     private function getExtraQuery($classes, $identifiers, $mask)
     {
-        $database = ($this->aclConnection->getDatabasePlatform() instanceof SqlitePlatform) ? 
-                    'main' : $this->aclConnection->getDatabase();
+        $database = $this->aclConnection->getDatabase();
         $inClasses = implode(",", $classes);
         $inIdentifiers = implode(",", $identifiers);
+        
+        if ($this->aclConnection->getDatabasePlatform() instanceof SqlitePlatform) {
+            $database = 'main';
+            $inClasses = str_replace('\\\\', '\\', $inClasses);
+            $inIdentifiers = str_replace('\\\\', '\\', $inIdentifiers);
+        }
         
         $query = <<<SELECTQUERY
 SELECT DISTINCT o.object_identifier as id FROM {$database}.acl_object_identities as o
