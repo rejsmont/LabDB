@@ -128,12 +128,18 @@ class VialController extends CRUDController
      * @Route("/new")
      * @Template()
      *
+     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function createAction()
     {
         $om = $this->getObjectManager();
         $class = $this->getEntityClass();
+        
+        if ($class == 'VIB\FliesBundle\Entity\Vial') {
+            throw $this->createNotFoundException();
+        }
+            
         $vial = new $class();
         $data = array('vial' => $vial, 'number' => 1);
         $form = $this->createForm($this->getCreateForm(), $data);
