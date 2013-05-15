@@ -16,37 +16,37 @@
  * limitations under the License.
  */
 
-if (false !== getenv('BOOTSTRAP_CLEAR_CACHE_ENV')) {
+if (false !== ($env = getenv('BOOTSTRAP_CLEAR_CACHE_ENV'))) {
     passthru(sprintf(
         'php "%s/console" cache:clear --env=%s --no-warmup',
         __DIR__,
-        getenv('BOOTSTRAP_CLEAR_CACHE_ENV')
+        $env
     ));
 }
 
-if (false !== getenv('BOOTSTRAP_DROP_DB_ENV')) {
+if (false !== ($env = getenv('BOOTSTRAP_DROP_DB_ENV'))) {
     passthru(sprintf(
         'php "%s/console" doctrine:schema:drop --force --env=%s',
         __DIR__,
-        getenv('BOOTSTRAP_DROP_DB_ENV')
+        $env
     ));
 }
 
-if (false !== getenv('BOOTSTRAP_CREATE_DB_ENV')) {
+if (false !== ($env = getenv('BOOTSTRAP_CREATE_DB_ENV'))) {
     passthru(sprintf(
         'php "%s/console" doctrine:schema:create --env=%s',
         __DIR__,
-        getenv('BOOTSTRAP_CREATE_DB_ENV')
+        $env
     ));
 }
 
-if (false !== getenv('BOOTSTRAP_LOAD_FIXTURES_ENV')) {
+if (false !== ($env = getenv('BOOTSTRAP_LOAD_FIXTURES_ENV'))) {
     passthru(sprintf(
         'php "%s/console" doctrine:fixtures:load --no-interaction --fixtures=%s/../src/VIB/UserBundle/Tests/DataFixtures --fixtures=%s/../src/VIB/FliesBundle/Tests/DataFixtures --env=%s',
         __DIR__,
         __DIR__,
         __DIR__,
-        getenv('BOOTSTRAP_LOAD_FIXTURES_ENV')
+        $env
     ));
 }
 
