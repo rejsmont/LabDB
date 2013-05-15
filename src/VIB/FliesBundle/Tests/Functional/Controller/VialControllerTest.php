@@ -135,7 +135,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/vials/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $form = $crawler->selectButton('Download label PDF')->form();
+        $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
         $values['select']['action'] = 'label';
         $values['select']['items'][0] = 2;
@@ -158,7 +158,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/vials/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $form = $crawler->selectButton('Download label PDF')->form();
+        $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
         $values['select']['action'] = 'flip';
         $values['select']['items'][0] = 1;
@@ -178,7 +178,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/vials/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $form = $crawler->selectButton('Download label PDF')->form();
+        $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
         $values['select']['action'] = 'fliptrash';
         $values['select']['items'][0] = 5;
@@ -196,7 +196,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/vials/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $form = $crawler->selectButton('Download label PDF')->form();
+        $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
         $values['select']['action'] = 'trash';
         $values['select']['items'][0] = 8;
@@ -214,7 +214,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/vials/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $form = $crawler->selectButton('Download label PDF')->form();
+        $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
         $values['select']['action'] = 'untrash';
         $values['select']['items'][0] = 7;
@@ -232,7 +232,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/vials/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $form = $crawler->selectButton('Download label PDF')->form();
+        $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
         $values['select']['action'] = 'incubate';
         $values['select']['items'][0] = 1;
