@@ -33,6 +33,64 @@ class StockVialControllerTest extends WebTestCase
                 'tbody > tr:first-child > td:contains("stock 4")')->count());
     }
     
+    public function testExpand()
+    {
+        $client = $this->getAuthenticatedClient();
+
+        $crawler = $client->request('GET', '/secure/stocks/vials/expand');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals(6, $crawler->filter('.modal-body label')->count());
+    }
+    
+    public function testSelect()
+    {
+        $client = $this->getAuthenticatedClient();
+
+        $client->request('GET', '/secure/stocks/vials/select');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+    }
+    
+    public function testCreate()
+    {
+        $client = $this->getAuthenticatedClient();
+
+        $crawler = $client->request('GET', '/secure/stocks/vials/new');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals(12, $crawler->filter('.modal-body label')->count());
+    }
+    
+    public function testCreateSubmit()
+    {
+        $client = $this->getAuthenticatedClient();
+
+        $crawler = $client->request('GET', '/secure/stocks/vials/new');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $form = $crawler->selectButton('Save')->form();
+        $form['stockvial_new[vial][stock]'] = 'stock 1';
+        $form['stockvial_new[number]'] = 2;
+
+        $client->submit($form);
+        $this->assertEquals(302,$client->getResponse()->getStatusCode());
+        $result = $client->followRedirect();
+        $this->assertEquals(3, $result->filter('td:contains("stock 1")')->count());
+    }
+    
+    public function testCreateSubmitError()
+    {
+        $client = $this->getAuthenticatedClient();
+
+        $crawler = $client->request('GET', '/secure/stocks/vials/new');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $form = $crawler->selectButton('Save')->form();
+        $form['stockvial_new[vial][stock]'] = '';
+        $form['stockvial_new[number]'] = 0;
+        
+        $result = $client->submit($form);        
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals(1, $result->filter('span:contains("Stock must be specified")')->count());
+        $this->assertEquals(1, $result->filter('span:contains("This value should be 1 or more.")')->count());
+    }
+    
     public function testShow()
     {
         $client = $this->getAuthenticatedClient();
@@ -67,6 +125,20 @@ class StockVialControllerTest extends WebTestCase
         $client->request('GET', '/secure/stocks/vials/edit/8');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
+    }
+    
+    public static function tearDownAfterClass()
+    {
+        $client = static::createClient();
+        $vm = $client->getContainer()->get('vib.doctrine.vial_manager');
+        $repository = $vm->getRepository('VIB\FliesBundle\Entity\StockVial');
+        $qb = $repository->createQueryBuilder('v')->where('v.id > 8');
+        $vials = $qb->getQuery()->getResult();
+        foreach ($vials as $vial) {
+            $vm->removeACL($vial);
+            $vm->remove($vial);
+        }
+        $vm->flush();
     }
     
     protected function getAuthenticatedClient()

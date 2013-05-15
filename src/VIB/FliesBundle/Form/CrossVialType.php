@@ -65,7 +65,7 @@ class CrossVialType extends AbstractType
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',
                         'required' => false))
-                ->add('parent', 'text_entity', array(
+                ->add('sourceVial', 'text_entity', array(
                         'property'  => 'id',
                         'class'     => 'VIBFliesBundle:CrossVial',
                         'format'    => '%06d',

@@ -368,6 +368,26 @@ class Vial extends Entity implements LabelDateInterface
     {
         return $this->parent;
     }
+    
+    /**
+     * Set parent
+     *
+     * @param VIB\FliesBundle\Entity\Vial $parent
+     */
+    public function setSourceVial(Vial $parent = null)
+    {
+        $this->setParent($parent);
+    }
+
+    /**
+     * Get parent
+     *
+     * @return VIB\FliesBundle\Entity\Vial
+     */
+    public function getSourceVial()
+    {
+        return $this->getParent();
+    }
 
     /**
      * Check if parent vial is of matching type

@@ -322,9 +322,12 @@ class VialControllerTest extends WebTestCase
         $client = static::createClient();
         $vm = $client->getContainer()->get('vib.doctrine.vial_manager');
         $repository = $vm->getRepository('VIB\FliesBundle\Entity\Vial');
-        $qb = $repository->createQueryBuilder('v');
-        $qb->delete('VIB\FliesBundle\Entity\Vial','v')->where('v.id > 8');
-        $qb->getQuery()->getResult();
+        $qb = $repository->createQueryBuilder('v')->where('v.id > 8');
+        $vials = $qb->getQuery()->getResult();
+        foreach ($vials as $vial) {
+            $vm->removeACL($vial);
+            $vm->remove($vial);
+        }
         $vials = new ArrayCollection();
         $vials->add($repository->find(5));
         $vials->add($repository->find(8));

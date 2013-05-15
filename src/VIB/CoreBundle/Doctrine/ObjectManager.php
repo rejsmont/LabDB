@@ -49,7 +49,7 @@ class ObjectManager extends ObjectManagerDecorator
     protected $userProvider;
 
     /**
-     * @var \Symfony\Component\Security\Acl\Model\AclProviderInterface
+     * @var \Symfony\Component\Security\Acl\Model\MutableAclProviderInterface
      */
     protected $aclProvider;
 
@@ -105,6 +105,24 @@ class ObjectManager extends ObjectManagerDecorator
                 $acl->insertObjectAce($identity, $permission);
             }
             $aclProvider->updateAcl($acl);
+        }
+    }
+    
+    /**
+     * Delete ACL for object(s)
+     *
+     * @param object $objects
+     */
+    public function removeACL($objects)
+    {
+        if ($objects instanceof Collection) {
+            foreach ($objects as $object) {
+                $this->removeACL($object);
+            }
+        } else {
+            $objectIdentity = ObjectIdentity::fromDomainObject($objects);
+            $aclProvider = $this->aclProvider;
+            $aclProvider->deleteAcl($objectIdentity);
         }
     }
 
