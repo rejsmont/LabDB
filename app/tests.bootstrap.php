@@ -20,7 +20,7 @@ if (false !== getenv('BOOTSTRAP_CLEAR_CACHE_ENV')) {
     passthru(sprintf(
         'php "%s/console" cache:clear --env=%s --no-warmup',
         __DIR__,
-        $_ENV['BOOTSTRAP_CLEAR_CACHE_ENV']
+        getenv('BOOTSTRAP_CLEAR_CACHE_ENV')
     ));
 }
 
@@ -28,7 +28,7 @@ if (false !== getenv('BOOTSTRAP_DROP_DB_ENV')) {
     passthru(sprintf(
         'php "%s/console" doctrine:schema:drop --force --env=%s',
         __DIR__,
-        $_ENV['BOOTSTRAP_DROP_DB_ENV']
+        getenv('BOOTSTRAP_DROP_DB_ENV')
     ));
 }
 
@@ -36,7 +36,7 @@ if (false !== getenv('BOOTSTRAP_CREATE_DB_ENV')) {
     passthru(sprintf(
         'php "%s/console" doctrine:schema:create --env=%s',
         __DIR__,
-        $_ENV['BOOTSTRAP_CREATE_DB_ENV']
+        getenv('BOOTSTRAP_CREATE_DB_ENV')
     ));
 }
 
@@ -46,7 +46,7 @@ if (false !== getenv('BOOTSTRAP_LOAD_FIXTURES_ENV')) {
         __DIR__,
         __DIR__,
         __DIR__,
-        $_ENV['BOOTSTRAP_LOAD_FIXTURES_ENV']
+        getenv('BOOTSTRAP_LOAD_FIXTURES_ENV')
     ));
 }
 
