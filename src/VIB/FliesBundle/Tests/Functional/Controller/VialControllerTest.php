@@ -328,10 +328,8 @@ class VialControllerTest extends WebTestCase
             $vm->removeACL($vial);
             $vm->remove($vial);
         }
-        $vials = new ArrayCollection();
-        $vials->add($repository->find(5));
-        $vials->add($repository->find(8));
-        $vm->untrash($vials);
+        $vm->untrash($repository->find(5));
+        $vm->untrash($repository->find(8));
         $vm->trash($repository->find(7));
         $vial = $repository->find(1);
         $vial->setIncubator(null);
