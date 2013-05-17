@@ -20,7 +20,8 @@ namespace VIB\FliesBundle\Doctrine;
 
 use Doctrine\Common\Collections\Collection;
 
-use \VIB\FliesBundle\Entity\CrossVial;
+use VIB\FliesBundle\Repository\CrossVialRepository;
+use VIB\FliesBundle\Entity\CrossVial;
 
 /**
  * CrossVialManager is a class used to manage common operations on cross vials
@@ -29,7 +30,22 @@ use \VIB\FliesBundle\Entity\CrossVial;
  */
 class CrossVialManager extends VialManager
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    public function getRepository($className)
+    {
+        $repository = parent::getRepository($className);
+        
+        if (! $repository instanceof CrossVialRepository) {
+            throw new \ErrorException('Repository must be an instance of VIB\FliesBundle\Repository\CrossVialRepository');
+        } else {
+            $repository->setManager($this);
+        }
+        
+        return $repository;
+    }
+    
     /**
      * Mark cross(es) as sterile and trash it (them)
      *

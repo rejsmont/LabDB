@@ -30,7 +30,7 @@ use VIB\SecurityBundle\Bridge\Doctrine\AclFilter;
 class EntityRepository extends BaseEntityRepository
 {
     /**
-     * @var aclFilter VIB\SecurityBundle\Bridge\Doctrine\AclFilter
+     * @var $aclFilter VIB\SecurityBundle\Bridge\Doctrine\AclFilter
      */
     protected $aclFilter;
     

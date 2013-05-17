@@ -73,6 +73,13 @@ class CrossVialController extends VialController
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function expandAction($id = null) {
+        throw $this->createNotFoundException();
+    }
+    
+    /**
      * Statistics for cross
      *
      * @Route("/stats/{id}")
@@ -85,26 +92,7 @@ class CrossVialController extends VialController
     public function statsAction($id)
     {
         $cross = $this->getEntity($id);
-        $owner = $this->getObjectManager()->getOwner($cross);
-
-        $startDate = clone $cross->getSetupDate();
-        $stopDate = clone $cross->getSetupDate();
-        $startDate->sub(new \DateInterval('P2W'));
-        $stopDate->add(new \DateInterval('P2W'));
-
-        $query = $this->getListQuery();
-        $query->andWhere('b.maleName = :male_name')
-              ->andWhere('b.virginName = :virgin_name')
-              ->andWhere('b.setupDate > :start_date')
-              ->andWhere('b.setupDate <= :stop_date')
-              ->orderBy('b.setupDate', 'ASC')
-              ->addOrderBy('b.id', 'ASC')
-              ->setParameter('male_name', $cross->getUnformattedMaleName())
-              ->setParameter('virgin_name', $cross->getUnformattedVirginName())
-              ->setParameter('start_date', $startDate->format('Y-m-d'))
-              ->setParameter('stop_date', $stopDate->format('Y-m-d'));
-
-        $total = $this->get('vib.security.helper.acl')->apply($query,array('OWNER'),$owner)->getResult();
+        $total = $this->getObjectManager()->getRepository($this->entityClass)->findSimilar($cross);
         $sterile = new ArrayCollection();
         $success = new ArrayCollection();
         $fail = new ArrayCollection();
@@ -118,7 +106,7 @@ class CrossVialController extends VialController
         }
 
         foreach ($total as $vial) {
-            $temp = $vial->getTemperature();
+            $temp = (float) $vial->getTemperature();
             if (! $temps->contains($temp)) {
                 $temps->add($temp);
             }
