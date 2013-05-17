@@ -6,6 +6,6 @@ php:
 
 before_script:
   - cp app/config/parameters.default.yml app/config/parameters.yml
-  - composer install
+  - composer install --no-interaction
 
 script: phpunit -c app
