@@ -20,6 +20,7 @@ namespace VIB\FliesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -38,7 +39,8 @@ class Incubator extends Entity
     /**
      * @ORM\Column(type="string", length=255)
      * @Serializer\Expose
-     *
+     * @Assert\NotBlank(message = "Name must be specified")
+     * 
      * @var string
      */
     protected $name;
@@ -60,7 +62,14 @@ class Incubator extends Entity
     /**
      * @ORM\Column(type="float", length=255)
      * @Serializer\Expose
-     *
+     * @Assert\NotBlank(message = "Temperature must be specified")
+     * @Assert\Range(
+     *      min = 4,
+     *      max = 42,
+     *      minMessage = "Temperature cannot be lower than 4℃",
+     *      maxMessage = "Temperature cannot be higher than 42℃"
+     * )
+     *    
      * @var float
      */
     private $temperature;

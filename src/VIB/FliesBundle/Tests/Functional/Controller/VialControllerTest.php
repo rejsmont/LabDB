@@ -236,7 +236,7 @@ class VialControllerTest extends WebTestCase
         $values = $form->getPhpValues();
         $values['select']['action'] = 'incubate';
         $values['select']['items'][0] = 1;
-        $values['select']['incubator'] = 'New incubator';
+        $values['select']['incubator'] = 'Test incubator';
         
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertEquals(302,$client->getResponse()->getStatusCode());

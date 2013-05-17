@@ -20,6 +20,7 @@ namespace VIB\FliesBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\SatisfiesParentSecurityPolicy;
 
 use VIB\CoreBundle\Controller\CRUDController;
 
@@ -52,6 +53,16 @@ class IncubatorController extends CRUDController
         return new IncubatorType();
     }
 
+    /**
+     * {@inheritdoc}
+     * 
+     * @SatisfiesParentSecurityPolicy
+     */
+    public function listAction($filter = null)
+    {
+        throw $this->createNotFoundException();
+    }
+    
     /**
      * Generate links for putting stuff into incubator
      *

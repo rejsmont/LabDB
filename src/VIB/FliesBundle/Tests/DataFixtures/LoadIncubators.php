@@ -59,6 +59,7 @@ class LoadIncubators extends AbstractFixture implements OrderedFixtureInterface,
         );
         
         $incubator = new Incubator();
+        $incubator->setName("Test incubator");
         $manager->persist($incubator);
         $manager->flush();
         $manager->createACL($incubator, $user_acl);
