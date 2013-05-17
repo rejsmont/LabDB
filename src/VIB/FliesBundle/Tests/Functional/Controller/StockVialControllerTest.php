@@ -59,7 +59,23 @@ class StockVialControllerTest extends WebTestCase
         $this->assertEquals(12, $crawler->filter('.modal-body label')->count());
     }
     
-    public function testCreateSubmit()
+    public function testCreateSubmitOne()
+    {
+        $client = $this->getAuthenticatedClient();
+
+        $crawler = $client->request('GET', '/secure/stocks/vials/new');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $form = $crawler->selectButton('Save')->form();
+        $form['stockvial_new[vial][stock]'] = 'stock 4';
+        $form['stockvial_new[number]'] = 1;
+
+        $client->submit($form);
+        $this->assertEquals(302,$client->getResponse()->getStatusCode());
+        $result = $client->followRedirect();
+        $this->assertEquals(1, $result->filter('.input-text a:contains("stock 4")')->count());
+    }
+    
+    public function testCreateSubmitMany()
     {
         $client = $this->getAuthenticatedClient();
 
@@ -116,6 +132,21 @@ class StockVialControllerTest extends WebTestCase
         $crawler_5 = $client->request('GET', '/secure/stocks/vials/edit/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(0, $crawler_5->filter('html:contains("Edit stock vial 000005")')->count());
+    }
+    
+    public function testEditSubmit()
+    {
+        $client = $this->getAuthenticatedClient();
+        
+        $crawler = $client->request('GET', '/secure/stocks/vials/edit/5');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $form = $crawler->selectButton('Save')->form();
+        $form['stockvial[notes]'] = 'This is a test note.';
+        
+        $client->submit($form);        
+        $this->assertEquals(302,$client->getResponse()->getStatusCode());
+        $result = $client->followRedirect();
+        $this->assertEquals(1, $result->filter('span.input-text:contains("This is a test note.")')->count());
     }
     
     public function testEditNotFound()
