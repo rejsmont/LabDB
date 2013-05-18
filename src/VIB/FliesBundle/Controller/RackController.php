@@ -20,6 +20,7 @@ namespace VIB\FliesBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\SatisfiesParentSecurityPolicy;
 
 use VIB\CoreBundle\Controller\CRUDController;
 
@@ -56,6 +57,16 @@ class RackController extends CRUDController
         return new RackType();
     }
 
+    /**
+     * {@inheritdoc}
+     * 
+     * @SatisfiesParentSecurityPolicy
+     */
+    public function listAction($filter = null)
+    {
+        throw $this->createNotFoundException();
+    }
+    
     /**
      * Show rack
      *
