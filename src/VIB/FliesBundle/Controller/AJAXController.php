@@ -25,6 +25,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+use Doctrine\ORM\NoResultException;
+
 use VIB\CoreBundle\Controller\AbstractController;
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\StockVial;
@@ -53,13 +55,17 @@ class AJAXController extends AbstractController
     public function vialAction(Request $request)
     {
         $id = $request->query->get('id');
-        $filter = $request->query->get('filter');
-        $format = $request->query->get('format');
-        $order = $request->query->get('order',null);
+        $filter = $request->query->get('filter', null);
+        $format = $request->query->get('format', null);
+        $order = $request->query->get('order', null);
 
         $om = $this->getObjectManager();
         $securityContext = $this->getSecurityContext();
-        $vial = $om->find('VIBFliesBundle:Vial', $id);
+        try {
+            $vial = $om->find('VIBFliesBundle:Vial', $id);
+        } catch (NoResultException $e) {
+            $vial = null;
+        }
         $type = $filter !== null ? ' ' . $filter : '';
 
         if ((! $vial instanceof Vial)||(($filter !== null)&&($vial->getType() != $filter))) {
@@ -71,7 +77,7 @@ class AJAXController extends AbstractController
         $serializer = $this->get('serializer');
 
         if ($format == 'json') {
-            return new Response($serializer->serialize($vial, 'json'));
+            return new JsonResponse($serializer->serialize($vial, 'json'));
         } else {
             return array('entity' => $vial, 'checked' => 'checked', 'type' => $filter, 'order' => $order);
         }
@@ -94,10 +100,18 @@ class AJAXController extends AbstractController
 
         $om = $this->getObjectManager();
         $securityContext = $this->getSecurityContext();
-        $vial = $om->find('VIBFliesBundle:Vial', $vialID);
-        $position = $om->find('VIBFliesBundle:RackPosition', $positionID);
+        try {
+            $vial = $om->find('VIBFliesBundle:Vial', $vialID);
+        } catch (NoResultException $e) {
+            $vial = null;
+        }
+        try {
+            $position = $om->find('VIBFliesBundle:RackPosition', $positionID);
+        } catch (NoResultException $e) {
+            $position = null;
+        }
 
-        if (($vialID != null)&&(! $vial instanceof Vial)) {
+        if (! $vial instanceof Vial) {
             return new Response('The vial ' . sprintf("%06d",$vialID) . ' does not exist', 404);
         } elseif (!($securityContext->isGranted('ROLE_ADMIN') || $securityContext->isGranted('VIEW', $vial))) {
             return new Response('Access to vial ' . sprintf("%06d",$vialID) . ' denied', 401);
@@ -131,16 +145,25 @@ class AJAXController extends AbstractController
 
         $om = $this->getObjectManager();
         $securityContext = $this->getSecurityContext();
-        $vial = (null !== $vialID) ? $om->find('VIBFliesBundle:Vial', $vialID) : null;
-        $rack = (null !== $rackID) ? $om->find('VIBFliesBundle:Rack', $rackID) : null;
-
-        if (($vialID != null)&&(! $vial instanceof Vial)) {
+        
+        try {
+            $vial = (null !== $vialID) ? $om->find('VIBFliesBundle:Vial', $vialID) : null;
+        } catch (NoResultException $e) {
+            $vial = null;
+        }
+        try {
+            $rack = (null !== $rackID) ? $om->find('VIBFliesBundle:Rack', $rackID) : null;
+        } catch (NoResultException $e) {
+            $rack = null;
+        }
+        
+        if ((null !== $vialID)&&(! $vial instanceof Vial)) {
             return new Response('The vial ' . sprintf("%06d",$vialID) . ' does not exist', 404);
         } elseif (!($securityContext->isGranted('ROLE_ADMIN') || $securityContext->isGranted('VIEW', $vial))) {
             return new Response('Access to vial ' . sprintf("%06d",$vialID) . ' denied', 401);
         }
 
-        if (($rackID != null)&&(! $rack instanceof Rack)) {
+        if ((null === $vialID)&&(! $rack instanceof Rack)) {
             return new Response('The rack R'. sprintf("%06d",$rackID) . ' does not exist', 404);
         } elseif (($vialID != null)&&(! $rack->hasVial($vial))) {
             return new Response('The vial ' . sprintf("%06d",$vialID) . ' is not in the rack R'. sprintf("%06d",$rackID), 404);
@@ -151,7 +174,7 @@ class AJAXController extends AbstractController
             $om->persist($vial);
             $om->flush();
 
-            return new Response('The vial'. sprintf("%06d",$rackID) . ' was removed from rack R'. sprintf("%06d",$rackID), 200);
+            return new Response('The vial '. sprintf("%06d",$rackID) . ' was removed from rack R'. sprintf("%06d",$rackID), 200);
         } else {
             $rack->clearVials();
             $om->persist($rack);
@@ -187,7 +210,7 @@ class AJAXController extends AbstractController
     }
 
     /**
-     * Handle stock search AJAX request
+     * Handle popover AJAX request
      *
      * @Route("/popover")
      * @Template()
@@ -202,19 +225,23 @@ class AJAXController extends AbstractController
         $rack = $request->query->get('rack');
         $om = $this->getObjectManager();
 
-        switch ($type) {
-            case 'vial':
-                $entity =  $om->getRepository('VIBFliesBundle:Vial')->find($id);
-                $etype = "Vial";
-                break;
-            case 'stock':
-                $entity =  $om->getRepository('VIBFliesBundle:Stock')->find($id);
-                $etype = "Stock";
-                break;
-            default:
-                return new Response('Unrecognized type', 404);
+        try {
+            switch ($type) {
+                case 'vial':
+                    $entity =  $om->getRepository('VIBFliesBundle:Vial')->find($id);
+                    $etype = "Vial";
+                    break;
+                case 'stock':
+                    $entity =  $om->getRepository('VIBFliesBundle:Stock')->find($id);
+                    $etype = "Stock";
+                    break;
+                default:
+                    return new Response('Unrecognized type', 406);
+            }
+        } catch (NoResultException $e) {
+            $entity = null;
         }
-
+        
         $status = '<div class="status">';
         if ($entity instanceof Vial) {
             if ($entity->isTrashed()) {
