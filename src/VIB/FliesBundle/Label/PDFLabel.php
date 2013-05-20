@@ -90,7 +90,9 @@ class PDFLabel
             $this->pdf->setCellPaddings(0, 0, 0, 0);
             $this->pdf->setCellMargins(0, 0, 0, 0);
             $this->pdf->SetFont('DejaVuSans', 'B', 12);
-            $this->pdf->MultiCell(30, 12.5, $text,0,'C',0,1,20,2,true,0,false,true,18.5,'T',true);
+            if ($text != '') {
+                $this->pdf->MultiCell(30, 12.5, $text,0,'C',0,1,20,2,true,0,false,true,18.5,'T',true);
+            }
             $this->pdf->SetFont('DejaVuSans', '', 7);
             $this->pdf->MultiCell(15,6,$barcode,0,'C',0,1,2,15,true,0,false,true,6,'B',true);
             if (null !== $date) {

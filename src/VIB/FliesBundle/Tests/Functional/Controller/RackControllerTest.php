@@ -117,11 +117,45 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $client->request('GET', '/secure/incubators/edit/0');
+        $client->request('GET', '/secure/racks/edit/0');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
 
+    public function testDowaloadLabel()
+    {
+        $client = $this->getAdminAuthenticatedClient();
+
+        $client->request('GET', '/secure/racks/label/1/download');
+        $response = $client->getResponse();
+        $this->assertTrue($response->isSuccessful());
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/pdf'));
+    }
+    
+    public function testIncubate()
+    {
+        $client = $this->getAuthenticatedClient();
+
+        $vial_crawler = $client->request('GET', '/secure/stocks/vials/show/5');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals(0, $vial_crawler->filter('span:contains("25℃")')->count());
+        
+        $crawler = $client->request('GET', '/secure/racks/show/1');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $form = $crawler->selectButton('Flip')->form();
+        $values = $form->getPhpValues();
+        $values['select']['action'] = 'incubate';
+        $values['select']['incubator'] = 'Test incubator';
+        
+        $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
+        $response = $client->getResponse();
+        $this->assertTrue($response->isSuccessful());
+        
+        $vial_result = $client->request('GET', '/secure/stocks/vials/show/5');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals(1, $vial_result->filter('span:contains("25℃")')->count());
+    }
+    
     public static function tearDownAfterClass()
     {
         $client = static::createClient();
@@ -133,6 +167,10 @@ class RackControllerTest extends WebTestCase
             $om->removeACL($rack);
             $om->remove($rack);
         }
+        $rack = $repository->find(1);
+        $rack->setIncubator(null);
+        $om->persist($rack);
+        
         $om->flush();
     }
     

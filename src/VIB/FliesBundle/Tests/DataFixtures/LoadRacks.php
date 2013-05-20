@@ -49,7 +49,7 @@ class LoadRacks extends AbstractFixture implements OrderedFixtureInterface, Cont
      */
     public function load(ObjectManager $manager)
     {
-        $manager = $this->container->get('vib.doctrine.vial_manager');
+        $manager = $this->container->get('vib.doctrine.manager');
         
         $user_acl = array(
             array('identity' => $this->getReference('user'),
@@ -62,6 +62,11 @@ class LoadRacks extends AbstractFixture implements OrderedFixtureInterface, Cont
         $manager->persist($rack);
         $manager->flush();
         $manager->createACL($rack, $user_acl);
+        
+        $vial = $this->getReference('vial_1');
+        $vial->setPosition($rack->getPosition(1, 1));
+        $manager->persist($vial);
+        $manager->flush();
     }
     
     /**

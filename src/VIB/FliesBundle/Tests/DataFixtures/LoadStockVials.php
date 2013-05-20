@@ -63,6 +63,7 @@ class LoadStockVials extends AbstractFixture implements OrderedFixtureInterface,
         $manager->persist($vial_1);
         $manager->flush();
         $manager->createACL($vial_1, $user_acl);
+        $this->addReference('vial_1', $vial_1);
         
         $vial_2 = new StockVial();
         $vial_2->setStock($this->getReference('stock_1'));
