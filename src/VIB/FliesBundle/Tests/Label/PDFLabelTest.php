@@ -36,7 +36,7 @@ class PDFLabelTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddLabel($vials)
     {
-        $this->TCPDF->expects($this->exactly(3))->method('MultiCell');
+        $this->TCPDF->expects($this->exactly(2))->method('MultiCell');
         $this->om->expects($this->once())->method('getOwner');
         $this->PDF->addLabel($vials);
     }
