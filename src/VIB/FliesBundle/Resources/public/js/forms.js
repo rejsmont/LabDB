@@ -270,6 +270,7 @@ function popoverHover(el, ev) {
   var timeout = element.data('delay') != null ? element.data('delay') : 0;
     
   if (event.type == 'mouseenter') {
+    clearTimeout(element.data('timeout'));
     element.data('timeout', setTimeout(function() {
       clearTimeout(element.data('timeout'));
       if (! element.hasClass('loaded')) {
@@ -288,18 +289,25 @@ function popoverHover(el, ev) {
                 trigger: 'manual'
               }).popover('show');
               element.addClass('loaded');
+              element.addClass('on');
             }
           }
         });
       } else {
-        element.popover('show');
+        if (! element.hasClass('on')) {
+          element.popover('show');
+          element.addClass('on');
+        }
       }
     }, timeout));
   } else if (event.type == 'mouseleave') {
     clearTimeout(element.data('timeout'));
-    if (element.has('div.popover')) {
-      element.popover('hide');
-    }
+    element.data('timeout', setTimeout(function() {
+      if (element.hasClass('on')) {
+        element.popover('hide');
+        element.removeClass('on')
+      }
+    }, 250));
   }
 }
 
