@@ -68,7 +68,7 @@
                 "source": {
                     "url": "https://github.com/twitter/bootstrap.git",
                     "type": "git",
-                    "reference": "v2.3.1"
+                    "reference": "v2.3.2"
                 }
             }
         },
