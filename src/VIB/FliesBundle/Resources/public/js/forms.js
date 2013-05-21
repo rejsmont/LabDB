@@ -258,17 +258,22 @@ function setLabelMode(e) {
 }
 
 /**
- * Setup popover
+ * Handle popover events
  * 
- * @param e
+ * @param el Element
+ * @param ev Event
+ *
  */
-function setupPopover(e) {
-  var element = e;
+function popoverHover(el, ev) {
+  var element = el;
+  var event = ev;
   var timeout = element.data('delay') != null ? element.data('delay') : 0;
-  element.data('timeout', setTimeout(function() {
-    element.off('mouseenter mouseleave');
-    clearTimeout(element.data('timeout'));
-    $.ajax({
+    
+  if (event.type == 'mouseenter') {
+    element.data('timeout', setTimeout(function() {
+      clearTimeout(element.data('timeout'));
+      if (! element.hasClass('loaded')) {
+        $.ajax({
           url: element.data('link'),
           type: 'get',
           data: {type: element.data('type'), id: element.data('id'), rack: element.data('rack')},
@@ -277,15 +282,25 @@ function setupPopover(e) {
             content = json.html == 'undefined' ? false : json.html;
             if ((title != false)&&(content != false)) {
               element.popover({
-                title:title,
-                content:content,
-                html:true,
-                trigger:'hover'
+                title: title,
+                content: content,
+                html: true,
+                trigger: 'manual'
               }).popover('show');
+              element.addClass('loaded');
             }
           }
-    });
-  },timeout));
+        });
+      } else {
+        element.popover('show');
+      }
+    }, timeout));
+  } else if (event.type == 'mouseleave') {
+    clearTimeout(element.data('timeout'));
+    if (element.has('div.popover')) {
+      element.popover('hide');
+    }
+  }
 }
 
 /**
@@ -347,12 +362,10 @@ $(document).ready(function() {
            $(this).prop("checked", checked);
         });
     });
-
-    $('.popover-trigger').hover(function() {
-        setupPopover($(this));
-    }, function() {
-        clearTimeout($(this).data('timeout'));
-    });
+   
+   $('.popover-trigger').hover(function(e) {
+        popoverHover($(this), e);
+   });
 
     $('.rack-display').find('td').click(function() {
         if($(this).hasClass('empty')) {
