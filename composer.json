@@ -33,7 +33,7 @@
         "whiteoctober/tcpdf-bundle": "dev-master",
         "bmatzner/jquery-bundle": "dev-master",
         "bmatzner/jquery-ui-bundle": "1.10.1",
-        "sabre/vobject": "dev-master",
+        "sabre/vobject": "2.0.*",
         "rejsmont/php-ipp": "master",
         "kuleuven/shibboleth-bundle": "dev-master"
     },
