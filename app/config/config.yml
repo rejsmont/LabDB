@@ -27,7 +27,7 @@ assetic:
         less:
             node: /usr/bin/node
             node_paths: [/usr/lib/nodejs]
-            #apply_to: "\.less$"
+            apply_to: "\.css\.less$"
         cssrewrite: ~
         cssembed:
             jar: %kernel.root_dir%/Resources/java/cssembed-0.3.6.jar
