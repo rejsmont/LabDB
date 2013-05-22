@@ -41,8 +41,6 @@ class SearchController extends AbstractController
     /**
      * Handle search request
      *
-     * @Route("/")
-     * @Method({"GET"})
      * @Template()
      *
      * @return Symfony\Component\HttpFoundation\Response
