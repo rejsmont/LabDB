@@ -45,7 +45,7 @@
             "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap",
             "mkdir -p app/Resources/db",
             "touch app/Resources/db/test.db",
-            "chmod 777 -r app/Resources/db"
+            "chmod -R go+rw app/Resources/db"
         ],
         "post-update-cmd": [ 
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
@@ -54,7 +54,7 @@
             "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap",
             "mkdir -p app/Resources/db",
             "touch app/Resources/db/test.db",
-            "chmod 777 -r app/Resources/db"
+            "chmod -R go+rw app/Resources/db"
         ]
     },
     "config": {
