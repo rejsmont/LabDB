@@ -1,13 +1,13 @@
-{% extends "VIBFliesBundle:CrossVial:layout.html.twig" %}
+{% extends "VIBFliesBundle:InjectionVial:layout.html.twig" %}
 {% use "VIBSiteTemplateBundle:Form:form.html.twig" %}
 {% import "VIBSiteTemplateBundle:Macros:form.html.twig" as f %}
 
 {% form_theme form _self %}
 
 {% block modal_header %}
-  Edit cross {{ form.vars.value.name }} ({{ form.vars.value }})
+  Edit injection vial {{ form.vars.value.name }} ({{ form.vars.value }})
 {% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.vars.value,'vib_flies_crossvial') }}
+  {{ f.buttons(form.vars.value,'vib_flies_injectionvial') }}
 {% endblock modal_footer %}

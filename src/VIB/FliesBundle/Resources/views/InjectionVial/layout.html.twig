@@ -1,0 +1,18 @@
+{% extends "VIBSiteTemplateBundle::layout.html.twig" %}
+
+{% block headline %}Injection vials{% endblock headline %}
+
+{% block content_sidebar %}
+<ul class="nav nav-list well">
+  <li class="nav-header">My injection vials</li>
+  <li><a href="{{ path('vib_flies_injectionvial_list') }}">Alive</a></li>
+  <li><a href="{{ path('vib_flies_injectionvial_list_1',{ 'filter': 'trashed' }) }}">Trashed</a></li>
+  <li><a href="{{ path('vib_flies_injectionvial_list_1',{ 'filter': 'dead' }) }}">Dead</a></li>
+  <li class="nav-header">Public injection vials</li>
+  <li><a href="{{ path('vib_flies_injectionvial_list_1',{ 'filter': 'public' }) }}">Alive</a></li>
+  <li><a href="{{ path('vib_flies_injectionvial_list_1',{ 'filter': 'all' }) }}">All</a></li>
+  <li class="nav-header">Actions</li>
+  <li><a href="{{ path('vib_flies_injectionvial_create') }}">New injection vial</a></li>
+  <li><a href="{{ path('vib_flies_injectionvial_select') }}">Select injection vials</a></li>
+</ul>
+{% endblock content_sidebar %}

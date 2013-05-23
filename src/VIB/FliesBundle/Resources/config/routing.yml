@@ -6,6 +6,10 @@ cross_vial:
     resource: "@VIBFliesBundle/Controller/CrossVialController.php"
     type:     annotation
 
+injection_vial:
+    resource: "@VIBFliesBundle/Controller/InjectionVialController.php"
+    type:     annotation
+
 stock_vial:
     resource: "@VIBFliesBundle/Controller/StockVialController.php"
     type:     annotation

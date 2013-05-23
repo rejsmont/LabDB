@@ -440,9 +440,7 @@ class CrossVial extends Vial
     }
 
     /**
-     * Get progress
-     *
-     * @return float
+     * {@inheritdoc}
      */
     public function getProgress()
     {
@@ -455,9 +453,7 @@ class CrossVial extends Vial
     }
 
     /**
-     * Get default flip date
-     *
-     * @return \DateTime
+     * {@inheritdoc}
      */
     public function getDefaultFlipDate()
     {

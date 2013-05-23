@@ -1,0 +1,26 @@
+{% import 'VIBSiteTemplateBundle:Macros:status.html.twig' as status %}
+
+{% if checked is not defined %}
+  {% if entity.labelPrinted %}
+    {% set checked = "" %}
+  {% else %}
+    {% set checked = "checked" %}
+  {% endif %}
+{% endif %}
+
+{% if order is not defined or order is empty %}
+  {% set order = entity.id %}
+{% endif %}
+
+{% if not (checkbox is defined and checkbox == false) %}
+<td><input type="checkbox" id="select_items_{{ entity.id }}"
+           name="select[items][{{ order }}]"
+           value="{{ entity.id }}" {{ checked }} /></td>
+{% endif %}
+<td>{{ l.link(entity, 'vib_flies_injectionvial_show', false, null, 'vial') }}</td>
+<td class="dates">
+  <div>{{ entity.setupDate | date("d‑m‑Y") }}</div>
+  <div>{{ entity.realFlipDate | date("d‑m‑Y") }}</div>
+</td>
+<td>{{ l.link(entity.parent, 'vib_flies_injectionvial_show', true, null, 'vial') }}</td>
+<td>{{ status.vial(entity) }}</td>

@@ -34,7 +34,11 @@ use VIB\FliesBundle\Label\LabelDateInterface;
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\VialRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"vial" = "Vial", "stock" = "StockVial", "cross" = "CrossVial"})
+ * @ORM\DiscriminatorMap({
+ *     "vial" = "Vial",
+ *     "stock" = "StockVial",
+ *     "cross" = "CrossVial",
+ *     "injection" = "InjectionVial"})
  * @Serializer\ExclusionPolicy("all")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
@@ -118,7 +122,7 @@ class Vial extends Entity implements LabelDateInterface
     protected $incubator;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     protected $temperature;
 

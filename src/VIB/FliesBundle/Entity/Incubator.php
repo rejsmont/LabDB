@@ -60,7 +60,7 @@ class Incubator extends Entity
     protected $vials;
 
     /**
-     * @ORM\Column(type="float", length=255)
+     * @ORM\Column(type="float")
      * @Serializer\Expose
      * @Assert\NotBlank(message = "Temperature must be specified")
      * @Assert\Range(

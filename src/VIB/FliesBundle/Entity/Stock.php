@@ -199,7 +199,7 @@ class Stock extends Entity
     /**
      * Get vendor
      *
-     * @return type
+     * @return string
      */
     public function getVendor()
     {
@@ -209,7 +209,7 @@ class Stock extends Entity
     /**
      * Set vendor
      *
-     * @return type
+     * @param string
      */
     public function setVendor($stockVendor)
     {
