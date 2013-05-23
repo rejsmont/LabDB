@@ -25,7 +25,7 @@ class ShibbolethUserProviderTest extends \PHPUnit_Framework_TestCase
     private $userProvider;
     private $userManager;
     private $userToken;
-    
+
     public function testCreateUser()
     {
         $this->userManager->expects($this->once())
@@ -34,7 +34,7 @@ class ShibbolethUserProviderTest extends \PHPUnit_Framework_TestCase
         $user = $this->userProvider->createUser($this->userToken);
         $this->assertInstanceOf('FOS\UserBundle\Entity\User', $user);
     }
-    
+
     public function testUpdateUser()
     {
         $this->userManager->expects($this->once())
@@ -43,7 +43,7 @@ class ShibbolethUserProviderTest extends \PHPUnit_Framework_TestCase
         $user = $this->userProvider->updateUser($this->userToken);
         $this->assertInstanceOf('FOS\UserBundle\Entity\User', $user);
     }
-    
+
     public function testUpdateUserNotFound()
     {
         $this->userManager->expects($this->once())
@@ -52,7 +52,7 @@ class ShibbolethUserProviderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Symfony\Component\Security\Core\Exception\UsernameNotFoundException');
         $this->userProvider->updateUser($this->userToken);
     }
-    
+
     protected function setUp()
     {
         $this->userManager = $this->getMock('FOS\UserBundle\Model\UserManagerInterface');

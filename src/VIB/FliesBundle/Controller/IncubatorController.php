@@ -55,14 +55,14 @@ class IncubatorController extends CRUDController
 
     /**
      * {@inheritdoc}
-     * 
+     *
      * @SatisfiesParentSecurityPolicy
      */
     public function listAction($filter = null)
     {
         throw $this->createNotFoundException();
     }
-    
+
     /**
      * Generate links for putting stuff into incubator
      *

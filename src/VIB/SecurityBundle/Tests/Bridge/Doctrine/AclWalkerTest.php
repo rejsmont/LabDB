@@ -24,7 +24,7 @@ class AclWalkerTest extends \PHPUnit_Framework_TestCase
 {
     private $walker;
     private $query;
-    
+
     public function testWalkFromClause()
     {
         $fromClause = $this->getMockBuilder('Doctrine\ORM\Query\AST\FromClause')
@@ -32,7 +32,7 @@ class AclWalkerTest extends \PHPUnit_Framework_TestCase
         $result = $this->walker->walkFromClause($fromClause);
         $this->assertContains('FROM', $result);
     }
-    
+
     protected function setUp()
     {
         $conn = $this->getMockBuilder('Doctrine\DBAL\Connection')

@@ -21,7 +21,6 @@ namespace VIB\FliesBundle\Tests\Entity;
 use VIB\FliesBundle\Entity\Rack;
 use VIB\FliesBundle\Entity\Vial;
 
-
 class RackPositionTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -135,10 +134,11 @@ class RackPositionTest extends \PHPUnit_Framework_TestCase
         $position->setPrevContents($vial);
         $this->assertEquals($position, $vial->getPrevPosition());
     }
-    
+
     public function positionProvider()
     {
         $rack = new Rack(3, 3);
+
         return array(array($rack->getPosition(1, 2)));
     }
 }

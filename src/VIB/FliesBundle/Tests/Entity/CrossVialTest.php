@@ -23,7 +23,6 @@ use VIB\FliesBundle\Entity\CrossVial;
 use VIB\FliesBundle\Entity\StockVial;
 use VIB\FliesBundle\Entity\Stock;
 
-
 class CrossVialTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -36,7 +35,7 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($vial->isSuccessful());
         $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $vial->getStocks());
     }
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -263,13 +262,14 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
         $vial->setParent(new CrossVial());
         $this->assertEquals($date,$vial->getDefaultFlipDate());
     }
-    
+
     public function vialProvider()
     {
         $vial = new FakeCrossVial();
+
         return array(array($vial));
     }
-    
+
     public function vialOutcomeProvider()
     {
         return array(
@@ -279,14 +279,14 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
             array(new FakeCrossVial(), 'undefined')
         );
     }
-    
+
     public function crossParentProvider()
     {
         $stock = new Stock();
         $stock->setGenotype('test stock');
         $stockVial = new StockVial();
         $stockVial->setStock($stock);
-        
+
         return array(
             array(new FakeCrossVial(), null, ''),
             array(new FakeCrossVial(), new Vial(), ''),
@@ -294,21 +294,21 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
             array(new FakeCrossVial(), new CrossVial(), '')
         );
     }
-    
+
     public function crossParentNameProvider()
     {
         $stock = new Stock();
         $stock->setGenotype('test stock');
         $stockVial = new StockVial();
         $stockVial->setStock($stock);
-        
+
         return array(
             array(new FakeCrossVial(), null, 'test'),
             array(new FakeCrossVial(), $stockVial, 'test male'),
             array(new FakeCrossVial(), new CrossVial(), 'test')
         );
     }
-    
+
     protected function setUp()
     {
         $this->date = new \DateTime('2000-01-01 00:00:00');

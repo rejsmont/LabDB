@@ -36,16 +36,16 @@ class CrossVialManager extends VialManager
     public function getRepository($className)
     {
         $repository = parent::getRepository($className);
-        
+
         if (! $repository instanceof CrossVialRepository) {
             throw new \ErrorException('Repository must be an instance of VIB\FliesBundle\Repository\CrossVialRepository');
         } else {
             $repository->setManager($this);
         }
-        
+
         return $repository;
     }
-    
+
     /**
      * Mark cross(es) as sterile and trash it (them)
      *

@@ -308,7 +308,6 @@ class Rack extends Entity implements LabelInterface
 
             return true;
         } else {
-            
             return false;
         }
     }

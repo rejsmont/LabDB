@@ -20,7 +20,6 @@ namespace VIB\CoreBundle\Tests\Entity;
 
 use VIB\CoreBundle\Entity\Entity;
 
-
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetId()

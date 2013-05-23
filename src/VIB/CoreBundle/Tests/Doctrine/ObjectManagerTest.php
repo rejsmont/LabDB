@@ -31,77 +31,75 @@ use Doctrine\Common\Collections\ArrayCollection;
 use VIB\CoreBundle\Doctrine\ObjectManager;
 use VIB\CoreBundle\Entity\Entity;
 
-
 class ObjectManagerTest extends \PHPUnit_Framework_TestCase
 {
     private $om;
     private $aclProvider;
     private $userProvider;
-    
-    
+
     public function testCreateACL()
     {
         $user = new FakeUser();
         $acl = $this->getMock('Symfony\Component\Security\Acl\Model\MutableAclInterface');
-        
+
         $acl->expects($this->at(0))
             ->method('insertObjectAce')
             ->with(UserSecurityIdentity::fromAccount($user),MaskBuilder::MASK_OWNER);
         $acl->expects($this->at(1))
             ->method('insertObjectAce')
             ->with(new RoleSecurityIdentity('ROLE_TEST'),MaskBuilder::MASK_VIEW);
-        
+
         $this->aclProvider->expects($this->once())
             ->method('createACL')
             ->with($this->isInstanceOf('Symfony\Component\Security\Acl\Domain\ObjectIdentity'))
             ->will($this->returnValue($acl));
         $this->aclProvider->expects($this->once())->method('updateAcl')->with($acl);
-        
+
         $this->om->createACL(new FakeEntity(), array(
             array('identity' => $user,
                   'permission' => MaskBuilder::MASK_OWNER),
             array('identity' => 'ROLE_TEST',
                   'permission' => MaskBuilder::MASK_VIEW)));
     }
-    
+
     public function testCreateACLCollection()
     {
         $user = new FakeUser();
         $entity = new FakeEntity();
         $collection = new ArrayCollection();
         $collection->add($entity);
-        
+
         $acl = $this->getMock('Symfony\Component\Security\Acl\Model\MutableAclInterface');
-        
+
         $acl->expects($this->at(0))
             ->method('insertObjectAce')
             ->with(UserSecurityIdentity::fromAccount($user),MaskBuilder::MASK_OWNER);
         $acl->expects($this->at(1))
             ->method('insertObjectAce')
             ->with(new RoleSecurityIdentity('ROLE_TEST'),MaskBuilder::MASK_VIEW);
-        
+
         $this->aclProvider->expects($this->once())
             ->method('createACL')
             ->with($this->isInstanceOf('Symfony\Component\Security\Acl\Domain\ObjectIdentity'))
             ->will($this->returnValue($acl));
         $this->aclProvider->expects($this->once())->method('updateAcl')->with($acl);
-        
+
         $this->om->createACL($collection, array(
             array('identity' => $user,
                   'permission' => MaskBuilder::MASK_OWNER),
             array('identity' => 'ROLE_TEST',
                   'permission' => MaskBuilder::MASK_VIEW)));
     }
-    
+
     public function testGetOwner()
     {
         $user = new FakeUser();
-        
+
         $this->aclProvider->expects($this->once())
             ->method('findAcl')
             ->with($this->isInstanceOf('Symfony\Component\Security\Acl\Domain\ObjectIdentity'))
             ->will($this->returnValue($this->getFakeObjectAces()));
-        
+
         $this->userProvider->expects($this->once())
             ->method('loadUserByUsername')
             ->will($this->returnValue($user));
@@ -109,28 +107,28 @@ class ObjectManagerTest extends \PHPUnit_Framework_TestCase
         $owner = $this->om->getOwner(new FakeEntity());
         $this->assertEquals($user, $owner);
     }
-    
+
     public function testGetOwnerNoAcl()
     {
         $this->aclProvider->expects($this->once())
             ->method('findAcl')
             ->with($this->isInstanceOf('Symfony\Component\Security\Acl\Domain\ObjectIdentity'))
             ->will($this->throwException(new AclNotFoundException()));
-        
+
         $this->userProvider->expects($this->never())
             ->method('loadUserByUsername');
 
         $owner = $this->om->getOwner(new FakeEntity());
         $this->assertEquals(null, $owner);
     }
-    
+
     public function testGetOwnerNoUser()
     {
         $this->aclProvider->expects($this->once())
             ->method('findAcl')
             ->with($this->isInstanceOf('Symfony\Component\Security\Acl\Domain\ObjectIdentity'))
             ->will($this->returnValue($this->getFakeObjectAces()));
-        
+
         $this->userProvider->expects($this->once())
             ->method('loadUserByUsername')
             ->will($this->throwException(new UsernameNotFoundException()));
@@ -138,25 +136,24 @@ class ObjectManagerTest extends \PHPUnit_Framework_TestCase
         $owner = $this->om->getOwner(new FakeEntity());
         $this->assertEquals(null, $owner);
     }
-    
-    
+
     protected function setUp()
     {
         $mr = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
-        
+
         $this->aclProvider = $this->getMock('Symfony\Component\Security\Acl\Model\MutableAclProviderInterface');
         $this->userProvider = $this->getMock('Symfony\Component\Security\Core\User\UserProviderInterface');
         $this->aclFilter = $this->getMockBuilder('VIB\SecurityBundle\Bridge\Doctrine\AclFilter')
                                  ->disableOriginalConstructor()->getMock();
-        
+
         $this->om = new ObjectManager($mr, $this->userProvider, $this->aclProvider, $this->aclFilter);
 
     }
-    
+
     private function getFakeObjectAces()
     {
         $aces = array();
-        
+
         $aclEntry_1 = $this->getMock('Symfony\Component\Security\Acl\Model\EntryInterface');
         $aclEntry_1->expects($this->once())
              ->method('getMask')
@@ -164,7 +161,7 @@ class ObjectManagerTest extends \PHPUnit_Framework_TestCase
         $aclEntry_1->expects($this->never())
              ->method('getSecurityIdentity');
         $aces[] = $aclEntry_1;
-        
+
         $aclEntry_2 = $this->getMock('Symfony\Component\Security\Acl\Model\EntryInterface');
         $aclEntry_2->expects($this->once())
              ->method('getMask')
@@ -174,22 +171,22 @@ class ObjectManagerTest extends \PHPUnit_Framework_TestCase
              ->will($this->returnValue(
                     new UserSecurityIdentity('user','VIB\CoreBundle\Tests\Doctrine\FakeUser')));
         $aces[] = $aclEntry_2;
-        
+
         $aclInterface = $this->getMock('Symfony\Component\Security\Acl\Model\AclInterface');
         $aclInterface->expects($this->once())
              ->method('getObjectAces')
              ->will($this->returnValue($aces));
-        
+
         return $aclInterface;
     }
-    
+
 }
 
 class FakeUser implements UserInterface
 {
     public function eraseCredentials()
     {
-        
+
     }
 
     public function getPassword()

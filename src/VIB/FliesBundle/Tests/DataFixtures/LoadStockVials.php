@@ -27,7 +27,6 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\FliesBundle\Entity\StockVial;
 
-
 class LoadStockVials extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
 
@@ -43,35 +42,35 @@ class LoadStockVials extends AbstractFixture implements OrderedFixtureInterface,
     {
         $this->container = $container;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
         $manager = $this->container->get('vib.doctrine.vial_manager');
-        
+
         $user_acl = array(
             array('identity' => $this->getReference('user'),
                   'permission' => MaskBuilder::MASK_OWNER),
             array('identity' => 'ROLE_USER',
                   'permission' => MaskBuilder::MASK_VIEW)
         );
-        
+
         $vial_1 = new StockVial();
         $vial_1->setStock($this->getReference('stock_4'));
         $manager->persist($vial_1);
         $manager->flush();
         $manager->createACL($vial_1, $user_acl);
         $this->addReference('vial_1', $vial_1);
-        
+
         $vial_2 = new StockVial();
         $vial_2->setStock($this->getReference('stock_1'));
         $vial_2->getSetupDate()->sub(new \DateInterval('P3M'));
         $manager->persist($vial_2);
         $manager->flush();
         $manager->createACL($vial_2, $user_acl);
-        
+
         $vial_3 = new StockVial();
         $vial_3->setStock($this->getReference('stock_1'));
         $vial_3->setTrashed(true);
@@ -79,7 +78,7 @@ class LoadStockVials extends AbstractFixture implements OrderedFixtureInterface,
         $manager->flush();
         $manager->createACL($vial_3, $user_acl);
     }
-    
+
     /**
      * {@inheritDoc}
      */

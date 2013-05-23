@@ -27,7 +27,6 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\FliesBundle\Entity\CrossVial;
 
-
 class LoadCrossVials extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
 
@@ -43,21 +42,21 @@ class LoadCrossVials extends AbstractFixture implements OrderedFixtureInterface,
     {
         $this->container = $container;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
         $manager = $this->container->get('vib.doctrine.vial_manager');
-        
+
         $user_acl = array(
             array('identity' => $this->getReference('user'),
                   'permission' => MaskBuilder::MASK_OWNER),
             array('identity' => 'ROLE_USER',
                   'permission' => MaskBuilder::MASK_VIEW)
         );
-        
+
         $vial = new CrossVial();
         $vial->setVirgin($this->getReference('stock_1')->getVials()->first());
         $vial->setMale($this->getReference('stock_2')->getVials()->first());
@@ -65,7 +64,7 @@ class LoadCrossVials extends AbstractFixture implements OrderedFixtureInterface,
         $manager->flush();
         $manager->createACL($vial, $user_acl);
     }
-    
+
     /**
      * {@inheritDoc}
      */

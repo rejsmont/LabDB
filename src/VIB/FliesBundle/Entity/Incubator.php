@@ -40,7 +40,7 @@ class Incubator extends Entity
      * @ORM\Column(type="string", length=255)
      * @Serializer\Expose
      * @Assert\NotBlank(message = "Name must be specified")
-     * 
+     *
      * @var string
      */
     protected $name;
@@ -69,7 +69,7 @@ class Incubator extends Entity
      *      minMessage = "Temperature cannot be lower than 4℃",
      *      maxMessage = "Temperature cannot be higher than 42℃"
      * )
-     *    
+     *
      * @var float
      */
     private $temperature;

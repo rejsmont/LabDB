@@ -83,7 +83,7 @@ class StockController extends CRUDController
         $stock = $this->getEntity($id);
         $response = parent::showAction($stock);
         $om = $this->getObjectManager();
-        
+
         $options = array('user' => $this->getUser(), 'permissions' => array('OWNER'));
         $myVials = $om->getRepository('VIB\FliesBundle\Entity\StockVial')
                       ->findLivingVialsByStock($stock, $options);

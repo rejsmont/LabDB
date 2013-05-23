@@ -135,11 +135,11 @@ class VialController extends CRUDController
     {
         $om = $this->getObjectManager();
         $class = $this->getEntityClass();
-        
+
         if ($class == 'VIB\FliesBundle\Entity\Vial') {
             throw $this->createNotFoundException();
         }
-            
+
         $vial = new $class();
         $data = array('vial' => $vial, 'number' => 1);
         $form = $this->createForm($this->getCreateForm(), $data);
@@ -155,7 +155,7 @@ class VialController extends CRUDController
                 $vials = $om->expand($vial, $number, false);
                 $om->flush();
                 $om->createACL($vials,$this->getDefaultACL());
-                
+
                 $message = (($count = count($vials)) == 1) ?
                     ucfirst($this->getEntityName()) . ' ' . $vials[0] . ' was created.' :
                     ucfirst($count . ' ' . $this->getEntityPluralName()) . ' were created.';

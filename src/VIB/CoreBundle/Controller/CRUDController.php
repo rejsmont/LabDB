@@ -84,8 +84,8 @@ abstract class CRUDController extends AbstractController
     }
 
     /**
-     * 
-     * @param string $filter
+     *
+     * @param  string $filter
      * @return array
      */
     protected function getListOptions($filter = null)
@@ -103,7 +103,7 @@ abstract class CRUDController extends AbstractController
                 $options['permissions'] = array('OWNER');
                 break;
         }
-        
+
         return $options;
     }
 

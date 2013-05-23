@@ -22,7 +22,6 @@ use VIB\FliesBundle\Entity\Rack;
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\Incubator;
 
-
 class RackTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -127,12 +126,12 @@ class RackTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($rack->getIncubator());
         $rack->setIncubator($incubator);
         $this->assertEquals($incubator, $rack->getIncubator());
-        
+
         return $rack;
     }
 
     /**
-     * 
+     *
      * @depends testIncubator
      */
     public function testGetTemperature($rack)
@@ -141,10 +140,11 @@ class RackTest extends \PHPUnit_Framework_TestCase
         $rack->setIncubator(null);
         $this->assertEquals(21, $rack->getTemperature());
     }
-    
+
     public function rackProvider()
     {
         $rack = new FakeRack(5, 3);
+
         return array(array($rack));
     }
 }

@@ -29,7 +29,7 @@ class RackControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/secure/racks/');
         $this->assertEquals(404,$client->getResponse()->getStatusCode());
     }
-    
+
     public function testCreate()
     {
         $client = $this->getAdminAuthenticatedClient();
@@ -38,7 +38,7 @@ class RackControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(3, $crawler->filter('.modal-body label')->count());
     }
-    
+
     public function testCreateSubmit()
     {
         $client = $this->getAdminAuthenticatedClient();
@@ -55,7 +55,7 @@ class RackControllerTest extends WebTestCase
         $result = $client->followRedirect();
         $this->assertEquals(1, $result->filter('html:contains("Test flies")')->count());
     }
-    
+
     public function testCreateSubmitError()
     {
         $client = $this->getAdminAuthenticatedClient();
@@ -65,21 +65,21 @@ class RackControllerTest extends WebTestCase
         $form = $crawler->selectButton('Save')->form();
         $form['rack[rows]'] = 0;
         $form['rack[columns]'] = 0;
-        
-        $result = $client->submit($form);        
+
+        $result = $client->submit($form);
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(2, $result->filter('span:contains("This value should be 1 or more.")')->count());
     }
-    
+
     public function testShow()
     {
         $client = $this->getAuthenticatedClient();
-        
+
         $crawler = $client->request('GET', '/secure/racks/show/1');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('html:contains("Rack R000001")')->count());
     }
-    
+
     public function testShowNotFound()
     {
         $client = $this->getAuthenticatedClient();
@@ -88,31 +88,31 @@ class RackControllerTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
-    
+
     public function testEdit()
     {
         $client = $this->getAdminAuthenticatedClient();
-        
+
         $crawler = $client->request('GET', '/secure/racks/edit/2');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('html:contains("Edit rack R000002")')->count());
     }
-    
+
     public function testEditSubmit()
     {
         $client = $this->getAdminAuthenticatedClient();
-        
+
         $crawler = $client->request('GET', '/secure/racks/edit/2');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['rack[rack][description]'] = 'Test flies modified';
-        
-        $client->submit($form);        
+
+        $client->submit($form);
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
         $result = $client->followRedirect();
         $this->assertEquals(1, $result->filter('html:contains("Test flies modified")')->count());
     }
-    
+
     public function testEditNotFound()
     {
         $client = $this->getAdminAuthenticatedClient();
@@ -131,7 +131,7 @@ class RackControllerTest extends WebTestCase
         $this->assertTrue($response->isSuccessful());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/pdf'));
     }
-    
+
     public function testIncubate()
     {
         $client = $this->getAuthenticatedClient();
@@ -139,23 +139,23 @@ class RackControllerTest extends WebTestCase
         $vial_crawler = $client->request('GET', '/secure/stocks/vials/show/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(0, $vial_crawler->filter('span:contains("25℃")')->count());
-        
+
         $crawler = $client->request('GET', '/secure/racks/show/1');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
         $values['select']['action'] = 'incubate';
         $values['select']['incubator'] = 'Test incubator';
-        
+
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
-        
+
         $vial_result = $client->request('GET', '/secure/stocks/vials/show/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $vial_result->filter('span:contains("25℃")')->count());
     }
-    
+
     public static function tearDownAfterClass()
     {
         $client = static::createClient();
@@ -170,10 +170,10 @@ class RackControllerTest extends WebTestCase
         $rack = $repository->find(1);
         $rack->setIncubator(null);
         $om->persist($rack);
-        
+
         $om->flush();
     }
-    
+
     protected function getAuthenticatedClient()
     {
         return static::createClient(array(), array(
@@ -181,7 +181,7 @@ class RackControllerTest extends WebTestCase
             'PHP_AUTH_PW'   => 'password',
         ));
     }
-    
+
     protected function getAdminAuthenticatedClient()
     {
         return static::createClient(array(), array(

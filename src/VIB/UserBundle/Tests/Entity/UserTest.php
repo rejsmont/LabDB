@@ -20,62 +20,61 @@ namespace VIB\UserBundle\Tests\Entity;
 
 use VIB\UserBundle\Entity\User;
 
-
 class UserTest extends \PHPUnit_Framework_TestCase
 {
     private $user;
-    
+
     public function testGetSetGivenName()
     {
         $this->user->setGivenName('John');
         $this->assertEquals('John',$this->user->getGivenName());
     }
-    
+
     public function testGetSetSurname()
     {
         $this->user->setSurname('Doe');
         $this->assertEquals('Doe',$this->user->getSurname());
     }
-    
+
     public function testGetInitials()
     {
         $this->user->setGivenName('John Michael');
         $this->assertEquals('JM',$this->user->getInitials());
     }
-    
+
     public function testGetFullName()
     {
         $this->user->setGivenName('John Michael');
         $this->user->setSurname('Doe');
         $this->assertEquals('John Michael Doe',$this->user->getFullName());
     }
-    
+
     public function testGetFullNameNoName()
     {
         $this->user->setUsername('Test');
         $this->assertEquals('Test',$this->user->getFullName());
     }
-    
+
     public function testGetShortNameNoName()
     {
         $this->user->setUsername('Test');
         $this->assertEquals('Test',$this->user->getShortName());
     }
-    
+
     public function testToStringLongName()
     {
         $this->user->setGivenName('John Michael');
         $this->user->setSurname('Doe');
         $this->assertEquals('JM Doe',(string) $this->user);
     }
-    
+
     public function testToStringShortName()
     {
         $this->user->setGivenName('John');
         $this->user->setSurname('Doe');
         $this->assertEquals('John Doe',(string) $this->user);
     }
-    
+
     protected function setUp()
     {
         $this->user = new User();

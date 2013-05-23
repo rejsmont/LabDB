@@ -21,13 +21,11 @@ namespace VIB\CoreBundle\Tests\Request\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use VIB\CoreBundle\Request\ParamConverter\DoctrineParamConverter;
 
-
 class DoctrineParamConverterTest extends \PHPUnit_Framework_TestCase
 {
     private $converter;
     private $registry;
 
-    
     public function testApply()
     {
         $request = new Request();
@@ -57,7 +55,7 @@ class DoctrineParamConverterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($ret);
         $this->assertSame($object, $request->attributes->get('arg'));
     }
-    
+
     public function testApplyNotFound()
     {
         $request = new Request();
@@ -85,13 +83,13 @@ class DoctrineParamConverterTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $this->converter->apply($request, $config);
     }
-    
+
     protected function setUp()
-    {        
+    {
         $this->registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
         $this->converter = new DoctrineParamConverter($this->registry);
     }
-    
+
     private function createConfiguration($class = null, array $options = null, $name = 'arg', $isOptional = false)
     {
         $methods = array('getClass', 'getAliasName', 'getOptions', 'getName', 'allowArray');

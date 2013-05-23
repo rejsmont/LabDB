@@ -21,15 +21,9 @@ namespace VIB\FliesBundle\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-
-use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\FliesBundle\Entity\Stock;
-use VIB\FliesBundle\Entity\StockVial;
-
 
 /**
  * PrintCommand
@@ -39,7 +33,7 @@ use VIB\FliesBundle\Entity\StockVial;
 class PrintCommand extends Command
 {
     private $container;
-    
+
     protected function configure()
     {
         $this
@@ -57,30 +51,30 @@ class PrintCommand extends Command
     {
         $filename = $input->getArgument('csv');
         $file = fopen($filename,'r');
-        
+
         $this->container = $this->getApplication()->getKernel()->getContainer();
         $om = $this->container->get('vib.doctrine.manager');
         $vm = $this->container->get('vib.doctrine.vial_manager');
-        
+
         $stocks = array();
-        
+
         if ($file) {
             while ($data = fgetcsv($file, 0, "\t")) {
                 $stocks[] = $data[0];
             }
         }
-        
+
         natsort($stocks);
-        
+
         $pdf = $this->container->get('vibfolks.pdflabel');
-        
+
         foreach ($stocks as $stockname) {
             $qb = $om->getRepository('VIB\FliesBundle\Entity\Stock')->createQueryBuilder('b');
             $qb->where('b.name like :term')
                ->setParameter('term', $stockname);
             $stock = $qb->getQuery()->getSingleResult();
             echo $stock->getName() . "\n";
-            
+
             foreach ($stock->getLivingVials() as $vial) {
                 if (! $vial->isLabelPrinted()) {
                     echo "\t" . $vial . "\n";
@@ -89,12 +83,11 @@ class PrintCommand extends Command
                 }
             }
         }
-        
+
         $vm->flush();
-        
+
         $jobStatus = $pdf->printPDF();
         echo $jobStatus . "\n";
-        
-        
+
     }
 }

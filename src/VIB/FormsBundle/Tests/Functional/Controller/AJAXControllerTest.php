@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-namespace VIB\FliesBundle\Tests\Functional\Controller;
+namespace VIB\FormsBundle\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CalendarControllerTest extends WebTestCase
+class AJAXControllerTest extends WebTestCase
 {
     public function testCalendar()
     {
@@ -31,7 +31,7 @@ class CalendarControllerTest extends WebTestCase
         $this->assertTrue($response->isSuccessful());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
     }
-    
+
     protected function getAuthenticatedClient()
     {
         return static::createClient(array(), array(

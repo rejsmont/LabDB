@@ -24,14 +24,13 @@ use VIB\FliesBundle\Entity\Rack;
 use VIB\FliesBundle\Entity\RackPosition;
 use VIB\FliesBundle\Entity\Incubator;
 
-
 class VialTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DateTime 
+     * @var DateTime
      */
     private $date;
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -50,10 +49,10 @@ class VialTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($vial->getNotes());
         $this->assertEquals('medium', $vial->getSize());
         $this->assertNull($vial->getPosition());
-        
+
         return $vial;
     }
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -61,7 +60,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(1,$vial->getId());
     }
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -69,7 +68,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame('000001',(string) $vial);
     }
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -77,7 +76,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame('000001',$vial->getLabelBarcode());
     }
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -110,7 +109,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
         $vial->setSetupDate($date = $this->date);
         $this->assertEquals($date, $vial->getSetupDate());
     }
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -225,12 +224,12 @@ class VialTest extends \PHPUnit_Framework_TestCase
         $vial->setPosition($position);
         $this->assertEquals($position,$vial->getPosition());
         $this->assertEquals($vial,$position->getContents());
-        
+
         $newPosition = $this->getPosition();
         $vial->setPosition($newPosition);
         $this->assertEquals($position,$vial->getPrevPosition());
         $this->assertEquals($newPosition,$vial->getPosition());
-        
+
         return $vial;
     }
 
@@ -255,7 +254,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
         $vial->setIncubator($incubator);
         $this->assertEquals($incubator,$vial->getIncubator());
     }
-    
+
     /**
      * @depends testPosition
      */
@@ -280,7 +279,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(21,$vial->getTemperature());
     }
-    
+
     /**
      * @depends testPosition
      */
@@ -296,7 +295,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(13,$vial->getGenerationTime());
     }
-    
+
     /**
      * @depends testPosition
      */
@@ -304,7 +303,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(7,$vial->getGenerationTime());
     }
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -362,18 +361,19 @@ class VialTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('', $vial->getType());
     }
-    
+
     public function vialProvider()
     {
         $vial = new FakeVial();
+
         return array(array($vial));
     }
-    
+
     protected function setUp()
     {
         $this->date = new \DateTime('2000-01-01 00:00:00');
     }
-    
+
     protected function getPosition()
     {
         $incubator = new Incubator();
@@ -381,6 +381,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
         $incubator->setTemperature(28);
         $rack = new Rack(1,1);
         $rack->setIncubator($incubator);
+
         return new RackPosition($rack,1,1);
     }
 }

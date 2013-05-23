@@ -22,10 +22,9 @@ use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\StockVial;
 use VIB\FliesBundle\Entity\Stock;
 
-
 class StockVialTest extends \PHPUnit_Framework_TestCase
 {
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -91,13 +90,14 @@ class StockVialTest extends \PHPUnit_Framework_TestCase
         $vial->setStock($stock);
         $this->assertEquals($stock, $vial->getStock());
     }
-    
+
     public function vialProvider()
     {
         $vial = new FakeStockVial();
+
         return array(array($vial));
     }
-    
+
     public function vialParentProvider()
     {
         return array(

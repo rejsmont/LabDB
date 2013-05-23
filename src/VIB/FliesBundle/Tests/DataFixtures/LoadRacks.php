@@ -27,7 +27,6 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\FliesBundle\Entity\Rack;
 
-
 class LoadRacks extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
 
@@ -43,32 +42,32 @@ class LoadRacks extends AbstractFixture implements OrderedFixtureInterface, Cont
     {
         $this->container = $container;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
         $manager = $this->container->get('vib.doctrine.manager');
-        
+
         $user_acl = array(
             array('identity' => $this->getReference('user'),
                   'permission' => MaskBuilder::MASK_OWNER),
             array('identity' => 'ROLE_USER',
                   'permission' => MaskBuilder::MASK_VIEW)
         );
-        
+
         $rack = new Rack(5, 5);
         $manager->persist($rack);
         $manager->flush();
         $manager->createACL($rack, $user_acl);
-        
+
         $vial = $this->getReference('vial_1');
         $vial->setPosition($rack->getPosition(1, 1));
         $manager->persist($vial);
         $manager->flush();
     }
-    
+
     /**
      * {@inheritDoc}
      */

@@ -129,7 +129,7 @@ class Vial extends Entity implements LabelDateInterface
      * If $flip is true, become a child of the template.
      *
      * @param VIB\FliesBundle\Entity\Vial $template
-     * @param boolean                      $flip
+     * @param boolean                     $flip
      */
     public function __construct(Vial $template = null, $flip = true)
     {
@@ -368,7 +368,7 @@ class Vial extends Entity implements LabelDateInterface
     {
         return $this->parent;
     }
-    
+
     /**
      * Set parent
      *
@@ -449,7 +449,7 @@ class Vial extends Entity implements LabelDateInterface
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('trashed', false))
             ->andWhere(Criteria::expr()->gt('setupDate', $date));
-        
+
         $livingCrosses = new ArrayCollection();
         foreach ($this->getMaleCrosses()->matching($criteria) as $cross) {
             $livingCrosses->add($cross);

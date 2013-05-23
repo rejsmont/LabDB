@@ -26,7 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use VIB\UserBundle\Entity\User;
 
-
 class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
 
@@ -42,14 +41,14 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
     {
         $this->container = $container;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
         $manager = $this->container->get('fos_user.user_manager');
-        
+
         $user = new User;
         $user->setUsername('jdoe');
         $user->setPlainPassword('password');
@@ -60,7 +59,7 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         $user->setEnabled(true);
         $manager->updateUser($user);
         $this->addReference('user', $user);
-        
+
         $admin = new User;
         $admin->setUsername('asmith');
         $admin->setPlainPassword('password');
@@ -73,7 +72,7 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         $manager->updateUser($admin);
         $this->addReference('admin', $admin);
     }
-    
+
     /**
      * {@inheritDoc}
      */

@@ -58,11 +58,11 @@ class AclFilter
     /**
      * Apply ACL filter
      *
-     * @param  Doctrine\ORM\QueryBuilder | Doctrine\ORM\Query     $query
-     * @param  array                                              $permissions
+     * @param Doctrine\ORM\QueryBuilder | Doctrine\ORM\Query $query
+     * @param array                                          $permissions
      * @param  string |
      *         Symfony\Component\Security\Core\User\UserInterface $identity
-     * @param  string                                             $alias
+     * @param  string             $alias
      * @return Doctrine\ORM\Query
      */
     public function apply($query, array $permissions = array("VIEW"), $identity = null, $alias = null)
@@ -71,7 +71,7 @@ class AclFilter
             $token = $this->securityContext->getToken();
             $identity = $token->getUser();
         }
-        
+
         if ($query instanceof QueryBuilder) {
             $query = $this->cloneQuery($query->getQuery());
         } elseif ($query instanceof Query) {
@@ -85,7 +85,7 @@ class AclFilter
             $mask = constant(get_class($maskBuilder) . '::MASK_' . strtoupper($permission));
             $maskBuilder->add($mask);
         }
-        
+
         $entity = ($this->getEntityFromAlias($query, $alias));
         $metadata = $entity['metadata'];
         $alias = $entity['alias'];
@@ -95,23 +95,23 @@ class AclFilter
                 $this->getIdentifiers($identity),
                 $maskBuilder->get()
         );
-        
+
         $hintAclMetadata =
             (false !== $query->getHint('acl.metadata')) ? $query->getHint('acl.metadata') : array();
         $hintAclMetadata[] = array('query' => $aclQuery, 'table' => $table, 'alias' => $alias);
-        
+
         $query->setHint('acl.metadata', $hintAclMetadata);
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER,$this->aclWalker);
-        
+
         return $query;
     }
 
     /**
      * Get ACL filter SQL
-     * 
-     * @param array   $classes
-     * @param array   $identifiers
-     * @param integer $mask
+     *
+     * @param  array   $classes
+     * @param  array   $identifiers
+     * @param  integer $mask
      * @return string
      */
     private function getExtraQuery($classes, $identifiers, $mask)
@@ -119,13 +119,13 @@ class AclFilter
         $database = $this->aclConnection->getDatabase();
         $inClasses = implode(",", $classes);
         $inIdentifiers = implode(",", $identifiers);
-        
+
         if ($this->aclConnection->getDatabasePlatform() instanceof SqlitePlatform) {
             $database = 'main';
             $inClasses = str_replace('\\\\', '\\', $inClasses);
             $inIdentifiers = str_replace('\\\\', '\\', $inIdentifiers);
         }
-        
+
         $query = <<<SELECTQUERY
 SELECT DISTINCT o.object_identifier as id FROM {$database}.acl_object_identities as o
     INNER JOIN {$database}.acl_classes c ON c.id = o.class_id
@@ -145,21 +145,20 @@ SELECTQUERY;
 
     /**
      * Resolve DQL alias into class metadata
-     * 
-     * @param Doctrine\ORM\Query $query
-     * @param string             $alias
-     * @return array | null
+     *
+     * @param  Doctrine\ORM\Query $query
+     * @param  string             $alias
+     * @return array              | null
      */
     protected function getEntityFromAlias($query, $alias = null)
     {
         $em = $query->getEntityManager();
         $ast = $query->getAST();
-        $fromClause = $ast->fromClause;        
+        $fromClause = $ast->fromClause;
         foreach ($fromClause->identificationVariableDeclarations as $root) {
             $className = $root->rangeVariableDeclaration->abstractSchemaName;
             $classAlias = $root->rangeVariableDeclaration->aliasIdentificationVariable;
             if (($classAlias == $alias)||(null === $alias)) {
-                
                 return array('alias' => $classAlias,
                              'metadata' => $em->getClassMetadata($className));
             } else {
@@ -169,21 +168,21 @@ SELECTQUERY;
                     if ($joinAlias == $alias) {
                         $metadata = $em->getClassMetadata($className);
                         $joinName = $metadata->associationMappings[$joinField]['targetEntity'];
-                        
+
                         return array('alias' => $joinAlias,
                                      'metadata' => $em->getClassMetadata($joinName));
                     }
                 }
             }
         }
-        
+
         return null;
     }
-    
+
     /**
-     * Get ACL compatible classes for specified class metadata 
-     * 
-     * @param Doctrine\Common\Persistence\Mapping $metadata
+     * Get ACL compatible classes for specified class metadata
+     *
+     * @param  Doctrine\Common\Persistence\Mapping $metadata
      * @return array
      */
     protected function getClasses(ClassMetadata $metadata)
@@ -193,14 +192,14 @@ SELECTQUERY;
             $classes[] = '"' . str_replace('\\', '\\\\', $subClass) . '"';
         }
         $classes[] = '"' . str_replace('\\', '\\\\', $metadata->name) . '"';
-        
+
         return $classes;
     }
-    
+
     /**
      * Get security identifiers associated with specified identity
-     * 
-     * @param Symfony\Component\Security\Core\User\UserInterface | string $identity
+     *
+     * @param  Symfony\Component\Security\Core\User\UserInterface | string $identity
      * @return array
      */
     protected function getIdentifiers($identity)
@@ -223,7 +222,7 @@ SELECTQUERY;
 
         return $identifiers;
     }
-    
+
     /**
      * Clone query
      *

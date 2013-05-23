@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace VIB\FliesBundle\Tests\Functional\Controller;
+namespace VIB\CalendarBundle\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -31,7 +31,7 @@ class CalendarControllerTest extends WebTestCase
         $this->assertTrue($response->isSuccessful());
         $this->assertTrue($response->headers->contains('Content-Type', 'text/calendar; charset=utf-8'));
     }
-    
+
     public function testCalendarNoSuchUser()
     {
         $client = static::createClient();

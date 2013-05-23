@@ -75,10 +75,11 @@ class CrossVialController extends VialController
     /**
      * {@inheritdoc}
      */
-    public function expandAction($id = null) {
+    public function expandAction($id = null)
+    {
         throw $this->createNotFoundException();
     }
-    
+
     /**
      * Statistics for cross
      *

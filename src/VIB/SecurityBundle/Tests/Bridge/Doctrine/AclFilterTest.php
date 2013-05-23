@@ -25,11 +25,10 @@ use Doctrine\ORM\Query\AST\IdentificationVariableDeclaration;
 use Doctrine\ORM\Query\AST\RangeVariableDeclaration;
 use VIB\SecurityBundle\Bridge\Doctrine\AclFilter;
 
-
 class AclFilterTest extends \PHPUnit_Framework_TestCase
 {
     private $helper;
-    
+
     public function testApply()
     {
         $queryBuilder = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
@@ -44,7 +43,7 @@ class AclFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('WHERE c.class_type IN ("")', $metadata[0]['query']);
         $this->assertContains('AND s.identifier IN ("Mock_UserInterface', $metadata[0]['query']);
     }
-    
+
     protected function setUp()
     {
         $entityManager = $this->getMockBuilder('Doctrine\ORM\EntityManager')
@@ -73,21 +72,23 @@ class AclFilterTest extends \PHPUnit_Framework_TestCase
 
 class FakeQuery extends AbstractQuery
 {
-    protected function _doExecute() {
-        
+    protected function _doExecute()
+    {
     }
 
-    public function getSQL() {
-        
+    public function getSQL()
+    {
     }
-    
-    public function getAST() {
+
+    public function getAST()
+    {
         $rangeVarDef = new RangeVariableDeclaration('Entity','e');
         $idVariableDef = new IdentificationVariableDeclaration($rangeVarDef,null,array());
+
         return new SelectStatement(null,new FromClause(array($idVariableDef)));
     }
-    
-    public function getParameters() {
-        
+
+    public function getParameters()
+    {
     }
 }

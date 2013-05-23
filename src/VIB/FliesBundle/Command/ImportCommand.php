@@ -30,7 +30,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use VIB\FliesBundle\Entity\Stock;
 use VIB\FliesBundle\Entity\StockVial;
 
-
 /**
  * ImportCommand
  *
@@ -39,7 +38,7 @@ use VIB\FliesBundle\Entity\StockVial;
 class ImportCommand extends Command
 {
     private $container;
-    
+
     protected function configure()
     {
         $this
@@ -78,10 +77,10 @@ class ImportCommand extends Command
     {
         $filename = $input->getArgument('csv');
         $file = fopen($filename,'r');
-        
+
         $logfilename = $input->getArgument('logfile');
         $logfile = fopen($logfilename,'w');
-        
+
         $listfilename = $input->getArgument('listfile');
         $importlist = array();
         if ($listfilename) {
@@ -92,20 +91,20 @@ class ImportCommand extends Command
                 }
             }
         }
-        
+
         $dialog = $this->getHelperSet()->get('dialog');
         $this->container = $this->getApplication()->getKernel()->getContainer();
         $user = $this->container->get('user_provider')->loadUserByUsername($input->getArgument('owner'));
-        
+
         $om = $this->container->get('vib.doctrine.manager');
         $vm = $this->container->get('vib.doctrine.vial_manager');
         $em = $this->container->get('doctrine')->getManager();
-        
+
         $em->getConnection()->beginTransaction();
-        
+
         $vials = new ArrayCollection();
         $stocks = new ArrayCollection();
-        
+
         if ($file) {
             $acronyms = array();
             while ($data = fgetcsv($file,0,"\t")) {
@@ -134,7 +133,7 @@ class ImportCommand extends Command
                             $stockName = str_replace($projectAcronym,$acronyms[$projectName],$stockName);
                         }
                     }
-                    
+
                     $stock = new Stock();
                     $stock->setName($stockName);
                     if (($stockGenotype == '')||($stockGenotype == '\N')) {
@@ -165,7 +164,7 @@ class ImportCommand extends Command
                     if (($url != '')&&($url != '\N')) {
                         $stock->setInfoURL($url);
                     }
-                                     
+
                     $qb = $om->getRepository('VIB\FliesBundle\Entity\Stock')->createQueryBuilder('b');
                     $qb->where('b.name like :term_1')
                        ->orWhere('b.name like :term_2')
@@ -173,9 +172,9 @@ class ImportCommand extends Command
                        ->setParameter('term_1', $projectAcronym . $numberInProject)
                        ->setParameter('term_2', $projectAcronym . ' ' . $numberInProject)
                        ->setParameter('term_3', $stock->getName());
-                    
+
                     $result = $qb->getQuery()->getResult();
-                    
+
                     if (count($result)) {
                         if (count($result == 1)) {
                             $existing = $result[0];
@@ -201,7 +200,7 @@ class ImportCommand extends Command
                                 $existing->setVendor($stock->getVendor());
                                 $existing->setInfoURL($stock->getInfoURL());
                                 $om->persist($existing);
-                                
+
                                 $vial = new StockVial();
                                 $vial->setStock($existing);
                                 $vm->persist($vial);
@@ -228,7 +227,7 @@ class ImportCommand extends Command
             }
         }
         $output->writeln("Objects imported. Flushing DB buffer.");
-        $om->flush(); 
+        $om->flush();
         $output->writeln("Creating ACLs.");
         $om->createACL($stocks,$this->getDefaultACL($user));
         $vm->createACL($vials,$this->getDefaultACL($user));
@@ -240,7 +239,7 @@ class ImportCommand extends Command
             $em->close();
         }
     }
-    
+
     protected function getDefaultACL($user)
     {
         return array(

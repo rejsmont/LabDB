@@ -27,7 +27,6 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\FliesBundle\Entity\Incubator;
 
-
 class LoadIncubators extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
 
@@ -43,28 +42,28 @@ class LoadIncubators extends AbstractFixture implements OrderedFixtureInterface,
     {
         $this->container = $container;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
         $manager = $this->container->get('vib.doctrine.vial_manager');
-        
+
         $user_acl = array(
             array('identity' => $this->getReference('user'),
                   'permission' => MaskBuilder::MASK_OWNER),
             array('identity' => 'ROLE_USER',
                   'permission' => MaskBuilder::MASK_VIEW)
         );
-        
+
         $incubator = new Incubator();
         $incubator->setName("Test incubator");
         $manager->persist($incubator);
         $manager->flush();
         $manager->createACL($incubator, $user_acl);
     }
-    
+
     /**
      * {@inheritDoc}
      */

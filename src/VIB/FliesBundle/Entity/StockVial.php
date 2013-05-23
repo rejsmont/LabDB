@@ -64,7 +64,7 @@ class StockVial extends Vial implements AltLabelInterface
             return parent::getLabelText();
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */

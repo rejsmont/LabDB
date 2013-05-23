@@ -59,14 +59,14 @@ class RackController extends CRUDController
 
     /**
      * {@inheritdoc}
-     * 
+     *
      * @SatisfiesParentSecurityPolicy
      */
     public function listAction($filter = null)
     {
         throw $this->createNotFoundException();
     }
-    
+
     /**
      * Show rack
      *

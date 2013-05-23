@@ -49,6 +49,7 @@ class PrintController extends Controller
         $canPrint = $this->canPrint();
         $autoprint = $canPrint ? $setting : $canPrint;
         $labelmode = $this->get('request')->getSession()->get('labelmode');
+
         return array('autoprint' => $autoprint, 'labelmode' => $labelmode);
     }
 
@@ -57,7 +58,7 @@ class PrintController extends Controller
      *
      * @Route("/_ajax/autoprint/")
      * @Method("POST")
-     * 
+     *
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function setAutoPrintAction(Request $request)
@@ -70,7 +71,7 @@ class PrintController extends Controller
 
         return new Response();
     }
-    
+
     /**
      * Autoprint panel
      *
@@ -87,10 +88,10 @@ class PrintController extends Controller
 
         return new Response();
     }
-    
+
     /**
      * Check if printer is available
-     * 
+     *
      * @return boolean
      */
     protected function canPrint()
@@ -104,11 +105,11 @@ class PrintController extends Controller
                 $ipp->setHost($host);
                 $ipp->setPrinterURI($queue);
                 $ipp->getPrinterAttributes();
-                
+
                 return (implode('\n',$ipp->status) == 'successfull-ok');
             } catch (IPPException $e) {}
         }
-        
+
         return false;
     }
 }

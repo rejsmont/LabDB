@@ -23,14 +23,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use VIB\FliesBundle\Label\PDFLabel;
 use VIB\FliesBundle\Entity\Vial;
 
-
 class PDFLabelTest extends \PHPUnit_Framework_TestCase
 {
     private $PDF;
     private $om;
     private $TCPDFController;
     private $TCPDF;
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -47,7 +46,7 @@ class PDFLabelTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response',$response);
         $this->assertEquals(200,$response->getStatusCode());
     }
-    
+
     protected function setUp()
     {
         $this->om = $this->getMockBuilder('VIB\CoreBundle\Doctrine\ObjectManager')
@@ -61,12 +60,13 @@ class PDFLabelTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->TCPDF));
         $this->PDF = new PDFLabel($this->om, $this->TCPDFController, null, null);
     }
-    
+
     public function vialProvider()
     {
         $vial = new Vial();
         $collection = new ArrayCollection();
         $collection->add($vial);
+
         return array(
           array($vial),
           array($collection),

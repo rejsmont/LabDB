@@ -20,7 +20,6 @@ namespace VIB\FliesBundle\Tests\Entity;
 
 use VIB\FliesBundle\Entity\Incubator;
 
-
 class IncubatorTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -31,7 +30,7 @@ class IncubatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('New incubator', (string) $incubator);
     }
-    
+
     /**
      * @dataProvider incubatorProvider
      */
@@ -49,7 +48,7 @@ class IncubatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $incubator->getRacks());
     }
-    
+
     /**
      * @dataProvider incubatorProvider
      */
@@ -67,10 +66,11 @@ class IncubatorTest extends \PHPUnit_Framework_TestCase
         $incubator->setTemperature(28);
         $this->assertEquals(28, $incubator->getTemperature());
     }
-    
+
     public function incubatorProvider()
     {
         $incubator = new Incubator();
+
         return array(array($incubator));
     }
 }

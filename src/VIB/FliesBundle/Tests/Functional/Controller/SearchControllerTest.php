@@ -21,7 +21,7 @@ namespace VIB\FliesBundle\Tests\Functional\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SearchControllerTest extends WebTestCase
-{    
+{
     public function testResultStocks()
     {
         $client = $this->getAuthenticatedClient();
@@ -30,7 +30,7 @@ class SearchControllerTest extends WebTestCase
         $form = $crawler->filter('form#search-form')->form();
         $form['search_form[query]'] = 'yw';
         $form['search_form[filter]'] = '';
-        
+
         $result = $client->submit($form);
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(4, $result->filter('tbody tr')->count());
@@ -44,12 +44,12 @@ class SearchControllerTest extends WebTestCase
         $form = $crawler->filter('form#search-form')->form();
         $form['search_form[query]'] = 'yw';
         $form['search_form[filter]'] = 'crosses';
-        
+
         $result = $client->submit($form);
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $result->filter('tbody tr')->count());
     }
-    
+
     public function testResultVial()
     {
         $client = $this->getAuthenticatedClient();
@@ -58,7 +58,7 @@ class SearchControllerTest extends WebTestCase
         $form = $crawler->filter('form#search-form')->form();
         $form['search_form[query]'] = '1';
         $form['search_form[filter]'] = '';
-        
+
         $client->submit($form);
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
         $client->followRedirect();
@@ -67,7 +67,7 @@ class SearchControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $result->filter('html:contains("Stock vial 000001")')->count());
     }
-    
+
     public function testResultRack()
     {
         $client = $this->getAuthenticatedClient();
@@ -76,7 +76,7 @@ class SearchControllerTest extends WebTestCase
         $form = $crawler->filter('form#search-form')->form();
         $form['search_form[query]'] = 'R1';
         $form['search_form[filter]'] = '';
-        
+
         $client->submit($form);
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
         $result = $client->followRedirect();

@@ -29,7 +29,7 @@ class IncubatorControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/secure/incubators/');
         $this->assertEquals(404,$client->getResponse()->getStatusCode());
     }
-    
+
     public function testCreate()
     {
         $client = $this->getAdminAuthenticatedClient();
@@ -38,7 +38,7 @@ class IncubatorControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(2, $crawler->filter('.modal-body label')->count());
     }
-    
+
     public function testCreateSubmit()
     {
         $client = $this->getAdminAuthenticatedClient();
@@ -54,7 +54,7 @@ class IncubatorControllerTest extends WebTestCase
         $result = $client->followRedirect();
         $this->assertEquals(1, $result->filter('html:contains("Incubator Hot incubator")')->count());
     }
-    
+
     public function testCreateSubmitError()
     {
         $client = $this->getAdminAuthenticatedClient();
@@ -64,22 +64,22 @@ class IncubatorControllerTest extends WebTestCase
         $form = $crawler->selectButton('Save')->form();
         $form['incubator[name]'] = '';
         $form['incubator[temperature]'] = '0.00';
-        
-        $result = $client->submit($form);        
+
+        $result = $client->submit($form);
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $result->filter('span:contains("Name must be specified")')->count());
         $this->assertEquals(1, $result->filter('span:contains("Temperature cannot be lower than 4℃")')->count());
     }
-    
+
     public function testShow()
     {
         $client = $this->getAuthenticatedClient();
-        
+
         $crawler = $client->request('GET', '/secure/incubators/show/1');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('html:contains("Incubator Test incubator")')->count());
     }
-    
+
     public function testShowNotFound()
     {
         $client = $this->getAuthenticatedClient();
@@ -88,31 +88,31 @@ class IncubatorControllerTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
-    
+
     public function testEdit()
     {
         $client = $this->getAdminAuthenticatedClient();
-        
+
         $crawler = $client->request('GET', '/secure/incubators/edit/2');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('html:contains("Edit incubator Hot incubator")')->count());
     }
-    
+
     public function testEditSubmit()
     {
         $client = $this->getAdminAuthenticatedClient();
-        
+
         $crawler = $client->request('GET', '/secure/incubators/edit/2');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['incubator[temperature]'] = 16;
-        
-        $client->submit($form);        
+
+        $client->submit($form);
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
         $result = $client->followRedirect();
         $this->assertEquals(1, $result->filter('span.input-text:contains("16")')->count());
     }
-    
+
     public function testEditNotFound()
     {
         $client = $this->getAdminAuthenticatedClient();
@@ -130,8 +130,7 @@ class IncubatorControllerTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertEquals(403,$response->getStatusCode());
     }
-    
-    
+
     public static function tearDownAfterClass()
     {
         $client = static::createClient();
@@ -145,7 +144,7 @@ class IncubatorControllerTest extends WebTestCase
         }
         $om->flush();
     }
-    
+
     protected function getAuthenticatedClient()
     {
         return static::createClient(array(), array(
@@ -153,7 +152,7 @@ class IncubatorControllerTest extends WebTestCase
             'PHP_AUTH_PW'   => 'password',
         ));
     }
-    
+
     protected function getAdminAuthenticatedClient()
     {
         return static::createClient(array(), array(

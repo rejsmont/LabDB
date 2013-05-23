@@ -25,7 +25,7 @@ class ShibbolethLoginListenerTest extends \PHPUnit_Framework_TestCase
 {
     private $listener;
     private $userProvider;
-    
+
     public function testGetSubscribedEvents()
     {
         $result = $this->listener->getSubscribedEvents();
@@ -45,7 +45,7 @@ class ShibbolethLoginListenerTest extends \PHPUnit_Framework_TestCase
         $this->userProvider->expects($this->once())->method('updateUser');
         $this->listener->onInteractiveLogin($event);
     }
-    
+
     public function testOnInteractiveLoginIgnoreToken()
     {
         $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');;
@@ -57,7 +57,7 @@ class ShibbolethLoginListenerTest extends \PHPUnit_Framework_TestCase
         $this->userProvider->expects($this->never())->method('updateUser');
         $this->listener->onInteractiveLogin($event);
     }
-    
+
     protected function setUp()
     {
         $this->userProvider = $this->getMockBuilder('VIB\UserBundle\Security\ShibbolethUserProvider')

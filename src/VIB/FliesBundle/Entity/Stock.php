@@ -306,7 +306,7 @@ class Stock extends Entity
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('trashed', false))
             ->andWhere(Criteria::expr()->gt('setupDate', $date));
-        
+
         return $this->getVials()->matching($criteria);
     }
 

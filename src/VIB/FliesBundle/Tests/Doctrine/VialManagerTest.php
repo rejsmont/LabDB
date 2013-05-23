@@ -25,15 +25,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\Incubator;
 
-
 class VialManagerTest extends \PHPUnit_Framework_TestCase
 {
     private $om;
     private $aclProvider;
     private $userProvider;
     private $entityManager;
-    
-    
+
     /**
      * @dataProvider flipProvider
      */
@@ -73,7 +71,7 @@ class VialManagerTest extends \PHPUnit_Framework_TestCase
         $this->om->markPrinted($vials);
         $this->assertEquals(true,$vial->isLabelPrinted());
     }
-    
+
     /**
      * @dataProvider vialProvider
      */
@@ -97,7 +95,7 @@ class VialManagerTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals((null === $size) ? 'medium' : $size, $newVial->getSize());
         }
     }
-    
+
     protected function setUp()
     {
         $this->entityManager = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
@@ -112,21 +110,23 @@ class VialManagerTest extends \PHPUnit_Framework_TestCase
         $this->om = new VialManager($mr, $this->userProvider, $this->aclProvider, $this->aclFilter);
 
     }
-    
+
     public function vialProvider()
     {
         $vial = new Vial();
         $collection = new ArrayCollection();
         $collection->add($vial);
+
         return array(
           array($vial, $vial),
           array($collection, $vial),
         );
     }
-    
+
     public function expandProvider()
     {
         $vial = new Vial();
+
         return array(
           array($vial, 1, true, null),
           array($vial, 2, false, null),
@@ -134,12 +134,13 @@ class VialManagerTest extends \PHPUnit_Framework_TestCase
           array($vial, 2, false, 'large'),
         );
     }
-    
+
     public function flipProvider()
     {
         $vial = new Vial();
         $collection = new ArrayCollection();
         $collection->add($vial);
+
         return array(
           array($vial, $vial, true, false),
           array($vial, $vial, true, true),

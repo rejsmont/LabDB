@@ -18,7 +18,6 @@
 
 namespace VIB\FliesBundle\Repository;
 
-
 /**
  * FlyVialRepository
  *
@@ -27,8 +26,8 @@ namespace VIB\FliesBundle\Repository;
 class StockVialRepository extends VialRepository
 {
     /**
-     * 
-     * @param type $stock
+     *
+     * @param  type                                   $stock
      * @return Doctrine\Common\Collections\Collection
      */
     public function findLivingVialsByStock($stock, $options = array())
@@ -39,9 +38,9 @@ class StockVialRepository extends VialRepository
         $permissions = isset($options['permissions']) ? $options['permissions'] : array();
         $user = isset($options['user']) ? $options['user'] : null;
         if (false === $permissions) {
-            return $qb->getQuery()->useResultCache(true)->getResult(); 
+            return $qb->getQuery()->useResultCache(true)->getResult();
         } else {
             return $this->aclFilter->apply($qb, $permissions, $user)->getResult();
         }
-    }   
+    }
 }

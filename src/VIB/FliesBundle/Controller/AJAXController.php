@@ -145,7 +145,7 @@ class AJAXController extends AbstractController
 
         $om = $this->getObjectManager();
         $securityContext = $this->getSecurityContext();
-        
+
         try {
             $vial = (null !== $vialID) ? $om->find('VIBFliesBundle:Vial', $vialID) : null;
         } catch (NoResultException $e) {
@@ -156,7 +156,7 @@ class AJAXController extends AbstractController
         } catch (NoResultException $e) {
             $rack = null;
         }
-        
+
         if ((null !== $vialID)&&(! $vial instanceof Vial)) {
             return new Response('The vial ' . sprintf("%06d",$vialID) . ' does not exist', 404);
         } elseif (!($securityContext->isGranted('ROLE_ADMIN') || $securityContext->isGranted('VIEW', $vial))) {
@@ -241,7 +241,7 @@ class AJAXController extends AbstractController
         } catch (NoResultException $e) {
             $entity = null;
         }
-        
+
         $status = '<div class="status">';
         if ($entity instanceof Vial) {
             if ($entity->isTrashed()) {

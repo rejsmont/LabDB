@@ -57,7 +57,7 @@ class ObjectManager extends ObjectManagerDecorator
      * @var \VIB\SecurityBundle\Bridge\Doctrine\AclFilter
      */
     protected $aclFilter;
-    
+
     /**
      * Construct ObjectManager
      *
@@ -75,7 +75,7 @@ class ObjectManager extends ObjectManagerDecorator
         $this->userProvider = $userProvider;
         $this->aclProvider = $aclProvider;
         $this->aclFilter = $aclFilter;
-        
+
     }
 
     /**
@@ -107,7 +107,7 @@ class ObjectManager extends ObjectManagerDecorator
             $aclProvider->updateAcl($acl);
         }
     }
-    
+
     /**
      * Delete ACL for object(s)
      *
@@ -153,47 +153,50 @@ class ObjectManager extends ObjectManagerDecorator
 
         return null;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function getRepository($className)
     {
         $repository = $this->wrapped->getRepository($className);
-        
+
         if (! $repository instanceof EntityRepository) {
             throw new \ErrorException('Repository must be an instance of VIB\CoreBundle\Repository\EntityRepository');
         } else {
             $repository->setAclFilter($this->aclFilter);
         }
-        
+
         return $repository;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function find($className, $id, $options = array())
     {
         $repository = $this->getRepository($className);
+
         return $repository->getEntity($id, $options);
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function findAll($className, $options = array())
     {
         $repository = $this->getRepository($className);
+
         return $repository->getList($options);
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function countAll($className, $options = array())
     {
         $repository = $this->getRepository($className);
+
         return $repository->getListCount($options);
     }
 }

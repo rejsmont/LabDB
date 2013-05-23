@@ -41,7 +41,7 @@ class AclWalker extends SqlWalker
     {
         $sql = parent::walkFromClause($fromClause);
         $aclMetadata = $this->getQuery()->getHint('acl.metadata');
-        
+
         if ($aclMetadata) {
             foreach ($aclMetadata as $key => $metadata) {
                 $alias = $metadata['alias'];
@@ -49,14 +49,14 @@ class AclWalker extends SqlWalker
                 $table = $metadata['table'];
                 $tableAlias = $this->getSQLTableAlias($table, $alias);
                 $aclAlias = 'ta' . $key . '_';
-                                
+
                 $aclSql = <<<ACL_SQL
 INNER JOIN ({$query}) {$aclAlias} ON {$tableAlias}.id = {$aclAlias}.id
 ACL_SQL;
                 $sql .= ' ' . $aclSql;
             }
         }
-        
+
         return $sql;
     }
 

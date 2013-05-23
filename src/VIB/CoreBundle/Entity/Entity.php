@@ -51,7 +51,7 @@ class Entity
     {
         return $this->id;
     }
-    
+
     /**
      * Return string representation of Entity
      *
@@ -59,6 +59,6 @@ class Entity
      */
     public function __toString()
     {
-        return (string)$this->getId();
+        return (string) $this->getId();
     }
 }

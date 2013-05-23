@@ -77,11 +77,11 @@ class PrintingExtension extends \Twig_Extension
                 $ipp->setHost($host);
                 $ipp->setPrinterURI($queue);
                 $ipp->getPrinterAttributes();
-                
+
                 return (implode('\n',$ipp->status) == 'successfull-ok');
             } catch (IPPException $e) {}
         }
-        
+
         return false;
     }
 

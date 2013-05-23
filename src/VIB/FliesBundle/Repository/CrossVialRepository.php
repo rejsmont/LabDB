@@ -31,25 +31,24 @@ class CrossVialRepository extends VialRepository
      * @var $manager VIB\CoreBundle\Doctrine\ObjectManager
      */
     private $manager;
-    
-    
+
     /**
      * Find similar crosses
-     * 
+     *
      * @param CrossVial $cross
      */
     public function findSimilar($cross)
     {
         $options = array();
         $options['filter'] = 'all';
-        
+
         $startDate = clone $cross->getSetupDate();
         $stopDate = clone $cross->getSetupDate();
         $startDate->sub(new \DateInterval('P2W'));
         $stopDate->add(new \DateInterval('P2W'));
-        
+
         $owner = $this->manager->getOwner($cross);
-        
+
         $qb = $this->getListQueryBuilder($options);
         $qb->andWhere('e.maleName = :male_name')
            ->andWhere('e.virginName = :virgin_name')
@@ -61,10 +60,10 @@ class CrossVialRepository extends VialRepository
            ->setParameter('virgin_name', $cross->getUnformattedVirginName())
            ->setParameter('start_date', $startDate->format('Y-m-d'))
            ->setParameter('stop_date', $stopDate->format('Y-m-d'));
-        
+
         return $this->aclFilter->apply($qb, array('OWNER'), $owner)->getResult();
     }
-    
+
     /**
      * Search stocks
      *
@@ -87,13 +86,14 @@ class CrossVialRepository extends VialRepository
 
         return $query;
     }
-    
+
     /**
      * Set the object manager service
-     * 
+     *
      * @param VIB\CoreBundle\Doctrine\ObjectManager
      */
-    public function setManager(\VIB\CoreBundle\Doctrine\ObjectManager $manager) {
+    public function setManager(\VIB\CoreBundle\Doctrine\ObjectManager $manager)
+    {
         $this->manager = $manager;
     }
 }

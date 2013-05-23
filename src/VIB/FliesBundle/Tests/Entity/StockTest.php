@@ -22,10 +22,9 @@ use VIB\FliesBundle\Entity\Stock;
 use VIB\FliesBundle\Entity\StockVial;
 use VIB\FliesBundle\Entity\CrossVial;
 
-
 class StockTest extends \PHPUnit_Framework_TestCase
 {
-    
+
     /**
      * @dataProvider stockProvider
      */
@@ -48,7 +47,7 @@ class StockTest extends \PHPUnit_Framework_TestCase
      * @dataProvider stockProvider
      */
     public function testName($stock)
-    {        
+    {
         $this->assertEmpty($stock->getName());
         $stock->setName('test');
         $this->assertEquals('test', $stock->getName());
@@ -146,10 +145,11 @@ class StockTest extends \PHPUnit_Framework_TestCase
         $stock->setSourceCross($cross);
         $this->assertEquals($cross, $stock->getSourceCross());
     }
-    
+
     public function stockProvider()
     {
         $stock = new Stock();
+
         return array(array($stock));
     }
 }

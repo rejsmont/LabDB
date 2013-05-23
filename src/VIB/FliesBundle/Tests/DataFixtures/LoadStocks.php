@@ -27,7 +27,6 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\FliesBundle\Entity\Stock;
 
-
 class LoadStocks extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
 
@@ -43,21 +42,21 @@ class LoadStocks extends AbstractFixture implements OrderedFixtureInterface, Con
     {
         $this->container = $container;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
         $manager = $this->container->get('vib.doctrine.manager');
-        
+
         $user_acl = array(
             array('identity' => $this->getReference('user'),
                   'permission' => MaskBuilder::MASK_OWNER),
             array('identity' => 'ROLE_USER',
                   'permission' => MaskBuilder::MASK_VIEW)
         );
-        
+
         $stock_1 = new Stock();
         $stock_1->setName('stock 1');
         $stock_1->setGenotype('yw');
@@ -66,7 +65,7 @@ class LoadStocks extends AbstractFixture implements OrderedFixtureInterface, Con
         $manager->createACL($stock_1, $user_acl);
         $manager->createACL($stock_1->getVials(), $user_acl);
         $this->addReference('stock_1', $stock_1);
-        
+
         $stock_2 = new Stock();
         $stock_2->setName('stock 2');
         $stock_2->setGenotype('yw;Sp/CyO');
@@ -75,14 +74,14 @@ class LoadStocks extends AbstractFixture implements OrderedFixtureInterface, Con
         $manager->createACL($stock_2, $user_acl);
         $manager->createACL($stock_2->getVials(), $user_acl);
         $this->addReference('stock_2', $stock_2);
-        
+
         $admin_acl = array(
             array('identity' => $this->getReference('admin'),
                   'permission' => MaskBuilder::MASK_OWNER),
             array('identity' => 'ROLE_USER',
                   'permission' => MaskBuilder::MASK_VIEW)
         );
-        
+
         $stock_3 = new Stock();
         $stock_3->setName('stock 3');
         $stock_3->setGenotype('yw;;Tm2/Tm6');
@@ -91,7 +90,7 @@ class LoadStocks extends AbstractFixture implements OrderedFixtureInterface, Con
         $manager->createACL($stock_3, $admin_acl);
         $manager->createACL($stock_3->getVials(), $admin_acl);
         $this->addReference('stock_3', $stock_3);
-        
+
         $stock_4 = new Stock();
         $stock_4->setName('stock 4');
         $stock_4->setGenotype('yw/Fm7');
@@ -101,7 +100,7 @@ class LoadStocks extends AbstractFixture implements OrderedFixtureInterface, Con
         $manager->createACL($stock_4->getVials(), $admin_acl);
         $this->addReference('stock_4', $stock_4);
     }
-    
+
     /**
      * {@inheritDoc}
      */

@@ -23,14 +23,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use VIB\FliesBundle\Doctrine\CrossVialManager;
 use VIB\FliesBundle\Entity\CrossVial;
 
-
 class CrossVialManagerTest extends \PHPUnit_Framework_TestCase
 {
     private $om;
     private $aclProvider;
     private $userProvider;
     private $entityManager;
-    
+
     /**
      * @dataProvider crossProvider
      */
@@ -40,7 +39,7 @@ class CrossVialManagerTest extends \PHPUnit_Framework_TestCase
         $this->om->markSterile($crosses);
         $this->assertEquals('sterile',$cross->getOutcome());
     }
-    
+
     /**
      * @dataProvider crossProvider
      */
@@ -50,7 +49,7 @@ class CrossVialManagerTest extends \PHPUnit_Framework_TestCase
         $this->om->markSuccessful($crosses);
         $this->assertEquals('successful',$cross->getOutcome());
     }
-    
+
     /**
      * @dataProvider crossProvider
      */
@@ -60,7 +59,7 @@ class CrossVialManagerTest extends \PHPUnit_Framework_TestCase
         $this->om->markFailed($crosses);
         $this->assertEquals('failed',$cross->getOutcome());
     }
-    
+
     protected function setUp()
     {
         $this->entityManager = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
@@ -75,13 +74,14 @@ class CrossVialManagerTest extends \PHPUnit_Framework_TestCase
         $this->om = new CrossVialManager($mr, $this->userProvider, $this->aclProvider, $this->aclFilter);
 
     }
-    
+
     public function crossProvider()
     {
         $cross = new CrossVial();
-        
+
         $collection = new ArrayCollection();
         $collection->add($cross);
+
         return array(
           array($cross, $cross),
           array($collection, $cross),

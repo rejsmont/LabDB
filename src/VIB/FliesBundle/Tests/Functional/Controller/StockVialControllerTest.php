@@ -32,7 +32,7 @@ class StockVialControllerTest extends WebTestCase
         $this->assertEquals(1, $crawler->filter(
                 'tbody > tr:first-child > td:contains("stock 4")')->count());
     }
-    
+
     public function testExpand()
     {
         $client = $this->getAuthenticatedClient();
@@ -41,7 +41,7 @@ class StockVialControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(6, $crawler->filter('.modal-body label')->count());
     }
-    
+
     public function testSelect()
     {
         $client = $this->getAuthenticatedClient();
@@ -49,7 +49,7 @@ class StockVialControllerTest extends WebTestCase
         $client->request('GET', '/secure/stocks/vials/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
-    
+
     public function testCreate()
     {
         $client = $this->getAuthenticatedClient();
@@ -58,7 +58,7 @@ class StockVialControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(12, $crawler->filter('.modal-body label')->count());
     }
-    
+
     public function testCreateSubmitOne()
     {
         $client = $this->getAuthenticatedClient();
@@ -74,7 +74,7 @@ class StockVialControllerTest extends WebTestCase
         $result = $client->followRedirect();
         $this->assertEquals(1, $result->filter('.input-text a:contains("stock 4")')->count());
     }
-    
+
     public function testCreateSubmitMany()
     {
         $client = $this->getAuthenticatedClient();
@@ -90,7 +90,7 @@ class StockVialControllerTest extends WebTestCase
         $result = $client->followRedirect();
         $this->assertEquals(3, $result->filter('td:contains("stock 1")')->count());
     }
-    
+
     public function testCreateSubmitError()
     {
         $client = $this->getAuthenticatedClient();
@@ -100,22 +100,22 @@ class StockVialControllerTest extends WebTestCase
         $form = $crawler->selectButton('Save')->form();
         $form['stockvial_new[vial][stock]'] = '';
         $form['stockvial_new[number]'] = 0;
-        
-        $result = $client->submit($form);        
+
+        $result = $client->submit($form);
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $result->filter('span:contains("Stock must be specified")')->count());
         $this->assertEquals(1, $result->filter('span:contains("This value should be 1 or more.")')->count());
     }
-    
+
     public function testShow()
     {
         $client = $this->getAuthenticatedClient();
-        
+
         $crawler_5 = $client->request('GET', '/secure/stocks/vials/show/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(0, $crawler_5->filter('html:contains("Stock vial 000005")')->count());
     }
-    
+
     public function testShowNotFound()
     {
         $client = $this->getAuthenticatedClient();
@@ -124,31 +124,31 @@ class StockVialControllerTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
-    
+
     public function testEdit()
     {
         $client = $this->getAuthenticatedClient();
-        
+
         $crawler_5 = $client->request('GET', '/secure/stocks/vials/edit/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(0, $crawler_5->filter('html:contains("Edit stock vial 000005")')->count());
     }
-    
+
     public function testEditSubmit()
     {
         $client = $this->getAuthenticatedClient();
-        
+
         $crawler = $client->request('GET', '/secure/stocks/vials/edit/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['stockvial[notes]'] = 'This is a test note.';
-        
-        $client->submit($form);        
+
+        $client->submit($form);
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
         $result = $client->followRedirect();
         $this->assertEquals(1, $result->filter('span.input-text:contains("This is a test note.")')->count());
     }
-    
+
     public function testEditNotFound()
     {
         $client = $this->getAuthenticatedClient();
@@ -157,7 +157,7 @@ class StockVialControllerTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
-    
+
     public static function tearDownAfterClass()
     {
         $client = static::createClient();
@@ -171,7 +171,7 @@ class StockVialControllerTest extends WebTestCase
         }
         $vm->flush();
     }
-    
+
     protected function getAuthenticatedClient()
     {
         return static::createClient(array(), array(

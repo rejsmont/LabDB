@@ -33,57 +33,61 @@ class EntityRepository extends BaseEntityRepository
      * @var $aclFilter VIB\SecurityBundle\Bridge\Doctrine\AclFilter
      */
     protected $aclFilter;
-    
-    
+
     /**
-     * 
-     * @param array $options
+     *
+     * @param  array                                  $options
      * @return Doctrine\Common\Collections\Collection
      */
-    public function getList($options = array()) {
+    public function getList($options = array())
+    {
         return $this->getListQuery($options)->getResult();
     }
-    
+
     /**
-     * 
-     * @param array $options
+     *
+     * @param  array              $options
      * @return Doctrine\ORM\Query
      */
-    public function getListQuery($options = array()) {
+    public function getListQuery($options = array())
+    {
         $qb = $this->getListQueryBuilder($options);
         $permissions = isset($options['permissions']) ? $options['permissions'] : array();
         $user = isset($options['user']) ? $options['user'] : null;
         if (false === $permissions) {
-            return $qb->getQuery(); 
+            return $qb->getQuery();
         } else {
             return $this->aclFilter->apply($qb, $permissions, $user);
         }
     }
-    
+
     /**
-     * 
-     * @param array $options
+     *
+     * @param  array                     $options
      * @return Doctrine\ORM\QueryBuilder
      */
-    protected function getListQueryBuilder($options = array()) {
+    protected function getListQueryBuilder($options = array())
+    {
         return $this->createQueryBuilder('e');
     }
-    
+
     /**
-     * 
-     * @param array $options
+     *
+     * @param  array   $options
      * @return integer
      */
-    public function getListCount($options = array()) {
+    public function getListCount($options = array())
+    {
         return $this->getCountQuery($options)->getSingleScalarResult();
     }
-    
+
     /**
-     * 
-     * @param array $options
+     *
+     * @param  array   $options
      * @return integer
      */
-    public function getCountQuery($options = array()) {
+    public function getCountQuery($options = array())
+    {
         $qb = $this->getCountQueryBuilder($options);
         $permissions = isset($options['permissions']) ? $options['permissions'] : null;
         $user = isset($options['user']) ? $options['user'] : null;
@@ -93,44 +97,47 @@ class EntityRepository extends BaseEntityRepository
             return $this->aclFilter->apply($qb, $permissions, $user);
         }
     }
-    
+
     /**
-     * 
-     * @param array $options
+     *
+     * @param  array                     $options
      * @return Doctrine\ORM\QueryBuilder
      */
-    protected function getCountQueryBuilder($options = array()) {
+    protected function getCountQueryBuilder($options = array())
+    {
         return $this->createQueryBuilder('e')
                 ->select('count(e.id)');
     }
-        
+
     /**
-     * 
-     * @param array $options
+     *
+     * @param  array                     $options
      * @return Doctrine\ORM\QueryBuilder
      */
-    public function getEntity($id, $options = array()) {
+    public function getEntity($id, $options = array())
+    {
         return $this->getEntityQueryBuilder($id, $options)->getQuery()->getSingleResult();
     }
-    
+
     /**
-     * 
-     * @param array $options
+     *
+     * @param  array                     $options
      * @return Doctrine\ORM\QueryBuilder
      */
-    protected function getEntityQueryBuilder($id, $options = array()) {
+    protected function getEntityQueryBuilder($id, $options = array())
+    {
         return $this->createQueryBuilder('e')
                 ->where('e.id = :id')
                 ->setParameter('id', $id);
     }
-    
-    
+
     /**
      * Set the ACL filter service
-     * 
+     *
      * @param VIB\SecurityBundle\Bridge\Doctrine\AclFilter
      */
-    public function setAclFilter(AclFilter $aclFilter) {
+    public function setAclFilter(AclFilter $aclFilter)
+    {
         $this->aclFilter = $aclFilter;
     }
 }
