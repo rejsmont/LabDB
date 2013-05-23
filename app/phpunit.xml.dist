@@ -23,6 +23,7 @@
     <php>
         <env name="BOOTSTRAP_CLEAR_CACHE_ENV" value="test"/>
         <env name="BOOTSTRAP_DROP_DB_ENV" value="test"/>
+        <env name="BOOTSTRAP_TEST_ENV" value="test"/>
         <env name="BOOTSTRAP_CREATE_DB_ENV" value="test"/>
         <env name="BOOTSTRAP_LOAD_FIXTURES_ENV" value="test"/>
     </php>

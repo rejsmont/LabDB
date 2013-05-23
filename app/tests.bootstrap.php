@@ -24,6 +24,14 @@ if (false !== ($env = getenv('BOOTSTRAP_CLEAR_CACHE_ENV'))) {
     ));
 }
 
+if (false !== ($env = getenv('BOOTSTRAP_TEST_ENV'))) {
+    passthru(sprintf(
+        'php "%s/console" test:bootstrap --env=%s',
+        __DIR__,
+        $env
+    ));
+}
+
 if (false !== ($env = getenv('BOOTSTRAP_DROP_DB_ENV'))) {
     passthru(sprintf(
         'php "%s/console" doctrine:schema:drop --force --env=%s',

@@ -11,6 +11,7 @@ cp app/config/parameters.default.yml app/config/parameters.yml
 cp app/config/security.form.yml app/config/security.yml
 curl -s https://getcomposer.org/installer | php
 composer.phar install
+app/console test:bootstrap
 app/console assetic:dump
 ```
 
