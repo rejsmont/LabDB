@@ -55,13 +55,13 @@ class AJAXController extends Controller
         }
         $found = $qb->getQuery()->getResult();
 
-        $stockNames = array();
-        foreach ($found as $stock) {
-            $stockNames[] = $stock->getName();
+        $options = array();
+        foreach ($found as $entity) {
+            $options[] = $entity->getName();
         }
 
         $response = new JsonResponse();
-        $response->setData(array('options' => $stockNames));
+        $response->setData(array('options' => $options));
 
         return $response;
     }

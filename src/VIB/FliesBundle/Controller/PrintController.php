@@ -55,7 +55,7 @@ class PrintController extends Controller
     /**
      * Autoprint panel
      *
-     * @Route("/ajax/autoprint/")
+     * @Route("/_ajax/autoprint/")
      * @Method("POST")
      * 
      * @return Symfony\Component\HttpFoundation\Response
@@ -74,7 +74,7 @@ class PrintController extends Controller
     /**
      * Autoprint panel
      *
-     * @Route("/ajax/labelmode/")
+     * @Route("/_ajax/labelmode/")
      * @Method("POST")
      *
      * @return Symfony\Component\HttpFoundation\Response

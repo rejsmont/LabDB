@@ -20,22 +20,16 @@ namespace VIB\FliesBundle\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class PrintControllerTest extends WebTestCase
+class CalendarControllerTest extends WebTestCase
 {
-    public function testSetAutoprint()
+    public function testCalendar()
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('POST', '/secure/_ajax/autoprint/', array('setting' => 'enabled'));
-        $this->assertTrue($client->getResponse()->isSuccessful());
-    }
-    
-    public function testSetLabelMode()
-    {
-        $client = $this->getAuthenticatedClient();
-
-        $client->request('POST', '/secure/_ajax/labelmode/', array('labelmode' => 'std'));
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $client->request('GET', '/secure/_ajax/choices/VIB%5CFliesBundle%5CEntity%5CStock/genotype?query=CyO');
+        $response = $client->getResponse();
+        $this->assertTrue($response->isSuccessful());
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
     }
     
     protected function getAuthenticatedClient()

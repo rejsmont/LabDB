@@ -38,7 +38,7 @@ use VIB\FliesBundle\Entity\RackPosition;
 /**
  * Description of AJAXController
  *
- * @Route("/ajax")
+ * @Route("/_ajax")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
