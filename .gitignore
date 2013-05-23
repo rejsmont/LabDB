@@ -36,3 +36,4 @@ app/config/security.yml
 # ignore files dumped by assetic
 web/css
 web/js
+/app/Resources/db/test.db
