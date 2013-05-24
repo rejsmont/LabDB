@@ -30,7 +30,7 @@ class VialControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(6, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
-                'tbody > tr:first-child > td:contains("yw ☿ ✕ yw; Sp / CyO ♂")')->count());
+                'tbody > tr:first-child > td:contains("test ➔ stock 4")')->count());
     }
 
     public function testListTrashed()
@@ -63,7 +63,7 @@ class VialControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(8, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
-                'tbody > tr:first-child > td:contains("yw ☿ ✕ yw; Sp / CyO ♂")')->count());
+                'tbody > tr:first-child > td:contains("test ➔ stock 4")')->count());
     }
 
     public function testListAll()
@@ -74,7 +74,7 @@ class VialControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(10, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
-                'tbody > tr:first-child > td:contains("yw ☿ ✕ yw; Sp / CyO ♂")')->count());
+                'tbody > tr:first-child > td:contains("test ➔ stock 4")')->count());
     }
 
     public function testExpand()
