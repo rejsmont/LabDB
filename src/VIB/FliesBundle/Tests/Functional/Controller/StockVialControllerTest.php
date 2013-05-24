@@ -163,7 +163,7 @@ class StockVialControllerTest extends WebTestCase
         $client = static::createClient();
         $vm = $client->getContainer()->get('vib.doctrine.vial_manager');
         $repository = $vm->getRepository('VIB\FliesBundle\Entity\StockVial');
-        $qb = $repository->createQueryBuilder('v')->where('v.id > 8');
+        $qb = $repository->createQueryBuilder('v')->where('v.id > 10');
         $vials = $qb->getQuery()->getResult();
         foreach ($vials as $vial) {
             $vm->removeACL($vial);

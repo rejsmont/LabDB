@@ -28,7 +28,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/vials/');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(4, $crawler->filter('tbody > tr')->count());
+        $this->assertEquals(6, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
                 'tbody > tr:first-child > td:contains("yw ☿ ✕ yw; Sp / CyO ♂")')->count());
     }
@@ -61,7 +61,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/vials/list/public');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(6, $crawler->filter('tbody > tr')->count());
+        $this->assertEquals(8, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
                 'tbody > tr:first-child > td:contains("yw ☿ ✕ yw; Sp / CyO ♂")')->count());
     }
@@ -72,7 +72,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/vials/list/all');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(8, $crawler->filter('tbody > tr')->count());
+        $this->assertEquals(10, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
                 'tbody > tr:first-child > td:contains("yw ☿ ✕ yw; Sp / CyO ♂")')->count());
     }
@@ -186,7 +186,7 @@ class VialControllerTest extends WebTestCase
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
         $result = $client->followRedirect();
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(1, $result->filter('td:contains("stock 4")')->count());
+        $this->assertEquals(3, $result->filter('td:contains("stock 4")')->count());
     }
 
     public function testSelectTrash()
@@ -321,7 +321,7 @@ class VialControllerTest extends WebTestCase
         $client = static::createClient();
         $vm = $client->getContainer()->get('vib.doctrine.vial_manager');
         $repository = $vm->getRepository('VIB\FliesBundle\Entity\Vial');
-        $qb = $repository->createQueryBuilder('v')->where('v.id > 8');
+        $qb = $repository->createQueryBuilder('v')->where('v.id > 10');
         $vials = $qb->getQuery()->getResult();
         foreach ($vials as $vial) {
             $vm->removeACL($vial);

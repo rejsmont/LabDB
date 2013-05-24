@@ -117,8 +117,8 @@ class CrossVialControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/secure/crosses/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
-        $form['crossvial_new[vial][virgin]'] = '10';
-        $form['crossvial_new[vial][male]'] = '11';
+        $form['crossvial_new[vial][virgin]'] = '12';
+        $form['crossvial_new[vial][male]'] = '13';
 
         $result = $client->submit($form);
         $this->assertTrue($client->getResponse()->isSuccessful());
@@ -135,17 +135,17 @@ class CrossVialControllerTest extends WebTestCase
         $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
         $values['select']['action'] = 'marksterile';
-        $values['select']['items'][0] = 10;
+        $values['select']['items'][0] = 12;
 
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
         $result = $client->followRedirect();
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(0, $result->filter('td:contains("000010")')->count());
+        $this->assertEquals(0, $result->filter('td:contains("000012")')->count());
 
         $crawler_trashed = $client->request('GET', '/secure/crosses/list/trashed');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(1, $crawler_trashed->filter('td:contains("000010")')->count());
+        $this->assertEquals(1, $crawler_trashed->filter('td:contains("000012")')->count());
         $this->assertEquals(1, $crawler_trashed->filter('td i.icon-remove-circle')->count());
     }
 
@@ -158,8 +158,8 @@ class CrossVialControllerTest extends WebTestCase
         $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
         $values['select']['action'] = 'marksuccessful';
-        $values['select']['items'][0] = 11;
-        $values['select']['items'][1] = 12;
+        $values['select']['items'][0] = 13;
+        $values['select']['items'][1] = 14;
 
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
@@ -177,7 +177,7 @@ class CrossVialControllerTest extends WebTestCase
         $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
         $values['select']['action'] = 'markfailed';
-        $values['select']['items'][0] = 13;
+        $values['select']['items'][0] = 15;
 
         $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
@@ -191,7 +191,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/stats/10');
+        $crawler = $client->request('GET', '/secure/crosses/stats/12');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler
                 ->filter('a.control-label:contains("Total crosses") + div > span > strong:contains("6")')
@@ -260,7 +260,7 @@ class CrossVialControllerTest extends WebTestCase
         $client = static::createClient();
         $vm = $client->getContainer()->get('vib.doctrine.vial_manager');
         $repository = $vm->getRepository('VIB\FliesBundle\Entity\CrossVial');
-        $qb = $repository->createQueryBuilder('v')->where('v.id > 8');
+        $qb = $repository->createQueryBuilder('v')->where('v.id > 10');
         $vials = $qb->getQuery()->getResult();
         foreach ($vials as $vial) {
             $vm->removeACL($vial);

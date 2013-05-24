@@ -45,6 +45,7 @@ class InjectionVial extends Vial implements AltLabelInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Serializer\Expose
+     * @Assert\NotBlank(message = "Construct name must be specified")
      *
      * @var string
      */
@@ -53,6 +54,7 @@ class InjectionVial extends Vial implements AltLabelInterface
     /**
      * @ORM\ManyToOne(targetEntity="Stock")
      * @Serializer\Expose
+     * @Assert\NotBlank(message = "Target stock must be specified")
      */
     protected $targetStock;
     
