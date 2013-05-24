@@ -54,6 +54,9 @@ class InjectionVialType extends AbstractType
                                              'Cre RMCE' => 'Cre RMCE'),
                         'label'     => 'Injection type',
                         'attr'      => array('class' => 'input-text')))
+                ->add('constructName', 'text', array(
+                        'label' => 'Construct name',
+                        'required' => true))
                 ->add('targetStock', 'entity_typeahead', array(
                         'property'  => 'name',
                         'class'     => 'VIBFliesBundle:Stock',

@@ -34,6 +34,26 @@
        data-link="{{ path('vib_flies_ajax_rackvialremove') }}">Remove</a>
   {% endif %}
 </div>
+{% elseif type == 'injectionvial' %}
+<p>
+  <strong>{{ entity.name }}</strong><br/>
+  {{ entity.targetStock.genotype }}
+  {% if entity.targetStock.verified %}
+    <i class="icon-ok text-success"></i>
+  {% endif %}
+</p>
+{{ s.idates(entity) }}
+<div class="popover-foot">
+  {{ s.user(owner) }}
+  <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_injectionvial_show',{'id': entity.id }) }}">Show</a>
+  {% if (is_granted('ROLE_ADMIN') or is_granted('EDIT',entity)) and rack == 0 %}
+    <a class="btn btn-mini" href="{{ path('vib_flies_injectionvial_edit',{'id': entity.id }) }}">Edit</a>
+  {% elseif rack > 0 %}
+    <a class="btn btn-mini btn-danger" href="#"
+       onclick="removeVial(this,{{ entity.id }},{{ rack }})"
+       data-link="{{ path('vib_flies_ajax_rackvialremove') }}">Remove</a>
+  {% endif %}
+</div>
 {% elseif type == 'vial' %}
 {{ s.dates(entity) }}
 <div class="popover-foot">
@@ -79,6 +99,14 @@
 <table class="table-plain"><tbody>
   <tr><th>Setup&nbsp;date</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
   <tr><th>{{ checkLabel }}&nbsp;date</th><td>{{ entity.realFlipDate | date("d-m-Y") }}</td></tr>
+  <tr><th>Location</th><td>{{ entity.location }}</td></tr>
+</tbody></table>
+{% endmacro %}
+
+{% macro idates(entity,checkLabel = 'Flip') %}
+<table class="table-plain"><tbody>
+  <tr><th>Injection&nbsp;date</th><td>{{ entity.setupDate | date("d-m-Y") }}</td></tr>
+  <tr><th>Check&nbsp;date</th><td>{{ entity.realFlipDate | date("d-m-Y") }}</td></tr>
   <tr><th>Location</th><td>{{ entity.location }}</td></tr>
 </tbody></table>
 {% endmacro %}

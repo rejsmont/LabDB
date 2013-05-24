@@ -18,9 +18,11 @@
            value="{{ entity.id }}" {{ checked }} /></td>
 {% endif %}
 <td>{{ l.link(entity, 'vib_flies_injectionvial_show', false, null, 'vial') }}</td>
+<td>{{ entity.constructName }}</td>
+<td>{{ l.link(entity.targetStock, 'vib_flies_stock_show', false, null, 'stock') }}</td>
+<td>{{ entity.injectionType }}</td>
 <td class="dates">
   <div>{{ entity.setupDate | date("d‑m‑Y") }}</div>
   <div>{{ entity.realFlipDate | date("d‑m‑Y") }}</div>
 </td>
-<td>{{ l.link(entity.parent, 'vib_flies_injectionvial_show', true, null, 'vial') }}</td>
 <td>{{ status.vial(entity) }}</td>

@@ -20,6 +20,8 @@
       {{ l.link(entity.stock, 'vib_flies_stock_show', true, null, 'stock') }}
     {% elseif entity.type == 'cross' %}
       {{ l.link(entity, 'vib_flies_crossvial_show', true, entity.name, 'vial') }}
+    {% elseif entity.type == 'injection' %}
+      {{ l.link(entity, 'vib_flies_injectionvial_show', true, entity.name, 'vial') }}
     {% endif %}{% endspaceless %}</td>
 <td class="dates">
   <div>{{ entity.setupDate | date("d‑m‑Y") }}</div>

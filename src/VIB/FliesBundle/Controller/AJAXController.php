@@ -31,6 +31,7 @@ use VIB\CoreBundle\Controller\AbstractController;
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\StockVial;
 use VIB\FliesBundle\Entity\CrossVial;
+use VIB\FliesBundle\Entity\InjectionVial;
 use VIB\FliesBundle\Entity\Stock;
 use VIB\FliesBundle\Entity\Rack;
 use VIB\FliesBundle\Entity\RackPosition;
@@ -273,6 +274,9 @@ class AJAXController extends AbstractController
                 $etype = "Cross";
             } elseif (($entity instanceof StockVial)&&(null !== $entity->getStock())) {
                 $type  = "stockvial";
+            } elseif (($entity instanceof InjectionVial)&&(null !== $entity->getTargetStock())) {
+                $type  = "injectionvial";
+                $etype = "Injection";
             }
         } elseif ($entity instanceof Stock) {
             $vials = count($entity->getLivingVials());

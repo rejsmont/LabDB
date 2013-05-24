@@ -43,6 +43,14 @@ class InjectionVial extends Vial implements AltLabelInterface
     protected $injectionType;
     
     /**
+     * @ORM\Column(type="string", length=255)
+     * @Serializer\Expose
+     *
+     * @var string
+     */
+    protected $constructName;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Stock")
      * @Serializer\Expose
      */
@@ -95,9 +103,9 @@ class InjectionVial extends Vial implements AltLabelInterface
      */
     public function __construct(Vial $template = null, $flip = false)
     {
-        parent::__construct($template, $flip);
         $this->injectionType = 'phiC31';
         $this->embryoCount = 0;
+        parent::__construct($template, $flip);
     }
     
     /**
@@ -108,19 +116,13 @@ class InjectionVial extends Vial implements AltLabelInterface
         parent::inheritFromTemplate($template);
         if ($template instanceof InjectionVial) {
             $this->setInjectionType($template->getInjectionType());
+            $this->setConstructName($template->getConstructName());
             $this->setTargetStock($template->getTargetStock());
             $this->setTargetStockVial($template->getTargetStockVial());
+            $this->setEmbryoCount($template->getEmbryoCount());
             $this->setVendor($template->getVendor());
             $this->setOrderNo($template->getOrderNo());
         }
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function getLabelText()
-    {
-        return parent::getLabelText();
     }
 
     /**
@@ -128,9 +130,21 @@ class InjectionVial extends Vial implements AltLabelInterface
      */
     public function getAltLabelText()
     {
-        return parent::getLabelText();
+        $stock = $this->getTargetStock();
+        if (null !== $stock) {
+            return $this->getConstructName() . " ➔ " . $stock->getGenotype();
+        }
+        return $this->getLabelText();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->getConstructName() . " ➔ " . $this->getTargetStock();
+    }
+    
     /**
      * {@inheritdoc}
      */
@@ -139,8 +153,10 @@ class InjectionVial extends Vial implements AltLabelInterface
         parent::addChild($child);
         if ($child instanceof InjectionVial) {
             $child->setInjectionType($this->getInjectionType());
+            $child->setConstructName($this->getConstructName());
             $child->setTargetStock($this->getTargetStock());
             $child->setTargetStockVial($this->getTargetStockVial());
+            $child->setEmbryoCount($this->getEmbryoCount());
             $child->setVendor($this->getVendor());
             $child->setOrderNo($this->getOrderNo());
         }
@@ -154,8 +170,10 @@ class InjectionVial extends Vial implements AltLabelInterface
         parent::setParent($parent);
         if ($parent instanceof InjectionVial) {
             $this->setInjectionType($parent->getInjectionType());
+            $this->setConstructName($parent->getConstructName());
             $this->setTargetStock($parent->getTargetStock());
             $this->setTargetStockVial($parent->getTargetStockVial());
+            $this->setEmbryoCount($parent->getEmbryoCount());
             $this->setVendor($parent->getVendor());
             $this->setOrderNo($parent->getOrderNo());
         }
@@ -196,8 +214,25 @@ class InjectionVial extends Vial implements AltLabelInterface
     public function setInjectionType($injectionType) {
         $this->injectionType = $injectionType;
     }
+     
+    /**
+     * Get injection type
+     *
+     * @return string
+     */
+    public function getConstructName() {
+        return $this->constructName;
+    }
 
-        
+    /**
+     * Set injection type
+     *
+     * @param string $injectionType
+     */
+    public function setConstructName($constructName) {
+        $this->constructName = $constructName;
+    }
+    
     /**
      * Set target stock
      *

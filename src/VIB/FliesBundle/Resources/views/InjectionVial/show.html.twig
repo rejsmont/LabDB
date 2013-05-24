@@ -12,6 +12,9 @@
 {% block modal_body %}
   {{ s.row("Injection date", entity.setupDate | date("d F Y")) }}
   {{ s.row("Check date", entity.realFlipDate | date("d F Y")) }}
+  {{ s.row("Injection type", entity.injectionType) }}
+  {{ s.row("Construct name", entity.constructName) }}
+  {{ s.row("Target stock", entity.targetStock, 'vib_flies_stock_show', null, 'stock') }}
   <div class="control-group">
     <a class="control-label collapse-toggle" data-toggle="collapse" href="#more">
       <strong>More information</strong></a>
@@ -19,7 +22,21 @@
   <div id="more" class="collapse">
     {{ s.row("Location", entity.location) }}
     {{ s.user("Created by", owner) }}
+    {{ s.row("Embryo count", entity.embryoCount) }}
     {{ s.row("Notes", entity.notes) }}
+  </div>
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#vendor">
+      <strong>Vendor information</strong></a>
+  </div>
+  <div id="vendor" class="collapse">
+    {{ s.row("Vendor", entity.vendor) }}
+    {% if entity.receiptDate is not null %}
+    {{ s.row("Receipt date", entity.receiptDate | date("d F Y")) }}
+    {% else %}
+    {{ s.row("Receipt date", null) }}
+    {% endif %}
+    {{ s.row("Order number", entity.orderNo) }}
   </div>
   <div class="control-group">
     <a class="control-label collapse-toggle" data-toggle="collapse" href="#development">
@@ -35,6 +52,7 @@
       <strong>Vials and stocks</strong></a>
   </div>
   <div id="vials" class="collapse">
+    {{ s.row("Source vial", entity.targetStockVial, 'vib_flies_stockvial_show', null, 'vial') }}
     {{ s.row("Flipped from", entity.parent, 'vib_flies_crossvial_show', null, 'vial') }}
     {{ s.list("Flipped to", entity.children, 'vib_flies_crossvial_show', null, 'vial') }}
     {{ s.list("Crosses", entity.crosses, 'vib_flies_crossvial_show', null, 'vial') }}

@@ -32,8 +32,16 @@
           <li>
             <a href="{{ path('vib_flies_crossvial_list') }}">Crosses</a>
           </li>
-          <li>
-              <a href="{{ path('vib_flies_vial_list') }}">Vials</a>
+          <li class="dropdown last visible-desktop">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Vials <i class="caret"></i></a>
+            <ul class="dropdown-menu menu_level_1">
+              <li class="first">
+                <a href="{{ path('vib_flies_vial_list') }}">My vials</a>
+              </li>
+              <li>
+                <a href="{{ path('vib_flies_injectionvial_list') }}">My injections</a>
+              </li>              
+            </ul>
           </li>
           <li class="dropdown last visible-desktop">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <i class="caret"></i></a>
@@ -43,6 +51,7 @@
                 <ul class="dropdown-menu menu_level_2">
                   <li class="first"><a href="{{ path('vib_flies_stock_create') }}">Stock</a></li>
                   <li><a href="{{ path('vib_flies_crossvial_create') }}">Cross</a></li>
+                  <li><a href="{{ path('vib_flies_injectionvial_create') }}">Injection</a></li>
                   <li><a href="{{ path('vib_flies_rack_create') }}">Rack</a></li>
                 </ul>
               </li>
