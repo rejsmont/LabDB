@@ -150,10 +150,8 @@ function checkRackVial() {
                 position.html(response).removeClass('empty').removeClass('info').addClass('success')
                     .stop().css("background-color","")
                     .effect("highlight", {color: "green"}, 5000);
-                position.find('.popover-trigger').hover(function() {
-                  setupPopover($(this));
-                }, function() {
-                  clearTimeout($(this).data('timeout'));
+                position.find('.popover-trigger').hover(function(e) {
+                    popoverHover($(this), e);
                 });
                 if (emptyPositions.length > 1) {
                   var index = emptyPositions.index(position);
