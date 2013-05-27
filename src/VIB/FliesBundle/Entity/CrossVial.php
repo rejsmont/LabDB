@@ -296,6 +296,8 @@ class CrossVial extends Vial
         if ($this->male != null) {
             if (($this->male instanceof StockVial)&&($this->maleName == '')) {
                 $this->maleName = $this->male->getStock()->getGenotype();
+            } elseif (($this->male instanceof InjectionVial)&&($this->maleName == '')) {
+                $this->maleName = $this->male->getName();
             }
         } else {
             $this->maleName = '';
@@ -320,9 +322,12 @@ class CrossVial extends Vial
     public function setMaleName($maleName)
     {
         if ($this->male != null)
-            if (($this->male instanceof StockVial)&&($maleName == ''))
+            if (($this->male instanceof StockVial)&&($maleName == '')) {
                 $maleName = $this->male->getStock()->getGenotype();
-        $this->maleName = preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$maleName);
+            } elseif (($this->male instanceof InjectionVial)&&($maleName == '')) {
+                $maleName = $this->male->getName();
+            }
+        $this->maleName = preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '), $maleName);
     }
 
     /**
@@ -332,7 +337,7 @@ class CrossVial extends Vial
      */
     public function getMaleName()
     {
-        return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->maleName);
+        return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '), $this->maleName);
     }
 
     /**
@@ -368,6 +373,8 @@ class CrossVial extends Vial
         if ($this->virgin != null) {
             if (($this->virgin instanceof StockVial)&&($this->virginName == '')) {
                 $this->virginName = $this->virgin->getStock()->getGenotype();
+            } elseif (($this->virgin instanceof InjectionVial)&&($this->virginName == '')) {
+                $this->virginName = $this->virgin->getName();
             }
         } else {
             $this->virginName = '';
@@ -392,9 +399,12 @@ class CrossVial extends Vial
     public function setVirginName($virginName)
     {
         if ($this->virgin != null)
-            if (($this->virgin instanceof StockVial)&&($virginName == ''))
+            if (($this->virgin instanceof StockVial)&&($virginName == '')) {
                 $virginName = $this->virgin->getStock()->getGenotype();
-        $this->virginName = preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$virginName);
+            } elseif (($this->virgin instanceof InjectionVial)&&($virginName == '')) {
+                $virginName = $this->virgin->getName();
+            }
+        $this->virginName = preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '), $virginName);
     }
 
     /**
@@ -404,7 +414,7 @@ class CrossVial extends Vial
      */
     public function getVirginName()
     {
-        return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '),$this->virginName);
+        return preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '), $this->virginName);
     }
 
     /**

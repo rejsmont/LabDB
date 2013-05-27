@@ -21,6 +21,7 @@ namespace VIB\FliesBundle\Tests\Entity;
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\CrossVial;
 use VIB\FliesBundle\Entity\StockVial;
+use VIB\FliesBundle\Entity\InjectionVial;
 use VIB\FliesBundle\Entity\Stock;
 
 class CrossVialTest extends \PHPUnit_Framework_TestCase
@@ -186,6 +187,8 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
         $vial->setMale($male);
         if ($male instanceof StockVial) {
             $this->assertEquals($male->getStock()->getGenotype(), $vial->getMaleName());
+        } elseif ($male instanceof InjectionVial) {
+            $this->assertEquals($male->getName(), $vial->getMaleName());
         }
         $vial->setMaleName($maleName);
         $this->assertEquals($maleName, $vial->getMaleName());
@@ -220,6 +223,8 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
         $vial->setVirgin($virgin);
         if ($virgin instanceof StockVial) {
             $this->assertEquals($virgin->getStock()->getGenotype(), $vial->getVirginName());
+        } elseif ($virgin instanceof InjectionVial) {
+            $this->assertEquals($virgin->getName(), $vial->getVirginName());
         }
         $vial->setVirginName($virginName);
         $this->assertEquals($virginName, $vial->getVirginName());
@@ -298,13 +303,19 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
     public function crossParentNameProvider()
     {
         $stock = new Stock();
-        $stock->setGenotype('test stock');
+        $stock->setGenotype('test genotype');
+        $stock->setName('test stock');
         $stockVial = new StockVial();
         $stockVial->setStock($stock);
 
+        $injection = new InjectionVial();
+        $injection->setTargetStock($stock);
+        $injection->setConstructName('test');
+        
         return array(
             array(new FakeCrossVial(), null, 'test'),
-            array(new FakeCrossVial(), $stockVial, 'test male'),
+            array(new FakeCrossVial(), $stockVial, 'test parent'),
+            array(new FakeCrossVial(), $injection, 'test parent'),
             array(new FakeCrossVial(), new CrossVial(), 'test')
         );
     }
