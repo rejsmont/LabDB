@@ -31,7 +31,8 @@ class InjectionVialTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstruct($vial)
     {
-
+        $this->assertEquals(100, $vial->getEmbryoCount());
+        $this->assertEquals('phiC31', $vial->getInjectionType());
     }
 
     /**
@@ -90,6 +91,97 @@ class InjectionVialTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("injection", $vial->getType());
     }
 
+    /**
+     * @dataProvider vialProvider
+     */
+    public function testInjectionType($vial)
+    {
+        $this->assertEquals('phiC31',$vial->getInjectionType());
+        $vial->setInjectionType('');
+        $this->assertEmpty($vial->getInjectionType());
+        $vial->setInjectionType('p-element');
+        $this->assertEquals('p-element',$vial->getInjectionType());
+    }
+    
+    /**
+     * @dataProvider vialProvider
+     */
+    public function testConstructName($vial)
+    {
+        $this->assertEquals('construct',$vial->getConstructName());
+        $vial->setConstructName('');
+        $this->assertEmpty($vial->getConstructName());
+        $vial->setConstructName('test');
+        $this->assertEquals('test',$vial->getConstructName());
+    }
+    
+    /**
+     * @dataProvider vialProvider
+     */
+    public function testTargetStock($vial)
+    {
+        $this->assertInstanceOf('VIB\FliesBundle\Entity\Stock', $vial->getTargetStock());
+        $vial->setTargetStock(null);
+        $this->assertNull($vial->getTargetStock());
+        $stock = new Stock();
+        $vial->setTargetStock($stock);
+        $this->assertEquals($stock,$vial->getTargetStock());
+    }
+    
+    /**
+     * @dataProvider vialProvider
+     */
+    public function testTargetStockVial($vial)
+    {
+        $this->assertInstanceOf('VIB\FliesBundle\Entity\StockVial', $vial->getTargetStockVial());
+        $vial->setTargetStockVial(null);
+        $this->assertNull($vial->getTargetStockVial());
+        $this->assertNull($vial->getTargetStock());
+        $stock = new Stock();
+        $stockVial = new StockVial();
+        $stockVial->setStock($stock);
+        $vial->setTargetStockVial($stockVial);
+        $this->assertEquals($stock, $vial->getTargetStock());
+        $this->assertEquals($stockVial, $vial->getTargetStockVial());
+    }
+    
+    /**
+     * @dataProvider vialProvider
+     */
+    public function testReceiptDate($vial)
+    {
+        $date = new \DateTime('2000-01-01 00:00:00');
+        $vial->setReceiptDate($date);
+        $this->assertEquals($date, $vial->getReceiptDate());
+    }
+    
+    /**
+     * @dataProvider vialProvider
+     */
+    public function testVendor($vial)
+    {
+        $vial->setVendor($vendor = 'test');
+        $this->assertEquals($vendor, $vial->getVendor());
+    }
+    
+    /**
+     * @dataProvider vialProvider
+     */
+    public function testOrderNo($vial)
+    {
+        $vial->setOrderNo($orderNo = 'test');
+        $this->assertEquals($orderNo, $vial->getOrderNo());
+    }
+    
+    /**
+     * @dataProvider vialProvider
+     */
+    public function testEmbryoCount($vial)
+    {
+        $vial->setEmbryoCount($count = 200);
+        $this->assertEquals($count, $vial->getEmbryoCount());
+    }
+    
     /**
      * @dataProvider vialProvider
      */
