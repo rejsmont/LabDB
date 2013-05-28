@@ -111,26 +111,30 @@ class CrossVialController extends VialController
             if (! $temps->contains($temp)) {
                 $temps->add($temp);
             }
-            if ($vial->isSterile()) {
-                $sterile->add($vial);
-            } elseif ($vial->isSuccessful() === true) {
-                $success->add($vial);
-                foreach ($vial->getStocks() as $childStock) {
-                    if (! $stocks->contains($childStock)) {
-                        $stocks->add($childStock);
+            switch ($vial->getOutcome()) {
+                case 'successful':
+                    $success->add($vial);
+                    foreach ($vial->getStocks() as $childStock) {
+                        if (! $stocks->contains($childStock)) {
+                            $stocks->add($childStock);
+                        }
                     }
-                }
-                foreach ($vial->getCrosses() as $childCross) {
-                    if (! $crosses->contains($childCross)) {
-                        $crosses->add($childCross);
+                    foreach ($vial->getCrosses() as $childCross) {
+                        if (! $crosses->contains($childCross)) {
+                            $crosses->add($childCross);
+                        }
                     }
-                }
-            } elseif ($vial->isSuccessful() === false) {
-                $fail->add($vial);
-            } else {
-                $ongoing->add($vial);
+                    break;
+                case 'failed':
+                    $fail->add($vial);
+                    break;
+                case 'sterile':
+                    $sterile->add($vial);
+                    break;
+                default:
+                    $ongoing->add($vial);
+                    break;
             }
-
         }
 
         return array('cross' => $cross,

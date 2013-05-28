@@ -1,0 +1,100 @@
+{% extends "VIBFliesBundle:InjectionVial:show.html.twig" %}
+{% use "VIBSiteTemplateBundle:Show:modal.html.twig" %}
+{% import "VIBSiteTemplateBundle:Macros:show.html.twig" as s %}
+{% import 'VIBSiteTemplateBundle:Macros:status.html.twig' as status %}
+
+{% block modal_header %}
+  Injection statistics<br/>
+  <span class="muted">{{ injection.name }}</span>
+{% endblock modal_header %}
+
+{% block modal_body %}
+  {% if crosses|length > 0 %}
+    {% set ongoing_fraction = ((ongoing|length)/(crosses|length) * 100)|number_format(2) %}
+    {% set success_fraction = ((success|length)/(crosses|length) * 100)|number_format(2) %}
+    {% set fail_fraction = ((fail|length)/(crosses|length) * 100)|number_format(2) %}
+    {% set sterile_fraction = ((sterile|length)/(crosses|length) * 100)|number_format(2) %}
+  {% else %}
+    {% set fail_fraction = 0 %}
+    {% set success_fraction = 0 %}
+    {% set ongoing_fraction = 100 %}
+    {% set sterile_fraction = 0 %}
+  {% endif %}
+  <div class="progress">
+    <div class="bar" title="ongoing" style="width: {{ ongoing_fraction }}%;"></div>
+    <div class="bar bar-success" title="successful" style="width: {{ success_fraction }}%;"></div>
+    <div class="bar bar-warning" title="failed" style="width: {{ fail_fraction }}%;"></div>
+    <div class="bar bar-danger" title="sterile" style="width: {{ sterile_fraction }}%;"></div>
+  </div>
+  {{ _self.vials('Total vials',vials,'vib_flies_injectionvial_show') }}
+  <div class="control-group">
+    <span class="control-label">Temperatures</span>
+    <div class="controls">
+      <div class="input-text input-block-level">
+        {% for temp in temps %}
+          {{ status.temperature(temp) }}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {{ s.row("Embryos injected", embryos) }}
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#stats">
+      <strong>Statistics</strong></a>
+  </div>
+  <div id="stats" class="collapse">
+    {{ s.row("Efficiency", ((success|length)/embryos * 100)|number_format(2) ~ '%') }}
+    {{ s.row("Survival rate", ((crosses|length)/embryos* 100)|number_format(2) ~ '%') }}
+  </div>
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#vials">
+      <strong>Crosses</strong></a>
+  </div>
+  <div id="vials" class="collapse">
+    {{ _self.vials('Ongoing crosses',ongoing,'vib_flies_crossvial_show',ongoing_fraction,'info') }}
+    {{ _self.vials('Successful crosses',success,'vib_flies_crossvial_show',success_fraction,'success') }}
+    {{ _self.vials('Failed crosses',fail,'vib_flies_crossvial_show',fail_fraction,'warning') }}
+    {{ _self.vials('Sterile crosses',sterile,'vib_flies_crossvial_show',sterile_fraction,'error') }}
+  </div>
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#child">
+      <strong>Stocks</strong></a>
+  </div>
+  <div id="child" class="collapse">
+    {{ s.list("Stocks", stocks, 'vib_flies_stock_show', null, 'stock') }}
+  </div>
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  <a href="{{ path('vib_flies_injectionvial_list') }}" class="btn">List</a>
+{% endblock modal_footer %}
+
+{% macro vials(label,items,route,fraction,color) %}
+{% set uuid = random() ~ '_' ~ 'vials'  %}
+<div class="control-group">
+  <a class="control-label collapse-toggle" data-toggle="collapse" href="#{{ uuid }}">{{ label }}</a>
+  <div class="controls">
+    <span class="input-text input-block-level{% if color is not empty %} text-{{ color }}{% endif %}">
+      <strong>{{ items | length }}</strong>
+      {% if fraction is not empty %}
+        ({{ fraction }}%)
+      {% endif %}
+    </span>
+    <ul id="{{ uuid }}" class="collapse unstyled input-text">
+    {% for item in items %}
+      <li>{% spaceless %}
+        {% if is_granted('ROLE_ADMIN') or is_granted('VIEW',item) %}
+            {% set uuid = random() ~ '_' ~ item.id  %}
+            <span class="popover-trigger" id="span_{{ uuid }}"
+                  data-placement="bottom" data-container="#span_{{ uuid }}"
+                  data-delay="500" data-link="{{ path('vib_flies_ajax_popover')}}"
+                  data-type="vial" data-id="{{ item.id }}">
+              <a href="{{ path(route, { 'id': item.id }) }}">{{ item }}</a>
+            </span>
+        {% else %}{{ item }}{% endif %}
+        {% endspaceless %}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endmacro %}

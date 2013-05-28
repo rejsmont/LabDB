@@ -25,5 +25,37 @@ namespace VIB\FliesBundle\Repository;
  */
 class InjectionVialRepository extends VialRepository
 {
-    
+    /**
+     * Find similar injections
+     *
+     * @param InjectionVial $cross
+     */
+    public function findSimilar($injection)
+    {
+        $options = array();
+        $options['filter'] = 'all';
+
+        $startDate = clone $injection->getSetupDate();
+        $stopDate = clone $injection->getSetupDate();
+        $startDate->sub(new \DateInterval('P2W'));
+        $stopDate->add(new \DateInterval('P2W'));
+
+        $owner = $this->manager->getOwner($injection);
+
+        $qb = $this->getListQueryBuilder($options);
+        $qb->andWhere('e.injectionType = :injection_type')
+           ->andWhere('e.constructName = :construct_name')
+           ->andWhere('e.targetStock = :target_stock')
+           ->andWhere('e.setupDate > :start_date')
+           ->andWhere('e.setupDate <= :stop_date')
+           ->orderBy('e.setupDate', 'ASC')
+           ->addOrderBy('e.id', 'ASC')
+           ->setParameter('injection_type', $injection->getInjectionType())
+           ->setParameter('construct_name', $injection->getConstructName())
+           ->setParameter('target_stock', $injection->getTargetStock())
+           ->setParameter('start_date', $startDate->format('Y-m-d'))
+           ->setParameter('stop_date', $stopDate->format('Y-m-d'));
+
+        return $this->aclFilter->apply($qb, array('OWNER'), $owner)->getResult();
+    }
 }

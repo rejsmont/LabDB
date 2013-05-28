@@ -85,9 +85,9 @@ class CrossVial extends Vial
      */
     public function __construct(Vial $template = null, $flip = false)
     {
+        $this->stocks = new ArrayCollection();
         parent::__construct($template, $flip);
         $this->setSuccessful(null);
-        $this->stocks = new ArrayCollection();
     }
 
     /**
@@ -116,7 +116,7 @@ class CrossVial extends Vial
     }
 
     /**
-     * If cross sterile
+     * Is cross sterile
      *
      * @return boolean
      */
@@ -146,7 +146,9 @@ class CrossVial extends Vial
      */
     public function hasProduced()
     {
-        return ((count($this->getStocks()) > 0)||(count($this->getCrosses()) > 0));
+        return (($this->getStocks()->count() > 0)||
+                ($this->getMaleCrosses()->count() > 0)||
+                ($this->getVirginCrosses()->count() > 0));
     }
 
     /**

@@ -21,13 +21,14 @@ namespace VIB\FliesBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\FliesBundle\Label\AltLabelInterface;
 
 /**
  * InjectionVial class
  *
- * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\StockVialRepository")
+ * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\InjectionVialRepository")
  * @Serializer\ExclusionPolicy("all")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
@@ -406,5 +407,123 @@ class InjectionVial extends Vial implements AltLabelInterface
     protected function getDelay()
     {
         return (null === $this->getParent()) ? 2 : 0;
+    }
+    
+    /**
+     * Get successful male crosses
+     * 
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSuccessfulMaleCrosses()
+    {
+        $crosses = new ArrayCollection();
+        foreach ($this->getMaleCrosses() as $cross) {
+            if ($cross->isSuccessful()) {
+                $crosses->add($cross);
+            }
+        }
+        
+        return $crosses;
+    }
+    
+    /**
+     * Get successful virgin crosses
+     * 
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSuccessfulVirginCrosses()
+    {
+        $crosses = new ArrayCollection();
+        foreach ($this->getVirginCrosses() as $cross) {
+            if ($cross->isSuccessful()) {
+                $crosses->add($cross);
+            }
+        }
+        
+        return $crosses;
+    }
+    
+    /**
+     * Get successful crosses
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSuccessfulCrosses()
+    {
+        $crosses = new ArrayCollection();
+        foreach ($this->getMaleCrosses() as $cross) {
+            if ($cross->isSuccessful()) {
+                $crosses->add($cross);
+            }
+        }
+        foreach ($this->getVirginCrosses() as $cross) {
+            if ($cross->isSuccessful()) {
+                $crosses->add($cross);
+            }
+        }
+
+        return $crosses;
+    }
+    
+    /**
+     * Has this injection produced crosses
+     *
+     * @return boolean
+     */
+    public function hasProduced()
+    {
+        return (($this->getMaleCrosses()->count() > 0)||($this->getVirginCrosses()->count() > 0));
+    }
+    
+    /**
+     * Has this injection produced successful crosses
+     *
+     * @return boolean
+     */
+    public function hasProducedSuccessful()
+    {
+        return ($this->getSuccessfulCrosses()->count() > 0);
+    }
+    
+    /**
+     * Is injection sterile
+     *
+     * @return boolean
+     */
+    public function isSterile()
+    {
+        return ! (($this->hasProduced())||($this->isAlive()));
+    }
+    
+    /**
+     * Is injection successful
+     *
+     * @return boolean|null
+     */
+    public function isSuccessful()
+    {
+        if ($this->isAlive()) {
+            return $this->hasProducedSuccessful() ? true : null;
+        } else {
+            return $this->hasProducedSuccessful();
+        }
+    }
+    
+    /**
+     * Get outcome
+     *
+     * @return string
+     */
+    public function getOutcome()
+    {
+        if ($this->isSterile()) {
+            return 'sterile';
+        } elseif ($this->isSuccessful() === true) {
+            return 'successful';
+        } elseif ($this->isSuccessful() === false) {
+            return 'failed';
+        } else {
+            return 'undefined';
+        }
     }
 }

@@ -79,4 +79,78 @@ class InjectionVialController extends VialController
     {
         throw $this->createNotFoundException();
     }
+    
+    /**
+     * Statistics for injection
+     *
+     * @Route("/stats/{id}")
+     * @Template()
+     *
+     * @param mixed $id
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function statsAction($id)
+    {
+        $injection = $this->getEntity($id);
+        $vials = $this->getObjectManager()->getRepository($this->entityClass)->findSimilar($injection);
+        $sterile = new ArrayCollection();
+        $success = new ArrayCollection();
+        $fail = new ArrayCollection();
+        $ongoing =  new ArrayCollection();
+        $stocks = new ArrayCollection();
+        $crosses = new ArrayCollection();
+        $temps = new ArrayCollection();
+        $embryos = 0;
+
+        if (count($vials) == 0) {
+            throw $this->createNotFoundException();
+        }
+
+        foreach ($vials as $vial) {
+            $temp = (float) $vial->getTemperature();
+            if (! $temps->contains($temp)) {
+                $temps->add($temp);
+            }
+            foreach ($vial->getCrosses() as $cross) {
+                if (! $crosses->contains($cross)) {
+                    $crosses->add($cross);
+                }
+            }
+            $embryos += $vial->getEmbryoCount();
+        }
+
+        foreach ($crosses as $cross) {
+            switch ($cross->getOutcome()) {
+                case 'successful':
+                    $success->add($cross);
+                    foreach ($cross->getStocks() as $childStock) {
+                        if (! $stocks->contains($childStock)) {
+                            $stocks->add($childStock);
+                        }
+                    }
+                    break;
+                case 'failed':
+                    $fail->add($cross);
+                    break;
+                case 'sterile':
+                    $sterile->add($cross);
+                    break;
+                default:
+                    $ongoing->add($cross);
+                    break;
+            }
+        }
+        
+        return array('injection' => $injection,
+                     'embryos' => $embryos,
+                     'vials' => $vials,
+                     'crosses' => $crosses,
+                     'sterile' => $sterile,
+                     'fail' => $fail,
+                     'success' => $success,
+                     'ongoing' => $ongoing,
+                     'stocks' => $stocks,
+                     'temps' => $temps);
+    }
 }

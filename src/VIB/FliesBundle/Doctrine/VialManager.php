@@ -24,6 +24,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use \VIB\FliesBundle\Entity\Vial;
 use \VIB\FliesBundle\Entity\Incubator;
+use VIB\FliesBundle\Repository\VialRepository;
 
 /**
  * VialManager is a class used to manage common operations on vials
@@ -32,7 +33,22 @@ use \VIB\FliesBundle\Entity\Incubator;
  */
 class VialManager extends ObjectManager
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getRepository($className)
+    {
+        $repository = parent::getRepository($className);
 
+        if (! $repository instanceof VialRepository) {
+            throw new \ErrorException('Repository must be an instance of VIB\FliesBundle\Repository\VialRepository');
+        } else {
+            $repository->setManager($this);
+        }
+
+        return $repository;
+    }
+    
     /**
      * Flip vial(s)
      *

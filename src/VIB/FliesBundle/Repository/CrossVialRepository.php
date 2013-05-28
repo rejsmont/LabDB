@@ -28,11 +28,6 @@ use VIB\CoreBundle\Doctrine\ObjectManager;
 class CrossVialRepository extends VialRepository
 {
     /**
-     * @var $manager VIB\CoreBundle\Doctrine\ObjectManager
-     */
-    private $manager;
-
-    /**
      * Find similar crosses
      *
      * @param CrossVial $cross
@@ -85,15 +80,5 @@ class CrossVialRepository extends VialRepository
             ->setParameter('term_2', '%' . $term .'%');
 
         return $query;
-    }
-
-    /**
-     * Set the object manager service
-     *
-     * @param VIB\CoreBundle\Doctrine\ObjectManager
-     */
-    public function setManager(\VIB\CoreBundle\Doctrine\ObjectManager $manager)
-    {
-        $this->manager = $manager;
     }
 }

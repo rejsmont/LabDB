@@ -28,6 +28,11 @@ use VIB\CoreBundle\Repository\EntityRepository;
 class VialRepository extends EntityRepository
 {
     /**
+     * @var $manager VIB\CoreBundle\Doctrine\ObjectManager
+     */
+    protected $manager;
+    
+    /**
      * {@inheritdoc}
      */
     protected function getListQueryBuilder($options = array())
@@ -105,5 +110,15 @@ class VialRepository extends EntityRepository
         }
 
         return array_unique($dates, SORT_REGULAR);
+    }
+    
+    /**
+     * Set the object manager service
+     *
+     * @param VIB\CoreBundle\Doctrine\ObjectManager
+     */
+    public function setManager(\VIB\CoreBundle\Doctrine\ObjectManager $manager)
+    {
+        $this->manager = $manager;
     }
 }
