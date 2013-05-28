@@ -63,5 +63,6 @@
   {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
   <a href="{{ path('vib_flies_injectionvial_edit', { 'id': entity.id }) }}" class="btn btn-primary">Edit</a>
   {% endif %}
+  <a href="{{ path('vib_flies_injectionvial_stats', { 'id': entity.id }) }}" class="btn">Stats</a>
   <a href="{{ path('vib_flies_injectionvial_list') }}" class="btn">List</a>
 {% endblock modal_footer %}
