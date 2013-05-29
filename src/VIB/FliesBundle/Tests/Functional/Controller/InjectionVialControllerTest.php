@@ -113,23 +113,22 @@ class InjectionVialControllerTest extends WebTestCase
         $this->assertEquals(1, $result->filter('span:contains("This value should be 1 or more.")')->count());
     }
 
-    /*
     public function testStats()
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/stats/12');
+        $crawler = $client->request('GET', '/secure/injections/stats/10');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler
-                ->filter('a.control-label:contains("Total crosses") + div > span > strong:contains("6")')
+                ->filter('a.control-label:contains("Total vials") + div > span > strong:contains("2")')
                 ->count());
-        $this->assertEquals(1, $crawler->filter('span.input-text.text-info:contains("(33.33%)")')->count());
-        $this->assertEquals(1, $crawler->filter('span.input-text.text-success:contains("(33.33%)")')->count());
-        $this->assertEquals(1, $crawler->filter('span.input-text.text-warning:contains("(16.67%)")')->count());
-        $this->assertEquals(1, $crawler->filter('span.input-text.text-error:contains("(16.67%)")')->count());
+        $this->assertEquals(1, $crawler->filter('span.input-text.text-info:contains("(100%)")')->count());
+        $this->assertEquals(1, $crawler->filter('span.input-text.text-success:contains("(0%)")')->count());
+        $this->assertEquals(1, $crawler->filter('span.input-text.text-warning:contains("(0%)")')->count());
+        $this->assertEquals(1, $crawler->filter('span.input-text.text-error:contains("(0%)")')->count());
 
     }
-    */
+
     public function testShow()
     {
         $client = $this->getAuthenticatedClient();
