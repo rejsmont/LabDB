@@ -18,15 +18,27 @@
 
 namespace VIB\FliesBundle\Repository;
 
-use VIB\CoreBundle\Doctrine\ObjectManager;
 
 /**
- * FlyCrossRepository
+ * CrossVialRepository
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class CrossVialRepository extends VialRepository
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function getListQueryBuilder($options = array())
+    {
+        return parent::getListQueryBuilder($options)
+            ->addSelect('m, v, partial mp.{id}, partial vp.{id}')
+            ->leftJoin('e.male', 'm')
+            ->leftJoin('e.virgin', 'v')
+            ->leftJoin('m.parent', 'mp')
+            ->leftJoin('v.parent', 'vp');
+    }
+    
     /**
      * Find similar crosses
      *

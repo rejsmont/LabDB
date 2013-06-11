@@ -20,8 +20,9 @@ namespace VIB\FliesBundle\Repository;
 
 use VIB\CoreBundle\Repository\EntityRepository;
 
+
 /**
- * FlyVialRepository
+ * VialRepository
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
@@ -38,6 +39,9 @@ class VialRepository extends EntityRepository
     protected function getListQueryBuilder($options = array())
     {
         $builder = $this->createQueryBuilder('e')
+                        ->addSelect('partial p.{id}, o')
+                        ->leftJoin('e.parent', 'p')
+                        ->leftJoin('e.position', 'o')
                         ->orderBy('e.setupDate','DESC')
                         ->addOrderBy('e.id','DESC');
 

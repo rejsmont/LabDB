@@ -18,13 +18,24 @@
 
 namespace VIB\FliesBundle\Repository;
 
+
 /**
- * FlyVialRepository
+ * StockVialRepository
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class StockVialRepository extends VialRepository
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function getListQueryBuilder($options = array())
+    {
+        return parent::getListQueryBuilder($options)
+            ->addSelect('s')
+            ->leftJoin('e.stock', 's');
+    }
+    
     /**
      *
      * @param  type                                   $stock

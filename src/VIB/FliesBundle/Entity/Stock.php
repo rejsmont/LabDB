@@ -309,6 +309,16 @@ class Stock extends Entity
 
         return $this->getVials()->matching($criteria);
     }
+    
+    /**
+     * Get living vials
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLivingVialsCount()
+    {
+        return $this->getLivingVials()->count();
+    }
 
     /**
      * Set sourceCross

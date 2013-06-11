@@ -32,6 +32,16 @@ use VIB\FliesBundle\Label\LabelDateInterface;
  * Vial class
  *
  * @ORM\Entity(repositoryClass="VIB\FliesBundle\Repository\VialRepository")
+ * @ORM\Table(
+ *     indexes={
+ *         @ORM\Index(name="alive_idx", columns={"id", "setupDate", "trashed", "type"}),
+ *         @ORM\Index(name="stock_idx", columns={"id", "setupDate", "trashed", "type", "stock_id"}),
+ *         @ORM\Index(name="cross_idx", columns={"id", "setupDate", "trashed", "type", "maleName", "virginName"}),
+ *         @ORM\Index(name="injection_idx", columns={
+ *             "id", "setupDate", "trashed", "type", "targetStock_id", "constructName"
+ *         })
+ *     }
+ * )
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({

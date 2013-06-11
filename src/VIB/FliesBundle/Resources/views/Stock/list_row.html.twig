@@ -7,5 +7,5 @@
   {% set sourceCrossName = null %}
 {% endif %}
 <td>{{ l.link(entity.sourceCross, 'vib_flies_crossvial_show', true, sourceCrossName, 'vial') }}</td>
-<td>{{ entity.livingVials | length }}</td>
+<td>{{ entity.livingVialsCount }}</td>
 <td>{{ status.stock(entity) }}</td>
