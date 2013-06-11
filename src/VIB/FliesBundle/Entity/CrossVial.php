@@ -470,10 +470,14 @@ class CrossVial extends Vial
     public function getDefaultFlipDate()
     {
         $interval = new \DateInterval('P' . ($this->getGenerationTime() + $this->getDelay()) . 'D');
-        $setup = clone $this->getSetupDate();
-        $setup->add($interval);
-
-        return $setup;
+        if (null !== $this->getSetupDate()) {
+            $flipDate = clone $this->getSetupDate();
+            $flipDate->add($interval);
+        } else {
+            $flipDate = null;
+        }
+        
+        return $flipDate;
     }
 
     /**

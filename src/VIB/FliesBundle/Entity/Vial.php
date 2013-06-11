@@ -652,9 +652,13 @@ class Vial extends Entity implements LabelDateInterface
     public function getDefaultFlipDate()
     {
         $interval = new \DateInterval('P' . 2 * $this->getGenerationTime() . 'D');
-        $flipDate = clone $this->getSetupDate();
-        $flipDate->add($interval);
-
+        if (null !== $this->getSetupDate()) {
+            $flipDate = clone $this->getSetupDate();
+            $flipDate->add($interval);
+        } else {
+            $flipDate = null;
+        }
+        
         return $flipDate;
     }
 
