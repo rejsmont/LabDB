@@ -81,13 +81,12 @@ class Vial extends Entity implements LabelDateInterface
     protected $size;
 
     /**
-     * @ORM\OneToMany(targetEntity="Vial", mappedBy="parent", fetch="EXTRA_LAZY")
+     * @var null
      */
     protected $children;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Vial", inversedBy="children")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @var null 
      */
     protected $parent;
 

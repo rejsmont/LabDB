@@ -36,6 +36,17 @@ use VIB\FliesBundle\Label\AltLabelInterface;
 class InjectionVial extends Vial implements AltLabelInterface
 {
     /**
+     * @ORM\ManyToOne(targetEntity="InjectionVial", inversedBy="children")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $parent;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="InjectionVial", mappedBy="parent", fetch="EXTRA_LAZY")
+     */
+    protected $children;
+    
+    /**
      * @ORM\Column(type="string", length=255)
      * @Serializer\Expose
      *

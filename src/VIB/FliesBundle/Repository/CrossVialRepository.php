@@ -32,11 +32,9 @@ class CrossVialRepository extends VialRepository
     protected function getListQueryBuilder($options = array())
     {
         return parent::getListQueryBuilder($options)
-            ->addSelect('m, v, partial mp.{id}, partial vp.{id}')
+            ->addSelect('m, v')
             ->leftJoin('e.male', 'm')
-            ->leftJoin('e.virgin', 'v')
-            ->leftJoin('m.parent', 'mp')
-            ->leftJoin('v.parent', 'vp');
+            ->leftJoin('e.virgin', 'v');
     }
     
     /**

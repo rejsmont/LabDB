@@ -35,6 +35,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 class CrossVial extends Vial
 {
     /**
+     * @ORM\ManyToOne(targetEntity="CrossVial", inversedBy="children")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $parent;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="CrossVial", mappedBy="parent", fetch="EXTRA_LAZY")
+     */
+    protected $children;
+    
+    /**
      * @ORM\Column(type="boolean")
      * @Serializer\Expose
      */

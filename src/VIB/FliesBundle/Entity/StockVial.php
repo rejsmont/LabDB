@@ -35,6 +35,17 @@ use VIB\FliesBundle\Label\AltLabelInterface;
 class StockVial extends Vial implements AltLabelInterface
 {
     /**
+     * @ORM\ManyToOne(targetEntity="StockVial", inversedBy="children")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $parent;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="StockVial", mappedBy="parent", fetch="EXTRA_LAZY")
+     */
+    protected $children;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Stock", inversedBy="vials")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotBlank(message = "Stock must be specified")

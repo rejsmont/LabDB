@@ -26,6 +26,17 @@ namespace VIB\FliesBundle\Repository;
 class InjectionVialRepository extends VialRepository
 {
     /**
+     * {@inheritdoc}
+     */
+    protected function getListQueryBuilder($options = array())
+    {
+        return parent::getListQueryBuilder($options)
+            ->addSelect('s, sv')
+            ->leftJoin('e.targetStock', 's')
+            ->leftJoin('e.targetStockVial', 'sv');
+    }
+    
+    /**
      * Find similar injections
      *
      * @param InjectionVial $cross
