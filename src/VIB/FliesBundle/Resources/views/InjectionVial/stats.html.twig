@@ -44,7 +44,7 @@
   </div>
   <div id="stats" class="collapse">
     {{ s.row("Efficiency", ((success|length)/embryos * 100)|number_format(2) ~ '%') }}
-    {{ s.row("Survival rate", ((crosses|length)/embryos* 100)|number_format(2) ~ '%') }}
+    {{ s.row("Survival rate", ((crosses|length)/embryos * 100)|number_format(2) ~ '%') }}
   </div>
   <div class="control-group">
     <a class="control-label collapse-toggle" data-toggle="collapse" href="#vials">
