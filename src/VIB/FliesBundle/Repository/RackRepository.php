@@ -27,4 +27,19 @@ use VIB\CoreBundle\Repository\EntityRepository;
  */
 class RackRepository extends EntityRepository
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function getEntityQueryBuilder($id, $options = array())
+    {
+        return $this->createQueryBuilder('e')
+                ->addSelect('o')
+                ->addSelect('c')
+                ->addSelect('i')
+                ->leftJoin('e.positions', 'o')
+                ->leftJoin('o.contents', 'c')
+                ->leftJoin('e.incubator', 'i')
+                ->where('e.id = :id')
+                ->setParameter('id', $id);
+    }
 }
