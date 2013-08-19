@@ -30,18 +30,18 @@ class ShibbolethUserProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->userManager->expects($this->once())
             ->method('createUser')
-            ->will($this->returnValue($this->getMock('FOS\UserBundle\Entity\User')));
+            ->will($this->returnValue($this->getMock('FOS\UserBundle\Model\User')));
         $user = $this->userProvider->createUser($this->userToken);
-        $this->assertInstanceOf('FOS\UserBundle\Entity\User', $user);
+        $this->assertInstanceOf('FOS\UserBundle\Model\User', $user);
     }
 
     public function testUpdateUser()
     {
         $this->userManager->expects($this->once())
             ->method('findUserByUsername')
-            ->will($this->returnValue($this->getMock('FOS\UserBundle\Entity\User')));
+            ->will($this->returnValue($this->getMock('FOS\UserBundle\Model\User')));
         $user = $this->userProvider->updateUser($this->userToken);
-        $this->assertInstanceOf('FOS\UserBundle\Entity\User', $user);
+        $this->assertInstanceOf('FOS\UserBundle\Model\User', $user);
     }
 
     public function testUpdateUserNotFound()

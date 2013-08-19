@@ -89,7 +89,7 @@ class RackController extends CRUDController
             $postForm = $request->request->get('select');
             $action = is_array($postForm) ? $postForm['action'] : '';
             if ($action == 'incubate') {
-                $form->bindRequest($request);
+                $form->bind($request);
                 if ($form->isValid()) {
                     $data = $form->getData();
                     $this->incubateRack($rack, $data['incubator']);
@@ -122,7 +122,7 @@ class RackController extends CRUDController
         $request = $this->getRequest();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
             if ($form->isValid()) {
                 $data = $form->getData();
                 $rack = $data['rack'];
@@ -173,7 +173,7 @@ class RackController extends CRUDController
         $request = $this->getRequest();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
             if ($form->isValid()) {
                 $data = $form->getData();
                 $rack = $data['rack'];

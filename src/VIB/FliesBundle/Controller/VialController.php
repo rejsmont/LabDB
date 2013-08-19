@@ -146,7 +146,7 @@ class VialController extends CRUDController
         $request = $this->getRequest();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
             if ($form->isValid()) {
                 $data = $form->getData();
                 $vial = $data['vial'];
@@ -215,7 +215,7 @@ class VialController extends CRUDController
         $request = $this->getRequest();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
             if ($form->isValid()) {
                 $data = $form->getData();
                 $source = $data['source'];
@@ -310,7 +310,7 @@ class VialController extends CRUDController
         $form = $this->createForm($formType);
         $request = $this->getRequest();
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
             if ($form->isValid()) {
                 return $this->handleBatchAction($form->getData());
             }

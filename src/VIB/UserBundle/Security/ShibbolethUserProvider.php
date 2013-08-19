@@ -18,7 +18,7 @@
 
 namespace VIB\UserBundle\Security;
 
-use FOS\UserBundle\Entity\User as BaseUser;
+use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Security\UserProvider as BaseUserProvider;
 use KULeuven\ShibbolethBundle\Security\ShibbolethUserProviderInterface;
 use KULeuven\ShibbolethBundle\Security\ShibbolethUserToken;
