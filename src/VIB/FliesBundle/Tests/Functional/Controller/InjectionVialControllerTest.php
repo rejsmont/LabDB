@@ -57,7 +57,7 @@ class InjectionVialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/injections/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(18, $crawler->filter('.modal-body label')->count());
+        $this->assertEquals(19, $crawler->filter('.modal-body label')->count());
     }
 
     public function testCreateSubmitOne()
