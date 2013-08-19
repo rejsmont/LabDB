@@ -6,7 +6,6 @@ php:
 
 before_script:
   - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-  - cp app/config/parameters.default.yml app/config/parameters.yml
   - composer selfupdate
   - composer install --no-interaction
 
