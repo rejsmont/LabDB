@@ -79,7 +79,7 @@ abstract class CRUDController extends AbstractController
         $count = $repository->getListCount($options);
         $query = $repository->getListQuery($options)->setHint('knp_paginator.count', $count);
         $entities = $paginator->paginate($query, $page, 25, array('distinct' => false));
-
+        
         return array('entities' => $entities, 'filter' => $filter);
     }
 

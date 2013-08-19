@@ -58,7 +58,7 @@ class SelectType extends AbstractType
     {
         $builder->add('action', 'hidden')
                 ->add('items', 'collection', array(
-                      'type'   => 'entity',
+                      'type'   => 'text_entity',
                       'allow_add' => true,
                       'options' => array(
                           'class' =>  $this->entityClass)))
