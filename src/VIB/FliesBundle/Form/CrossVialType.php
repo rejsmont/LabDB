@@ -79,6 +79,7 @@ class CrossVialType extends AbstractType
                         'expanded'  => true,
                         'label'     => 'Vial size',
                         'required'  => false,
+                        'empty_value' => false,
                         'attr'      => array('class' => 'input-text')))
                 ->add('trashed', 'checkbox', array(
                         'label' => '',
@@ -91,6 +92,7 @@ class CrossVialType extends AbstractType
                         'expanded' => true,
                         'label' => 'Outcome',
                         'required' => false,
+                        'empty_value' => false,
                         'attr' => array('class' => 'input-text')));
     }
 

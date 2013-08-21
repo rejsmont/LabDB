@@ -23,7 +23,7 @@ namespace VIB\FliesBundle\Repository;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class InjectionVialRepository extends VialRepository
+class InjectionVialRepository extends SearchableVialRepository
 {
     /**
      * {@inheritdoc}
@@ -31,9 +31,82 @@ class InjectionVialRepository extends VialRepository
     protected function getListQueryBuilder($options = array())
     {
         return parent::getListQueryBuilder($options)
-            ->addSelect('s, sv')
+            ->addSelect('s, sv, svs')
             ->leftJoin('e.targetStock', 's')
-            ->leftJoin('e.targetStockVial', 'sv');
+            ->leftJoin('e.targetStockVial', 'sv')
+            ->leftJoin('sv.stock', 'svs');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSearchQueryBuilder($terms, $excluded = array(), $options = array())
+    {
+        return parent::getSearchQueryBuilder($terms, $excluded, $options)
+            ->leftJoin('e.targetStock', 's')
+            ->leftJoin('e.targetStockVial', 'sv')
+            ->leftJoin('sv.stock', 'svs');
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSearchResultCountQueryBuilder($terms, $excluded = array(), $options = array())
+    {
+        return parent::getSearchResultCountQueryBuilder($terms, $excluded, $options)
+            ->leftJoin('e.targetStock', 's')
+            ->leftJoin('e.targetStockVial', 'sv')
+            ->leftJoin('sv.stock', 'svs');
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSearchFields($options = array())
+    {
+        $fields = array(
+            'e.constructName',
+            's.name',
+            's.genotype',
+            'svs.name',
+            'svs.genotype');
+        if ((key_exists('notes', $options))&&($options['notes'])) {
+            $fields[] = 'e.notes';
+        }
+        
+        return $fields;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function search($terms, $excluded = array(), $options = array())
+    {
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P2M'));
+
+        $expr = null;
+        foreach ($terms as $term) {
+            $expr = $qb->expr()->andX(
+                $qb->expr()->orX(
+                    $qb->expr()->like('b.name', '\'%' . $term . '%\''),
+                    $qb->expr()->like('b.genotype', '\'%' . $term . '%\'')
+                ),
+                $expr
+            );
+        }
+        
+        $query = $this->createQueryBuilder('b')
+            ->where('b.setupDate > :date')
+            ->andWhere('b.trashed = false')
+            ->orderBy('b.setupDate', 'DESC')
+            ->addOrderBy('b.id', 'DESC')
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->andWhere('b.maleName like :term_1 or b.virginName like :term_2')
+            ->setParameter('term_1', '%' . $term .'%')
+            ->setParameter('term_2', '%' . $term .'%');
+
+        return $query;
     }
     
     /**

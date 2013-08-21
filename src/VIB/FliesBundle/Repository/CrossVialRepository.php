@@ -24,7 +24,7 @@ namespace VIB\FliesBundle\Repository;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class CrossVialRepository extends VialRepository
+class CrossVialRepository extends SearchableVialRepository
 {
     /**
      * {@inheritdoc}
@@ -35,6 +35,19 @@ class CrossVialRepository extends VialRepository
             ->addSelect('m, v')
             ->leftJoin('e.male', 'm')
             ->leftJoin('e.virgin', 'v');
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSearchFields($options = array())
+    {
+        $fields = array('e.maleName', 'e.virginName');
+        if ((key_exists('notes', $options))&&($options['notes'])) {
+            $fields[] = 'e.notes';
+        }
+        
+        return $fields;
     }
     
     /**
@@ -67,28 +80,5 @@ class CrossVialRepository extends VialRepository
            ->setParameter('stop_date', $stopDate->format('Y-m-d'));
 
         return $this->aclFilter->apply($qb, array('OWNER'), $owner)->getResult();
-    }
-
-    /**
-     * Search stocks
-     *
-     * @return mixed
-     */
-    public function search($term)
-    {
-        $date = new \DateTime();
-        $date->sub(new \DateInterval('P2M'));
-
-        $query = $this->createQueryBuilder('b')
-            ->where('b.setupDate > :date')
-            ->andWhere('b.trashed = false')
-            ->orderBy('b.setupDate', 'DESC')
-            ->addOrderBy('b.id', 'DESC')
-            ->setParameter('date', $date->format('Y-m-d'))
-            ->andWhere('b.maleName like :term_1 or b.virginName like :term_2')
-            ->setParameter('term_1', '%' . $term .'%')
-            ->setParameter('term_2', '%' . $term .'%');
-
-        return $query;
     }
 }

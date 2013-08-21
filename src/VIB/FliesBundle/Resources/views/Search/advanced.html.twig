@@ -1,0 +1,14 @@
+{% extends "VIBSiteTemplateBundle::layout.html.twig" %}
+{% use "VIBSiteTemplateBundle:Form:form.html.twig" %}
+
+{% block headline %}Search{% endblock headline %}
+{% block form_header %}
+<form action="{{ path('vib_flies_search_result') }}"
+      method="post" {{ form_enctype(form) }}
+      class="form-horizontal">
+{% endblock form_header %}
+{% block modal_header %}Advanced search{% endblock modal_header %}
+{% block modal_footer %}
+  <button type="submit" class="btn btn-primary">Search</button>
+  <button type="reset" class="btn">Reset</button>
+{% endblock modal_footer %}

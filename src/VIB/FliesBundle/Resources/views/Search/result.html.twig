@@ -5,22 +5,24 @@
 
 {% block headline %}
   Search results
-  <small>{{ filter | capitalize }}: {{ query }}</small>
 {% endblock headline %}
 
-
 {% block list_header %}
-{% if filter == 'stocks' %}
+{% if filter == 'stock' %}
   {% include 'VIBFliesBundle:Stock:list_head.html.twig' %}
-{% elseif filter == 'crosses' %}
+{% elseif filter == 'crossvial' %}
   {% include 'VIBFliesBundle:CrossVial:list_head.html.twig' %}
+{% elseif filter == 'injectionvial' %}
+  {% include 'VIBFliesBundle:InjectionVial:list_head.html.twig' %}
 {% endif %}{% endblock list_header %}
 
 {% block list_item %}
-{% if filter == 'stocks' %}
+{% if filter == 'stock' %}
   {% include 'VIBFliesBundle:Stock:list_row.html.twig' with {'entity': entity} %}
-{% elseif filter == 'crosses' %}
+{% elseif filter == 'crossvial' %}
   {% include 'VIBFliesBundle:CrossVial:list_row.html.twig' with {'entity': entity,'checkbox': false} %}
+{% elseif filter == 'injectionvial' %}
+  {% include 'VIBFliesBundle:InjectionVial:list_row.html.twig' with {'entity': entity,'checkbox': false} %}
 {% endif %}
 {% endblock list_item %}
 

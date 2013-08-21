@@ -11,13 +11,24 @@
       </button>
       <ul class="dropdown-menu pull-right">
         <li class="first">
-          <a href="#" onclick="$('#search_form_filter').val('stocks'); $('#search-form').submit();">
+          <a href="#" onclick="$('#search_form_filter').val('stock'); $('#search-form').submit();">
             <b>Search stocks</b>
           </a>
         </li>
-        <li class="last">
-          <a href="#" onclick="$('#search_form_filter').val('crosses'); $('#search-form').submit();">
+        <li>
+          <a href="#" onclick="$('#search_form_filter').val('crossvial'); $('#search-form').submit();">
             Search crosses
+          </a>
+        </li>
+        <li>
+          <a href="#" onclick="$('#search_form_filter').val('injectionvial'); $('#search-form').submit();">
+            Search injections
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li class="last">
+          <a href="{{ path('vib_flies_search_advanced') }}">
+            Advanced search
           </a>
         </li>
       </ul>
@@ -25,7 +36,7 @@
   </div>
 {% else %}
   {{ form_widget(form.query) }}
-  <a class="btn" href="#" onclick="$('#search_form_filter').val('stocks'); $('#search-form').submit();">Search</a>
+  <a class="btn" href="#" onclick="$('#search_form_filter').val(''); $('#search-form').submit();">Search</a>
 {% endif %}
   {{ form_rest(form) }}
 </form>

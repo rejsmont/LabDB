@@ -22,11 +22,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use VIB\CoreBundle\Controller\AbstractController;
-
-use VIB\FliesBundle\Entity\Vial;
-use VIB\FliesBundle\Entity\CrossVial;
+use VIB\FliesBundle\Repository\SearchableRepositoryInterface;
 
 use VIB\FliesBundle\Form\SearchType;
+use VIB\FliesBundle\Form\AdvancedSearchType;
 
 /**
  * Description of SearchController
@@ -47,6 +46,20 @@ class SearchController extends AbstractController
     public function searchAction()
     {
         return $this->render('VIBFliesBundle:Search:search.html.twig');
+    }
+    
+    /**
+     * Handle advanced search request
+     *
+     * @Template()
+     * @Route("/") 
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function advancedAction()
+    {
+        $form = $this->createForm(new AdvancedSearchType());
+        return array('form' => $form->createView());
     }
 
     /**
@@ -91,63 +104,103 @@ class SearchController extends AbstractController
     {
         $om = $this->getObjectManager();
         $form = $this->createForm(new SearchType());
+        $advForm = $this->createForm(new AdvancedSearchType());
         $request = $this->get('request');
         $session = $request->getSession();
+        $securityContext = $this->getSecurityContext();
 
         if ($request->getMethod() == 'POST') {
 
             $form->bind($request);
-
+            $advForm->bind($request);
+            
             if ($form->isValid()) {
                 $data = $form->getData();
-                $query = $data['query'];
+                $advanced = false;
+            } elseif ($advForm->isValid()) {
+                $data = $advForm->getData();
+                $advanced = true;
+            } else {
+                $data = false;
+            }
+            
+            if (false !== $data) {
+                $term = $data['query'];
                 if ('' == $data['filter']) {
-                    if (preg_match("/^R\d+$/",$query) === 1) {
+                    if (preg_match("/^R\d+$/",$term) === 1) {
                         $filter = 'rack';
-                    } elseif (is_numeric($query)) {
+                        $id = (integer) str_replace('R','',$term);
+                    } elseif (is_numeric($term)) {
                         $filter = 'vial';
+                        $id = (integer) $term;
                     } else {
-                        $filter = 'stocks';
+                        $filter = 'stock';
                     }
                 } else {
                     $filter = $data['filter'];
                 }
-                $session->set('search_query',$query);
+                $exclude = $advanced ? $data['exclude'] : '';
+                $opts = $advanced ? $data['options'] : array();
+                $session->set('search_query',$term);
+                $session->set('search_exclude',$exclude);
                 $session->set('search_filter',$filter);
+                $session->set('search_options',$opts);
             }
         } else {
-            $query = $session->get('search_query');
+            $term = $session->get('search_query');
+            $exclude = $session->get('search_exclude');
             $filter = $session->get('search_filter');
+            $opts = $session->get('search_options');
+        }
+        
+        $repository = $om->getRepository($this->filterToClass($filter));
+        
+        if ($repository instanceof SearchableRepositoryInterface) {
+            
+            $terms = $term != '' ? explode(' ',$term) : array();
+            $excluded = $exclude != '' ? explode(' ',$exclude) : array();
+            $options = array();
+            $options['search'] = $opts;
+            $options['user'] = $this->getUser();
+            $options['permissions'] = in_array('private', $opts) ? array('OWNER') : 
+                ($securityContext->isGranted('ROLE_ADMIN') ? false : array('VIEW'));
+            $options['dead'] = in_array('dead', $opts);
+            $options['notes'] = in_array('notes', $opts);
+            
+            $resultCount = $repository->getSearchResultCount($terms, $excluded, $options);
+            $result = $repository->getSearchQuery($terms, $excluded, $options)
+                                 ->setHint('knp_paginator.count', $resultCount);
+            $paginator  = $this->getPaginator();
+            $page = $this->getCurrentPage();
+            $entities = $paginator->paginate($result, $page, 25);
+
+            return array('entities' => $entities,
+                         'query' => $term,
+                         'exclude' => $exclude,
+                         'filter' => $filter,
+                         'options' => $options);
         }
 
-        switch ($filter) {
-            case 'crosses':
-                $queryBuilder = $om->getRepository('VIB\FliesBundle\Entity\CrossVial')->search($query);
-                $result = $this->getAclFilter()->apply($queryBuilder);
-                break;
-            case 'vial':
-                $url = $this->generateUrl('vib_flies_vial_show', array('id' => $query));
-
-                return $this->redirect($url);
-                break;
-            case 'rack':
-                $url = $this->generateUrl('vib_flies_rack_show', array('id' => (integer) str_replace('R','',$query)));
-
-                return $this->redirect($url);
-                break;
-            case 'stocks':
-            default:
-                $queryBuilder = $om->getRepository('VIB\FliesBundle\Entity\Stock')->search($query);
-                $result = $this->getAclFilter()->apply($queryBuilder);
-                break;
-        }
-
-        $paginator  = $this->getPaginator();
-        $page = $this->getCurrentPage();
-        $entities = $paginator->paginate($result, $page, 10);
-
-        return array('entities' => $entities,
-                     'query' => $query,
-                     'filter' => $filter);
+        $url = $this->generateUrl('vib_flies_' . $filter . '_show', array('id' => $id));
+        return $this->redirect($url);
+    }
+    
+    /**
+     * Convert filter string to class name
+     * 
+     * @param string $filter
+     * @return string
+     */
+    private function filterToClass($filter)
+    {
+        $lookup = array(
+            'vial' => 'VIB\FliesBundle\Entity\Vial',
+            'rack' => 'VIB\FliesBundle\Entity\Rack',
+            'stock' => 'VIB\FliesBundle\Entity\Stock',
+            'crossvial' => 'VIB\FliesBundle\Entity\CrossVial',
+            'injectionvial' => 'VIB\FliesBundle\Entity\InjectionVial',
+        );
+        
+        return key_exists($filter, $lookup) ? $lookup[$filter] : '';
     }
 }

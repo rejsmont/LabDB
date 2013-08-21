@@ -54,11 +54,8 @@ class EntityRepository extends BaseEntityRepository
         $qb = $this->getListQueryBuilder($options);
         $permissions = isset($options['permissions']) ? $options['permissions'] : array();
         $user = isset($options['user']) ? $options['user'] : null;
-        if (false === $permissions) {
-            return $qb->getQuery();
-        } else {
-            return $this->aclFilter->apply($qb, $permissions, $user);
-        }
+        
+        return (false === $permissions) ? $qb->getQuery() : $this->aclFilter->apply($qb, $permissions, $user);
     }
 
     /**
@@ -84,18 +81,15 @@ class EntityRepository extends BaseEntityRepository
     /**
      *
      * @param  array   $options
-     * @return integer
+     * @return Doctrine\ORM\Query
      */
     public function getCountQuery($options = array())
     {
         $qb = $this->getCountQueryBuilder($options);
         $permissions = isset($options['permissions']) ? $options['permissions'] : null;
         $user = isset($options['user']) ? $options['user'] : null;
-        if (false === $permissions) {
-            return $qb->getQuery();
-        } else {
-            return $this->aclFilter->apply($qb, $permissions, $user);
-        }
+        
+        return (false === $permissions) ? $qb->getQuery() : $this->aclFilter->apply($qb, $permissions, $user);
     }
 
     /**

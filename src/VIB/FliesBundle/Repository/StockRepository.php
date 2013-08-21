@@ -25,7 +25,7 @@ use VIB\CoreBundle\Repository\EntityRepository;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class StockRepository extends EntityRepository
+class StockRepository extends SearchableRepository
 {
     /**
      * {@inheritdoc}
@@ -103,6 +103,99 @@ class StockRepository extends EntityRepository
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getSearchQuery($terms, $excluded = array(), $options = array())
+    {
+        $query = parent::getSearchQuery($terms, $excluded, $options);
+        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
+        
+        if ((false !== $permissions)&&(in_array('OWNER', $permissions))) {
+            $qb = $this->getSearchQueryBuilder($terms, $excluded, $options);
+            $user = isset($options['user']) ? $options['user'] : null;
+
+            return $this->aclFilter->apply($qb, $permissions, $user, 'v');
+        }
+            
+        return $query;
+    }
+        
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSearchQueryBuilder($terms, $excluded = array(), $options = array())
+    {
+        $qb = parent::getSearchQueryBuilder($terms, $excluded, $options);
+        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
+        
+        if ((false !== $permissions)&&(in_array('OWNER', $permissions))) {
+            $qb->join('e.vials','v');
+            if (! $options['dead']) {
+                $date = new \DateTime();
+                $date->sub(new \DateInterval('P2M'));
+                $qb->andWhere('v.setupDate > :date')
+                   ->andWhere('v.trashed = false')
+                   ->setParameter('date', $date->format('Y-m-d'));
+            }
+        }
+        
+        return $qb;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getSearchResultCountQuery($terms, $excluded = array(), $options = array())
+    {
+        $query = parent::getSearchResultCountQuery($terms, $excluded, $options);
+        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
+        
+        if ((false !== $permissions)&&(in_array('OWNER', $permissions))) {
+            $qb = $this->getSearchResultCountQueryBuilder($terms, $excluded, $options);
+            $user = isset($options['user']) ? $options['user'] : null;
+
+            return $this->aclFilter->apply($qb, $permissions, $user, 'v');
+        }
+            
+        return $query;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSearchResultCountQueryBuilder($terms, $excluded = array(), $options = array())
+    {
+        $qb = parent::getSearchResultCountQueryBuilder($terms, $excluded, $options)->select('count(DISTINCT e.id)');
+        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
+        
+        if ((false !== $permissions)&&(in_array('OWNER', $permissions))) {
+            $qb->join('e.vials','v');
+            if (! $options['dead']) {
+                $date = new \DateTime();
+                $date->sub(new \DateInterval('P2M'));
+                $qb->andWhere('v.setupDate > :date')
+                   ->andWhere('v.trashed = false')
+                   ->setParameter('date', $date->format('Y-m-d'));
+            }
+        }
+        
+        return $qb;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSearchFields($options = array())
+    {
+        $fields = array('e.name', 'e.genotype');
+        if ((key_exists('notes', $options))&&($options['notes'])) {
+            $fields[] = 'e.notes';
+        }
+        
+        return $fields;
+    }
+    
+    /**
      * Return stocks
      *
      * @return mixed
@@ -114,29 +207,5 @@ class StockRepository extends EntityRepository
                       ->setParameter('term', '%' . $term .'%');
 
         return $query;
-    }
-
-    /**
-     * Search stocks
-     *
-     * @return mixed
-     */
-    public function search($term)
-    {
-        $terms = explode(" ", $term);
-        $qb = $this->createQueryBuilder('b');
-        $expr = null;
-        foreach ($terms as $term) {
-            $expr = $qb->expr()->andX(
-                        $qb->expr()->orX(
-                            $qb->expr()->like('b.name', '\'%' . $term . '%\''),
-                            $qb->expr()->like('b.genotype', '\'%' . $term . '%\'')
-                        ),
-                        $expr
-                    );
-        }
-        $qb->add('where', $expr);
-
-        return $qb;
     }
 }

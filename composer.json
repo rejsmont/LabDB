@@ -28,6 +28,7 @@
         "knplabs/knp-menu-bundle": "1.1.*@dev",
         "craue/formflow-bundle": "dev-master",
         "friendsofsymfony/user-bundle": "dev-master",
+        "friendsofsymfony/rest-bundle": "dev-master",
         "exacttarget/fuelux": "master",
         "eternicode/bootstrap-datepicker": "master",
         "fontawesome/font-awesome": "master",
