@@ -195,9 +195,9 @@ class AJAXController extends AbstractController
      */
     public function stockSearchAction(Request $request)
     {
-        $query = $request->query->get('query');
-        $qb = $this->getObjectManager()->getRepository('VIBFliesBundle:Stock')->search($query);
-        $found = $this->getAclFilter()->apply($qb)->getResult();
+        $terms = explode(' ',$request->query->get('query'));
+        $query = $this->getObjectManager()->getRepository('VIBFliesBundle:Stock')->getSearchQuery($terms);
+        $found = $query->getResult();
 
         $stockNames = array();
         foreach ($found as $stock) {

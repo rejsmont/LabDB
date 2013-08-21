@@ -57,7 +57,7 @@ class CrossVialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/crosses/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(14, $crawler->filter('.modal-body label')->count());
+        $this->assertEquals(13, $crawler->filter('.modal-body label')->count());
     }
 
     public function testCreateSubmitOne()

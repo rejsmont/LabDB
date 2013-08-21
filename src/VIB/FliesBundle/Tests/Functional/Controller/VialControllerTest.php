@@ -83,7 +83,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/vials/expand');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(7, $crawler->filter('.modal-body label')->count());
+        $this->assertEquals(6, $crawler->filter('.modal-body label')->count());
     }
 
     public function testExpandSubmit()

@@ -39,7 +39,7 @@ class StockVialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/stocks/vials/expand');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(7, $crawler->filter('.modal-body label')->count());
+        $this->assertEquals(6, $crawler->filter('.modal-body label')->count());
     }
 
     public function testSelect()
@@ -56,7 +56,7 @@ class StockVialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/secure/stocks/vials/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(13, $crawler->filter('.modal-body label')->count());
+        $this->assertEquals(12, $crawler->filter('.modal-body label')->count());
     }
 
     public function testCreateSubmitOne()

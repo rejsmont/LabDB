@@ -43,7 +43,7 @@ class SearchControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/');
         $form = $crawler->filter('form#search-form')->form();
         $form['search_form[query]'] = 'yw';
-        $form['search_form[filter]'] = 'crosses';
+        $form['search_form[filter]'] = 'crossvial';
 
         $result = $client->submit($form);
         $this->assertTrue($client->getResponse()->isSuccessful());
