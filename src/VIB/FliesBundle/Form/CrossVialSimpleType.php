@@ -45,11 +45,14 @@ class CrossVialSimpleType extends AbstractType
         $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
                 ->add('flipDate', 'datepicker', array('label' => 'Check date', 'required'  => false))
                 ->add('virgin', 'text_entity', array(
-                        'property'     => 'id',
+                        'property' => 'id',
                         'class' => 'VIBFliesBundle:Vial',
                         'format'    => '%06d',
                         'label' => 'Virgin vial',
-                        'attr' => array('class' => 'barcode')))
+                        'attr' => array('class' => 'barcode'),
+                        'widget_addon' => array(
+                        'icon' => 'qrcode',
+                        'type' => 'append')))
                 ->add('virginName', 'text', array(
                         'label' => 'Virgin genotype',
                         'required' => false))
@@ -58,7 +61,10 @@ class CrossVialSimpleType extends AbstractType
                         'class' => 'VIBFliesBundle:Vial',
                         'format'    => '%06d',
                         'label' => 'Male vial',
-                        'attr' => array('class' => 'barcode')))
+                        'attr' => array('class' => 'barcode'),
+                        'widget_addon' => array(
+                        'icon' => 'qrcode',
+                        'type' => 'append')))
                 ->add('maleName', 'text', array(
                         'label' => 'Male genotype',
                         'required' => false))

@@ -4,6 +4,10 @@
     "autoload": {
         "psr-0": { "": "src/" }
     },
+    "provide": { 
+        "twitter/bootstrap": "*",
+        "frameworks/jquery" : "*"
+    },
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "2.3.*",
@@ -22,22 +26,25 @@
         "jms/di-extra-bundle": "1.4.*@dev",
         "jms/serializer-bundle": "dev-master",
         "mopa/bootstrap-bundle": "2.3.*@dev",
-        "twbs/bootstrap": "2.*",
         "knplabs/knp-paginator-bundle": "2.3.*@dev",
         "knplabs/knp-components": "1.2.2",
         "knplabs/knp-menu-bundle": "1.1.*@dev",
         "craue/formflow-bundle": "dev-master",
         "friendsofsymfony/user-bundle": "dev-master",
         "friendsofsymfony/rest-bundle": "dev-master",
-        "exacttarget/fuelux": "master",
-        "eternicode/bootstrap-datepicker": "master",
-        "fontawesome/font-awesome": "master",
         "whiteoctober/tcpdf-bundle": "dev-master",
-        "bmatzner/jquery-bundle": "dev-master",
-        "bmatzner/jquery-ui-bundle": "1.10.1",
         "sabre/vobject": "2.0.*",
-        "rejsmont/php-ipp": "master",
-        "kuleuven/shibboleth-bundle": "dev-master"
+        "rejsmont/php-ipp": "0.21",
+        "kuleuven/shibboleth-bundle": "dev-master",
+        "twbs/bootstrap": "2.3.*@dev",
+        "fortawesome/font-awesome": "3.2.*@dev",
+        "eternicode/bootstrap-datepicker": "dev-master",
+        "exacttarget/fuelux": "2.3.1",
+        "jquery/jquery": "1.10.2",
+        "jquery/jquery-ui": "1.10.3",
+        "packagist/yuicompressor-bin": "dev-master",
+        "packagist/cssembed-bin": "dev-master",
+        "verekia/initializr": "4.2.0"
     },
     "scripts": {
         "post-install-cmd": [
@@ -47,7 +54,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
         ],
-        "post-update-cmd": [ 
+        "post-update-cmd": [
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
@@ -72,43 +79,67 @@
         {
             "type": "package",
             "package": {
-                "version": "master",
+                "name": "verekia/initializr",
+                "version": "4.2.0",
+                "dist":{
+                    "url":"http://www.initializr.com/builder?modernizrrespond",
+                    "type":"zip"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "jquery/jquery",
+                "version": "1.10.2",
+                "dist":{
+                    "url":"http://code.jquery.com/jquery-1.10.2.min.js",
+                    "type":"file"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "jquery/jquery-ui",
+                "version": "1.10.3",
+                "dist":{
+                    "url":"http://jqueryui.com/resources/download/jquery-ui-1.10.3.zip",
+                    "type":"zip",
+                    "reference":"1.10.3"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "version": "2.3.1",
                 "name": "exacttarget/fuelux",
+                "type": "component",
                 "source": {
                     "url": "https://github.com/ExactTarget/fuelux.git",
                     "type": "git",
-                    "reference": "2.2.0"
+                    "reference": "2.3.1"
                 }
             }
         },
         {
             "type": "package",
             "package": {
-                "version": "master",
+                "version": "1.2.0",
                 "name": "eternicode/bootstrap-datepicker",
+                "type": "component",
                 "source": {
                     "url": "https://github.com/eternicode/bootstrap-datepicker.git",
                     "type": "git",
-                    "reference": "master"
+                    "reference": "1.2.0"
                 }
             }
         },
         {
             "type": "package",
             "package": {
-                "version": "master",
-                "name": "fontawesome/font-awesome",
-                "source": {
-                    "url": "https://github.com/FortAwesome/Font-Awesome.git",
-                    "type": "git",
-                    "reference": "master"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "version": "master",
+                "version": "0.21",
                 "name": "rejsmont/php-ipp",
                 "source": {
                     "url": "https://github.com/rejsmont/php-ipp.git",

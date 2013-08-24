@@ -52,7 +52,10 @@ class StockType extends AbstractType
                         'format'    => '%06d',
                         'required' => false,
                         'label'     => 'Source cross',
-                        'attr' => array('class' => 'barcode')))
+                        'attr' => array('class' => 'barcode'),
+                        'widget_addon' => array(
+                        'icon' => 'qrcode',
+                        'type' => 'append')))
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',
                         'required' => false))

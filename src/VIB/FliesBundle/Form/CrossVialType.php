@@ -49,7 +49,10 @@ class CrossVialType extends AbstractType
                         'class' => 'VIBFliesBundle:Vial',
                         'format'    => '%06d',
                         'label' => 'Virgin vial',
-                        'attr' => array('class' => 'barcode')))
+                        'attr' => array('class' => 'barcode'),
+                        'widget_addon' => array(
+                        'icon' => 'qrcode',
+                        'type' => 'append')))
                 ->add('virginName', 'text', array(
                         'label' => 'Virgin genotype',
                         'required' => false))
@@ -58,7 +61,10 @@ class CrossVialType extends AbstractType
                         'class' => 'VIBFliesBundle:Vial',
                         'format'    => '%06d',
                         'label' => 'Male vial',
-                        'attr' => array('class' => 'barcode')))
+                        'attr' => array('class' => 'barcode'),
+                        'widget_addon' => array(
+                        'icon' => 'qrcode',
+                        'type' => 'append')))
                 ->add('maleName', 'text', array(
                         'label' => 'Male genotype',
                         'required' => false))
@@ -71,7 +77,10 @@ class CrossVialType extends AbstractType
                         'format'    => '%06d',
                         'required'  => false,
                         'label'     => 'Flipped from',
-                        'attr' => array('class' => 'barcode')))
+                        'attr' => array('class' => 'barcode'),
+                        'widget_addon' => array(
+                        'icon' => 'qrcode',
+                        'type' => 'append')))
                 ->add('size', 'choice', array(
                         'choices'   => array('small' => 'small',
                                              'medium' => 'medium',

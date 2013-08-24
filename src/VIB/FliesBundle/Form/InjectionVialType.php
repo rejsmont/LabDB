@@ -68,7 +68,10 @@ class InjectionVialType extends AbstractType
                         'format'    => '%06d',
                         'required'  => false,
                         'label'     => 'Target stock source vial',
-                        'attr' => array('class' => 'barcode')))
+                        'attr' => array('class' => 'barcode'),
+                        'widget_addon' => array(
+                        'icon' => 'qrcode',
+                        'type' => 'append')))
                 ->add('embryoCount', 'number', array(
                         'label' => 'Embryo count'))
                 ->add('vendor', 'text', array(

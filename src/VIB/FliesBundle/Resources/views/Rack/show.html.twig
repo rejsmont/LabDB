@@ -15,7 +15,10 @@
 <div class="span12">
   {% block list_selector %}
     <div class="form-inline control-group well">
-      <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value="" onchange="checkRackVial()" data-link="{{ path('vib_flies_ajax_rackvial')}}"/>
+      <div class="input-append">
+        <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value=""
+          onchange="checkRackVial()" data-link="{{ path('vib_flies_ajax_rackvial')}}"/>
+        <span class="add-on"><i class="icon-qrcode"></i></span></div>
       <span class="help-inline"></span>
     </div>
   {% endblock list_selector %}

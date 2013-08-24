@@ -1,27 +1,25 @@
 {% extends 'VIBSiteTemplateBundle::layout.html.twig' %}
 
 {% block navbar %}
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-      <a class="brand" href="{{ path('default') }}">LNG FlyDB</a>
-      <div class="nav-collapse">
-      {% render(controller("VIBFliesBundle:Search:form")) %}
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <a class="brand" href="{{ path('default') }}">LNG FlyDB</a>
+        <div class="nav-collapse">
+        {% render(controller("VIBFliesBundle:Search:form")) %}
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock navbar %}
 
 {% block container %}
-<div class="{% block container_class %}container{% endblock container_class %}">
-    {% block header %}
-    {% endblock header %}
+  <div class="{% block container_class %}container{% endblock container_class %}">
     <div class="content">
       <div class="row">
         {% block main_row %}
@@ -35,10 +33,7 @@
         {% endblock main_row %}
       </div>
     </div>
-    <footer>
-    {% block footer %}
-    {% endblock footer %}
-    </footer>
+  </div>
 </div>
 {% endblock container %}
 

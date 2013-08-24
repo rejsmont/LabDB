@@ -18,3 +18,6 @@ parameters:
     print_queue:       ~
 
     knp_paginator.template.pagination: MopaBootstrapBundle:Pagination:sliding.html.twig
+
+    google_analytics:    'UA-xxxxxxxx-x'
+    google_verification: 'xxx'

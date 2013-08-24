@@ -49,6 +49,9 @@ class VialExpandType extends AbstractType
                         'format'   => '%06d',
                         'label'    => 'Source',
                         'attr' => array('class' => 'barcode'),
+                        'widget_addon' => array(
+                            'icon' => 'qrcode',
+                            'type' => 'append'),
                         'constraints' => array(
                             new NotNull())))
                 ->add('size', 'choice', array(

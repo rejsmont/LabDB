@@ -57,7 +57,10 @@ class StockVialType extends AbstractType
                         'format'    => '%06d',
                         'required'  => false,
                         'label'     => 'Flipped from',
-                        'attr' => array('class' => 'barcode')))
+                        'attr' => array('class' => 'barcode'),
+                        'widget_addon' => array(
+                        'icon' => 'qrcode',
+                        'type' => 'append')))
                 ->add('size', 'choice', array(
                         'choices'   => array('small' => 'small',
                                              'medium' => 'medium',

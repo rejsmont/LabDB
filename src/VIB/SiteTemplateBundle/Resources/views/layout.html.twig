@@ -1,186 +1,196 @@
-{% extends 'MopaBootstrapBundle::base' ~ theme_type|default('')~ '.html.twig' %}
+{% extends 'MopaBootstrapBundle::base_initializr.html.twig' %}
 {% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
 
-{% block head_style %}
+{% block html_tag %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+{% endblock html_tag %}
+
+{% block head %}
+<head>
+  <meta charset="utf-8">
+  {% block dns_prefetch %}
+    {% for domain in dns_prefetch %}
+  <link rel="dns-prefetch" href="{{ domain }}" />
+    {% endfor %}
+  {% endblock dns_prefetch %}
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">        
+  <meta name="description" content="{{ meta['description'] }}" />
+  <meta name="keywords" content="{{ meta['keywords'] }}" />
+  <meta name="author" content="{{ meta['author_name'] }}" />
+  <link rel="author" href="{{ meta['author_url'] }}" title="{{ meta['author_name'] }}" />
+  <title>{% block title%}{{ meta['title'] }}{% endblock %}</title>
+  <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+  <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}" />
+  {% if meta['sitemap'] is defined %}
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ meta['sitemap'] }}" />
+  {% endif %}
+  {% if meta['feed_atom'] is defined %}
+    <link rel="alternate" type="application/atom+xml" title="Atom" href="{{ meta['feed_atom'] }}" />
+  {% endif %}
+  {% if meta['feed_rss'] is defined %}
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ meta['feed_rss'] }}" />
+  {% endif %}
+  {% if meta['noindex'] or noindex is defined %}
+    {% set meta_robots = 'noindex,' %}
+  {% else %}
+    {% set meta_robots = '' %}
+  {% endif %}
+  {% if meta['nofollow'] or nofollow is defined %}
+    {% set meta_robots = meta_robots ~ 'nofollow' %}
+  {% else %}
+    {% set meta_robots = meta_robots ~ 'follow' %}
+  {% endif %}
+  {% if meta_robots != 'follow' %}
+    <meta name="robots" content="{{ meta_robots }}" />
+  {% endif %}
+  {% if google['wt'] is defined %}
+    <meta name="google-site-verification" content="{{ google['wt'] }}" />
+  {% endif %}
+  {% block head_style %}
     {% stylesheets
-        '@VIBSiteTemplateBundle/Resources/public/less/vibbasebundle.css.less'
+      '@VIBSiteTemplateBundle/Resources/public/less/vibbasebundle.less'
+      output='css/styles.css'
     %}
-    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+      <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
     {% endstylesheets %}
-{% endblock head_style %}
-
-{% block title %}Laboratory of Neurogenetics{% endblock title %}
-
-{% block navbar %}
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-      <a class="brand" href="{{ path('default') }}">LNG FlyDB</a>
-      <div class="nav-collapse">
-        <ul class="nav">
-          <li class="first">
-            <a href="{{ path('vib_flies_stock_list') }}">Stocks</a>
-          </li>
-          <li>
-            <a href="{{ path('vib_flies_stockvial_list') }}">Stock vials</a>
-          </li>
-          <li>
-            <a href="{{ path('vib_flies_crossvial_list') }}">Crosses</a>
-          </li>
-          <li class="dropdown last visible-desktop">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Vials <i class="caret"></i></a>
-            <ul class="dropdown-menu menu_level_1">
-              <li class="first">
-                <a href="{{ path('vib_flies_vial_list') }}">My vials</a>
-              </li>
-              <li>
-                <a href="{{ path('vib_flies_injectionvial_list') }}">My injections</a>
-              </li>              
-            </ul>
-          </li>
-          <li class="dropdown last visible-desktop">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <i class="caret"></i></a>
-            <ul class="dropdown-menu menu_level_1">
-              <li class="dropdown-submenu first">
-                <a>New</a>
-                <ul class="dropdown-menu menu_level_2">
-                  <li class="first"><a href="{{ path('vib_flies_stock_create') }}">Stock</a></li>
-                  <li><a href="{{ path('vib_flies_crossvial_create') }}">Cross</a></li>
-                  <li><a href="{{ path('vib_flies_injectionvial_create') }}">Injection</a></li>
-                  <li><a href="{{ path('vib_flies_rack_create') }}">Rack</a></li>
-                </ul>
-              </li>
-              <li class="dropdown-submenu">
-                <a>Select</a>
-                <ul class="dropdown-menu menu_level_2">
-                  <li><a href="{{ path('vib_flies_vial_select') }}">Vials</a></li>
-                  <li><a href="{{ path('vib_flies_stockvial_select') }}">Stock vials</a></li>
-                  <li><a href="{{ path('vib_flies_crossvial_select') }}">Crosses</a></li>
-                </ul>
-              </li>
-              <li class="last"><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
-              {% render(controller("VIBFliesBundle:Incubator:menu")) %}
-            </ul>
-          </li>
-        </ul>
-        {% if app.user is not empty %}
-        <ul class="nav pull-right user-menu">
-          <li class="dropdown first last">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              {% if is_granted('ROLE_ADMIN') %}
-                <span class="text-error">
-              {% endif %}
-              {{ app.user }}
-              <i class="icon-user"></i>
-              {% if is_granted('ROLE_ADMIN') %}
-                </span>
-              {% endif %}
-            </a>
-            <ul class="dropdown-menu menu_level_1 pull-right">
-              <li class="first last"><a href="{{ path('logout') }}">Logout</a></li>
-            </ul>
-          </li>
-        </ul>
-        {% endif %}
-        {% render(controller("VIBFliesBundle:Search:form")) %}
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock navbar %}
-
-{% block container %}
-<div class="{% block container_class %}container{% endblock container_class %}">
-    {% block header %}
-    {% endblock header %}
-    <div class="content">
-      <div class="row">
-        {% block info_row %}
-        <div class="span12">
-          {% block flashes %}
-          {% if app.session.flashbag.peekAll|length > 0 %}
-              {{ session_flash(true) }}
-          {% endif %}
-          {% endblock flashes %}
-          {% block msie_info %}
-          {% render(controller("VIBSiteTemplateBundle:Messages:msie")) %}
-          {% endblock msie_info %}
-          {% block info_messages %}{% endblock info_messages %}
-        </div>
-        {% endblock info_row %}
-        {% block header_row %}
-        <div class="offset3 span9">
-          {% block page_header %}
-          <div class="page-header">
-                <h1>{% block headline %}Welcome{% endblock headline %}</h1>
-          </div>
-          {% endblock page_header %}
-        </div>
-        {% endblock header_row %}
-      </div>
-      <div class="row">
-        {% block main_row %}
-        <div id="sidebar" class="span3">
-          {% block content_sidebar %}
-          {% endblock content_sidebar %}
-          {% render(controller("VIBFliesBundle:Print:printPanel")) %}
-        </div>
-        <div class="span9">
-          {% block content_row %}
-          <div class="row-fluid">
-              {% block content %}
-                  {% block content_content %}
-                  {% endblock content_content %}
-              {% endblock content %}
-          </div>
-          {% endblock content_row %}
-        </div>
-        {% endblock main_row %}
-      </div>
-    </div>
-    <footer>
-    {% block footer %}
-    {% endblock footer %}
-    </footer>
-</div>
-{% endblock container %}
-
-{% block foot_script %}
+    {% if diagnostic_mode %}
+      {% stylesheets
+          '@MopaBootstrapBundle/Resources/public/css/diagnostic.css'
+          output='css/screen_diagnostic.css'
+      %}
+      <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+      {% endstylesheets %}
+    {% endif %}
+  {% endblock head_style %}
+  {% block head_scripts %}
     {% javascripts
-        '@BmatznerJQueryBundle/Resources/public/js/jquery.js'
-        '@BmatznerJQueryUIBundle/Resources/public/js/jquery.ui.core.js'
-        '@BmatznerJQueryUIBundle/Resources/public/js/jquery.ui.effect.js'
-        '@BmatznerJQueryUIBundle/Resources/public/js/jquery.ui.effect-highlight.js'
-        '@VIBFormsBundle/Resources/public/js/forms.js'
-        '@VIBFliesBundle/Resources/public/js/forms.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-transition.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-modal.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-dropdown.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-scrollspy.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-tab.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-tooltip.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-popover.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-alert.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-button.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-collapse.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-carousel.js'
-        '@MopaBootstrapBundle/Resources/bootstrap/js/bootstrap-typeahead.js'
-        '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
-        '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-subnav.js'
-        '../vendor/eternicode/bootstrap-datepicker/js/bootstrap-datepicker.js'
-         filter='?yui_js'
+        '../vendor/verekia/initializr/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js'
+        output='js/head.js'
     %}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
-<script type="text/javascript">
-  $('.date').datepicker();
-</script>
-<!--[if lt IE 9]>
-  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+  {% endblock head_scripts %}
+</head>
+{% endblock head %}
+
+{% block body_start %}
+<!--[if lt IE 7]>
+  <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 <![endif]-->
-{% endblock foot_script %}
+{% endblock body_start %}    
+
+{% block body %}
+  <div class="wrap">
+
+    {% block header %}
+    {% block header_start %}<header>{% endblock header_start %}
+      {% block navbar %}
+        {% include 'VIBSiteTemplateBundle::navbar.html.twig' %}
+      {% endblock navbar %}
+    {% block header_end %}</header>{% endblock header_end %}
+    {% endblock header %}
+
+    {% block container %}
+    {% block container_div_start %}<div class="{% block container_class %}container{% endblock container_class %}">{% endblock container_div_start %}
+      {% block content_div_start %}<div class="content">{% endblock content_div_start %}
+        <div class="row">
+          {% block info_row %}
+          <div class="span12">
+            {% block flashes %}
+            {% if app.session.flashbag.peekAll|length > 0 %}
+                {{ session_flash(true) }}
+            {% endif %}
+            {% endblock flashes %}
+            {% block msie_info %}
+            {% render(controller("VIBSiteTemplateBundle:Messages:msie")) %}
+            {% endblock msie_info %}
+            {% block info_messages %}{% endblock info_messages %}
+          </div>
+          {% endblock info_row %}
+          {% block header_row %}
+          <div class="offset3 span9">
+            {% block page_header %}
+            <div class="page-header">
+                  <h1>{% block headline %}Welcome{% endblock headline %}</h1>
+            </div>
+            {% endblock page_header %}
+          </div>
+          {% endblock header_row %}
+        </div>
+        <div class="row">
+          {% block main_row %}
+          <div id="sidebar" class="span3">
+            {% block content_sidebar %}
+            {% endblock content_sidebar %}
+            {% render(controller("VIBFliesBundle:Print:printPanel")) %}
+          </div>
+          <div class="span9">
+            {% block content_row %}
+            <div class="row-fluid">
+                {% block content %}
+                    {% block content_content %}
+                    {% endblock content_content %}
+                {% endblock content %}
+            </div>
+            {% endblock content_row %}
+          </div>
+          {% endblock main_row %}
+        </div>
+      {% block content_div_end %}</div>{% endblock content_div_end %}
+    {% block container_div_end %}</div>{% endblock container_div_end %}
+    {% endblock container %}
+
+  </div>
+
+  {% block footer %}
+    {% include 'VIBSiteTemplateBundle::footer.html.twig' %}
+  {% endblock footer %}
+
+  {% block foot_script %}
+    {% if google['analytics'] is defined %}
+    <script>
+        var _gaq = [['_setAccount', '{{ google['analytics'] }}'], ['_trackPageview']];
+        (function(d, t) {
+            var g = d.createElement(t),
+                s = d.getElementsByTagName(t)[0];
+            g.async = g.src = '//www.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g, s);
+        }(document, 'script'));
+    </script>
+    {% endif %}
+    {% javascripts output='js/main.js'
+      '../vendor/jquery/jquery/jquery-1.10.2.min.js'
+      '../vendor/jquery/jquery-ui/ui/minified/jquery.ui.core.min.js'
+      '../vendor/jquery/jquery-ui/ui/minified/jquery.ui.effect.min.js'
+      '../vendor/jquery/jquery-ui/ui/minified/jquery.ui.effect-highlight.min.js'
+      '@VIBFormsBundle/Resources/public/js/forms.js'
+      '@VIBFliesBundle/Resources/public/js/forms.js'
+      '@VIBSiteTemplateBundle/Resources/public/js/split-dropdown.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-transition.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-modal.js'
+      '@VIBSiteTemplateBundle/Resources/public/js/bootstrap-dropdown.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-scrollspy.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-tab.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-tooltip.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-popover.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-alert.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-button.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-collapse.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-carousel.js'
+      '../vendor/twbs/bootstrap/js/bootstrap-typeahead.js'
+      '../vendor/eternicode/bootstrap-datepicker/js/bootstrap-datepicker.js'
+    %}
+      <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+  {% endblock foot_script %}
+  {% block foot_script_additional %}
+    <script type="text/javascript">
+      $('.date').datepicker();
+    </script>
+  {% endblock foot_script_additional %}
+{% endblock body %}

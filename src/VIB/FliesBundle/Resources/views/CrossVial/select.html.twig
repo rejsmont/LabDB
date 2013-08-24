@@ -7,10 +7,11 @@
 
 {% block list_selector %}
   <div class="form-inline control-group well">
-    <input id="barcode" class="barcode" type="text"
-           placeholder="Scan your barcodes here" value=""
-           onchange="checkVial('cross')" data-link="{{ path('vib_flies_ajax_vial')}}"
-           data-rack-redirect="{{ path('vib_flies_rack_show',{'id': 0}) | replace({'/0': '/'}) }}" />
+    <div class="input-append">
+      <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value=""
+        onchange="checkVial('cross')" data-link="{{ path('vib_flies_ajax_vial')}}"
+        data-rack-redirect="{{ path('vib_flies_rack_show',{'id': 0}) | replace({'/0': '/'}) }}" />
+      <span class="add-on"><i class="icon-qrcode"></i></span></div>
     <span class="help-inline"></span>
   </div>
 {% endblock list_selector %}

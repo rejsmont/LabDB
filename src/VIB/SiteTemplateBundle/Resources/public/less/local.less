@@ -1,28 +1,5 @@
-/*!
- * MopaBootstrapSandboxBundle
- *
- * Copyright 2011 Mohrenweiser & Partner
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * This file is a fully functional example for MopaBootstrapBundle
- */
-
-// Getting the whole mopabootstrapbundle.less
-@import "../../../../../../vendor/twbs/bootstrap/less/bootstrap.less";
-
-// includes from third-party bundles
-@import '../../../../../../vendor/eternicode/bootstrap-datepicker/less/datepicker.less';
-
-// local includes
-@import 'tables.less';
-@import 'forms.less';
-@import 'fontawesome.less';
-@import 'navs.less';
-
-body {
+.wrap > .container {
   padding-top: 60px;
-  padding-bottom: 40px;
 }
 
 .page-header {
@@ -129,9 +106,3 @@ div.status {
 .btn + .btn-group {
   margin-left: 5px;
 }
-
-// include the responsive after all of your stuff!
-@import "../../../../../../vendor/twbs/bootstrap/less/responsive.less";
-
-// if you have any variables.less file INCLUDE IT AFTER EVERYTHING cause responsive.less also overrides it with the one from bootstrap!!!!!
-// @import 'variables.less';

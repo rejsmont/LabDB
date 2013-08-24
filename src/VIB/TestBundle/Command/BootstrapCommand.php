@@ -18,27 +18,17 @@
 
 namespace VIB\TestBundle\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Security\Acl\Permission\MaskBuilder;
-
-use Doctrine\Common\Collections\ArrayCollection;
-
-use VIB\FliesBundle\Entity\Stock;
-use VIB\FliesBundle\Entity\StockVial;
 
 /**
  * BootstrapCommand
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class BootstrapCommand extends Command
+class BootstrapCommand extends ContainerAwareCommand
 {
-    private $container;
-
     protected function configure()
     {
         $this
@@ -49,9 +39,7 @@ class BootstrapCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->container = $this->getApplication()->getKernel()->getContainer();
-
-        $connection = $this->container->get('doctrine')->getManager()->getConnection();
+        $connection = $this->getContainer()->get('doctrine')->getManager()->getConnection();
         $params = $connection->getParams();
         
         if ((isset($params['driver']))&&($params['driver'] == 'pdo_sqlite')) {

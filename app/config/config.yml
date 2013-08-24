@@ -1,5 +1,6 @@
 imports:
     - { resource: parameters.yml }
+    - { resource: assets.yml }
 
 framework:
     secret:          %secret%
@@ -18,25 +19,6 @@ twig:
     form:
         resources:
             - 'VIBFormsBundle:Form:fields.html.twig'
-
-# Assetic Configuration
-assetic:
-    debug:          %kernel.debug%
-    use_controller: false
-    filters:
-        less:
-            node: /usr/bin/node
-            node_paths: [/usr/lib/nodejs]
-            apply_to: "\.css\.less$"
-        cssrewrite: ~
-        cssembed:
-            jar: %kernel.root_dir%/Resources/java/cssembed-0.3.6.jar
-            apply_to: "\.css$|\.less$"
-        yui_css:
-            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
-            apply_to: "\.css$"
-        yui_js:
-            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
 
 # Doctrine Configuration
 doctrine:
@@ -61,6 +43,20 @@ swiftmailer:
     spool:     { type: memory }
 
 mopa_bootstrap:
+    initializr:
+        meta:
+            title:        "FlyDB"
+            description:  "Fly stock management system"
+            keywords:     "FlyDB,management,stock"
+            author_name:  "Radosław Kamil Ejsmont"
+            author_url:   "http://radoslaw.ejsmont.net/"
+            nofollow:     true
+            noindex:      true
+        dns_prefetch:
+            - '//ajax.googleapis.com'
+        google:
+            wt:          %google_verification%
+            analytics:   %google_analytics%
     navbar:
         template: 'VIBBaseBundle:Menu:main.html.twig'
     form: 

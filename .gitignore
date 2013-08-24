@@ -37,3 +37,4 @@ app/config/security.yml
 web/css
 web/js
 /app/Resources/db/test.db
+/web/font/

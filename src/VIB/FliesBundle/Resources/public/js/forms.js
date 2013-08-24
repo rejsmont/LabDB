@@ -31,7 +31,7 @@ function checkVial(filter) {
     } else if (barcode.match(/^\d+$/) == null) {
         $('#barcode').parents('.control-group').addClass('error');
         $('#barcode').addClass('error');
-        $('#barcode').siblings('span.help-inline').html(form_error('Wrong barcode format'));
+        $('#barcode').parents('.input-append').siblings('span.help-inline').html(form_error('Wrong barcode format'));
         $('#barcode').val('');
         $('#barcode').parents('form').find(':input').blur();
         $('#barcode').focus();
@@ -46,7 +46,7 @@ function checkVial(filter) {
     
     $('#barcode').parents('.control-group').removeClass('error');
     $('#barcode').removeClass('error');
-    $('#barcode').siblings('span.help-inline').html('');
+    $('#barcode').parents('.input-append').siblings('span.help-inline').html('');
     
     if(checkbox.length) {
         if (checkbox.is(':checked')) {
@@ -85,7 +85,7 @@ function checkVial(filter) {
             function(xhr, ajaxOptions, thrownError) {
                 $('#barcode').parents('.control-group').addClass('error');
                 $('#barcode').addClass('error');
-                $('#barcode').siblings('span.help-inline').html(form_error(xhr.responseText));
+                $('#barcode').parents('.input-append').siblings('span.help-inline').html(form_error(xhr.responseText));
             });
     }
 
@@ -105,7 +105,7 @@ function checkRackVial() {
     if (barcode.match(/^\d+$/) == null) {
         $('#barcode').parents('.control-group').addClass('error');
         $('#barcode').addClass('error');
-        $('#barcode').siblings('span.help-inline').html(form_error('Wrong barcode format'));
+        $('#barcode').parents('.input-append').siblings('span.help-inline').html(form_error('Wrong barcode format'));
         $('#barcode').val('');
         $('#barcode').parents('form').find(':input').blur();
         $('#barcode').focus();
@@ -123,7 +123,7 @@ function checkRackVial() {
     
     $('#barcode').parents('.control-group').removeClass('error');
     $('#barcode').removeClass('error');
-    $('#barcode').siblings('span.help-inline').html('');
+    $('#barcode').parents('.input-append').siblings('span.help-inline').html('');
     
     if(checkbox.length) {
         if (checkbox.is(':checked')) {
@@ -166,12 +166,12 @@ function checkRackVial() {
             function(xhr, ajaxOptions, thrownError) {
                 $('#barcode').parents('.control-group').addClass('error');
                 $('#barcode').addClass('error');
-                $('#barcode').siblings('span.help-inline').html(form_error(xhr.responseText));
+                $('#barcode').parents('.input-append').siblings('span.help-inline').html(form_error(xhr.responseText));
         });
     } else {
       $('#barcode').parents('.control-group').addClass('error');
       $('#barcode').addClass('error');
-      $('#barcode').siblings('span.help-inline').html(form_error('Rack is full'));
+      $('#barcode').parents('.input-append').siblings('span.help-inline').html(form_error('Rack is full'));
     }
 
     $('#barcode').val('');

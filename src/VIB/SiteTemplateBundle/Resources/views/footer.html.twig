@@ -1,0 +1,23 @@
+<footer>
+  <div class="container">
+    <div class="content">
+      {% block footer_content %}
+      <div class="row">
+        <div class="span12 text-center">
+          <p>Copyright &copy 2011-{{ "now"|date("Y") }}&nbsp;
+          <i class="icon-linkedin-sign icon-large text-info"></i>
+          <a href="http://www.linkedin.com/in/rejsmont">Radoslaw Kamil Ejsmont</a>&nbsp;
+          <i class="icon-twitter-sign icon-large text-info"></i>
+          <a href="https://twitter.com/rejsmont">@rejsmont</a><br>
+          Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License</a>, Version 2.0</p>
+          Code available on&nbsp;
+          <i class="icon-github icon-large"></i>
+          <a href="https://github.com/rejsmont/LabDB">GitHub</a>.&nbsp;
+          You can report bugs and errors or request new features on <i class="icon-bug icon-large text-error"></i>
+          <a href="https://bugzilla.vibfolks.eu/">Bugzilla</a>.
+        </div>
+      </div>
+      {% endblock footer_content %}
+    </div>
+  </div>
+</footer>

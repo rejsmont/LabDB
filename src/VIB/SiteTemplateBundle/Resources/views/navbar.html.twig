@@ -1,0 +1,83 @@
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="{{ path('default') }}">LNG FlyDB</a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li class="first">
+            <a href="{{ path('vib_flies_stock_list') }}">Stocks</a>
+          </li>
+          <li>
+            <a href="{{ path('vib_flies_stockvial_list') }}">Stock vials</a>
+          </li>
+          <li>
+            <a href="{{ path('vib_flies_crossvial_list') }}">Crosses</a>
+          </li>
+          <li class="dropdown-split-left visible-desktop">
+            <a href="#">Vials</a>
+          </li>
+          <li class="dropdown dropdown-split-right visible-desktop">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-caret-down"></i></a>
+            <ul class="dropdown-menu menu_level_1 pull-right">
+              <li class="first">
+                <a href="{{ path('vib_flies_vial_list') }}">My vials</a>
+              </li>
+              <li>
+                <a href="{{ path('vib_flies_injectionvial_list') }}">My injections</a>
+              </li>              
+            </ul>
+          </li>
+          <li class="dropdown last visible-desktop">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <i class="caret"></i></a>
+            <ul class="dropdown-menu menu_level_1">
+              <li class="dropdown-submenu first">
+                <a>New</a>
+                <ul class="dropdown-menu menu_level_2">
+                  <li class="first"><a href="{{ path('vib_flies_stock_create') }}">Stock</a></li>
+                  <li><a href="{{ path('vib_flies_crossvial_create') }}">Cross</a></li>
+                  <li><a href="{{ path('vib_flies_injectionvial_create') }}">Injection</a></li>
+                  <li><a href="{{ path('vib_flies_rack_create') }}">Rack</a></li>
+                </ul>
+              </li>
+              <li class="dropdown-submenu">
+                <a>Select</a>
+                <ul class="dropdown-menu menu_level_2">
+                  <li><a href="{{ path('vib_flies_vial_select') }}">Vials</a></li>
+                  <li><a href="{{ path('vib_flies_stockvial_select') }}">Stock vials</a></li>
+                  <li><a href="{{ path('vib_flies_crossvial_select') }}">Crosses</a></li>
+                </ul>
+              </li>
+              <li class="last"><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
+              {% render(controller("VIBFliesBundle:Incubator:menu")) %}
+            </ul>
+          </li>
+        </ul>
+        {% if app.user is not empty %}
+        <ul class="nav pull-right user-menu">
+          <li class="dropdown first last">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              {% if is_granted('ROLE_ADMIN') %}
+                <span class="text-error">
+              {% endif %}
+              {{ app.user }}&nbsp;
+              <i class="icon-user"></i>
+              {% if is_granted('ROLE_ADMIN') %}
+                </span>
+              {% endif %}
+            </a>
+            <ul class="dropdown-menu menu_level_1 pull-right">
+              <li class="first last"><a href="{{ path('logout') }}">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+        {% endif %}
+        {% render(controller("VIBFliesBundle:Search:form")) %}
+      </div>
+    </div>
+  </div>
+</div>
