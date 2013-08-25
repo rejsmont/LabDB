@@ -1,25 +1,28 @@
 {% extends "VIBSiteTemplateBundle::layout.html.twig" %}
 
-{% block headline %}LNG FlyDB{% endblock headline %}
+{% block headline %}FlyDB{% endblock headline %}
 
 {% block content %}
 <p>
-  Welcome the to the LNG FlyDB. Use the menu above to access database resources.
+  Welcome the to the FlyDB. Use the menu above to access database resources.
   {% if app.user is empty %}
-  You will redirected to the KU Leuven login
-  page, where you can log in with your <b>u-number</b> and <b>email password</b>. After successful login you will see
-  a list of your private stock vials.
+  You will redirected to the login page, where you can log in with your <b>username</b>
+  and <b>password</b>. After successful login you will see a list of your private stock vials.
   {% endif %}
 </p>
 <p>
   The website is still in development, so if you encounter any errors, please send an email to
-  <a href="mailto:radoslaw.ejsmont@med.kuleuven.be">webmaster</a>, including
-  description of what you were doing, URL from the address bar and the error message. I will try to fix the error as
-  soon as possible.
+  <a href="mailto:radoslaw@ejsmont.net">webmaster</a>, including description of what you were doing,
+  URL from the address bar and the error message. I will try to fix the error as soon as possible.
 </p>
 <hr>
 <h3>Updates and new features:</h3>
 <ul>
+  <li>
+    <b>Menu redesigned.</b><br/>
+    <span class="muted">The menu has been designed from scratch to provide easier
+      and more intuitive access to database features.</span>
+  </li>
   <li>
     <b>Racks - you can store your vials in barcoded racks.</b><br/>
     <span class="muted">To create a rack, go to Tools→New rack.<br/>

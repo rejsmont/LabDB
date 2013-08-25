@@ -3,7 +3,7 @@
   <a>Incubators</a>
   <ul class="dropdown-menu menu_level_2">
     {% if is_granted('ROLE_ADMIN') %}
-    <li><a href="{{ path('vib_flies_incubator_create') }}">New</a></li>
+    <li><a href="{{ path('vib_flies_incubator_create') }}">New incubator</a></li>
     <li class="divider"></li>
     {% endif %}
     {% for entity in entities %}

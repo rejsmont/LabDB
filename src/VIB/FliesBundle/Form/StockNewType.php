@@ -50,6 +50,7 @@ class StockNewType extends AbstractType
                         'expanded'  => true,
                         'label'     => 'Vial size',
                         'required'  => false,
+                        'empty_value' => false,
                         'attr'      => array('class' => 'input-text')))
                 ->add('number','number', array(
                         'label'       => 'Number of vials',

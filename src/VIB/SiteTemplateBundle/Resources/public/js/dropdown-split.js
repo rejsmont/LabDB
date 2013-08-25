@@ -15,9 +15,9 @@
  */
 
 $('.dropdown.dropdown-split-right').on('show.bs.dropdown', function () {
-      $(this).siblings('.dropdown-split-left').addClass('open')
+      $(this).prev('.dropdown-split-left').addClass('open')
 })
 
 $('.dropdown.dropdown-split-right').on('hide.bs.dropdown', function () {
-      $(this).siblings('.dropdown-split-left').removeClass('open')
+      $(this).prev('.dropdown-split-left').removeClass('open')
 })
