@@ -38,3 +38,4 @@ web/css
 web/js
 /app/Resources/db/test.db
 /web/font/
+/bin/
