@@ -20,15 +20,24 @@
 
 {% block container %}
   <div class="{% block container_class %}container{% endblock container_class %}">
-    <div class="content">
-      <div class="row">
+    <div class="content exception">
+      <div class="row no-header">
         {% block main_row %}
-        <div class="span12">
-          {% block content_row %}
-          <div class="row-fluid no-header">
-              {{ block('content') }}
+        <div class="error-icon">
+          {% block error_icon %}
+            <i class="icon-bug text-error"></i>
+          {% endblock error_icon %}
+        </div>
+        <div>
+          <div class="error-content">
+          {% block error_content %}
+            <h1>{{ status_code }}</h1><h2>{{ status_text }}</h2>
+            <h3>Something seems to be broken.</h3>
+            <p>Please us our <a href="https://bugzilla.vibfolks.eu">bug tracking system</a> or send an
+               email to <a href="mailto:radoslaw.ejsmont@med.kuleuven.be">webmaster</a> describing what
+               you were doing when this error occurred. We will fix it as soon as possible.</p>
+          {% endblock error_content %}
           </div>
-          {% endblock content_row %}
         </div>
         {% endblock main_row %}
       </div>
@@ -38,19 +47,5 @@
 {% endblock container %}
 
 {% block content %}
-<div class="pull-left" style="font-size: 200px; margin-right: 50px;">
-  <i class="icon-warning-sign text-error"></i>
-</div>
-<div>
-  {% block error_content %}
-  <h1>Oops! An Error Occurred</h1>
-  <h2>The server returned a "{{ status_code }} {{ status_text }}".</h2>
-
-  <div>
-      Something is broken. Please e-mail us at [email] and let us know
-      what you were doing when this error occurred. We will fix it as soon
-      as possible. Sorry for any inconvenience caused.
-  </div>
-  {% endblock error_content %}
-</div>
+  
 {% endblock content %}

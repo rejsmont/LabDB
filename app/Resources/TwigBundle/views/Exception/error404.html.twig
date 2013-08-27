@@ -1,21 +1,15 @@
 {% extends 'TwigBundle:Exception:layout.html.twig' %}
+          
+{% block error_icon %}
+<i class="icon-thumbs-down-alt text-info"></i>
+{% endblock error_icon %}
 
-{% block content %}
-<div class="pull-left" style="font-size: 200px; margin-right: 50px;">
-  <i class="icon-warning-sign text-warning"></i>
-</div>
-<div>
-  {% block error_content %}
-  <h1>Not found</h1>
-  <h2>The server returned "{{ status_code }} {{ status_text }}".</h2>
-  <div>
-      The requested resource was not found. Please use the search form
-      above to find what you were looking for. If you believe this
-      is an error, please send an email to 
-      <a href="mailto:radoslaw.ejsmont@med.kuleuven.be">webmaster</a>
-      describing what you were doing when this error occurred. We will fix it
-      as soon as possible.
-  </div>
-  {% endblock error_content %}
-</div>
-{% endblock content %}
+{% block error_content %}
+  <h1>{{ status_code }}</h1><h2>{{ status_text }}</h2>
+  <h3>The requested resource was not found.</h3>
+  <p>We have tried our best, but could not find what you have been looking for. Please verify that the specified
+     URL is correct, or use the search form above to find what you have been looking for.</p>
+  <p>If you believe this is an error, please us our <a href="https://bugzilla.vibfolks.eu">bug tracking system</a>
+     or send an email to <a href="mailto:radoslaw.ejsmont@med.kuleuven.be">webmaster</a>
+     describing what you were doing when this error occurred. We will fix it as soon as possible.</p>
+{% endblock error_content %}
