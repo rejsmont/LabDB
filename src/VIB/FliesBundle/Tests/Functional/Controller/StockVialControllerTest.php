@@ -33,15 +33,6 @@ class StockVialControllerTest extends WebTestCase
                 'tbody > tr:first-child > td:contains("stock 4")')->count());
     }
 
-    public function testExpand()
-    {
-        $client = $this->getAuthenticatedClient();
-
-        $crawler = $client->request('GET', '/secure/stocks/vials/expand');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(6, $crawler->filter('.modal-body label')->count());
-    }
-
     public function testSelect()
     {
         $client = $this->getAuthenticatedClient();
