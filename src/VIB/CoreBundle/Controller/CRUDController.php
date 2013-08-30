@@ -260,13 +260,15 @@ abstract class CRUDController extends AbstractController
 
     /**
      * Get default ACL
-     *
+     * 
+     * @param mixed $user
      * @return array
      */
-    protected function getDefaultACL()
+    protected function getDefaultACL($user = null)
     {
+        $user = (null === $user) ? $this->getUser() : $user;
         return array(
-            array('identity' => $this->getUser(),
+            array('identity' => $user,
                   'permission' => MaskBuilder::MASK_OWNER),
             array('identity' => 'ROLE_USER',
                   'permission' => MaskBuilder::MASK_VIEW));

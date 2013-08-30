@@ -256,6 +256,7 @@ class VialController extends CRUDController
     public function giveAction($id = null)
     {
         $om = $this->getObjectManager();
+        $securityContext = $this->getSecurityContext();
         $source = (null !== $id) ? $this->getEntity($id) : null;
         $data = array(
             'source' => $source,
@@ -264,34 +265,70 @@ class VialController extends CRUDController
             'size' => null !== $source ? $source->getSize() : 'medium');
         $form = $this->createForm(new VialGiveType(), $data);
         $request = $this->getRequest();
-
-        /*
+        
         if ($request->getMethod() == 'POST') {
             $form->bind($request);
             if ($form->isValid()) {
                 $data = $form->getData();
                 $source = $data['source'];
-                $number = $data['number'];
+                $user = $data['user'];
+                $type = $data['type'];
                 $size = $data['size'];
-
-                $vials = $om->expand($source, $number, true, $size);
+                
+                if (!($securityContext->isGranted('OWNER',$source)||$securityContext->isGranted('ROLE_ADMIN'))) {
+                    throw new AccessDeniedException();
+                }
+                
+                switch($type) {
+                    case 'flip':
+                        $vial = $om->flip($source);
+                        $vial->setPosition($source->getPosition());
+                        $vial->setSize($size);
+                        $om->persist($vial);
+                        $om->persist($source);
+                        break;
+                    case 'flipped':
+                        $vial = $om->flip($source);
+                        $vial->setSize($size);
+                        $om->persist($vial);
+                        break;
+                }
+                
                 $om->flush();
-                $om->createACL($vials, $this->getDefaultACL());
-
-                $message = (($count = count($vials)) == 1) ?
-                    ucfirst($this->getEntityName()) . ' ' . $source . ' was flipped.' :
-                    ucfirst($this->getEntityName()) . ' ' . $source . ' was expanded into ' . $count . ' vials.';
+                $vials = new ArrayCollection();
+                
+                switch($type) {
+                    case 'flip':
+                        $om->createACL($vial, $this->getDefaultACL());
+                        $vials->add($vial);
+                    case 'give':
+                        $om->removeACL($source);
+                        $om->createACL($source, $this->getDefaultACL($user));
+                        $vials->add($source);
+                        $given = $source;
+                        break;
+                    case 'flipped':
+                        $om->createACL($vial, $this->getDefaultACL($user));
+                        $vials->add($vial);
+                        $given = $vial;
+                        break;
+                }
+                
+                $message = ($type != 'give') ?
+                    ucfirst($this->getEntityName()) . ' ' . $source . ' was flipped into '
+                        . $this->getEntityName() . ' ' . $vial . ". " : '';
+                $message .= 
+                    ucfirst($this->getEntityName()) . ' ' . $given . ' was given to ' . $user->getFullName() . '.';
                 $this->addSessionFlash('success', $message);
 
                 $this->autoPrint($vials);
-
-                $route = str_replace("_expand", "_list", $request->attributes->get('_route'));
+                
+                $route = str_replace("_give", "_list", $request->attributes->get('_route'));
                 $url = $this->generateUrl($route);
 
                 return $this->redirect($url);
             }
         }
-        */
 
         return array('form' => $form->createView(), 'cancel' => 'vib_flies_vial_list');
     }
