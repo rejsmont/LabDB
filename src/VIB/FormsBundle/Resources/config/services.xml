@@ -9,6 +9,7 @@
         <parameter key="text_entity.class">VIB\FormsBundle\Form\Type\TextEntityType</parameter>
         <parameter key="hidden_entity.class">VIB\FormsBundle\Form\Type\HiddenEntityType</parameter>
         <parameter key="entity_typeahead.class">VIB\FormsBundle\Form\Type\EntityTypeaheadType</parameter>
+        <parameter key="user_typeahead.class">VIB\FormsBundle\Form\Type\UserTypeaheadType</parameter>
     </parameters>
 
     <services>
@@ -25,6 +26,11 @@
         </service>
         <service id="form.type.entity_typeahead" class="%entity_typeahead.class%">
             <tag name="form.type" alias="entity_typeahead"/>
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="router"/>
+        </service>
+        <service id="form.type.user_typeahead" class="%user_typeahead.class%">
+            <tag name="form.type" alias="user_typeahead"/>
             <argument type="service" id="doctrine"/>
             <argument type="service" id="router"/>
         </service>

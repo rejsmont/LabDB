@@ -79,3 +79,8 @@ fos_user:
     db_driver: orm
     firewall_name: secured_area
     user_class: VIB\UserBundle\Entity\User
+
+jms_di_extra:
+    locations:
+        all_bundles: false
+        bundles: [VIBFliesBundle]

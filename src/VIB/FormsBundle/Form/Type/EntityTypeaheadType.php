@@ -55,11 +55,17 @@ class EntityTypeaheadType extends TextEntityType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $data_link = $options['data_link'];
+        $data_route = $options['data_route'];
+        $data_route_options = $options['data_route_options'];
 
         if (null === $data_link) {
-            $data_link = $this->router->generate('VIBFormsBundle_ajax_choices',
+            if (null === $data_route) {
+                $data_link = $this->router->generate('VIBFormsBundle_ajax_choices',
                     array('class' => $options['class'],
                           'property' => $options['property']));
+            } else {
+                $data_link = $this->router->generate($data_route, $data_route_options);
+            }
         }
 
         $view->vars['data_link'] = $data_link;
@@ -70,10 +76,12 @@ class EntityTypeaheadType extends TextEntityType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-      parent::setDefaultOptions($resolver);
+        parent::setDefaultOptions($resolver);
 
-      $resolver->setDefaults(array(
-            'data_link' => null
+        $resolver->setDefaults(array(
+            'data_link' => null,
+            'data_route' => null,
+            'data_route_options' => array()
         ));
     }
 

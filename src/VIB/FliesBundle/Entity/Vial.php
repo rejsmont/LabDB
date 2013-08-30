@@ -305,7 +305,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get notes
      *
-     * @return type
+     * @return string
      */
     public function getNotes()
     {
@@ -315,7 +315,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Get size
      *
-     * @return type
+     * @return string
      */
     public function getSize()
     {
@@ -325,7 +325,7 @@ class Vial extends Entity implements LabelDateInterface
     /**
      * Set size
      *
-     * @return type
+     * @param string $size
      */
     public function setSize($size)
     {

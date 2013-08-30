@@ -91,7 +91,7 @@ abstract class SearchableRepository extends EntityRepository implements Searchab
     {
         return $this->createQueryBuilder('e')
                 ->select('count(e.id)')
-                ->add('where', $this->getSearchExpression($terms, $excluded, $options));        
+                ->add('where', $this->getSearchExpression($terms, $excluded, $options));
     }
     
     /**

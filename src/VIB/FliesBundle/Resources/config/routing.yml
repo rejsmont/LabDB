@@ -37,3 +37,7 @@ search:
 print:
     resource: "@VIBFliesBundle/Controller/PrintController.php"
     type:     annotation
+
+user_ajax:
+    resource: "@VIBUserBundle/Controller/AJAXController.php"
+    type:     annotation

@@ -35,6 +35,7 @@ use VIB\FliesBundle\Form\VialType;
 use VIB\FliesBundle\Form\VialNewType;
 use VIB\FliesBundle\Form\VialExpandType;
 use VIB\FliesBundle\Form\SelectType;
+use VIB\FliesBundle\Form\VialGiveType;
 
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\Incubator;
@@ -239,6 +240,58 @@ class VialController extends CRUDController
                 return $this->redirect($url);
             }
         }
+
+        return array('form' => $form->createView(), 'cancel' => 'vib_flies_vial_list');
+    }
+    
+    /**
+     * Expand vial
+     *
+     * @Route("/give/{id}", defaults={"id" = null})
+     * @Template()
+     *
+     * @param  mixed                                            $id
+     * @return array|\Symfony\Component\HttpFoundation\Response
+     */
+    public function giveAction($id = null)
+    {
+        $om = $this->getObjectManager();
+        $source = (null !== $id) ? $this->getEntity($id) : null;
+        $data = array(
+            'source' => $source,
+            'user' => null,
+            'type' => 'give',
+            'size' => null !== $source ? $source->getSize() : 'medium');
+        $form = $this->createForm(new VialGiveType(), $data);
+        $request = $this->getRequest();
+
+        /*
+        if ($request->getMethod() == 'POST') {
+            $form->bind($request);
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $source = $data['source'];
+                $number = $data['number'];
+                $size = $data['size'];
+
+                $vials = $om->expand($source, $number, true, $size);
+                $om->flush();
+                $om->createACL($vials, $this->getDefaultACL());
+
+                $message = (($count = count($vials)) == 1) ?
+                    ucfirst($this->getEntityName()) . ' ' . $source . ' was flipped.' :
+                    ucfirst($this->getEntityName()) . ' ' . $source . ' was expanded into ' . $count . ' vials.';
+                $this->addSessionFlash('success', $message);
+
+                $this->autoPrint($vials);
+
+                $route = str_replace("_expand", "_list", $request->attributes->get('_route'));
+                $url = $this->generateUrl($route);
+
+                return $this->redirect($url);
+            }
+        }
+        */
 
         return array('form' => $form->createView(), 'cancel' => 'vib_flies_vial_list');
     }

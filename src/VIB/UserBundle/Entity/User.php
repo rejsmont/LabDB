@@ -21,10 +21,11 @@ namespace VIB\UserBundle\Entity;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * User entity
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="VIB\UserBundle\Repository\UserRepository")
  * @ORM\Table(name="kuleuven_user")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>

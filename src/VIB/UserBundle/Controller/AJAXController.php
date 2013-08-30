@@ -16,16 +16,13 @@
  * limitations under the License.
  */
 
-namespace VIB\FormsBundle\Controller;
+namespace VIB\UserBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyPath;
-
 
 /**
  * This controller generates choices list for EntityTypeaheadType
@@ -37,38 +34,41 @@ class AJAXController extends Controller
     /**
      * Search for the specified entity by its property
      *
-     * @Route("/_ajax/choices/{class}/{property}", name="VIBFormsBundle_ajax_choices")
+     * @Route("/_ajax/choices/users", name="vib_user_ajax_choices")
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
-     * @param  string                                     $class    Entity class to search for
-     * @param  string                                     $property Property to lookup in search
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function choicesAction(Request $request, $class, $property)
+    public function nameChoicesAction(Request $request)
     {
         $query = $request->query->get('query');
 
         $qb = $this->getDoctrine()
-                   ->getRepository($class)
-                   ->createQueryBuilder('b');
-
+                   ->getManager()
+                   ->getRepository('VIB\UserBundle\Entity\User')
+                   ->createQueryBuilder('u');
+        $eb = $this->getDoctrine()
+                   ->getManager()
+                   ->getExpressionBuilder();
+        
         $terms = explode(" ",$query);
-        foreach ($terms as $term) {
-          $qb = $qb->andWhere("b." . $property . " like '%" . $term . "%'");
+        if (count($terms) > 0)
+        {
+            $expr = $eb->andX();
+            foreach ($terms as $term) {
+                $subexpr = $eb->orX();
+                foreach (array('u.surname','u.givenName', 'u.username') as $field) {
+                    $subexpr->add($eb->like($field, '\'%' . $term . '%\''));
+                }
+                $expr->add($subexpr);
+            }
+            $qb->add('where', $expr);
         }
         $found = $qb->getQuery()->getResult();
 
-        $propertyPath = (null !== $property) ? new PropertyPath($property) : null;
-        $propertyAccessor = PropertyAccess::getPropertyAccessor();
-
-        
         $options = array();
-        foreach ($found as $entity) {
-            if (null !== $propertyPath) {
-                $options[] = (string) ($propertyAccessor->getValue($entity, $propertyPath));
-            } else {
-                $options[] = (string) ($entity);
-            }
+        foreach ($found as $user) {
+            $options[] = $user->getFullName() . "[[" . $user->getUsername() . "]]";
         }
 
         $response = new JsonResponse();
