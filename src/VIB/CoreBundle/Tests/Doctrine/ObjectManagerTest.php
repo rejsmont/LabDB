@@ -158,7 +158,7 @@ class ObjectManagerTest extends \PHPUnit_Framework_TestCase
         $aclEntry_1->expects($this->once())
              ->method('getMask')
              ->will($this->returnValue(MaskBuilder::MASK_VIEW));
-        $aclEntry_1->expects($this->never())
+        $aclEntry_1->expects($this->once())
              ->method('getSecurityIdentity');
         $aces[] = $aclEntry_1;
 

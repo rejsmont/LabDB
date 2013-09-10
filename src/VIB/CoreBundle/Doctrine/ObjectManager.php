@@ -165,7 +165,7 @@ class ObjectManager extends ObjectManagerDecorator
             }
         } catch (AclNotFoundException $e) {
             
-            return null;
+            return array();
         }
         
         return $acl_array;
