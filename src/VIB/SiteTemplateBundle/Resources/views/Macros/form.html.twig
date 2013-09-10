@@ -1,8 +1,11 @@
-{% macro buttons(value,name) %}
+{% macro buttons(value,name,delete = true) %}
   <button type="submit" class="btn btn-primary">Save</button>
   {% if value.id is not null %}
-    {% if is_granted('ROLE_ADMIN') or is_granted('DELETE',value) %}
+    {% if (is_granted('ROLE_ADMIN') or is_granted('DELETE',value)) and delete %}
     <a href="{{ path(name ~ '_delete', { 'id': value.id }) }}" class="btn btn-danger">Delete</a>
+    {% endif %}
+    {% if (is_granted('ROLE_ADMIN') or is_granted('MASTER',value)) and delete %}
+    <a href="{{ path(name ~ '_permissions', { 'id': value.id }) }}" class="btn btn-warning">Permissions</a>
     {% endif %}
     <a href="{{ path(name ~ '_show', { 'id': value.id }) }}" class="btn">Cancel</a>
   {% else %}

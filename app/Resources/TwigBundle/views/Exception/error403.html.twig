@@ -6,9 +6,10 @@
 
 {% block error_content %}
   <h1>{{ status_code }}</h1><h2>{{ status_text }}</h2>
-  <h3>You are not allowed to access this resource.</h3>
-  <p>You do not have sufficient permissions to access this resource. Try asking resource's owner to grant
-     you required permissions or add you to a group that has access to this resource.</p>
+  <h3>You are not allowed to access this resource or to perform this action.</h3>
+  <p>You do not have sufficient permissions to access this resource or to perform this action.
+     Try asking resource's owner to grant you required permissions or add you to a group that
+     is allowed to perform this action or access this resource.</p>
   <p>If you believe this is an error, please us our <a href="https://bugzilla.vibfolks.eu">bug tracking system</a>
      or send an email to <a href="mailto:radoslaw.ejsmont@med.kuleuven.be">webmaster</a>
      describing what you were doing when this error occurred. We will fix it as soon as possible.</p>

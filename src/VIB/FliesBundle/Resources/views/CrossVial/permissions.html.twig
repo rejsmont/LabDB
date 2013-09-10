@@ -3,9 +3,9 @@
 {% import "VIBSiteTemplateBundle:Macros:form.html.twig" as f %}
 
 {% block modal_header %}
-  Edit cross {{ form.vars.value.name }} ({{ form.vars.value }})
+  Edit permissions for cross {{ entity }}
 {% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.vars.value,'vib_flies_crossvial') }}
+  {{ f.buttons(entity,'vib_flies_crossvial',false) }}
 {% endblock modal_footer %}

@@ -1,0 +1,9 @@
+{% extends "VIBFliesBundle:Vial:layout.html.twig" %}
+{% use "VIBSiteTemplateBundle:Form:form.html.twig" %}
+{% import "VIBSiteTemplateBundle:Macros:form.html.twig" as f %}
+
+{% block modal_header %}Edit permissions for vial {{ entity }}{% endblock modal_header %}
+
+{% block modal_footer %}
+  {{ f.buttons(entity,'vib_flies_vial',false) }}
+{% endblock modal_footer %}

@@ -2,8 +2,6 @@
 {% use "VIBSiteTemplateBundle:Form:form.html.twig" %}
 {% import "VIBSiteTemplateBundle:Macros:form.html.twig" as f %}
 
-{% form_theme form _self %}
-
 {% block modal_header %}
   Edit injection vial {{ form.vars.value.name }} ({{ form.vars.value }})
 {% endblock modal_header %}

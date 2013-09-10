@@ -302,8 +302,7 @@ class VialController extends CRUDController
                         $om->createACL($vial, $this->getDefaultACL());
                         $vials->add($vial);
                     case 'give':
-                        $om->removeACL($source);
-                        $om->createACL($source, $this->getDefaultACL($user));
+                        $om->setOwner($source, $user);
                         $vials->add($source);
                         $given = $source;
                         break;

@@ -1,12 +1,24 @@
 {% extends 'MopaBootstrapBundle:Form:fields.html.twig' %}
 
-{% block entity_typeahead_widget %}
+{% block typeahead_widget %}
   {% spaceless %}
     {% set attr = attr|merge({
         'class': attr.class|default('') ~ ' ajax-typeahead',
         'data-link': data_link|default(''),
         'autocomplete': 'off' }) %}
     {{ block('form_widget_simple') }}
+  {% endspaceless %}
+{% endblock %}
+
+{% block role_typeahead_widget %}
+  {% spaceless %}
+    {{ block('typeahead_widget') }}
+  {% endspaceless %}
+{% endblock %}
+
+{% block entity_typeahead_widget %}
+  {% spaceless %}
+    {{ block('typeahead_widget') }}
   {% endspaceless %}
 {% endblock %}
 

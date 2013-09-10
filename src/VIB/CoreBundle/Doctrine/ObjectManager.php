@@ -94,16 +94,7 @@ class ObjectManager extends ObjectManagerDecorator
             $objectIdentity = ObjectIdentity::fromDomainObject($objects);
             $aclProvider = $this->aclProvider;
             $acl = $aclProvider->createAcl($objectIdentity);
-            foreach ($acl_array as $acl_entry) {
-                $identity = $acl_entry['identity'];
-                $permission = $acl_entry['permission'];
-                if ($identity instanceof UserInterface) {
-                    $identity = UserSecurityIdentity::fromAccount($identity);
-                } elseif (is_string($identity)) {
-                    $identity = new RoleSecurityIdentity($identity);
-                }
-                $acl->insertObjectAce($identity, $permission);
-            }
+            $this->insertAclEntries($acl, $acl_array);
             $aclProvider->updateAcl($acl);
         }
     }
@@ -122,10 +113,64 @@ class ObjectManager extends ObjectManagerDecorator
         } else {
             $objectIdentity = ObjectIdentity::fromDomainObject($objects);
             $aclProvider = $this->aclProvider;
-            $aclProvider->deleteAcl($objectIdentity);
+            try {
+                $aclProvider->deleteAcl($objectIdentity);
+            } catch (AclNotFoundException $e) {}
         }
     }
-
+    
+    /**
+     * Update ACL for object(s)
+     *
+     * @param object $objects
+     */
+    public function updateACL($objects, array $acl_array)
+    {
+        if ($objects instanceof Collection) {
+            foreach ($objects as $object) {
+                $this->updateACL($object, $acl_array);
+            }
+        } else {
+            $aclProvider = $this->aclProvider;
+            $objectIdentity = ObjectIdentity::fromDomainObject($objects);
+            try {
+                $acl = $aclProvider->findAcl($objectIdentity);
+                $diff = $this->diffACL($acl, $acl_array);
+                print_r($diff);
+                $this->updateAclEntries($acl, $diff['update']);
+                $this->deleteAclEntries($acl, $diff['delete']);
+                $this->insertAclEntries($acl, $diff['insert']);
+                $aclProvider->updateAcl($acl);
+            } catch (AclNotFoundException $e) {
+                $this->createACL($object, $acl_array);
+            }
+        }
+    }
+    
+    /**
+     * Get ACL for object
+     *
+     * @return array
+     */
+    public function getACL($object)
+    {
+        $objectIdentity = ObjectIdentity::fromDomainObject($object);
+        $aclProvider = $this->aclProvider;
+        try {
+            $acl = $aclProvider->findAcl($objectIdentity);
+            $acl_array = array();
+            foreach ($acl->getObjectAces() as $index => $ace) {
+                $identity = $this->resolveIdentity($ace);
+                $acl_array[$index] = array('identity' => $identity, 'permission' => $ace->getMask());
+            }
+        } catch (AclNotFoundException $e) {
+            
+            return null;
+        }
+        
+        return $acl_array;
+    }
+    
     /**
      * Get object's owner
      *
@@ -134,24 +179,108 @@ class ObjectManager extends ObjectManagerDecorator
      */
     public function getOwner($object)
     {
-        $objectIdentity = ObjectIdentity::fromDomainObject($object);
-        $aclProvider = $this->aclProvider;
-        try {
-            $acl = $aclProvider->findAcl($objectIdentity);
-            foreach ($acl->getObjectAces() as $ace) {
-                if ($ace->getMask() == MaskBuilder::MASK_OWNER) {
-                    $securityIdentity = $ace->getSecurityIdentity();
-                    if ($securityIdentity instanceof UserSecurityIdentity) {
-                        $userProvider = $this->userProvider;
-                        try {
-                            return $userProvider->loadUserByUsername($securityIdentity->getUsername());
-                        } catch (UsernameNotFoundException $e) {}
+        $acl_array = $this->getACL($object);
+        foreach ($acl_array as $entry) {
+            $identity = $entry['identity'];
+            $permission = $entry['permission'];
+            if (($permission == MaskBuilder::MASK_OWNER)&&($identity instanceof UserInterface)) {
+                
+                return $identity;
+            }
+        }
+
+        return null;
+    }
+    
+    /**
+     * Set object's owner
+     *
+     * @param  object                                             $object
+     * @param  Symfony\Component\Security\Core\User\UserInterface $owner
+     * @return Symfony\Component\Security\Core\User\UserInterface
+     */
+    public function setOwner($objects, $owner)
+    {
+        if ($objects instanceof Collection) {
+            foreach ($objects as $object) {
+                $this->setOwner($object, $owner);
+            }
+        } else {
+            $acl_array = $this->getACL($objects);
+            $owner_found = false;
+            foreach ($acl_array as $index => $entry) {
+                $identity = $entry['identity'];
+                $permission = $entry['permission'];
+                if (($permission == MaskBuilder::MASK_OWNER)&&($identity instanceof UserInterface)) {
+                    $owner_found = true;
+                    if ($owner instanceof UserInterface) {
+                        $acl_array[$index]['identity'] = $owner;
+                    } else {
+                        unset($acl_array[$index]);
                     }
                 }
             }
-        } catch (AclNotFoundException $e) {}
+            if (!$owner_found) {
+                $acl_array[]= array('identity' => $owner, 'permission' => MaskBuilder::MASK_OWNER);
+            }
+            $this->updateACL($objects, $acl_array);
+        }
+    }
+    
+    /**
+     * Get object's group
+     *
+     * @param  object $object
+     * @return string
+     */
+    public function getGroup($object)
+    {
+        $acl_array = $this->getACL($object);
+        foreach ($acl_array as $entry) {
+            $identity = $entry['identity'];
+            $permission = $entry['permission'];
+            if (($permission == MaskBuilder::MASK_OWNER)&&(is_string($identity))) {
+                
+                return $identity;
+            }
+        }
 
         return null;
+    }
+    
+    /**
+     * Set object's group
+     *
+     * @param  object                                             $object
+     * @param  string                                             $group
+     * @return Symfony\Component\Security\Core\User\UserInterface
+     */
+    public function setGroup($objects, $group)
+    {
+        if ($objects instanceof Collection) {
+            foreach ($objects as $object) {
+                $this->setGroup($object, $group);
+            }
+        } else {
+            $acl_array = $this->getACL($objects);
+            $group_found = false;
+            foreach ($acl_array as $index => $entry) {
+                $identity = $entry['identity'];
+                $permission = $entry['permission'];
+                if (($permission == MaskBuilder::MASK_OWNER)&&(is_string($identity))) {
+                    $group_found = true;
+                    if (is_string($group)) {
+                        $acl_array[$index]['identity'] = $group;
+                    } else {
+                        unset($acl_array[$index]);
+                    }
+                }
+            }
+            if (!$group_found) {
+                $acl_array[]= array('identity' => $group, 'permission' => MaskBuilder::MASK_OWNER);
+            }
+            $this->updateACL($objects, $acl_array);
+        }
     }
 
     /**
@@ -198,5 +327,100 @@ class ObjectManager extends ObjectManagerDecorator
         $repository = $this->getRepository($className);
 
         return $repository->getListCount($options);
+    }
+    
+    /**
+     * 
+     * @param type $ace
+     * @return null
+     */
+    protected function resolveIdentity($ace)
+    {
+        $securityIdentity = $ace->getSecurityIdentity();
+        if ($securityIdentity instanceof UserSecurityIdentity) {
+            $userProvider = $this->userProvider;
+            try {
+                return $userProvider->loadUserByUsername($securityIdentity->getUsername());
+            } catch (UsernameNotFoundException $e) {
+                return null;
+            }
+        } elseif ($securityIdentity instanceof RoleSecurityIdentity) {
+            return $securityIdentity->getRole();
+        }
+    }
+    
+    /**
+     * 
+     * @param type $acl
+     * @param array $acl_array
+     * @return array
+     */
+    protected function diffACL($acl, array $acl_array)
+    {
+        $insert = $acl_array;
+        $update = array();
+        $delete = array();
+        foreach ($acl->getObjectAces() as $index => $ace) {
+            $identity = $this->resolveIdentity($ace);
+            $mask = $ace->getMask();
+            $found = false;
+            foreach ($acl_array as $key => $acl_entry) {
+                if ($acl_entry['identity'] == $identity) {
+                    $found = true;
+                    if ($acl_entry['permission'] != $mask) {
+                        $update[$index] = $acl_entry;
+                    }
+                    unset($insert[$key]);
+                }
+            }
+            if (! $found) {
+                $delete[$index] = array('identity' => $identity, 'permission' => $mask);
+            }
+        }
+        
+        return array('insert' => $insert, 'update' => $update, 'delete' => $delete);
+    }
+    
+    /**
+     * 
+     * @param type $acl
+     * @param array $update
+     */
+    protected function updateAclEntries($acl, array $update)
+    {
+        foreach ($update as $index => $entry) {
+            $acl->updateObjectAce($index, $entry['permission']);
+        }
+    }
+    
+    /**
+     * 
+     * @param type $acl
+     * @param array $delete
+     */
+    protected function deleteAclEntries($acl, array $delete)
+    {
+        foreach (array_reverse($delete, true) as $index => $entry) {
+            $acl->deleteObjectAce($index, $entry['permission']);
+        }
+    }
+    
+    /**
+     * 
+     * @param type $acl
+     * @param array $insert
+     */
+    protected function insertAclEntries($acl, array $insert)
+    {
+        foreach ($insert as $entry) {
+            $identity = $entry['identity'];
+            $permission = $entry['permission'];
+            if ($identity instanceof UserInterface) {
+                $identity = UserSecurityIdentity::fromAccount($identity);
+            } elseif (is_string($identity)) {
+                $identity = new RoleSecurityIdentity($identity);
+            }
+            $acl->insertObjectAce($identity, $permission);
+        }
     }
 }

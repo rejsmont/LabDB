@@ -168,12 +168,8 @@
       '../vendor/jquery/jquery-ui/ui/minified/jquery.ui.core.min.js'
       '../vendor/jquery/jquery-ui/ui/minified/jquery.ui.effect.min.js'
       '../vendor/jquery/jquery-ui/ui/minified/jquery.ui.effect-highlight.min.js'
-      '@VIBFormsBundle/Resources/public/js/forms.js'
-      '@VIBFliesBundle/Resources/public/js/forms.js'
-      '@VIBSiteTemplateBundle/Resources/public/js/dropdown-split.js'
       '../vendor/twbs/bootstrap/js/bootstrap-transition.js'
       '../vendor/twbs/bootstrap/js/bootstrap-modal.js'
-      '@VIBSiteTemplateBundle/Resources/public/js/bootstrap-dropdown.js'
       '../vendor/twbs/bootstrap/js/bootstrap-scrollspy.js'
       '../vendor/twbs/bootstrap/js/bootstrap-tab.js'
       '../vendor/twbs/bootstrap/js/bootstrap-tooltip.js'
@@ -184,6 +180,11 @@
       '../vendor/twbs/bootstrap/js/bootstrap-carousel.js'
       '../vendor/twbs/bootstrap/js/bootstrap-typeahead.js'
       '../vendor/eternicode/bootstrap-datepicker/js/bootstrap-datepicker.js'
+      '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
+      '@VIBFormsBundle/Resources/public/js/forms.js'
+      '@VIBFliesBundle/Resources/public/js/forms.js'
+      '@VIBSiteTemplateBundle/Resources/public/js/dropdown-split.js'
+      '@VIBSiteTemplateBundle/Resources/public/js/bootstrap-dropdown.js'
     %}
       <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -191,6 +192,51 @@
   {% block foot_script_additional %}
     <script type="text/javascript">
       $('.date').datepicker();
+      $('.user-typeahead').typeahead({
+        source: function(query, process) {
+          return $.ajax({
+            url: $(this)[0].$element.data('link'),
+            type: 'get',
+            data: {query: query},
+            dataType: 'json',
+            success: function(json) {
+              return typeof json.options == 'undefined' ? false : process(json.options);
+            }
+          });
+        },
+        matcher: function (item) {
+          return true;
+        },
+        updater: function (item) {
+          return item.replace(/.*\[\[/,'').replace(/\]\]/,'')
+        },
+        sorter: function (items) {
+          var beginswith = []
+            , caseSensitive = []
+            , caseInsensitive = []
+            , item
+
+          while (item = items.shift()) {
+            if (!item.toLowerCase().indexOf(this.query.toLowerCase())) beginswith.push(item)
+            else if (~item.indexOf(this.query)) caseSensitive.push(item)
+            else caseInsensitive.push(item)
+          }
+
+          return beginswith.concat(caseSensitive, caseInsensitive)
+        },
+        highlighter: function (item) {
+          var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+          var name = item.replace(/\[\[.*\]\]/,'')
+            .replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+              return '<strong>' + match + '</strong>'
+          })
+          var username = item.replace(/.*\[\[/,'').replace(/\]\]/,'')
+            .replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+              return '<strong>' + match + '</strong>'
+          })
+          return name + '<span class="pull-right">' + username + '</span>'
+        }
+      })
     </script>
   {% endblock foot_script_additional %}
 {% endblock body %}

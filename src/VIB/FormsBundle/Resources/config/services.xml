@@ -8,6 +8,8 @@
         <parameter key="datepicker.class">VIB\FormsBundle\Form\Type\DatePickerType</parameter>
         <parameter key="text_entity.class">VIB\FormsBundle\Form\Type\TextEntityType</parameter>
         <parameter key="hidden_entity.class">VIB\FormsBundle\Form\Type\HiddenEntityType</parameter>
+        <parameter key="typeahead.class">VIB\FormsBundle\Form\Type\TypeaheadType</parameter>
+        <parameter key="role_typeahead.class">VIB\FormsBundle\Form\Type\RoleTypeaheadType</parameter>
         <parameter key="entity_typeahead.class">VIB\FormsBundle\Form\Type\EntityTypeaheadType</parameter>
         <parameter key="user_typeahead.class">VIB\FormsBundle\Form\Type\UserTypeaheadType</parameter>
     </parameters>
@@ -23,6 +25,14 @@
         <service id="form.type.hidden_entity" class="%hidden_entity.class%">
             <tag name="form.type" alias="hidden_entity"/>
             <argument type="service" id="doctrine"/>
+        </service>
+        <service id="form.type.typeahead" class="%typeahead.class%">
+            <tag name="form.type" alias="typeahead"/>
+            <argument type="service" id="router"/>
+        </service>
+        <service id="form.type.role_typeahead" class="%role_typeahead.class%">
+            <tag name="form.type" alias="role_typeahead"/>
+            <argument type="service" id="router"/>
         </service>
         <service id="form.type.entity_typeahead" class="%entity_typeahead.class%">
             <tag name="form.type" alias="entity_typeahead"/>

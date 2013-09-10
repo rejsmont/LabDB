@@ -26,6 +26,9 @@ use Doctrine\ORM\NoResultException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+use VIB\CoreBundle\Form\AclType;
 
 /**
  * Base class for CRUD operations CRUDController
@@ -231,6 +234,59 @@ abstract class CRUDController extends AbstractController
         return array('entity' => $entity);
     }
 
+    /**
+     * Edit permissions
+     *
+     * @Route("/permissions/{id}")
+     * @Template()
+     *
+     * @param  mixed                                     $id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function permissionsAction($id)
+    {
+        $om = $this->getObjectManager();
+        $entity = $this->getEntity($id);
+        $acl_array = $om->getACL($entity);
+        $securityContext = $this->getSecurityContext();
+        if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('MASTER', $entity))) {
+            throw new AccessDeniedException();
+        }
+
+        $data = array(
+            'user_acl' => array(),
+            'role_acl' => array()
+        );
+                
+        foreach($acl_array as $acl_entry) {
+            $identity = $acl_entry['identity'];
+            if ($identity instanceof UserInterface) {
+                $data['user_acl'][] = $acl_entry;
+            } else if (is_string($identity)) {
+                $data['role_acl'][] = $acl_entry;
+            }
+        }
+        
+        $form = $this->createForm(new AclType(), $data);
+        $request = $this->getRequest();
+        if ($request->getMethod() == 'POST') {
+            $form->bind($request);
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $acl_array = array_merge($data['user_acl'], $data['role_acl']);
+                $om->updateACL($entity, $acl_array);
+                $message = 'Changes to ' . $this->getEntityName() . ' ' . $entity . ' permissions were saved.';
+                $this->addSessionFlash('success', $message);
+                $route = str_replace("_permissions", "_show", $request->attributes->get('_route'));
+                $url = $this->generateUrl($route,array('id' => $entity->getId()));
+
+                return $this->redirect($url);
+            }
+        }
+
+        return array('form' => $form->createView(), 'entity' => $entity);
+    }
+    
     /**
      * Get entity
      *

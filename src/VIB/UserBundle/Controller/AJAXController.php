@@ -23,6 +23,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * This controller generates choices list for EntityTypeaheadType
@@ -39,7 +42,7 @@ class AJAXController extends Controller
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function nameChoicesAction(Request $request)
+    public function userChoicesAction(Request $request)
     {
         $query = $request->query->get('query');
 
@@ -71,6 +74,62 @@ class AJAXController extends Controller
             $options[] = $user->getFullName() . "[[" . $user->getUsername() . "]]";
         }
 
+        $response = new JsonResponse();
+        $response->setData(array('options' => $options));
+
+        return $response;
+    }
+    
+    /**
+     * Search for the specified entity by its property
+     *
+     * @Route("/_ajax/choices/roles", name="vib_role_ajax_choices")
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function roleChoicesAction(Request $request)
+    {
+        $query = $request->query->get('query');
+        $query_string = 'SELECT identifier FROM acl_security_identities WHERE identifier like \'ROLE_%\'';
+        
+        $rsm = new ResultSetMapping;
+        $rsm->addScalarResult('identifier', 'role');
+        
+        $sql_query = $this->getDoctrine()->getManager()->createNativeQuery($query_string, $rsm);
+        
+        $roles = array();
+        
+        $found = $sql_query->getResult();
+        foreach ($found as $result) {
+            $roles[] = $result['role'];
+        }
+        
+        $hierarchy = $this->container->getParameter('security.role_hierarchy.roles');
+        foreach ($hierarchy as $parent => $children) {
+            $roles[] = $parent;
+            foreach($children as $child) {
+                $roles[] = $child;
+            }
+        }
+        
+        if (($user = $this->getUser()) instanceof UserInterface) {
+            foreach ($user->getRoles() as $role) {
+                $roles[] = $role;
+            }
+        }
+        
+        $roles = array_unique($roles);
+        sort($roles);
+        
+        $options = array();
+        foreach($roles as $role) {
+            $role = ucfirst(strtolower(str_replace(array("ROLE_","_"), array(""," "), $role)));
+            if (stristr($role ,$query)) {
+                $options[] = $role;
+            }
+        }
+        
         $response = new JsonResponse();
         $response->setData(array('options' => $options));
 
