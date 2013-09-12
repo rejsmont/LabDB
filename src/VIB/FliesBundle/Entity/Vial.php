@@ -25,6 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 
+use VIB\CoreBundle\Entity\NamedEntityInterface;
 use VIB\StorageBundle\Entity\RackContent;
 use VIB\StorageBundle\Entity\StorageUnitInterface;
 use VIB\StorageBundle\Entity\StorageUnitContentInterface;
@@ -56,7 +57,8 @@ use VIB\FliesBundle\Label\LabelDateInterface;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Vial extends RackContent implements StorageUnitContentInterface, TermocontrolledInterface, LabelDateInterface
+class Vial extends RackContent
+    implements NamedEntityInterface, StorageUnitContentInterface, TermocontrolledInterface, LabelDateInterface
 {
     /**
      * @ORM\Column(type="date")
@@ -169,6 +171,22 @@ class Vial extends RackContent implements StorageUnitContentInterface, Termocont
     /**
      * {@inheritdoc}
      */
+    public function __toString()
+    {
+        return sprintf("%06d",$this->getId());
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return (string) $this->getId();
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
     public function getLabelBarcode()
     {
         return sprintf("%06d",$this->getId());
@@ -189,7 +207,7 @@ class Vial extends RackContent implements StorageUnitContentInterface, Termocont
     {
         return $this->getSetupDate();
     }
-
+    
     /**
      * Reset dates
      *
@@ -223,26 +241,6 @@ class Vial extends RackContent implements StorageUnitContentInterface, Termocont
             $this->setNotes($template->getNotes());
             $this->setIncubator($template->getIncubator());
         }
-    }
-
-    /**
-     * Return string representation of Vial
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return sprintf("%06d",$this->getId());
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return (string) $this->getId();
     }
 
     /**

@@ -34,13 +34,6 @@ interface RackPositionInterface
     public function __toString();
 
     /**
-     * Get row (as integer)
-     *
-     * @return integer
-     */
-    public function getRackRow();
-
-    /**
      * Get row (as string)
      *
      * @return string
@@ -48,46 +41,11 @@ interface RackPositionInterface
     public function getRow();
 
     /**
-     * Set row
-     *
-     * @param integer|string $rackRow
-     */
-    public function setRackRow($rackRow);
-
-    /**
-     * Alias for setRackRow
-     *
-     * @param integer|string $rackRow
-     */
-    public function setRow($rackRow);
-
-    /**
-     * Get column
-     *
-     * @return type
-     */
-    public function getRackColumn();
-
-    /**
      * Alias for getRackColumn
      *
      * @return type
      */
     public function getColumn();
-
-    /**
-     * Set column
-     *
-     * @param integer $rackColumn
-     */
-    public function setRackColumn($rackColumn);
-
-    /**
-     * Alias for setRackColumn
-     *
-     * @param integer $rackColumn
-     */
-    public function setColumn($rackColumn);
 
     /**
      * Does this position have provided coordinates
@@ -104,13 +62,6 @@ interface RackPositionInterface
      * @return VIB\StorageBundle\Entity\RackInterface
      */
     public function getRack();
-
-    /**
-     * Set rack
-     *
-     * @param VIB\StorageBundle\Entity\RackInterface $rack
-     */
-    public function setRack(RackInterface $rack);
 
     /**
      * Get content

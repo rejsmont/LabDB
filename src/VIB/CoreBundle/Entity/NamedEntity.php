@@ -31,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class NamedEntity extends Entity
+class NamedEntity extends Entity implements NamedEntityInterface
 {
     /**
      * @ORM\Column(type="string", length=255)
@@ -64,9 +64,7 @@ class NamedEntity extends Entity
     }
 
     /**
-     * Get name
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {

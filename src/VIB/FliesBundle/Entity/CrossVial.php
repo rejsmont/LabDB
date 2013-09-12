@@ -289,9 +289,7 @@ class CrossVial extends Vial
     }
 
     /**
-     * Get name
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {

@@ -44,31 +44,9 @@ class RackPositionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider positionProvider
      */
-    public function testRackRow($position)
-    {
-        $this->assertEquals(1, $position->getRackRow());
-        $position->setRackRow(10);
-        $this->assertEquals(10, $position->getRackRow());
-    }
-
-    /**
-     * @dataProvider positionProvider
-     */
     public function testRow($position)
     {
         $this->assertEquals('A', $position->getRow());
-        $position->setRow('J');
-        $this->assertEquals('J', $position->getRow());
-    }
-
-    /**
-     * @dataProvider positionProvider
-     */
-    public function testRackColumn($position)
-    {
-        $this->assertEquals(2, $position->getRackColumn());
-        $position->setRackColumn(20);
-        $this->assertEquals(20, $position->getRackColumn());
     }
 
     /**
@@ -77,8 +55,6 @@ class RackPositionTest extends \PHPUnit_Framework_TestCase
     public function testColumn($position)
     {
         $this->assertEquals(2, $position->getColumn());
-        $position->setColumn(20);
-        $this->assertEquals(20, $position->getColumn());
     }
 
     /**
@@ -96,9 +72,6 @@ class RackPositionTest extends \PHPUnit_Framework_TestCase
     public function testRack($position)
     {
         $this->assertInstanceOf('VIB\FliesBundle\Entity\Rack', $position->getRack());
-        $rack = new Rack(2, 2);
-        $position->setRack($rack);
-        $this->assertEquals($rack, $position->getRack());
     }
 
     /**

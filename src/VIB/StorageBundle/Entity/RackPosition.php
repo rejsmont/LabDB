@@ -90,9 +90,9 @@ abstract class RackPosition extends Entity implements RackPositionInterface
     abstract protected function getRackProperty();
     
     /**
-     * {@inheritdoc}
+     * @see getRow
      */
-    public function getRackRow()
+    protected function getRackRow()
     {
         return $this->rackRow;
     }
@@ -106,26 +106,27 @@ abstract class RackPosition extends Entity implements RackPositionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @see setRow
      */
-    public function setRackRow($rackRow)
+    protected function setRackRow($rackRow)
     {
-        $row = $this->rowToNumber($rackRow);
-        $this->rackRow = $row;
+        $this->rackRow = $this->rowToNumber($rackRow);
     }
 
     /**
-     * {@inheritdoc}
+     * Set row
+     * 
+     * @param string|integer $row
      */
-    public function setRow($rackRow)
+    protected function setRow($row)
     {
-        $this->setRackRow($rackRow);
+        $this->setRackRow($row);
     }
 
     /**
-     * {@inheritdoc}
+     * @see getColumn
      */
-    public function getRackColumn()
+    protected function getRackColumn()
     {
         return $this->rackColumn;
     }
@@ -139,19 +140,21 @@ abstract class RackPosition extends Entity implements RackPositionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @see setColumn
      */
-    public function setRackColumn($rackColumn)
+    protected function setRackColumn($rackColumn)
     {
         $this->rackColumn = $rackColumn;
     }
 
     /**
-     * {@inheritdoc}
+     * Set column
+     * 
+     * @param integer $column
      */
-    public function setColumn($rackColumn)
+    protected function setColumn($column)
     {
-        $this->setRackColumn($rackColumn);
+        $this->setRackColumn($column);
     }
 
     /**
@@ -172,9 +175,11 @@ abstract class RackPosition extends Entity implements RackPositionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Set rack
+     * 
+     * @param VIB\StorageBundle\Entity\RackInterface $rack
      */
-    public function setRack(RackInterface $rack)
+    protected function setRack(RackInterface $rack)
     {
         $this->{$this->getRackProperty()} = $rack;
     }
