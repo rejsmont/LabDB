@@ -191,7 +191,7 @@ abstract class Rack extends NamedEntity implements RackInterface
     public function removeContent(RackContentInterface $content)
     {
         foreach ($this->getPositions() as $position ) {
-            if ($position->getContent() == $content) {
+            if ($position->getContent() === $content) {
                 $position->setContent(null);
             }
         }
