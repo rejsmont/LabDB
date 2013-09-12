@@ -77,12 +77,12 @@ class RackPositionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider positionProvider
      */
-    public function testContents($position)
+    public function testContent($position)
     {
-        $this->assertNull($position->getContents());
+        $this->assertNull($position->getContent());
         $vial = new Vial();
-        $position->setContents($vial);
-        $this->assertEquals($vial, $position->getContents());
+        $position->setContent($vial);
+        $this->assertEquals($vial, $position->getContent());
     }
 
     /**
@@ -92,18 +92,18 @@ class RackPositionTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($position->isEmpty());
         $vial = new Vial();
-        $position->setContents($vial);
+        $position->setContent($vial);
         $this->assertFalse($position->isEmpty());
     }
 
     /**
      * @dataProvider positionProvider
      */
-    public function testSetPrevContents($position)
+    public function testSetPreviousContent($position)
     {
         $vial = new Vial();
-        $position->setPrevContents($vial);
-        $this->assertEquals($position, $vial->getPrevPosition());
+        $position->setPreviousContent($vial);
+        $this->assertEquals($position, $vial->getPreviousPosition());
     }
 
     public function positionProvider()

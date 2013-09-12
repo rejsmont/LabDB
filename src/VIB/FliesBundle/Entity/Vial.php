@@ -510,22 +510,6 @@ class Vial extends RackContent
     }
 
     /**
-     * @see getPreviousPosition
-     */
-    public function getPrevPosition()
-    {
-        return $this->getPreviousPosition();
-    }
-
-    /**
-     * @see setPreviousPosition
-     */
-    public function setPrevPosition(RackPosition $prevPosition = null)
-    {
-        $this->setPreviousPosition($prevPosition);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getStorageUnit() {

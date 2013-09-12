@@ -60,11 +60,11 @@ class RackTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider rackProvider
      */
-    public function testDescription($rack)
+    public function testName($rack)
     {
-        $this->assertEquals('test',$rack->getDescription());
-        $rack->setDescription('another test');
-        $this->assertEquals('another test',$rack->getDescription());
+        $this->assertEquals('test',$rack->getName());
+        $rack->setName('another test');
+        $this->assertEquals('another test',$rack->getName());
     }
 
     /**
@@ -98,46 +98,46 @@ class RackTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider rackProvider
      */
-    public function testVials($rack)
+    public function testContents($rack)
     {
         $vial_1 = new Vial();
         $vial_2 = new Vial();
         $vial_3 = new Vial();
-        $rack->addVial($vial_1, 2, 2);
-        $this->assertEquals($vial_1, $rack->getVial(2, 2));
-        $rack->addVial($vial_2, 3, 3);
-        $this->assertContains($vial_2, $rack->getVials());
-        $this->assertEquals(2, count($rack->getVials()));
-        $rack->replaceVial(2, 2, $vial_3);
-        $this->assertNotContains($vial_1, $rack->getVials());
-        $this->assertEquals($vial_3, $rack->getVial(2, 2));
-        $rack->removeVial($vial_2);
-        $this->assertNotContains($vial_2, $rack->getVials());
-        $this->assertEquals(false, $rack->hasVial($vial_2));
-        $rack->clearVials();
-        $this->assertEquals(0, count($rack->getVials()));
+        $rack->addContent($vial_1, 2, 2);
+        $this->assertEquals($vial_1, $rack->getContent(2, 2));
+        $rack->addContent($vial_2, 3, 3);
+        $this->assertContains($vial_2, $rack->getContents());
+        $this->assertEquals(2, count($rack->getContents()));
+        $rack->replaceContent(2, 2, $vial_3);
+        $this->assertNotContains($vial_1, $rack->getContents());
+        $this->assertEquals($vial_3, $rack->getContent(2, 2));
+        $rack->removeContent($vial_2);
+        $this->assertNotContains($vial_2, $rack->getContents());
+        $this->assertEquals(false, $rack->hasContent($vial_2));
+        $rack->clearContents();
+        $this->assertEquals(0, count($rack->getContents()));
     }
 
-    public function testIncubator()
+    public function testStorageUnit()
     {
         $rack = new Rack();
         $incubator = new Incubator();
         $incubator->setTemperature(28);
-        $this->assertNull($rack->getIncubator());
-        $rack->setIncubator($incubator);
-        $this->assertEquals($incubator, $rack->getIncubator());
+        $this->assertNull($rack->getStorageUnit());
+        $rack->setStorageUnit($incubator);
+        $this->assertEquals($incubator, $rack->getStorageUnit());
 
         return $rack;
     }
 
     /**
      *
-     * @depends testIncubator
+     * @depends testStorageUnit
      */
     public function testGetTemperature($rack)
     {
         $this->assertEquals(28, $rack->getTemperature());
-        $rack->setIncubator(null);
+        $rack->setStorageUnit(null);
         $this->assertEquals(21, $rack->getTemperature());
     }
 

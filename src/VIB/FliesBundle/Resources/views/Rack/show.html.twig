@@ -6,7 +6,7 @@
   {% block _select_items_row %}{% endblock %}
 {% endif %}
 
-{% block headline %}Rack {{ entity }} <small>{{ entity.description }}</small>{% endblock headline %}
+{% block headline %}Rack {{ entity }} <small>{{ entity.name }}</small>{% endblock headline %}
 
 {% block content %}
 {% if form is defined %}
@@ -49,9 +49,9 @@
               <td id="position_{{ entity.position(i,j).id }}" class="empty"></td>
             {% endif %}
           {% else %}
-            {% set contents = entity.position(i,j).contents %}
+            {% set content = entity.position(i,j).content %}
             <td id="position_{{ entity.position(i,j).id }}" class="success">
-              {% include 'VIBFliesBundle:Rack:position.html.twig' with {'contents': contents, 'rackID': entity.id, 'order': order} %}
+              {% include 'VIBFliesBundle:Rack:position.html.twig' with {'content': content, 'rackID': entity.id, 'order': order} %}
               {% set order = order + 1 %}
             </td>
           {% endif %}

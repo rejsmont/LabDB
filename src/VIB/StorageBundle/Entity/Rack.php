@@ -151,7 +151,7 @@ abstract class Rack extends NamedEntity implements RackInterface
      */
     public function getContent($row, $column)
     {
-        return $this->getPosition($row, $column)->getContents();
+        return $this->getPosition($row, $column)->getContent();
     }
 
     /**
@@ -161,8 +161,8 @@ abstract class Rack extends NamedEntity implements RackInterface
     {
         $contents = new ArrayCollection();
         foreach ($this->getPositions() as $position) {
-            if (($content = $position->getContents()) !== null) {
-                $contents[] = $position->getContents();
+            if (($content = $position->getContent()) !== null) {
+                $contents[] = $content;
             }
         }
 

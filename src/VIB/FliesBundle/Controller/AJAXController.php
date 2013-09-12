@@ -128,7 +128,7 @@ class AJAXController extends AbstractController
         $om->persist($vial);
         $om->flush();
 
-        return array('contents' => $vial, 'rackID' => $rackID, 'order' => $order);
+        return array('content' => $vial, 'rackID' => $rackID, 'order' => $order);
     }
 
     /**
@@ -166,7 +166,7 @@ class AJAXController extends AbstractController
 
         if ((null === $vialID)&&(! $rack instanceof Rack)) {
             return new Response('The rack R'. sprintf("%06d",$rackID) . ' does not exist', 404);
-        } elseif (($vialID != null)&&(! $rack->hasVial($vial))) {
+        } elseif (($vialID != null)&&(! $rack->hasContent($vial))) {
             return new Response('The vial ' . sprintf("%06d",$vialID) . ' is not in the rack R'. sprintf("%06d",$rackID), 404);
         }
 
@@ -177,7 +177,7 @@ class AJAXController extends AbstractController
 
             return new Response('The vial '. sprintf("%06d",$rackID) . ' was removed from rack R'. sprintf("%06d",$rackID), 200);
         } else {
-            $rack->clearVials();
+            $rack->clearContents();
             $om->persist($rack);
             $om->flush();
 

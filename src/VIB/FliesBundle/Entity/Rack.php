@@ -67,82 +67,6 @@ class Rack extends BaseRack implements LabelInterface, StorageUnitContentInterfa
     }
 
     /**
-     * Set description
-     *
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->setName($description);
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->getName();
-    }
-
-    /**
-     * @see getContent
-     */
-    public function getVial($row, $column)
-    {
-        return $this->getContent($row, $column);
-    }
-
-    /**
-     * @see getContents
-     */
-    public function getVials()
-    {
-        return $this->getContents();
-    }
-
-    /**
-     * @see addContent
-     */
-    public function addVial(Vial $vial, $row = null, $column = null)
-    {
-        return $this->addContent($vial, $row, $column);
-    }
-
-    /**
-     * @see removeContent
-     */
-    public function removeVial(Vial $vial)
-    {
-        return $this->removeContent($vial);
-    }
-
-    /**
-     * @see replaceContent
-     */
-    public function replaceVial($row, $column, Vial $vial = null)
-    {
-        $this->replaceContent($row, $column, $vial);
-    }
-
-    /**
-     * @see clearContents
-     */
-    public function clearVials()
-    {
-        $this->clearContents();
-    }
-
-    /**
-     * $see hasContent
-     */
-    public function hasVial(Vial $vial)
-    {
-        return $this->hasContent($vial);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getStorageUnit()
@@ -156,22 +80,6 @@ class Rack extends BaseRack implements LabelInterface, StorageUnitContentInterfa
     public function setStorageUnit(StorageUnitInterface $unit = null)
     {
         $this->incubator = $unit;
-    }
-    
-    /**
-     * @see getStorageUnit
-     */
-    public function getIncubator()
-    {
-        return $this->incubator;
-    }
-
-    /**
-     * @see setStorageUnit
-     */
-    public function setIncubator(Incubator $incubator = null)
-    {
-        $this->setStorageUnit($incubator);
     }
 
     /**

@@ -42,9 +42,9 @@ class RackSimpleType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('description', 'text', array(
-                        'label' => 'Description',
-                        'required' => false));
+        $builder->add('name', 'text', array(
+                        'label' => 'Name',
+                        'required' => true));
     }
 
     /**

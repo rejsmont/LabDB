@@ -223,11 +223,11 @@ class VialTest extends \PHPUnit_Framework_TestCase
         $position = new RackPosition(new Rack(1,1),1,1);
         $vial->setPosition($position);
         $this->assertEquals($position,$vial->getPosition());
-        $this->assertEquals($vial,$position->getContents());
+        $this->assertEquals($vial,$position->getContent());
 
         $newPosition = $this->getPosition();
         $vial->setPosition($newPosition);
-        $this->assertEquals($position,$vial->getPrevPosition());
+        $this->assertEquals($position,$vial->getPreviousPosition());
         $this->assertEquals($newPosition,$vial->getPosition());
 
         return $vial;
@@ -236,32 +236,32 @@ class VialTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider vialProvider
      */
-    public function testPrevPosition($vial)
+    public function testPreviousPosition($vial)
     {
-        $this->assertNull($vial->getPrevPosition());
+        $this->assertNull($vial->getPreviousPosition());
         $position = new RackPosition(new Rack(1,1),1,1);
-        $vial->setPrevPosition($position);
-        $this->assertEquals($position,$vial->getPrevPosition());
+        $vial->setPreviousPosition($position);
+        $this->assertEquals($position,$vial->getPreviousPosition());
     }
 
     /**
      * @dataProvider vialProvider
      */
-    public function testIncubator($vial)
+    public function testStorageUnit($vial)
     {
-        $this->assertNull($vial->getIncubator());
+        $this->assertNull($vial->getStorageUnit());
         $incubator = new Incubator();
-        $vial->setIncubator($incubator);
-        $this->assertEquals($incubator,$vial->getIncubator());
+        $vial->setStorageUnit($incubator);
+        $this->assertEquals($incubator,$vial->getStorageUnit());
     }
 
     /**
      * @depends testPosition
      */
-    public function testRackIncubator($vial)
+    public function testRackStorageUnit($vial)
     {
-        $this->assertInstanceOf('VIB\FliesBundle\Entity\Incubator',$vial->getIncubator());
-        $this->assertEquals($vial->getPosition()->getRack()->getIncubator(),$vial->getIncubator());
+        $this->assertInstanceOf('VIB\FliesBundle\Entity\Incubator',$vial->getStorageUnit());
+        $this->assertEquals($vial->getPosition()->getRack()->getStorageUnit(),$vial->getStorageUnit());
     }
 
     /**
@@ -380,7 +380,7 @@ class VialTest extends \PHPUnit_Framework_TestCase
         $incubator->setName('Test');
         $incubator->setTemperature(28);
         $rack = new Rack(1,1);
-        $rack->setIncubator($incubator);
+        $rack->setStorageUnit($incubator);
 
         return new RackPosition($rack,1,1);
     }

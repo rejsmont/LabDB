@@ -66,10 +66,10 @@ abstract class RackContent extends Entity implements RackContentInterface
         $this->setPreviousPosition($prevPosition);
         $this->{$this->getPositionProperty()} = $position;
         if ((null !== $prevPosition)&&(null === $position)) {
-            $prevPosition->setContents(null);
+            $prevPosition->setContent(null);
         }
-        if ((null !== $position)&&($position->getContents() !== $this)) {
-            $position->setContents($this);
+        if ((null !== $position)&&($position->getContent() !== $this)) {
+            $position->setContent($this);
         }
     }
 

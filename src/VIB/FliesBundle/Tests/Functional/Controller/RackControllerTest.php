@@ -46,7 +46,7 @@ class RackControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/secure/racks/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
-        $form['rack[rack][description]'] = 'Test flies';
+        $form['rack[rack][name]'] = 'Test flies';
         $form['rack[rows]'] = 5;
         $form['rack[columns]'] = 5;
 
@@ -105,7 +105,7 @@ class RackControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/secure/racks/edit/2');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
-        $form['rack[rack][description]'] = 'Test flies modified';
+        $form['rack[rack][name]'] = 'Test flies modified';
 
         $client->submit($form);
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
@@ -168,7 +168,7 @@ class RackControllerTest extends WebTestCase
             $om->remove($rack);
         }
         $rack = $repository->find(1);
-        $rack->setIncubator(null);
+        $rack->setStorageUnit(null);
         $om->persist($rack);
 
         $om->flush();

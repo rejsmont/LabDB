@@ -275,7 +275,7 @@ class RackController extends CRUDController
     public function incubateRack(Rack $rack, Incubator $incubator)
     {
         $om = $this->getObjectManager();
-        $rack->setIncubator($incubator);
+        $rack->setStorageUnit($incubator);
         $om->persist($rack);
         $om->flush();
         $this->addSessionFlash('success', 'Rack ' . $rack . ' was put in ' . $incubator . '.');

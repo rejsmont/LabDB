@@ -53,31 +53,6 @@ class RackPosition extends BaseRackPosition
      */
     protected $contents;
     
-
-    /**
-     * @see getContent
-     */
-    public function getContents()
-    {
-        return $this->getContent();
-    }
-
-    /**
-     * @see setContent
-     */
-    public function setContents(Vial $contents = null)
-    {
-        $this->setContent($contents);
-    }
-
-    /**
-     * @see setPreviousContent
-     */
-    public function setPrevContents(Vial $prevContents = null)
-    {
-        $this->setPreviousContent($prevContents);
-    }
-    
     
     protected function getContentProperty() {
         return 'contents';

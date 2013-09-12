@@ -1,15 +1,15 @@
-{% set uuid = random() ~ '_' ~ contents.id  %}
+{% set uuid = random() ~ '_' ~ content.id  %}
 
 {% if order is not defined or order is empty %}
-  {% set order = contents.id %}
+  {% set order = content.id %}
 {% endif %}
 
 <span class="popover-trigger" id="span_{{ uuid }}"
       data-placement="top" data-container="#span_{{ uuid }}"
       data-delay="500" data-link="{{ path('vib_flies_ajax_popover') }}"
-      data-type="vial" data-id="{{ contents.id }}" data-rack="{{ rackID }}">
-  <a><input type="checkbox" id="select_items_{{ contents.id }}"
+      data-type="vial" data-id="{{ content.id }}" data-rack="{{ rackID }}">
+  <a><input type="checkbox" id="select_items_{{ content.id }}"
      name="select[items][{{ order }}]"
-     value="{{ contents.id }}" checked />
+     value="{{ content.id }}" checked />
   </a>
 </span>
