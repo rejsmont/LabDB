@@ -96,8 +96,6 @@ class RackPositionTest extends \PHPUnit_Framework_TestCase
     public function testRack($position)
     {
         $this->assertInstanceOf('VIB\FliesBundle\Entity\Rack', $position->getRack());
-        $position->setRack(null);
-        $this->assertNull($position->getRack());
         $rack = new Rack(2, 2);
         $position->setRack($rack);
         $this->assertEquals($rack, $position->getRack());

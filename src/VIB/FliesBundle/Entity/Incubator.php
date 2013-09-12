@@ -24,7 +24,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use VIB\CoreBundle\Entity\Entity;
+use VIB\CoreBundle\Entity\NamedEntity;
+use VIB\StorageBundle\Entity\StorageUnitInterface;
+use VIB\StorageBundle\Entity\TermocontrolledInterface;
 
 /**
  * Incubator class
@@ -34,17 +36,8 @@ use VIB\CoreBundle\Entity\Entity;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Incubator extends Entity
+class Incubator extends NamedEntity implements StorageUnitInterface, TermocontrolledInterface
 {
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Serializer\Expose
-     * @Assert\NotBlank(message = "Name must be specified")
-     *
-     * @var string
-     */
-    protected $name;
-
     /**
      * @ORM\OneToMany(targetEntity="Rack", mappedBy="incubator", fetch="EXTRA_LAZY")
      *
@@ -88,36 +81,6 @@ class Incubator extends Entity
     }
 
     /**
-     * Return string representation of Incubator
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getName();
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
      * Get racks
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
@@ -137,6 +100,14 @@ class Incubator extends Entity
         return $this->vials;
     }
 
+    /**
+     * {@inheritdoc}
+     */    
+    public function getContents() {
+        $contents = array_merge($this->getRacks()->toArray(), $this->getVials()->toArray());
+        return new ArrayCollection($contents);
+    }
+    
     /**
      * Get temperature
      *

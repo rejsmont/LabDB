@@ -26,7 +26,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity as UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 
-use VIB\CoreBundle\Entity\Entity;
+use VIB\CoreBundle\Entity\NamedEntity;
 
 /**
  * Stock class
@@ -37,7 +37,7 @@ use VIB\CoreBundle\Entity\Entity;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Stock extends Entity
+class Stock extends NamedEntity
 {
     /**
      * @ORM\Column(type="string", length=255, unique=true, nullable=false)
@@ -60,6 +60,8 @@ class Stock extends Entity
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Expose
+     * 
+     * @var string
      */
     protected $notes;
 
@@ -84,14 +86,14 @@ class Stock extends Entity
      * @ORM\Column(type="boolean", length=255, nullable=true)
      * @Serializer\Expose
      *
-     * @var string
+     * @var boolean
      */
     protected $verified;
 
     /**
      * @ORM\OneToMany(targetEntity="StockVial", mappedBy="stock", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      *
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Doctrine\Common\Collections\Collection
      */
     protected $vials;
 
@@ -99,7 +101,7 @@ class Stock extends Entity
      * @ORM\ManyToOne(targetEntity="CrossVial", inversedBy="stocks")
      * @ORM\JoinColumn(onDelete="SET NULL")
      *
-     * @var \VIB\FliesBundle\Entity\CrossVial
+     * @var VIB\FliesBundle\Entity\CrossVial
      */
     protected $sourceCross;
 
@@ -114,36 +116,6 @@ class Stock extends Entity
         foreach ($this->getVials() as $vial) {
             $vial->setStock($this);
         }
-    }
-
-    /**
-     * Return string representation of Stock
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string) $this->getName();
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**

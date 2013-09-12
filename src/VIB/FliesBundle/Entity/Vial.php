@@ -25,7 +25,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 
-use VIB\CoreBundle\Entity\Entity;
+use VIB\StorageBundle\Entity\RackContent;
+use VIB\StorageBundle\Entity\StorageUnitInterface;
+use VIB\StorageBundle\Entity\StorageUnitContentInterface;
+use VIB\StorageBundle\Entity\TermocontrolledInterface;
 use VIB\FliesBundle\Label\LabelDateInterface;
 
 /**
@@ -53,7 +56,7 @@ use VIB\FliesBundle\Label\LabelDateInterface;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Vial extends Entity implements LabelDateInterface
+class Vial extends RackContent implements StorageUnitContentInterface, TermocontrolledInterface, LabelDateInterface
 {
     /**
      * @ORM\Column(type="date")
@@ -185,16 +188,6 @@ class Vial extends Entity implements LabelDateInterface
     public function getLabelDate()
     {
         return $this->getSetupDate();
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -519,102 +512,73 @@ class Vial extends Entity implements LabelDateInterface
     }
 
     /**
-     * Get position
-     *
-     * @return VIB\FliesBundle\Entity\RackPosition
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * Set position
-     *
-     * @param VIB\FliesBundle\Entity\RackPosition $position
-     */
-    public function setPosition(RackPosition $position = null)
-    {
-        $prevPosition = $this->getPosition();
-        $this->setPrevPosition($prevPosition);
-        $this->position = $position;
-        if ((null !== $prevPosition)&&(null === $position)) {
-            $prevPosition->setContents(null);
-        }
-        if ((null !== $position)&&($position->getContents() !== $this)) {
-            $position->setContents($this);
-        }
-    }
-
-    /**
-     * Get previous position
-     *
-     * @return VIB\FliesBundle\Entity\RackPosition
+     * @see getPreviousPosition
      */
     public function getPrevPosition()
     {
-        return $this->prevPosition;
+        return $this->getPreviousPosition();
     }
 
     /**
-     * Set previous position
-     *
-     * @param VIB\FliesBundle\Entity\RackPosition $prevPosition
+     * @see setPreviousPosition
      */
     public function setPrevPosition(RackPosition $prevPosition = null)
     {
-        $this->prevPosition = $prevPosition;
+        $this->setPreviousPosition($prevPosition);
     }
 
     /**
-     * Get incubator
-     *
-     * @return VIB\FliesBundle\Entity\Incubator
+     * {@inheritdoc}
      */
-    public function getIncubator()
-    {
-        if ((($position = $this->getPosition()) instanceof RackPosition)&&
-            (($rack = $position->getRack()) instanceof Rack)) {
-            return $rack->getIncubator();
+    public function getStorageUnit() {
+        if ((null !== ($position = $this->getPosition()))&&
+            (null !== ($rack = $position->getRack()))) {
+            return $rack->getStorageUnit();
         } else {
             return $this->incubator;
         }
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setStorageUnit(StorageUnitInterface $unit = null) {
+        $this->incubator = $unit;
+    }
+
+    
+    /**
+     * @see getStorageUnit
+     */
+    public function getIncubator()
+    {
+        return $this->getStorageUnit();
+    }
 
     /**
-     * Set incubator
-     *
-     * @param VIB\FliesBundle\Entity\Incubator $incubator
+     * @see setStorageUnit
      */
     public function setIncubator(Incubator $incubator = null)
     {
-        $this->incubator = $incubator;
+        $this->setStorageUnit($incubator);
     }
 
     /**
-     * Get position
-     *
-     * @return VIB\FliesBundle\Entity\RackPosition
+     * {@inheritdoc}
      */
     public function getLocation()
     {
-        $incubator = (string) $this->getIncubator();
-        $position = (string) $this->getPosition();
-        $glue = (null !== $incubator)&&(null !== $position) ? " " : "";
-
-        return $this->isAlive() ? $incubator . $glue . $position : null;
+        return $this->isAlive() ? parent::getLocation() : null;
     }
 
     /**
-     * Get temperature
-     *
-     * @return float The temperature vial is kept in
+     * {@inheritdoc}
      */
     public function getTemperature()
     {
-        $incubator = $this->getIncubator();
-        if (($incubator instanceof Incubator)&&(! $this->isTrashed())) {
-            return $incubator->getTemperature();
+        $unit = $this->getStorageUnit();
+        if (($unit instanceof TermocontrolledInterface)&&(! $this->isTrashed())) {
+            return $unit->getTemperature();
         } else {
             return ($this->temperature !== null) ? $this->temperature : 21.00;
         }
@@ -693,4 +657,19 @@ class Vial extends Entity implements LabelDateInterface
     {
         return '';
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getPositionProperty() {
+        return 'position';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getPreviousPositionProperty() {
+        return 'prevPosition';
+    }
+
 }

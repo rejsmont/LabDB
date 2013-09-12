@@ -21,10 +21,11 @@ namespace VIB\FliesBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
-use VIB\CoreBundle\Entity\Entity;
-use \VIB\FliesBundle\Label\LabelInterface;
+use VIB\StorageBundle\Entity\Rack as BaseRack;
+use VIB\StorageBundle\Entity\StorageUnitInterface;
+use VIB\StorageBundle\Entity\StorageUnitContentInterface;
+use VIB\StorageBundle\Entity\TermocontrolledInterface;
+use VIB\FliesBundle\Label\LabelInterface;
 
 /**
  * Rack class
@@ -34,16 +35,8 @@ use \VIB\FliesBundle\Label\LabelInterface;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Rack extends Entity implements LabelInterface
+class Rack extends BaseRack implements LabelInterface, StorageUnitContentInterface, TermocontrolledInterface
 {
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Serializer\Expose
-     *
-     * @var string
-     */
-    protected $description;
-
     /**
      * @ORM\OneToMany(targetEntity="RackPosition", mappedBy="rack", cascade={"persist", "remove"}, orphanRemoval=true, fetch="EXTRA_LAZY")
      *
@@ -52,32 +45,10 @@ class Rack extends Entity implements LabelInterface
     protected $positions;
 
     /**
-     * @var integer
-     */
-    private $rows;
-
-    /**
-     * @var integer
-     */
-    private $columns;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Incubator", inversedBy="racks")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $incubator;
-
-    /**
-     * Construct Rack
-     *
-     * @param integer $rows
-     * @param integer $columns
-     */
-    public function __construct($rows = null, $columns = null)
-    {
-        $this->positions = new ArrayCollection();
-        $this->setGeometry($rows, $columns);
-    }
 
     /**
      * {@inheritdoc}
@@ -92,17 +63,7 @@ class Rack extends Entity implements LabelInterface
      */
     public function getLabelText()
     {
-        return $this->getDescription();
-    }
-
-    /**
-     * Return string representation of Rack
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return sprintf("R%06d",$this->getId());
+        return $this->getName();
     }
 
     /**
@@ -112,7 +73,7 @@ class Rack extends Entity implements LabelInterface
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->setName($description);
     }
 
     /**
@@ -122,248 +83,83 @@ class Rack extends Entity implements LabelInterface
      */
     public function getDescription()
     {
-        return $this->description;
+        return $this->getName();
     }
 
     /**
-     * Get positions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    protected function getPositions()
-    {
-        return $this->positions;
-    }
-
-    /**
-     * Get position
-     *
-     * @param  string                               $row
-     * @param  integer                              $column
-     * @return \VIB\FliesBundle\Entity\RackPosition
-     * @throws \OutOfBoundsException
-     */
-    public function getPosition($row, $column)
-    {
-        foreach ($this->getPositions() as $position) {
-            if ($position->isAt($row, $column)) {
-                return $position;
-            }
-        }
-        throw new \OutOfBoundsException();
-    }
-
-    /**
-     * Get first empty position
-     *
-     * @param  string                               $row
-     * @param  integer                              $column
-     * @return \VIB\FliesBundle\Entity\RackPosition
-     * @throws \OutOfBoundsException
-     */
-    protected function getFirstEmptyPosition($row = null, $column = null)
-    {
-        foreach ($this->getPositions() as $position) {
-            if ($position->isAt($row, $column) && $position->isEmpty()) {
-                return $position;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Set position
-     *
-     * @param string  $row
-     * @param integer $column
-     * @param mixed   $contents
-     */
-    protected function setPosition($row, $column, $contents = null)
-    {
-        $this->getPosition($row, $column)->setContents($contents);
-    }
-
-    /**
-     * Update counters for rows and columns
-     *
-     */
-    private function updateGeometry()
-    {
-        if ((null === $this->rows)||(null === $this->columns)) {
-            $rows = array();
-            $columns = array();
-            foreach ($this->getPositions() as $position) {
-                $rows[$position->getRow()] = true;
-                $columns[$position->getColumn()] = true;
-            }
-            $this->rows = count($rows);
-            $this->columns = count($columns);
-        }
-    }
-
-    /**
-     * Count rows in rack
-     *
-     * @return integer
-     */
-    public function getRows()
-    {
-        $this->updateGeometry();
-
-        return $this->rows;
-    }
-
-    /**
-     * Count columns in rack
-     *
-     * @return integer
-     */
-    public function getColumns()
-    {
-        $this->updateGeometry();
-
-        return $this->columns;
-    }
-
-    /**
-     * Get geometry
-     *
-     * @return string
-     */
-    public function getGeometry()
-    {
-        $this->updateGeometry();
-
-        return $this->rows . " ✕ " . $this->columns;
-    }
-
-    /**
-     * Set geometry
-     *
-     * @param integer $rows
-     * @param integer $columns
-     */
-    public function setGeometry($rows, $columns)
-    {
-        $this->updateGeometry();
-
-        if (($this->rows == $rows)&&($this->columns == $columns)) {
-            return;
-        }
-
-        if ((null !== $rows)&&(null !== $columns)) {
-            $this->getPositions()->clear();
-            for ($row = 1; $row <= $rows; $row++) {
-                for ($column = 1; $column <= $columns; $column++) {
-                    $this->positions[] = new RackPosition($this,$row,$column);
-                }
-            }
-            $this->rows = $rows;
-            $this->columns = $columns;
-        }
-    }
-
-    /**
-     * Get vial
-     *
-     * @param  string                       $row
-     * @param  integer                      $column
-     * @return \VIB\FliesBundle\Entity\Vial
+     * @see getContent
      */
     public function getVial($row, $column)
     {
-        return $this->getPosition($row, $column)->getContents();
+        return $this->getContent($row, $column);
     }
 
     /**
-     * Get vials
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @see getContents
      */
     public function getVials()
     {
-        $vials = new ArrayCollection();
-        foreach ($this->getPositions() as $position) {
-            if (($vial = $position->getContents()) !== null) {
-                $vials[] = $position->getContents();
-            }
-        }
-
-        return $vials;
+        return $this->getContents();
     }
 
     /**
-     * Add vial to first empty position
-     *
-     * @param \VIB\FliesBundle\Entity\Vial $vial
-     * @param string                       $row
-     * @param integer                      $column
+     * @see addContent
      */
     public function addVial(Vial $vial, $row = null, $column = null)
     {
-        $position = $this->getFirstEmptyPosition($row, $column);
-        if ($position != null) {
-            $position->setContents($vial);
-
-            return true;
-        } else {
-            return false;
-        }
+        return $this->addContent($vial, $row, $column);
     }
 
     /**
-     * Remove vial
-     *
-     * @param \VIB\FliesBundle\Entity\Vial $vial
+     * @see removeContent
      */
     public function removeVial(Vial $vial)
     {
-        foreach ($this->getPositions() as $position ) {
-            if ($position->getContents() == $vial) {
-                $position->setContents(null);
-            }
-        }
+        return $this->removeContent($vial);
     }
 
     /**
-     * Replace vial at given position
-     *
-     * @param string                       $row
-     * @param integer                      $column
-     * @param \VIB\FliesBundle\Entity\Vial $vial
+     * @see replaceContent
      */
     public function replaceVial($row, $column, Vial $vial = null)
     {
-        $this->setPosition($row, $column, $vial);
+        $this->replaceContent($row, $column, $vial);
     }
 
     /**
-     * Clear all vial
-     *
+     * @see clearContents
      */
     public function clearVials()
     {
-        foreach ($this->getPositions() as $position ) {
-            $position->setContents(null);
-        }
+        $this->clearContents();
     }
 
     /**
-     * Check if a vial is in the rack
-     *
-     * @param  \VIB\FliesBundle\Entity\Vial $vial
-     * @return boolean
+     * $see hasContent
      */
     public function hasVial(Vial $vial)
     {
-        return $this->getVials()->contains($vial);
+        return $this->hasContent($vial);
     }
 
     /**
-     * Get incubator
-     *
-     * @return \VIB\FliesBundle\Entity\Incubator
+     * {@inheritdoc}
+     */
+    public function getStorageUnit()
+    {
+        return $this->incubator;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setStorageUnit(StorageUnitInterface $unit = null)
+    {
+        $this->incubator = $unit;
+    }
+    
+    /**
+     * @see getStorageUnit
      */
     public function getIncubator()
     {
@@ -371,22 +167,41 @@ class Rack extends Entity implements LabelInterface
     }
 
     /**
-     * Set incubator
-     *
-     * @param \VIB\FliesBundle\Entity\Incubator $incubator
+     * @see setStorageUnit
      */
-    public function setIncubator($incubator)
+    public function setIncubator(Incubator $incubator = null)
     {
-        $this->incubator = $incubator;
+        $this->setStorageUnit($incubator);
     }
 
     /**
-     * Get temperature
-     *
-     * @return float The temperature rack is kept in
+     * {@inheritdoc}
      */
     public function getTemperature()
     {
-        return (($incubator = $this->getIncubator()) instanceof Incubator) ? $incubator->getTemperature() : 21.00;
+        return (($unit = $this->getStorageUnit()) instanceof TermocontrolledInterface) ? 
+            $unit->getTemperature() : 21.00;
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocation() {
+        return (null !== ($unit = $this->getStorageUnit())) ? (string) $unit : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getPositionClass() {
+        return 'VIB\FliesBundle\Entity\RackPosition';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getPositionsProperty() {
+        return 'positions';
+    }
+
 }

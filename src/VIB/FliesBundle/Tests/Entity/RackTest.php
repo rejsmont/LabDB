@@ -155,6 +155,6 @@ class FakeRack extends Rack
     {
         parent::__construct($rows, $columns);
         $this->id = 1;
-        $this->description = 'test';
+        $this->name = 'test';
     }
 }

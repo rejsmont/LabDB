@@ -1,3 +1,13 @@
+vib_antibody:
+    resource: "@VIBAntibodyBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+vib_storage:
+    resource: "@VIBStorageBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 vib_calendar:
     resource: "@VIBCalendarBundle/Controller/"
     type:     annotation
