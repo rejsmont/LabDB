@@ -8,5 +8,5 @@ before_script:
   - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - composer selfupdate
   - composer install --no-interaction
-
+  - echo 'xdebug.max_nesting_level = 250' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 script: phpunit -c app

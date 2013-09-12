@@ -331,7 +331,7 @@ class VialControllerTest extends WebTestCase
         $vm->untrash($repository->find(8));
         $vm->trash($repository->find(7));
         $vial = $repository->find(1);
-        $vial->setIncubator(null);
+        $vial->setStorageUnit(null);
         $vm->persist($vial);
         foreach (array(2, 5, 8) as $id) {
             $vial = $repository->find($id);

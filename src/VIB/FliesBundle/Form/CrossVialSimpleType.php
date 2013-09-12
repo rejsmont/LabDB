@@ -71,7 +71,7 @@ class CrossVialSimpleType extends AbstractType
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',
                         'required' => false))
-                ->add('incubator', 'entity', array(
+                ->add('storageUnit', 'entity', array(
                         'property'     => 'name',
                         'class' => 'VIBFliesBundle:Incubator',
                         'label' => 'Incubator'))

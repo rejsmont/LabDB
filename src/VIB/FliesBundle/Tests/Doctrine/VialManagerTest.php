@@ -80,7 +80,7 @@ class VialManagerTest extends \PHPUnit_Framework_TestCase
         $incubator = new Incubator();
         $this->entityManager->expects($this->once())->method('persist')->with($vial);
         $this->om->incubate($vials,$incubator);
-        $this->assertEquals($incubator,$vial->getIncubator());
+        $this->assertEquals($incubator,$vial->getStorageUnit());
     }
 
     /**

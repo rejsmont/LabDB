@@ -165,7 +165,7 @@ class VialManager extends ObjectManager
     public function incubate($vials, Incubator $incubator = null)
     {
         if (($vial = $vials) instanceof Vial) {
-            $vial->setIncubator($incubator);
+            $vial->setStorageUnit($incubator);
             $this->persist($vial);
         } elseif ($vials instanceof Collection) {
             foreach ($vials as $vial) {

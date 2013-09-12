@@ -239,7 +239,7 @@ class Vial extends RackContent
             $this->setFlipDate($template->getFlipDate());
             $this->setSize($template->getSize());
             $this->setNotes($template->getNotes());
-            $this->setIncubator($template->getIncubator());
+            $this->setStorageUnit($template->getStorageUnit());
         }
     }
 
@@ -526,23 +526,6 @@ class Vial extends RackContent
      */
     public function setStorageUnit(StorageUnitInterface $unit = null) {
         $this->incubator = $unit;
-    }
-
-    
-    /**
-     * @see getStorageUnit
-     */
-    public function getIncubator()
-    {
-        return $this->getStorageUnit();
-    }
-
-    /**
-     * @see setStorageUnit
-     */
-    public function setIncubator(Incubator $incubator = null)
-    {
-        $this->setStorageUnit($incubator);
     }
 
     /**
