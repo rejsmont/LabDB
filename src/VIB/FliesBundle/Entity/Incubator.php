@@ -109,10 +109,8 @@ class Incubator extends NamedEntity implements StorageUnitInterface, Termocontro
     }
     
     /**
-     * Get temperature
-     *
-     * @return float
-     */
+     * {@inheritdoc}
+     */ 
     public function getTemperature()
     {
         return $this->temperature;

@@ -39,7 +39,7 @@
         "twbs/bootstrap": "2.3.*@dev",
         "fortawesome/font-awesome": "3.2.*@dev",
         "eternicode/bootstrap-datepicker": "dev-master",
-        "exacttarget/fuelux": "2.3.1",
+        "ivaynberg/select2": "3.4-dev",
         "jquery/jquery": "1.10.2",
         "jquery/jquery-ui": "1.10.3",
         "packagist/yuicompressor-bin": "dev-master",
@@ -113,13 +113,13 @@
         {
             "type": "package",
             "package": {
-                "version": "2.3.1",
-                "name": "exacttarget/fuelux",
+                "version": "3.4-dev",
+                "name": "ivaynberg/select2",
                 "type": "component",
                 "source": {
-                    "url": "https://github.com/ExactTarget/fuelux.git",
+                    "url": "https://github.com/ivaynberg/select2.git",
                     "type": "git",
-                    "reference": "2.3.1"
+                    "reference": "master"
                 }
             }
         },

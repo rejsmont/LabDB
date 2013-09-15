@@ -1,5 +1,12 @@
 {% extends 'MopaBootstrapBundle:Form:fields.html.twig' %}
 
+{% block choice_widget_collapsed %}
+  {% spaceless %}
+    {% set attr = attr|merge({ 'class': attr.class|default('') ~ ' select2' }) %}
+    {{ parent() }}
+  {% endspaceless %}
+{% endblock %}
+
 {% block typeahead_widget %}
   {% spaceless %}
     {% set attr = attr|merge({

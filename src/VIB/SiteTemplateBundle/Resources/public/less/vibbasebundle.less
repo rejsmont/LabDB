@@ -1,4 +1,4 @@
- // Main stylesheet
+// Main stylesheet
 
 // Vendor includes
 @import "../../../../../../vendor/twbs/bootstrap/less/bootstrap.less";
@@ -13,6 +13,7 @@
 @import 'dropdown-split.less';
 @import 'local.less';
 @import 'error.less';
+@import '../../../../FormsBundle/Resources/public/less/select2-bootstrap.less';
 
 .input-append input.add-on {
   text-align: left;
@@ -32,7 +33,7 @@ label > .btn {
 
 .collection-item {
   margin-bottom: 5px;
-  input, select {
+  input, select, .select2-container {
     margin-right: 5px;
   }
   .input-append, .input-prepend {

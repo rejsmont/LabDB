@@ -81,4 +81,8 @@ $(document).ready(function () {
       return name + '<span class="pull-right">' + username + '</span>'
     }
   })
+  $('.select2').select2({
+    width: 'resolve',
+    minimumResultsForSearch: -1
+  })
 });
