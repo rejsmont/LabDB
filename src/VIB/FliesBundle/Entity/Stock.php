@@ -83,7 +83,7 @@ class Stock extends NamedEntity
     protected $infoURL;
 
     /**
-     * @ORM\Column(type="boolean", length=255, nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      * @Serializer\Expose
      *
      * @var boolean
@@ -240,7 +240,7 @@ class Stock extends NamedEntity
             if (! $vials->contains($vial)) {
                 $vials->add($vial);
             }
-            if ($vial->getStock() != $this) {
+            if ($vial->getStock() !== $this) {
                 $vial->setStock($this);
             }
         }

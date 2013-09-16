@@ -41,7 +41,7 @@ class BoxPosition extends RackPosition
      * @Serializer\Expose
      * @Assert\NotBlank(message = "Box must be specified")
      *
-     * @var \VIB\AntibodyBundle\Entity\Box
+     * @var VIB\AntibodyBundle\Entity\Box
      */
     protected $rack;
 
@@ -49,7 +49,7 @@ class BoxPosition extends RackPosition
      * @ORM\OneToOne(targetEntity="Tube", mappedBy="position")
      * @Serializer\Expose
      *
-     * @var \VIB\AntibodyBundle\Entity\Tube
+     * @var VIB\AntibodyBundle\Entity\Tube
      */
     protected $content;
     

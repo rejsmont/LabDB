@@ -46,6 +46,13 @@ class Tube extends RackContent implements TermocontrolledInterface
     protected $type;
 
     /**
+     * @ORM\Column(type="date")
+     * @Assert\NotBlank(message = "Date must be specified")
+     * @Serializer\Expose
+     */
+    protected $date;
+    
+    /**
      * @ORM\OneToOne(targetEntity="BoxPosition", inversedBy="contents")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
@@ -56,6 +63,14 @@ class Tube extends RackContent implements TermocontrolledInterface
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $prevPosition;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Antibody", inversedBy="tubes")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Assert\NotBlank(message = "Antibody must be specified")
+     * @Serializer\Expose
+     */
+    protected $antibody;
 
     /**
      * Construct new tube
@@ -63,7 +78,8 @@ class Tube extends RackContent implements TermocontrolledInterface
      */
     public function __construct()
     {
-        
+        $this->type = '1.5mL Eppendorf';
+        $this->date = new \DateTime();
     }
 
     /**
@@ -75,11 +91,29 @@ class Tube extends RackContent implements TermocontrolledInterface
     }
 
     /**
+     * Get antibody
+     * 
+     * @return VIB\AntibodyBundle\Entity\Antibody
+     */
+    public function getAntibody() {
+        return $this->antibody;
+    }
+
+    /**
+     * Set antibody
+     * 
+     * @param VIB\AntibodyBundle\Entity\Antibody $antibody
+     */
+    public function setAntibody(Antibody $antibody = null) {
+        $this->antibody = $antibody;
+    }
+        
+    /**
      * {@inheritdoc}
      */
     public function getTemperature()
     {
-        $box = $this->getPosition()->getRack();
+        $box = $this->getRack();
         
         return ($box instanceof TermocontrolledInterface) ? $box->getTemperature() : 21;
     }

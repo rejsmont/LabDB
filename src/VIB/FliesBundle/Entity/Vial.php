@@ -513,8 +513,7 @@ class Vial extends RackContent
      * {@inheritdoc}
      */
     public function getStorageUnit() {
-        if ((null !== ($position = $this->getPosition()))&&
-            (null !== ($rack = $position->getRack()))) {
+        if (($rack = $this->getRack()) instanceof StorageUnitContentInterface) {
             return $rack->getStorageUnit();
         } else {
             return $this->incubator;
