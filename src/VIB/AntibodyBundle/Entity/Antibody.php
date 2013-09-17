@@ -24,7 +24,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity as UniqueEntity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 
 use VIB\CoreBundle\Entity\Entity;
 
@@ -65,6 +64,15 @@ class Antibody extends Entity
     protected $hostSpecies;
 
     /**
+     * @ORM\Column(name="aborder", type="string", length=255, nullable=false)
+     * @Serializer\Expose
+     * @Assert\NotBlank(message = "Order must be specified")
+     *
+     * @var string
+     */
+    protected $order;
+    
+    /**
      * @ORM\Column(type="string", length=255, nullable=false)
      * @Serializer\Expose
      * @Assert\NotBlank(message = "Type must be specified")
@@ -72,6 +80,15 @@ class Antibody extends Entity
      * @var string
      */
     protected $type;
+    
+    /**
+     * @ORM\Column(type="string", length=255, nullable=false)
+     * @Serializer\Expose
+     * @Assert\NotBlank(message = "Class must be specified")
+     *
+     * @var string
+     */
+    protected $class;
     
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -130,14 +147,27 @@ class Antibody extends Entity
     
     
     /**
-     * Construct Stock
+     * Construct Antibody
+     * 
      */
     public function __construct()
     {
         $this->verified = false;
         $this->tubes = new ArrayCollection();
+        $this->applications = new ArrayCollection();        
+        $this->class = 'IgG';
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString() {
+        return $this->getAntigen() . " " . 
+               $this->getOrder() . " " .
+               $this->getType() . " " .
+               $this->getCLass();
+    }
+    
     /**
      * Get antigen
      * 
@@ -193,6 +223,24 @@ class Antibody extends Entity
     }
 
     /**
+     * Get order
+     * 
+     * @return string
+     */
+    public function getOrder() {
+        return $this->order;
+    }
+
+    /**
+     * Set order
+     * 
+     * @param string $order
+     */
+    public function setOrder($order) {
+        $this->order = $order;
+    }
+    
+    /**
      * Get type
      * 
      * @return string
@@ -210,6 +258,24 @@ class Antibody extends Entity
         $this->type = $type;
     }
 
+    /**
+     * Get class
+     * 
+     * @return string
+     */
+    public function getClass() {
+        return $this->class;
+    }
+
+    /**
+     * Set class
+     * 
+     * @param string $class
+     */
+    public function setClass($class) {
+        $this->class = $class;
+    }
+        
     /**
      * Get clone
      * 
@@ -321,16 +387,14 @@ class Antibody extends Entity
      *
      * @param VIB\AntibodyBundle\Entity\Application $application
      */
-    public function addApplication(Application $application = null)
+    public function addApplication(Application $application)
     {
         $applications = $this->getApplications();
-        if (null !== $application) {
-            if (! $applications->contains($application)) {
-                $applications->add($application);
-            }
-            if ($application->getAntibody() !== $this) {
-                $application->setAntibody($this);
-            }
+        if (! $applications->contains($application)) {
+            $applications->add($application);
+        }
+        if ($application->getAntibody() !== $this) {
+            $application->setAntibody($this);
         }
     }
 
@@ -339,7 +403,7 @@ class Antibody extends Entity
      *
      * @param VIB\AntibodyBundle\Entity\Application $application
      */
-    public function removeApplication(Application $application = null)
+    public function removeApplication(Application $application)
     {
         $this->getApplications()->removeElement($application);
     }
@@ -359,7 +423,7 @@ class Antibody extends Entity
      *
      * @param VIB\AntibodyBundle\Entity\Tube $tube
      */
-    public function addTube(Tube $tube = null)
+    public function addTube(Tube $tube)
     {
         $tubes = $this->getTubes();
         if (null !== $tube) {
@@ -377,7 +441,7 @@ class Antibody extends Entity
      *
      * @param VIB\AntibodyBundle\Entity\Tube $tube
      */
-    public function removeTube(Tube $tube = null)
+    public function removeTube(Tube $tube)
     {
         $this->getTubes()->removeElement($tube);
     }

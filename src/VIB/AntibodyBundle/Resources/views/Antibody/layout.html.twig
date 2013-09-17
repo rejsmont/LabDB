@@ -1,0 +1,14 @@
+{% extends "VIBSiteTemplateBundle::layout.html.twig" %}
+
+{% block headline %}Antibodies{% endblock headline %}
+
+{% block content_sidebar %}
+<ul class="nav nav-list well">
+  <li class="nav-header">List</li>
+  <li><a href="{{ path('vib_antibody_antibody_list') }}">All</a></li>
+  <li><a href="{{ path('vib_antibody_antibody_list') }}">Primary</a></li>
+  <li><a href="{{ path('vib_antibody_antibody_list') }}">Secondary</a></li>
+  <li class="nav-header">Actions</li>
+  <li><a href="{{ path('vib_antibody_antibody_create') }}">New antibody</a></li>
+</ul>
+{% endblock content_sidebar %}

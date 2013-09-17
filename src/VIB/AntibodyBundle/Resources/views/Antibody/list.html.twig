@@ -1,0 +1,17 @@
+{% extends "VIBAntibodyBundle:Antibody:layout.html.twig" %}
+{% use "VIBSiteTemplateBundle:List:table.html.twig" %}
+{% import "VIBSiteTemplateBundle:Macros:list.html.twig" as l %}
+{% import 'VIBSiteTemplateBundle:Macros:status.html.twig' as status %}
+
+{% block headline %}Antibodies{% endblock headline %}
+
+{% block list_header %}
+  {% include 'VIBAntibodyBundle:Antibody:list_head.html.twig' %}
+{% endblock list_header %}
+
+{% block list_item %}
+  {% include 'VIBAntibodyBundle:Antibody:list_row.html.twig' with {'entity': entity} %}
+{% endblock list_item %}
+
+{% block list_buttons %}
+{% endblock list_buttons %}

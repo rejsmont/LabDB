@@ -1,0 +1,17 @@
+{% extends "VIBAntibodyBundle:Antibody:layout.html.twig" %}
+{% use "VIBSiteTemplateBundle:Delete:modal.html.twig" %}
+{% import "VIBSiteTemplateBundle:Macros:delete.html.twig" as d %}
+
+{% block modal_header %}Delete antibody {{ antibody }}{% endblock modal_header %}
+
+{% block modal_body %}
+  <h4>Are you sure you want to delete this antibody?</h4>
+  <p>
+    Applications that are assiciated with it <strong>will also</strong> be deleted.
+  </p>
+  <h4>This operation cannot be undone!</h4>
+{% endblock %}
+
+{% block modal_footer %}
+  {{ d.buttons(entity,'vib_flies_stock') }}
+{% endblock modal_footer %}

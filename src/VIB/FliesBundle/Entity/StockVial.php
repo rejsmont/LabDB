@@ -91,7 +91,7 @@ class StockVial extends Vial implements AltLabelInterface
     /**
      * {@inheritdoc}
      */
-    public function addChild(Vial $child = null)
+    public function addChild(Vial $child)
     {
         parent::addChild($child);
         if ($child instanceof StockVial) {

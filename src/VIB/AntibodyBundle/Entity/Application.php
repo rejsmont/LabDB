@@ -55,7 +55,7 @@ class Application extends Entity
     protected $type;
     
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="integer", length=255, nullable=true)
      * @Serializer\Expose
      *
      * @var string
@@ -83,7 +83,7 @@ class Application extends Entity
      */ 
     public function __construct()
     {
-        $this->name = 'Western blot';
+        $this->type = 'Western blot';
         $this->verified = false;
     }
     

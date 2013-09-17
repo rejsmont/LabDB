@@ -245,7 +245,7 @@ class CrossVial extends Vial
     /**
      * {@inheritdoc}
      */
-    public function addChild(Vial $child = null)
+    public function addChild(Vial $child)
     {
         parent::addChild($child);
         if ($child instanceof CrossVial) {

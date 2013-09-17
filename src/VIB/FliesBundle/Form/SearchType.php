@@ -45,6 +45,7 @@ class SearchType extends AbstractType
                         'required' => false,
                         'attr' => array(
                           'class' => 'span2 search-query',
+                          'form' => 'search-form',
                           'placeholder' => 'Search')))
                 ->add('filter','hidden',array('required' => false));
     }

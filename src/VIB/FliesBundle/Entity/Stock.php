@@ -233,7 +233,7 @@ class Stock extends NamedEntity
      *
      * @param VIB\FliesBundle\Entity\Vial $vial
      */
-    public function addVial(Vial $vial = null)
+    public function addVial(Vial $vial)
     {
         $vials = $this->getVials();
         if ($vial instanceof StockVial) {
@@ -251,7 +251,7 @@ class Stock extends NamedEntity
      *
      * @param VIB\FliesBundle\Entity\Vial $vial
      */
-    public function removeVial(Vial $vial = null)
+    public function removeVial(Vial $vial)
     {
         $this->getVials()->removeElement($vial);
     }

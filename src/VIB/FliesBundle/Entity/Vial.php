@@ -124,7 +124,7 @@ class Vial extends RackContent
     protected $position;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RackPosition", inversedBy="prevContents")
+     * @ORM\ManyToOne(targetEntity="RackPosition")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $prevPosition;
@@ -328,7 +328,7 @@ class Vial extends RackContent
      *
      * @param VIB\FliesBundle\Entity\Vial $child
      */
-    public function addChild(Vial $child = null)
+    public function addChild(Vial $child)
     {
         $this->getChildren()->add($child);
     }
@@ -338,7 +338,7 @@ class Vial extends RackContent
      *
      * @param VIB\FliesBundle\Entity\Vial $child
      */
-    public function removeChild(Vial $child = null)
+    public function removeChild(Vial $child)
     {
         $this->getChildren()->removeElement($child);
     }

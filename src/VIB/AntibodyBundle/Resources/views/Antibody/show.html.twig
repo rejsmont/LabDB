@@ -1,0 +1,45 @@
+{% extends "VIBAntibodyBundle:Antibody:layout.html.twig" %}
+{% use "VIBSiteTemplateBundle:Show:modal.html.twig" %}
+{% import "VIBSiteTemplateBundle:Macros:show.html.twig" as s %}
+{% import 'VIBSiteTemplateBundle:Macros:status.html.twig' as status %}
+
+{% block modal_header %}
+  #{{entity.id}} - {{ entity }}
+{% endblock modal_header %}
+
+{% block modal_body %}
+  {{ s.row("Antigen", entity.antigen) }}
+  {{ s.row("Target species", entity.targetSpecies) }}
+  {{ s.row("Host species", entity.hostSpecies) }}
+  {{ s.row("Type", entity.order ~ ' ' ~ entity.type) }}
+
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#details"><strong>Details</strong></a>
+  </div>
+  <div id="details" class="collapse">
+    {{ s.row("Class", entity.class) }}
+    {{ s.row("Clone", entity.clone) }}
+    {{ s.row("Size", entity.clone) }}
+    {{ s.row("Notes", entity.notes) }}
+  </div>
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#vendor"><strong>Vendor information</strong></a>
+  </div>
+  <div id="vendor" class="collapse">
+    {{ s.row("Vendor", entity.vendor) }}
+    <div class="control-group">
+      <span class="control-label">Data sheet</span>
+      <div class="controls">
+        <span class="input-text">
+          {% if entity.infoURL is not empty %}
+            <a href="{{ entity.infoURL }}" target="_blank">{{ entity.infoURL }}</a>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  {{ s.buttons(entity, 'vib_antibody_antibody') }}
+{% endblock modal_footer %}

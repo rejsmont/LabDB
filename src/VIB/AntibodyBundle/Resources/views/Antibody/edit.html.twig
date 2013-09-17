@@ -1,0 +1,9 @@
+{% extends "VIBAntibodyBundle:Antibody:layout.html.twig" %}
+{% use "VIBSiteTemplateBundle:Form:form.html.twig" %}
+{% import "VIBSiteTemplateBundle:Macros:form.html.twig" as f %}
+
+{% block modal_header %}Edit antibody{% endblock modal_header %}
+
+{% block modal_footer %}
+  {{ f.buttons(form.vars.value,'vib_antibody_antibody') }}
+{% endblock modal_footer %}
