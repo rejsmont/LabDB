@@ -53,13 +53,13 @@ class Tube extends RackContent implements TermocontrolledInterface
     protected $date;
     
     /**
-     * @ORM\OneToOne(targetEntity="BoxPosition", inversedBy="contents")
+     * @ORM\OneToOne(targetEntity="BoxPosition", inversedBy="content")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $position;
 
     /**
-     * @ORM\ManyToOne(targetEntity="BoxPosition", inversedBy="prevContents")
+     * @ORM\ManyToOne(targetEntity="BoxPosition")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $prevPosition;

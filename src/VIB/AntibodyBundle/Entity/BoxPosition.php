@@ -43,7 +43,7 @@ class BoxPosition extends RackPosition
      *
      * @var VIB\AntibodyBundle\Entity\Box
      */
-    protected $rack;
+    protected $box;
 
     /**
      * @ORM\OneToOne(targetEntity="Tube", mappedBy="position")

@@ -51,7 +51,12 @@ class ApplicationType extends AbstractType
                             'Immunoprecipitation' => 'Immunoprecipitation',
                         )))
                 ->add('dilution', 'number', array(
-                        'label'     => 'Dilution'))
+                        'label'     => 'Dilution',
+                        'attr'      => array('class' => 'input-small'),
+                        'widget_addon' => array(
+                            'text' => '1:',
+                            'type' => 'prepend',
+                        )))
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',
                         'required' => false))

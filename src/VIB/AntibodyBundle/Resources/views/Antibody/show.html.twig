@@ -38,6 +38,37 @@
       </div>
     </div>
   </div>
+  <div class="control-group">
+    <a class="control-label collapse-toggle" data-toggle="collapse" href="#applications"><strong>Applications</strong></a>
+  </div>
+  <div id="applications" class="collapse">
+    {% for application in entity.applications %}
+      <div class="control-group">
+        <span class="control-label">{{ loop.index }}.</span>
+        <div class="controls">
+          <a class="input-text collapse-toggle" data-toggle="collapse" href="#application-{{ loop.index }}">
+            <strong>{{ application.type }}</strong>
+          </a>
+        </div>
+      </div>
+      <div id="application-{{ loop.index }}" class="collapse">
+        {{ s.row("Dilution", application.dilution) }}
+        {{ s.row("Notes", application.notes) }}
+        <div class="control-group">
+          <span class="control-label">Verified</span>
+          <div class="controls">
+            <span class="input-text">
+              {% if application.verified %}
+                 <i class="icon-ok text-success"></i> Yes
+              {% else %}
+                 <i class="icon-remove text-error"></i> No
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock modal_body %}
 
 {% block modal_footer %}

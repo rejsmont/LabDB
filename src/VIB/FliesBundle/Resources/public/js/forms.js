@@ -461,5 +461,9 @@ $(document).ready(function() {
           return name + '<span class="pull-right">' + username + '</span>'
         }
       })
+      $('.select2').not('.select2-container').not('.select2-offscreen').select2({
+        width: 'resolve',
+        minimumResultsForSearch: -1
+      })
     });
 })

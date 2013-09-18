@@ -15,6 +15,39 @@
 @import 'error.less';
 @import '../../../../FormsBundle/Resources/public/less/select2-bootstrap.less';
 
+#antibody_applications_control_group .collection-item {
+  position: relative;
+  min-height: 20px;
+  padding: 19px;
+  padding-bottom: 0;
+  margin-bottom: 20px;
+  background-color: @wellBackground;
+  border: 1px solid darken(@wellBackground, 7%);
+  .border-radius(@baseBorderRadius);
+  .box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
+  [data-collection-remove-btn] {
+    position: absolute;
+    top: 8px;
+    right: 11px;
+    line-height: @baseLineHeight;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: @baseLineHeight;
+    color: @black;
+    text-shadow: 0 1px 0 rgba(255,255,255,1);
+    .opacity(20);
+    &:hover,
+    &:focus {
+      color: @black;
+      text-decoration: none;
+      cursor: pointer;
+      .opacity(40);
+    }
+  }
+  
+}
+
 .input-append input.add-on {
   text-align: left;
   background-color: #fff;
