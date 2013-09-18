@@ -73,7 +73,12 @@ class AntibodyType extends AbstractType
                 ->add('clone', 'text', array(
                         'label'     => 'Clone'))
                 ->add('size', 'number', array(
-                        'label'     => 'Size'))
+                        'label'     => 'Size',
+                        'attr'      => array('class' => 'input-small'),
+                            'widget_addon' => array(
+                                'text' => 'kDa',
+                                'type' => 'append',
+                            )))
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',
                         'required' => false))
