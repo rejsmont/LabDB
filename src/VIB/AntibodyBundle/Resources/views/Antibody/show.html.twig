@@ -52,7 +52,7 @@
         </div>
       </div>
       <div id="application-{{ loop.index }}" class="collapse">
-        {{ s.row("Dilution", application.dilution) }}
+        {{ s.row("Dilution", '1:' ~ application.dilution) }}
         {{ s.row("Notes", application.notes) }}
         <div class="control-group">
           <span class="control-label">Verified</span>
