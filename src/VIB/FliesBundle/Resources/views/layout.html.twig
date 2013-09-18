@@ -1,0 +1,9 @@
+{% extends "VIBSiteTemplateBundle::layout.html.twig" %}
+
+{% block navbar %}
+  {% include 'VIBFliesBundle::navbar.html.twig' %}
+{% endblock navbar %}
+
+{% block content_sidebar %}
+  {% render(controller("VIBFliesBundle:Print:printPanel")) %}
+{% endblock content_sidebar %}

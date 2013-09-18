@@ -79,6 +79,15 @@ class AntibodyType extends AbstractType
                                 'text' => 'kDa',
                                 'type' => 'append',
                             )))
+                ->add('temperature', 'number', array(
+                        'precision' => 2,
+                        'label' => 'Temperature',
+                        'required' => false,
+                        'attr'      => array('class' => 'input-small'),
+                            'widget_addon' => array(
+                                'text' => '℃',
+                                'type' => 'append',
+                            )))
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',
                         'required' => false))

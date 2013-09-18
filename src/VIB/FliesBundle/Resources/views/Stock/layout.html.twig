@@ -1,4 +1,4 @@
-{% extends "VIBSiteTemplateBundle::layout.html.twig" %}
+{% extends "VIBFliesBundle::layout.html.twig" %}
 
 {% block headline %}Stocks{% endblock headline %}
 
@@ -13,4 +13,5 @@
   <li><a href="{{ path('vib_flies_vial_expand') }}">Expand stock</a></li>
   <li><a href="{{ path('vib_flies_vial_give') }}">Give vial</a></li>
 </ul>
+{{ parent() }}
 {% endblock content_sidebar %}

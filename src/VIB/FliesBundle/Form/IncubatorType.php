@@ -48,7 +48,12 @@ class IncubatorType extends AbstractType
                 ->add('temperature', 'number', array(
                         'precision' => 2,
                         'label' => 'Temperature',
-                        'required' => false));
+                        'required' => false,
+                        'attr'      => array('class' => 'input-small'),
+                            'widget_addon' => array(
+                                'text' => '℃',
+                                'type' => 'append',
+                            )));
     }
 
     /**

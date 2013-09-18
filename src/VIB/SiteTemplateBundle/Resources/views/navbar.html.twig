@@ -6,111 +6,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-      <a class="brand" href="{{ path('default') }}">FlyDB</a>
+      <a class="brand" href="{{ path('default') }}">LabDB</a>
       <div class="nav-collapse">
         <ul class="nav">
-          <li class="first dropdown dropdown-split-left">
-            <a href="{{ path('vib_flies_stock_list') }}">Stocks</a>
-            <ul class="dropdown-menu menu_level_1">
-              <li><a href="{{ path('vib_flies_stock_list') }}">My stocks</a></li>
-              <li><a href="{{ path('vib_flies_stock_list_1',{ 'filter': 'created' }) }}">Stocks I created</a></li>
-              <li><a href="{{ path('vib_flies_stock_list_1',{ 'filter': 'public' }) }}">Public stocks</a></li>
-              <li class="divider"></li>
-              <li><a href="{{ path('vib_flies_stock_create') }}">New stock</a></li>
-              <li><a href="{{ path('vib_flies_vial_expand') }}">Expand stock</a></li>
-            </ul>
+          <li class="first">
+            <a href="{{ path('vib_flies_stock_list') }}">Flies</a>
           </li>
-          <li class="visible-desktop dropdown dropdown-split-right">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-caret-down"></i></a>
-          </li>
-          <li class="dropdown dropdown-split-left">
-            <a href="{{ path('vib_flies_stockvial_list') }}">Stock vials</a>
-            <ul class="dropdown-menu menu_level_1">
-              <li><a href="{{ path('vib_flies_stockvial_list') }}">My vials</a></li>
-              <li><a href="{{ path('vib_flies_stockvial_list_1',{ 'filter': 'public' }) }}">Public vials</a></li>
-              <li class="divider"></li>
-              <li><a href="{{ path('vib_flies_stockvial_select') }}">Select vials</a></li>
-              <li><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
-            </ul>
-          </li>
-          <li class="visible-desktop dropdown dropdown-split-right">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-caret-down"></i></a>
-          </li>
-          <li class="dropdown dropdown-split-left">
-            <a href="{{ path('vib_flies_crossvial_list') }}">Crosses</a>
-            <ul class="dropdown-menu menu_level_1">
-              <li><a href="{{ path('vib_flies_crossvial_list') }}">My crosses</a></li>
-              <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'public' }) }}">Public crosses</a></li>
-              <li class="divider"></li>
-              <li><a href="{{ path('vib_flies_crossvial_create') }}">New cross</a></li>
-              <li><a href="{{ path('vib_flies_crossvial_select') }}">Select crosses</a></li>
-            </ul>
-          </li>
-          <li class="visible-desktop dropdown dropdown-split-right">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-caret-down"></i></a>
-          </li>
-          <li class="dropdown dropdown-split-left">
-            <a href="{{ path('vib_flies_vial_list') }}">Vials</a>
-            <ul class="dropdown-menu menu_level_1">
-              <li><a href="{{ path('vib_flies_vial_list') }}">My vials</a></li>
-              <li><a href="{{ path('vib_flies_vial_list_1',{ 'filter': 'public' }) }}">Public vials</a></li>
-              <li class="divider"></li>
-              <li><a href="{{ path('vib_flies_vial_select') }}">Select vials</a></li>
-              <li><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
-                <li><a href="{{ path('vib_flies_vial_give') }}">Give vial</a></li>
-            </ul>
-          </li>
-          <li class="visible-desktop dropdown dropdown-split-right">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-caret-down"></i></a>
-          </li>
-          <li class="visible-desktop dropdown last">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <i class="icon-caret-down"></i></a>
-            <ul class="dropdown-menu menu_level_1">
-              <li class="dropdown-submenu first">
-                <a href="{{ path('vib_flies_injectionvial_list') }}">Injections</a>
-                <ul class="dropdown-menu menu_level_2">
-                  <li><a href="{{ path('vib_flies_injectionvial_list') }}">My injections</a></li>
-                  <li>
-                    <a href="{{ path('vib_flies_injectionvial_list_1',{ 'filter': 'public' }) }}">Public injections</a>
-                  </li>
-                  <li class="divider"></li>
-                  <li><a href="{{ path('vib_flies_injectionvial_create') }}">New injection</a></li>
-                  <li><a href="{{ path('vib_flies_injectionvial_select') }}">Select injections</a></li>
-                </ul>
-              </li>
-              <li class="dropdown-submenu first">
-                <a>Racks</a>
-                <ul class="dropdown-menu menu_level_2">
-                  <li><a href="{{ path('vib_flies_rack_create') }}">New rack</a></li>
-                </ul>
-              </li>
-              {% render(controller("VIBFliesBundle:Incubator:menu")) %}
-              <li class="divider"></li>
-              <li><a href="{{ path('vib_flies_search_advanced') }}">Search</a></li>
-            </ul>
+          <li>
+            <a href="{{ path('vib_antibody_antibody_list') }}">Antibodies</a>
           </li>
         </ul>
-        {% if app.user is not empty %}
-        <ul class="nav pull-right user-menu">
-          <li class="dropdown first last">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              {% if is_granted('ROLE_ADMIN') %}
-                <span class="text-error">
-              {% endif %}
-              {{ app.user }}&nbsp;
-              <i class="icon-user"></i>
-              {% if is_granted('ROLE_ADMIN') %}
-                </span>
-              {% endif %}
-            </a>
-            <ul class="dropdown-menu menu_level_1 pull-right">
-              <li class="first last"><a href="{{ path('logout') }}">Logout</a></li>
-            </ul>
-          </li>
-        </ul>
-        {% endif %}
-        {% render(controller("VIBFliesBundle:Search:form")) %}
       </div>
     </div>
   </div>
 </div>
+

@@ -26,6 +26,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity as UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\CoreBundle\Entity\Entity;
+use VIB\StorageBundle\Entity\TermocontrolledInterface;
 
 /**
  * Antibody class
@@ -35,7 +36,7 @@ use VIB\CoreBundle\Entity\Entity;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Antibody extends Entity
+class Antibody extends Entity implements TermocontrolledInterface
 { 
     /**
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -145,6 +146,10 @@ class Antibody extends Entity
      */
     protected $applications;
     
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    protected $temperature;
     
     /**
      * Construct Antibody
@@ -445,4 +450,20 @@ class Antibody extends Entity
     {
         $this->getTubes()->removeElement($tube);
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getTemperature()
+    {
+        ($this->temperature !== null) ? $this->temperature : 21.00;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setTemperature($temperature) {
+        $this->temperature = $temperature;
+    }
+
 }
