@@ -62,20 +62,12 @@ class VialManager extends ObjectManager
     {
         if (($vial = $vials) instanceof Vial) {
             $vialClass = str_replace("Proxies\\__CG__\\","",get_class($vial));
-            
-            echo "<h1>$vialClass</h1>";
-            
             $newVial = new $vialClass($vial,$setSource);
             if ($trashSource) {
                 $newVial->setPosition($vial->getPosition());
                 $vial->setTrashed(true);
                 $this->persist($vial);
             }
-            
-            echo "<pre>";
-            var_dump($newVial);
-            echo "</pre>";
-            
             $this->persist($newVial);
 
             return $newVial;
