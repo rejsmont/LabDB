@@ -139,6 +139,9 @@ class StockRepository extends SearchableRepository
             }
         }
         
+        $qb->addSelect('LENGTH(e.name) AS HIDDEN namelength')
+           ->orderBy('namelength')->addOrderBy('e.name');
+        
         return $qb;
     }
     
