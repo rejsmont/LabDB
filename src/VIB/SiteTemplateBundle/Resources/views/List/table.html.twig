@@ -18,7 +18,9 @@
     {% endif %}
     </tbody>
   </table>
+  <div class="span12 list-buttons">
   {% block list_buttons %}{% endblock list_buttons %}
+  </div>
   {% block paginator %}
     {% if entities is defined %}{{ knp_pagination_render(entities) }}{% endif %}
   {% endblock paginator %}
