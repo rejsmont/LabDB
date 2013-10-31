@@ -34,13 +34,13 @@ class DatePickerType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'widget_addon' => array(
-                'type' => 'append',
-                'icon'=> 'calendar'),
-            'widget_controls_attr' => array(
+            'widget_addon_append' => array(
+                'icon'=> 'calendar'
+            ),
+            'attr' => array(
                 'class' => 'date',
-                'data-date-format' => 'dd MM yyyy'),
-            'attr' => array('class' => 'input-medium'),
+                'data-date-format' => 'dd MM yyyy'
+            ),
             'widget' => 'single_text',
             'format' => 'dd MMMM yyyy',
         ));

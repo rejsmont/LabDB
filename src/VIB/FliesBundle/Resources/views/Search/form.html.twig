@@ -1,12 +1,13 @@
-<form id="search-form" action="{{ path('vib_flies_search_result') }}" method="post" {{ form_enctype(form) }} class="navbar-form form-search pull-right visible-desktop">
+<div class="col-sm-3 col-md-3 pull-right">
+<form id="search-form" action="{{ path('vib_flies_search_result') }}" method="post" {{ form_enctype(form) }} class="navbar-form">
 {% if not msie %}
-  <div class="input-append">
+  <div class="input-group">
     {{ form_widget(form.query) }}
-    <div class="btn-group">
-      <button class="btn" onclick="$('#search-form').submit();">
-        <i class="icon-search"></i>
+    <div class="input-group-btn">
+      <button class="btn btn-default" onclick="$('#search-form').submit();">
+        <i class="fa fa-search"></i>
       </button>
-      <button class="btn dropdown-toggle" data-toggle="dropdown">
+      <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right">
@@ -40,6 +41,7 @@
 {% endif %}
   {{ form_rest(form) }}
 </form>
+</div>
 {% form_theme form _self %}
 {% block form_widget_compound %}{{ form_rest(form) }}{% endblock form_widget_compound %}
 {% block form_row %}{{ form_widget(form) }}{% endblock %}

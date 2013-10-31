@@ -25,7 +25,7 @@
         "jms/security-extra-bundle": "1.5.*@dev",
         "jms/di-extra-bundle": "1.4.*@dev",
         "jms/serializer-bundle": "dev-master",
-        "mopa/bootstrap-bundle": "2.3.*@dev",
+        "mopa/bootstrap-bundle": "3.*@dev",
         "knplabs/knp-paginator-bundle": "2.3.*@dev",
         "knplabs/knp-components": "1.2.2",
         "knplabs/knp-menu-bundle": "1.1.*@dev",
@@ -36,9 +36,10 @@
         "sabre/vobject": "2.0.*",
         "rejsmont/php-ipp": "0.21",
         "kuleuven/shibboleth-bundle": "dev-master",
-        "twbs/bootstrap": "2.3.*@dev",
-        "fortawesome/font-awesome": "3.2.*@dev",
-        "eternicode/bootstrap-datepicker": "dev-master",
+        "twbs/bootstrap": "dev-master",
+        "twitter/typeahead.js": "dev-master",
+        "fortawesome/font-awesome": "dev-master",
+        "eternicode/bootstrap-datepicker": "dev-bs3",
         "ivaynberg/select2": "3.4-dev",
         "jquery/jquery": "1.10.2",
         "jquery/jquery-ui": "1.10.3",
@@ -120,19 +121,6 @@
                     "url": "https://github.com/ivaynberg/select2.git",
                     "type": "git",
                     "reference": "master"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "version": "1.2.0",
-                "name": "eternicode/bootstrap-datepicker",
-                "type": "component",
-                "source": {
-                    "url": "https://github.com/eternicode/bootstrap-datepicker.git",
-                    "type": "git",
-                    "reference": "1.2.0"
                 }
             }
         },

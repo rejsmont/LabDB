@@ -1,6 +1,7 @@
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
+#    bundles:        [VIBSiteTemplateBundle, VIBFliesBundle]
     use_controller: false
     read_from:      %kernel.root_dir%/../web
     filters:
@@ -30,17 +31,17 @@ assetic:
         # FontAwesome
         FontAwesome-eot:
             inputs:
-                -       %kernel.root_dir%/../vendor/fortawesome/font-awesome/font/fontawesome-webfont.eot
+                -       %kernel.root_dir%/../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.eot
             output:     'font/fontawesome-webfont.eot'
         FontAwesome-svg:
             inputs:
-                -       %kernel.root_dir%/../vendor/fortawesome/font-awesome/font/fontawesome-webfont.svg
+                -       %kernel.root_dir%/../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.svg
             output:     'font/fontawesome-webfont.svg'
         FontAwesome-ttf:
             inputs:
-                -       %kernel.root_dir%/../vendor/fortawesome/font-awesome/font/fontawesome-webfont.ttf
+                -       %kernel.root_dir%/../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.ttf
             output:     'font/fontawesome-webfont.ttf'
         FontAwesome-woff:
             inputs:
-                -       %kernel.root_dir%/../vendor/fortawesome/font-awesome/font/fontawesome-webfont.woff
+                -       %kernel.root_dir%/../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff
             output:     'font/fontawesome-webfont.woff'

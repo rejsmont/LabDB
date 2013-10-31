@@ -50,9 +50,9 @@ class UserAceType extends AbstractType
                         'show_legend' => false,
                         'error_bubbling' => true,
                         'widget_control_group' => false,
-                        'widget_addon' => array(
-                            'icon' => 'user',
-                            'type' => 'prepend')))
+                        'widget_addon_prepend' => array(
+                            'icon' => 'user'
+                        )))
                 ->add('permission', 'choice', array(
                         'label'     => false,
                         'show_legend' => false,

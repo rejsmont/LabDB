@@ -7,8 +7,8 @@
     {% if (is_granted('ROLE_ADMIN') or is_granted('MASTER',value)) and delete %}
     <a href="{{ path(name ~ '_permissions', { 'id': value.id }) }}" class="btn btn-warning">Permissions</a>
     {% endif %}
-    <a href="{{ path(name ~ '_show', { 'id': value.id }) }}" class="btn">Cancel</a>
+    <a href="{{ path(name ~ '_show', { 'id': value.id }) }}" class="btn btn-default">Cancel</a>
   {% else %}
-    <a href="{{ path(name ~ '_list') }}" class="btn">Cancel</a>
+    <a href="{{ path(name ~ '_list') }}" class="btn btn-default">Cancel</a>
   {% endif %}
 {% endmacro %}

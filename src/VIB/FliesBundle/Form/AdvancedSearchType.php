@@ -45,13 +45,11 @@ class AdvancedSearchType extends AbstractType
                         'label' => 'Include terms',
                         'required' => false,
                         'attr' => array(
-                          'class' => 'input-block-level',
                           'placeholder' => 'separate terms with space')))
                 ->add('exclude', 'text', array(
                         'label' => 'Exclude terms',
                         'required' => false,
                         'attr' => array(
-                          'class' => 'input-block-level',
                           'placeholder' => 'separate terms with space')))
                 ->add('filter', 'choice', array(
                         'label' => 'Scope',

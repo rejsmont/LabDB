@@ -53,7 +53,7 @@ class AclType extends AbstractType
                         'widget_add_btn' => array('label' => false, 'icon' => 'plus'),
                         'options' => array(
                             'label' => false,
-                            'widget_remove_btn' => array('label' => false, 'icon' => 'remove'),
+                            'widget_remove_btn' => array('label' => false, 'icon' => 'times'),
                             'widget_control_group' => false),
                         'constraints' => array(
                             new UniqueOwnerIdentity('Only one user can be the owner.'),
@@ -68,7 +68,7 @@ class AclType extends AbstractType
                         'widget_add_btn' => array('label' => false, 'icon' => 'plus'),
                         'options' => array(
                             'label' => false,
-                            'widget_remove_btn' => array('label' => false, 'icon' => 'remove'),
+                            'widget_remove_btn' => array('label' => false, 'icon' => 'times'),
                             'widget_control_group' => false),
                         'constraints' => array(
                             new UniqueOwnerIdentity('Only one group can be the owner.'),

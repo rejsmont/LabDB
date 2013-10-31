@@ -1,9 +1,9 @@
 {% if entities|length > 0 %}
 <div class="btn-group pull-right">
-  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
     Incubate in
     <span class="caret"></span>
-  </a>
+  </button>
   <ul class="dropdown-menu">
   {% for entity in entities %}
   <li onclick="$('#select_incubator').val('{{ entity }}'); $('#select_action').val('incubate'); $('form').submit();">

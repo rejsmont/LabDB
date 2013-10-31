@@ -1,20 +1,20 @@
 {% macro vial(vial) %}{% spaceless %}
   <div class="status">
   {% if vial.trashed %}
-    <span title="trashed" class="label status label-inverse"><i class="icon-trash"></i></span>
+    <span title="trashed" class="label status label-inverse"><i class="fa fa-trash"></i></span>
   {% elseif vial.alive %}
-    <span title="alive" class="label status label-success"><i class="icon-heart"></i></span>
+    <span title="alive" class="label status label-success"><i class="fa fa-heart"></i></span>
   {% else %}
-    <span title="dead" class="label status label-important"><i class="icon-remove-sign"></i></span>
+    <span title="dead" class="label status label-important"><i class="fa fa-remove-circle"></i></span>
   {% endif %}
   {{ _self.temperature(vial.temperature) }}
   {% if vial.type == 'cross' %}
     {% if vial.successful %}
-      <span title="successful" class="label status label-success"><i class="icon-ok"></i></span>
+      <span title="successful" class="label status label-success"><i class="fa fa-ok"></i></span>
     {% elseif vial.sterile %}
-      <span title="sterile" class="label status label-important"><i class="icon-remove-circle"></i></span>
+      <span title="sterile" class="label status label-important"><i class="fa fa-remove-circle"></i></span>
     {% elseif vial.successful is not null %}
-      <span title="failed" class="label status label-warning"><i class="icon-remove"></i></span>
+      <span title="failed" class="label status label-warning"><i class="fa fa-remove"></i></span>
     {% endif %}
   {% endif %}
   </div>
@@ -23,13 +23,13 @@
 {% macro stock(stock) %}{% spaceless %}
   <div class="status">
   {% if stock.livingVials | length > 3 %}
-    <span title="amplified" class="label status label-success"><i class="icon-plus-sign"></i></span>
+    <span title="amplified" class="label status label-success"><i class="fa fa-plus-circle"></i></span>
     {% elseif stock.livingVials | length > 1 %}
-    <span title="healthy" class="label status label-success"><i class="icon-ok-sign"></i></span>
+    <span title="healthy" class="label status label-success"><i class="fa fa-ok-circle"></i></span>
     {% elseif stock.livingVials | length < 1 %}
-    <span title="dead" class="label status label-important"><i class="icon-remove-sign"></i></span>
+    <span title="dead" class="label status label-important"><i class="fa fa-remove-circle"></i></span>
     {% else %}
-    <span title="expand" class="label status label-warning"><i class="icon-minus-sign"></i></span>
+    <span title="expand" class="label status label-warning"><i class="fa fa-minus-circle"></i></span>
   {% endif %}
   </div>
 {% endspaceless %}{% endmacro %}

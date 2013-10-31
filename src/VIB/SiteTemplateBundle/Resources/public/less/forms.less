@@ -4,13 +4,15 @@
 
 .form-horizontal {
   .input-text {
-    float: left;
-    padding-top: 5px;
+    padding-top: 7px;
+  }
+  span.input-text {
+    display: block;
   }
 }
 
 .well-modal {
-  .border-radius(6px);
+  border-radius: 6px;
   background: none;
   padding: 0px;
   form {
@@ -27,19 +29,19 @@
 }
 
 .input-append > .btn-group > .btn:first-child {
-  .border-radius(0);
+  border-radius: 0;
 }
 
 .modal-danger,
 .modal-error {
-  border-color: @errorBorder;
-  color: @errorText;
+  border-color: @state-danger-border;
+  color: @state-danger-text;
   .modal-header,
   .modal-footer {
-    border-color: @errorBorder;
+    border-color: @state-danger-border;
   }
   .modal-footer {
-    background-color: @errorBackground;
+    background-color: @state-danger-bg;
   }
 }
 

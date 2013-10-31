@@ -50,9 +50,9 @@ class CrossVialSimpleType extends AbstractType
                         'format'    => '%06d',
                         'label' => 'Virgin vial',
                         'attr' => array('class' => 'barcode'),
-                        'widget_addon' => array(
-                        'icon' => 'qrcode',
-                        'type' => 'append')))
+                        'widget_addon_append' => array(
+                            'icon' => 'qrcode'
+                        )))
                 ->add('virginName', 'text', array(
                         'label' => 'Virgin genotype',
                         'required' => false))
@@ -62,9 +62,9 @@ class CrossVialSimpleType extends AbstractType
                         'format'    => '%06d',
                         'label' => 'Male vial',
                         'attr' => array('class' => 'barcode'),
-                        'widget_addon' => array(
-                        'icon' => 'qrcode',
-                        'type' => 'append')))
+                        'widget_addon_append' => array(
+                            'icon' => 'qrcode'
+                        )))
                 ->add('maleName', 'text', array(
                         'label' => 'Male genotype',
                         'required' => false))
@@ -83,7 +83,7 @@ class CrossVialSimpleType extends AbstractType
                         'label'     => 'Vial size',
                         'required'  => false,
                         'empty_value' => false,
-                        'attr'      => array('class' => 'input-text')));
+                        ));
     }
 
     /**

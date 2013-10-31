@@ -43,8 +43,9 @@ class SearchType extends AbstractType
     {
         $builder->add('query', 'text', array(
                         'required' => false,
+                        'inline'  => 'inline',
                         'attr' => array(
-                          'class' => 'span2 search-query',
+                          'class' => '',
                           'form' => 'search-form',
                           'placeholder' => 'Search')))
                 ->add('filter','hidden',array('required' => false));

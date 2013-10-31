@@ -65,6 +65,6 @@ class SelectType extends AbstractType
                 ->add('incubator', 'hidden_entity', array(
                       'property'     => 'name',
                       'class' => 'VIBFliesBundle:Incubator',
-                      'attr' => array('class' => 'input-medium')));
+                      ));
     }
 }

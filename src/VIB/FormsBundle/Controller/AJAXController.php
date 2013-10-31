@@ -72,7 +72,7 @@ class AJAXController extends Controller
         }
 
         $response = new JsonResponse();
-        $response->setData(array('options' => $options));
+        $response->setData($options);
 
         return $response;
     }

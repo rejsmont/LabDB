@@ -3,9 +3,9 @@
 
 {% block page_header %}{% endblock page_header %}
 {% block main_row %}
-<div class="span6 offset3">
+<div class="col-md-6 col-md-offset-3">
   {% block content_row %}
-  <div class="row-fluid no-header">
+  <div class="row no-header">
       {{ block('content') }}
   </div>
   {% endblock content_row %}
@@ -15,17 +15,17 @@
 {% block modal_header %}Please log in{% endblock modal_header %}
 
 {% block modal_body %}
-<div class="control-group">
-    <label for="username" class="control-label required">Username:</label>
-    <div class="controls">
+<div class="form-group">
+    <label for="username" class="control-label col-lg-3 required">Username:</label>
+    <div class="col-lg-9">
         <input type="text" id="username" name="_username"
-               value="{{ last_username }}" required="required" class="not-removable" />
+               value="{{ last_username }}" required="required" class="form-control not-removable" />
     </div>
 </div>
-<div class="control-group">
-    <label for="password" class="control-label required">Password:</label>
-    <div class="controls">
-        <input type="password" id="password" name="_password" required="required" class="not-removable" />
+<div class="form-group">
+    <label for="password" class="control-label col-lg-3 required">Password:</label>
+    <div class="col-lg-9">
+        <input type="password" id="password" name="_password" required="required" class="form-control not-removable" />
     </div>
 </div>
 <input type="hidden" name="_target_path" value="/" />
@@ -33,5 +33,5 @@
 
 {% block modal_footer %}
 <button type="submit" class="btn btn-primary">Login</button>
-<button type="reset" class="btn">Cancel</button>
+<button type="reset" class="btn btn-default">Cancel</button>
 {% endblock modal_footer %}

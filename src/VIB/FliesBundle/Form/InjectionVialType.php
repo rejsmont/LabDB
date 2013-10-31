@@ -53,7 +53,7 @@ class InjectionVialType extends AbstractType
                                              'Flp RMCE' => 'Flp RMCE',
                                              'Cre RMCE' => 'Cre RMCE'),
                         'label'     => 'Injection type',
-                        'attr'      => array('class' => 'input-text')))
+                        ))
                 ->add('constructName', 'text', array(
                         'label' => 'Construct name',
                         'required' => true))
@@ -69,9 +69,9 @@ class InjectionVialType extends AbstractType
                         'required'  => false,
                         'label'     => 'Target stock source vial',
                         'attr' => array('class' => 'barcode'),
-                        'widget_addon' => array(
-                        'icon' => 'qrcode',
-                        'type' => 'append')))
+                        'widget_addon_append' => array(
+                            'icon' => 'qrcode'
+                        )))
                 ->add('embryoCount', 'number', array(
                         'label' => 'Embryo count'))
                 ->add('vendor', 'text', array(
@@ -92,7 +92,7 @@ class InjectionVialType extends AbstractType
                         'label'     => 'Vial size',
                         'required'  => false,
                         'empty_value' => false,
-                        'attr'      => array('class' => 'input-text')))
+                        ))
                 ->add('trashed', 'checkbox', array(
                         'label' => '',
                         'required' => false));

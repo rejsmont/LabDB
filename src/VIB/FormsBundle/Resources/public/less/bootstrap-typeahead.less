@@ -1,0 +1,42 @@
+// TABLE HEAD BACKGROUNDS
+// -----------------
+// Exact selectors below required to override .table-striped
+
+.twitter-typeahead {
+  width: 100%;
+}
+
+.tt-dropdown-menu {
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  background-color: @dropdown-bg;
+  border: 1px solid @dropdown-fallback-border; // IE8 fallback
+  border: 1px solid @dropdown-border;
+  border-radius: @border-radius-base;
+  .box-shadow(0 6px 12px rgba(0,0,0,.175));
+  background-clip: padding-box;
+}
+
+.tt-suggestion {
+  display: block;
+  padding: 3px 20px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+  color: @dropdown-link-hover-color;
+  background-color: @dropdown-link-hover-bg;
+}
+
+.tt-suggestion.tt-is-under-cursor a {
+  color: @dropdown-link-hover-color;
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+.tt-hint {
+  padding: 5px 11px;
+  color: @gray-light;
+}

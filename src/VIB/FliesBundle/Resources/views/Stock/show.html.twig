@@ -14,14 +14,14 @@
   {{ _self.vials("Vials", entity.livingVials, 'vib_flies_stockvial_show') }}
   {{ s.user("Created by", owner) }}
   {{ s.row("Notes", entity.notes) }}
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#more"><strong>More information</strong></a>
+  <div class="form-group">
+    <a class="control-label col-lg-3 collapse-toggle" data-toggle="collapse" href="#more"><strong>More information</strong></a>
   </div>
   <div id="more" class="collapse">
     {{ s.row("Vendor", entity.vendor) }}
-    <div class="control-group">
-      <span class="control-label">Stock information</span>
-      <div class="controls">
+    <div class="form-group">
+      <span class="control-label col-lg-3">Stock information</span>
+      <div class="col-lg-9">
         <span class="input-text">
           {% if entity.infoURL is not empty %}
             <a href="{{ entity.infoURL }}" target="_blank">{{ entity.infoURL }}</a>
@@ -29,21 +29,21 @@
         </span>
       </div>
     </div>
-    <div class="control-group">
-      <span class="control-label">Verified</span>
-      <div class="controls">
+    <div class="form-group">
+      <span class="control-label col-lg-3">Verified</span>
+      <div class="col-lg-9">
         <span class="input-text">
           {% if entity.verified %}
-             <i class="icon-ok text-success"></i> Yes
+             <i class="fa fa-ok text-success"></i> Yes
           {% else %}
-             <i class="icon-remove text-error"></i> No
+             <i class="fa fa-remove text-error"></i> No
           {% endif %}
         </span>
       </div>
     </div>
   </div>
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#myvials"><strong>My vials</strong></a>
+  <div class="form-group">
+    <a class="control-label col-lg-3 collapse-toggle" data-toggle="collapse" href="#myvials"><strong>My vials</strong></a>
   </div>
   <div id="myvials" class="collapse">
     {{ _self.vials('Small',small,'vib_flies_stockvial_show') }}
@@ -58,12 +58,12 @@
 
 {% macro vials(label,items,route) %}
 {% set uuid = random() ~ '_' ~ 'vials'  %}
-<div class="control-group">
-  <a class="control-label collapse-toggle" data-toggle="collapse" href="#{{ uuid }}">{{ label }}</a>
-  <div class="controls">
-    <span class="input-text input-block-level">
+<div class="form-group">
+  <a class="control-label col-lg-3 collapse-toggle" data-toggle="collapse" href="#{{ uuid }}">{{ label }}</a>
+  <div class="col-lg-9">
+    <div class="input-text input-block-level">
       <strong>{{ items | length }}</strong>
-    </span>
+    </div>
     <ul id="{{ uuid }}" class="collapse unstyled input-text">
     {% for item in items %}
       <li>{% spaceless %}

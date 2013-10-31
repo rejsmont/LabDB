@@ -26,9 +26,9 @@
   font-size: 14px;
   font-weight: normal;
   line-height: 18px;
-  background-color: @popoverTitleBackground;
-  border-top: 1px solid darken(@popoverTitleBackground, 5%);
-  .border-radius(0 0 5px 5px);
+  background-color: @popover-title-bg;
+  border-top: 1px solid darken(@popover-title-bg, 5%);
+  border-radius: 0 0 5px 5px;
   span {
     margin-top: 2px;
   }
@@ -49,15 +49,13 @@
   margin-top: 8px;
 }
 
-.modal-header h3 {
+.modal-header h4 {
   div.status {
     float: right;
   }
   .label.status {
     margin-right: 0;
     margin-left: 10px;
-    font-size: 21px;
-    line-height: 25px;
   }
 }
 .popover-title {
@@ -99,10 +97,25 @@ div.status {
   overflow: visible;
 }
 
-.btn-group + .btn {
-  margin-left: 5px;
+.table-curved,
+.table-bordered.table-curved {
+  border-collapse: separate;
+  border-width: 1px;
+  border-radius: @border-radius-large;
+  td, th {
+    border-width: 1px 0 0 1px;
+    &:first-child {
+      border-left-width: 0;
+    }
+  }
+  & > tr:first-child,
+  & > thead:first-child tr:first-child,
+  & > tbody:first-child tr:first-child,
+  & > tfoot:first-child tr:first-child {
+    td, th {
+      border-top-width: 0;
+    }
+  }
 }
 
-.btn + .btn-group {
-  margin-left: 5px;
-}
+/* tbody td, tbody th, thead td, thead th, tfoot td, tfoot th */

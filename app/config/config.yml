@@ -57,15 +57,15 @@ mopa_bootstrap:
         google:
             wt:          %google_verification%
             analytics:   %google_analytics%
-    navbar:
-        template: 'VIBBaseBundle:Menu:main.html.twig'
     form: 
         collection:
             widget_remove_btn:
-                icon: trash
+                icon: times
             widget_add_btn:
                 icon: plus-sign
         render_optional_text: false
+    icons:
+        icon_set: fontawesome4
 
 vib_security:
     acl_walker: VIB\SecurityBundle\Bridge\Doctrine\AclWalker

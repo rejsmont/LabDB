@@ -400,22 +400,14 @@ $(document).ready(function() {
       }
       $btn.collection('add');
       e.preventDefault();
-      $('.ajax-typeahead').typeahead({
-        source: function(query, process) {
-          return $.ajax({
-            url: $(this)[0].$element.data('link'),
-            type: 'get',
-            data: {query: query},
-            dataType: 'json',
-            success: function(json) {
-              return typeof json.options == 'undefined' ? false : process(json.options);
-            }
-          });
-        },
-        matcher: function (item) {
-          return true;
-        }
+      $('.ajax-typeahead').each(function() {
+        var $this = $(this);
+        var $url = $this.data('link') + '?query=%QUERY';
+        $this.typeahead({
+          remote: $url
+        });
       });
+      /**
       $('.user-typeahead').typeahead({
         source: function(query, process) {
           return $.ajax({
@@ -461,6 +453,7 @@ $(document).ready(function() {
           return name + '<span class="pull-right">' + username + '</span>'
         }
       })
+      **/
       $('.select2').not('.select2-container').not('.select2-offscreen').select2({
         width: 'resolve',
         minimumResultsForSearch: -1

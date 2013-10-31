@@ -49,9 +49,9 @@ class RoleAceType extends AbstractType
                         'show_legend' => false,
                         'error_bubbling' => true,
                         'widget_control_group' => false,
-                        'widget_addon' => array(
+                        'widget_addon_prepend' => array(
                             'icon' => 'group',
-                            'type' => 'prepend')))
+                        )))
                 ->add('permission', 'choice', array(
                         'label'     => false,
                         'show_legend' => false,

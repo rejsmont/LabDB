@@ -1,12 +1,12 @@
 <div class="nav-list well">
-  <span class="nav-header">Printer settings</span>
+  <div class="nav-header">Printer settings</div>
   <label class="checkbox">
     <input type="checkbox" id="autoprint"
            {% if autoprint %}checked {% elseif not can_print() %}disabled {% endif %}
            data-link="{{ path('vib_flies_print_setautoprint') }}" onchange="setAutoPrint(this)"/>
     Automagic label printing
   </label>
-  <span class="nav-header">Label settings</span>
+  <div class="nav-header">Label settings</div>
   <label class="radio">
     <input type="radio" name="labelmode" id="labelmode_std" value="std"
            {% if labelmode != "alt" %}checked {% endif %}

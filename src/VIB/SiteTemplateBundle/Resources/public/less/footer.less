@@ -3,13 +3,11 @@
 // Exact selectors below required to override .table-striped
 
 footer {
-  min-height: @navbarHeight;
+  min-height: @navbar-height;
   padding-top: 10px;
   padding-bottom: 10px;
-  #gradient > .vertical(@navbarBackground, @navbarBackgroundHighlight);
-  border: 1px solid @navbarBorder;
-  border-width: 1px 0 0;
-  .box-shadow(0 -1px 10px rgba(0,0,0,.1));
+  background-color: @navbar-default-bg;
+  border-top: solid 1px @navbar-default-border;
   .clearfix();
 }
 

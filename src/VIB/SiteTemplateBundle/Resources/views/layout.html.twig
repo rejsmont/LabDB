@@ -101,7 +101,7 @@
       {% block content_div_start %}<div class="content">{% endblock content_div_start %}
         <div class="row">
           {% block info_row %}
-          <div class="span12">
+          <div class="col-sm-12">
             {% block flashes %}
             {% if app.session.flashbag.peekAll|length > 0 %}
                 {{ session_flash(true) }}
@@ -114,7 +114,7 @@
           </div>
           {% endblock info_row %}
           {% block header_row %}
-          <div class="offset3 span9">
+          <div class="col-sm-offset-3 col-sm-9">
             {% block page_header %}
             <div class="page-header">
                   <h1>{% block headline %}Welcome{% endblock headline %}</h1>
@@ -125,13 +125,13 @@
         </div>
         <div class="row">
           {% block main_row %}
-          <div id="sidebar" class="span3">
+          <div id="sidebar" class="col-sm-3">
             {% block content_sidebar %}
             {% endblock content_sidebar %}
           </div>
-          <div class="span9">
+          <div class="col-sm-9">
             {% block content_row %}
-            <div class="row-fluid">
+            <div class="row">
                 {% block content %}
                     {% block content_content %}
                     {% endblock content_content %}
@@ -168,30 +168,32 @@
       '../vendor/jquery/jquery-ui/ui/minified/jquery.ui.core.min.js'
       '../vendor/jquery/jquery-ui/ui/minified/jquery.ui.effect.min.js'
       '../vendor/jquery/jquery-ui/ui/minified/jquery.ui.effect-highlight.min.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-transition.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-modal.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-scrollspy.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-tab.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-tooltip.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-popover.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-alert.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-button.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-collapse.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-carousel.js'
-      '../vendor/twbs/bootstrap/js/bootstrap-typeahead.js'
+      '../vendor/twbs/bootstrap/js/transition.js'
+      '../vendor/twbs/bootstrap/js/modal.js'
+      '../vendor/twbs/bootstrap/js/scrollspy.js'
+      '../vendor/twbs/bootstrap/js/tab.js'
+      '../vendor/twbs/bootstrap/js/tooltip.js'
+      '../vendor/twbs/bootstrap/js/popover.js'
+      '../vendor/twbs/bootstrap/js/dropdown.js'
+      '../vendor/twbs/bootstrap/js/alert.js'
+      '../vendor/twbs/bootstrap/js/button.js'
+      '../vendor/twbs/bootstrap/js/collapse.js'
+      '../vendor/twbs/bootstrap/js/carousel.js'
+      '../vendor/twitter/typeahead.js/dist/typeahead.js'
       '../vendor/eternicode/bootstrap-datepicker/js/bootstrap-datepicker.js'
       '../vendor/ivaynberg/select2/select2.js'
       '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
       '@VIBFormsBundle/Resources/public/js/forms.js'
       '@VIBFliesBundle/Resources/public/js/forms.js'
       '@VIBSiteTemplateBundle/Resources/public/js/dropdown-split.js'
-      '@VIBSiteTemplateBundle/Resources/public/js/bootstrap-dropdown.js'
     %}
+    {#      '../vendor/twbs/bootstrap/js/bootstrap-typeahead.js'#}
       <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
   {% endblock foot_script %}
   {% block foot_script_additional %}
     <script type="text/javascript">
+      /*
       $('.date').datepicker();
       $('.user-typeahead').typeahead({
         source: function(query, process) {
@@ -238,6 +240,7 @@
           return name + '<span class="pull-right">' + username + '</span>'
         }
       })
+      */
     </script>
   {% endblock foot_script_additional %}
 {% endblock body %}

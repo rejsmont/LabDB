@@ -5,11 +5,11 @@
 {{ s.dates(entity,'Check') }}
 <div class="popover-foot">
   {{ s.user(owner) }}
-  <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_crossvial_show',{'id': entity.id }) }}">Show</a>
+  <a class="btn btn-primary btn-xs" href="{{ path('vib_flies_crossvial_show',{'id': entity.id }) }}">Show</a>
   {% if (is_granted('ROLE_ADMIN') or is_granted('EDIT',entity)) and rack == 0 %}
-    <a class="btn btn-mini" href="{{ path('vib_flies_crossvial_edit',{'id': entity.id }) }}">Edit</a>
+    <a class="btn btn-default btn-xs" href="{{ path('vib_flies_crossvial_edit',{'id': entity.id }) }}">Edit</a>
   {% elseif rack > 0 %}
-    <a class="btn btn-mini btn-danger" href="#"
+    <a class="btn btn-danger btn-xs" href="#"
        onclick="removeVial(this,{{ entity.id }},{{ rack }})"
        data-link="{{ path('vib_flies_ajax_rackvialremove') }}">Remove</a>
   {% endif %}
@@ -19,17 +19,17 @@
   <strong>{{ entity.stock.name }}</strong><br/>
   {{ entity.stock.genotype }}
   {% if entity.stock.verified %}
-    <i class="icon-ok text-success"></i>
+    <i class="fa fa-ok text-success"></i>
   {% endif %}
 </p>
 {{ s.dates(entity) }}
 <div class="popover-foot">
   {{ s.user(owner) }}
-  <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_stockvial_show',{'id': entity.id }) }}">Show</a>
+  <a class="btn btn-primary btn-xs" href="{{ path('vib_flies_stockvial_show',{'id': entity.id }) }}">Show</a>
   {% if (is_granted('ROLE_ADMIN') or is_granted('EDIT',entity)) and rack == 0 %}
-    <a class="btn btn-mini" href="{{ path('vib_flies_stockvial_edit',{'id': entity.id }) }}">Edit</a>
+    <a class="btn btn-default btn-xs" href="{{ path('vib_flies_stockvial_edit',{'id': entity.id }) }}">Edit</a>
   {% elseif rack > 0 %}
-    <a class="btn btn-mini btn-danger" href="#"
+    <a class="btn btn-danger btn-xs" href="#"
        onclick="removeVial(this,{{ entity.id }},{{ rack }})"
        data-link="{{ path('vib_flies_ajax_rackvialremove') }}">Remove</a>
   {% endif %}
@@ -39,17 +39,17 @@
   <strong>{{ entity.name }}</strong><br/>
   {{ entity.targetStock.genotype }}
   {% if entity.targetStock.verified %}
-    <i class="icon-ok text-success"></i>
+    <i class="fa fa-ok text-success"></i>
   {% endif %}
 </p>
 {{ s.idates(entity) }}
 <div class="popover-foot">
   {{ s.user(owner) }}
-  <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_injectionvial_show',{'id': entity.id }) }}">Show</a>
+  <a class="btn btn-primary btn-xs" href="{{ path('vib_flies_injectionvial_show',{'id': entity.id }) }}">Show</a>
   {% if (is_granted('ROLE_ADMIN') or is_granted('EDIT',entity)) and rack == 0 %}
-    <a class="btn btn-mini" href="{{ path('vib_flies_injectionvial_edit',{'id': entity.id }) }}">Edit</a>
+    <a class="btn btn-default btn-xs" href="{{ path('vib_flies_injectionvial_edit',{'id': entity.id }) }}">Edit</a>
   {% elseif rack > 0 %}
-    <a class="btn btn-mini btn-danger" href="#"
+    <a class="btn btn-danger btn-xs" href="#"
        onclick="removeVial(this,{{ entity.id }},{{ rack }})"
        data-link="{{ path('vib_flies_ajax_rackvialremove') }}">Remove</a>
   {% endif %}
@@ -58,11 +58,11 @@
 {{ s.dates(entity) }}
 <div class="popover-foot">
 {{ s.user(owner) }}
-  <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_vial_show',{'id': entity.id }) }}">Show</a>
+  <a class="btn btn-primary btn-xs" href="{{ path('vib_flies_vial_show',{'id': entity.id }) }}">Show</a>
   {% if (is_granted('ROLE_ADMIN') or is_granted('EDIT',entity)) and rack == 0 %}
-    <a class="btn btn-mini" href="{{ path('vib_flies_vial_edit',{'id': entity.id }) }}">Edit</a>
+    <a class="btn btn-default btn-xs" href="{{ path('vib_flies_vial_edit',{'id': entity.id }) }}">Edit</a>
   {% elseif rack > 0 %}
-    <a class="btn btn-mini btn-danger" href="#"
+    <a class="btn btn-danger btn-xs" href="#"
        onclick="removeVial(this,{{ entity.id }},{{ rack }})"
        data-link="{{ path('vib_flies_ajax_rackvialremove') }}">Remove</a>
   {% endif %}
@@ -71,14 +71,14 @@
 <p>
   {{ entity.genotype }}
   {% if entity.verified %}
-    <i class="icon-ok text-success"></i>
+    <i class="fa fa-ok text-success"></i>
   {% endif %}
 </p>
 <div class="popover-foot">
   {{ s.user(owner) }}
-  <a class="btn btn-mini btn-primary" href="{{ path('vib_flies_stock_show',{'id': entity.id }) }}">Show</a>
+  <a class="btn btn-primary btn-xs" href="{{ path('vib_flies_stock_show',{'id': entity.id }) }}">Show</a>
   {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
-  <a class="btn btn-mini" href="{{ path('vib_flies_stock_edit',{'id': entity.id }) }}">Edit</a>
+  <a class="btn btn-default btn-xs" href="{{ path('vib_flies_stock_edit',{'id': entity.id }) }}">Edit</a>
   {% endif %}
 </div>
 {% endif %}

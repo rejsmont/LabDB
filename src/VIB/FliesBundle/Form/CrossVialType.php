@@ -50,9 +50,9 @@ class CrossVialType extends AbstractType
                         'format'    => '%06d',
                         'label' => 'Virgin vial',
                         'attr' => array('class' => 'barcode'),
-                        'widget_addon' => array(
-                        'icon' => 'qrcode',
-                        'type' => 'append')))
+                        'widget_addon_append' => array(
+                            'icon' => 'qrcode'
+                        )))
                 ->add('virginName', 'text', array(
                         'label' => 'Virgin genotype',
                         'required' => false))
@@ -62,9 +62,9 @@ class CrossVialType extends AbstractType
                         'format'    => '%06d',
                         'label' => 'Male vial',
                         'attr' => array('class' => 'barcode'),
-                        'widget_addon' => array(
-                        'icon' => 'qrcode',
-                        'type' => 'append')))
+                        'widget_addon_append' => array(
+                            'icon' => 'qrcode'
+                        )))
                 ->add('maleName', 'text', array(
                         'label' => 'Male genotype',
                         'required' => false))
@@ -78,9 +78,9 @@ class CrossVialType extends AbstractType
                         'required'  => false,
                         'label'     => 'Flipped from',
                         'attr' => array('class' => 'barcode'),
-                        'widget_addon' => array(
-                        'icon' => 'qrcode',
-                        'type' => 'append')))
+                        'widget_addon_append' => array(
+                            'icon' => 'qrcode'
+                        )))
                 ->add('size', 'choice', array(
                         'choices'   => array('small' => 'small',
                                              'medium' => 'medium',
@@ -89,7 +89,7 @@ class CrossVialType extends AbstractType
                         'label'     => 'Vial size',
                         'required'  => false,
                         'empty_value' => false,
-                        'attr'      => array('class' => 'input-text')))
+                        ))
                 ->add('trashed', 'checkbox', array(
                         'label' => '',
                         'required' => false))
@@ -102,7 +102,7 @@ class CrossVialType extends AbstractType
                         'label' => 'Outcome',
                         'required' => false,
                         'empty_value' => false,
-                        'attr' => array('class' => 'input-text')));
+                        ));
     }
 
     /**

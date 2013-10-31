@@ -50,17 +50,17 @@ class VialGiveType extends AbstractType
                         'format'   => '%06d',
                         'label'    => 'Source',
                         'attr' => array('class' => 'barcode'),
-                        'widget_addon' => array(
-                            'icon' => 'qrcode',
-                            'type' => 'append'),
+                        'widget_addon_append' => array(
+                            'icon' => 'qrcode'
+                        ),
                         'constraints' => array(
                             new NotNull())))
                 ->add('user', 'user_typeahead', array(
                         'label'     => 'Recipient',
                         'required'  => true,
-                        'widget_addon' => array(
-                            'icon' => 'user',
-                            'type' => 'append')))
+                        'widget_addon_append' => array(
+                            'icon' => 'user'
+                        )))
                 ->add('type', 'choice', array(
                         'choices'   => array('give' => 'Just give this vial',
                                              'flip' => 'Flip and give this vial',
@@ -69,7 +69,7 @@ class VialGiveType extends AbstractType
                         'label'     => 'Flip',
                         'required'  => false,
                         'empty_value' => false,
-                        'attr'      => array('class' => 'input-text')))
+                        ))
                 ->add('size', 'choice', array(
                         'choices'   => array('small' => 'small',
                                              'medium' => 'medium',
@@ -78,6 +78,6 @@ class VialGiveType extends AbstractType
                         'label'     => 'Destination size',
                         'required'  => false,
                         'empty_value' => false,
-                        'attr'      => array('class' => 'input-text')));
+                        ));
     }
 }

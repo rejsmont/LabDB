@@ -53,9 +53,8 @@ class ApplicationType extends AbstractType
                 ->add('dilution', 'number', array(
                         'label'     => 'Dilution',
                         'attr'      => array('class' => 'input-small'),
-                        'widget_addon' => array(
+                        'widget_addon_prepend' => array(
                             'text' => '1:',
-                            'type' => 'prepend',
                         )))
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',

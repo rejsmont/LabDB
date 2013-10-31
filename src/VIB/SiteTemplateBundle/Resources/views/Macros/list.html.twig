@@ -80,10 +80,10 @@
 {% macro print_button() %}{% spaceless %}
 {% if can_print() %}
 <div class="btn-group">
-  <button class="btn" onclick="$('#select_action').val('print'); $('form').submit();">
+  <button class="btn btn-default" onclick="$('#select_action').val('print'); $('form').submit();">
     Print labels
   </button>
-  <button class="btn dropdown-toggle" data-toggle="dropdown">
+  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu">
@@ -96,7 +96,7 @@
   </ul>
 </div>
 {% else %}
-  <button class="btn" onclick="$('#select_action').val('label'); $('form').submit();">
+  <button class="btn btn-default" onclick="$('#select_action').val('label'); $('form').submit();">
     Download label PDF
   </button>
 {% endif %}
