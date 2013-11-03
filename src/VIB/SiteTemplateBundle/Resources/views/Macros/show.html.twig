@@ -1,7 +1,7 @@
 {% macro row(label, value, ctrl, name, popover, additional) %}
 <div class="form-group">
-  <label class="control-label col-lg-3">{{ label }}</label>
-  <div class="col-lg-9">
+  <label class="control-label col-sm-3">{{ label }}</label>
+  <div class="col-sm-9">
     <span class="input-text">{% spaceless %}
         {% if value is not empty %}
           {% set showName = (name is not empty or (value.name is defined and value.name != value.__toString)) %}
@@ -32,8 +32,8 @@
 
 {% macro list(label, values, ctrl, name, popover) %}
 <div class="form-group">
-  <label class="control-label col-lg-3">{{ label }}</label>
-  <div class="col-lg-9">
+  <label class="control-label col-sm-3">{{ label }}</label>
+  <div class="col-sm-9">
     <ul class="unstyled input-text">
     {% for item in values %}
       <li>{% spaceless %}
@@ -62,8 +62,8 @@
 
 {% macro user(label, user) %}
 <div class="form-group">
-  <label class="control-label col-lg-3">{{ label }}</label>
-  <div class="col-lg-9">
+  <label class="control-label col-sm-3">{{ label }}</label>
+  <div class="col-sm-9">
     <span class="input-text">{% spaceless %}
         {% if user is not empty %}
           {% if user.email | default(null) is not empty %}
@@ -79,7 +79,7 @@
 
 {% macro development(value) %}
 <div class="form-group">
-<div class="col-md-offset-3 col-md-9">
+<div class="col-sm-offset-3 col-sm-9">
   <div class="progress">
     {% set progress = (value.progress * 100) % 100 %}
     {% set width = progress > 11 ? 11 : progress %}
@@ -117,8 +117,8 @@
 
 {% macro stage(value) %}
 <div class="form-group">
-  <span class="control-label col-lg-3">Stage</span>
-  <div class="controls col-lg-9">
+  <span class="control-label col-sm-3">Stage</span>
+  <div class="controls col-sm-9">
     {% set progress = (value.progress * 100) % 100 %}
     {% if progress <= 11 %}
       <span class="input-text text-info">Embryo</span>

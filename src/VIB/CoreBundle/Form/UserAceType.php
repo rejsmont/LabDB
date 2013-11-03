@@ -45,19 +45,21 @@ class UserAceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('identity', 'user_typeahead', array(
-                        'label'     => false,
+                        'label_render' => false,
                         'required'  => true,
                         'show_legend' => false,
                         'error_bubbling' => true,
-                        'widget_control_group' => false,
+                        'horizontal_input_wrapper_class' => "col-sm-4",
+                        'widget_form_group' => false,
                         'widget_addon_prepend' => array(
                             'icon' => 'user'
                         )))
                 ->add('permission', 'choice', array(
-                        'label'     => false,
+                        'label_render' => false,
                         'show_legend' => false,
                         'error_bubbling' => true,
-                        'widget_control_group' => false,
+                        'horizontal_input_wrapper_class' => "col-sm-4",
+                        'widget_form_group' => false,
                         'required'  => true,
                         'choices' => array(
                             0 => 'None',

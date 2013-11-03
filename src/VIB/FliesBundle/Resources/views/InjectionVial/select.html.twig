@@ -6,13 +6,18 @@
 {% block checkall_attr %}checked{%endblock checkall_attr %}
 
 {% block list_selector %}
-  <div class="form-inline control-group well">
-    <div class="input-append">
-      <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value=""
-        onchange="checkVial('injection')" data-link="{{ path('vib_flies_ajax_vial')}}"
-        data-rack-redirect="{{ path('vib_flies_rack_show',{'id': 0}) | replace({'/0': '/'}) }}" />
-      <span class="add-on"><i class="fa fa-qrcode"></i></span></div>
-    <span class="help-inline"></span>
+  <div class="form-horizontal well">
+    <div class="form-group row">
+      <div class="input-group col-sm-4">
+        <input id="barcode" class="barcode form-control" type="text" placeholder="Scan your barcodes here" value=""
+          onchange="checkVial('injection')" data-link="{{ path('vib_flies_ajax_vial')}}"
+          data-rack-redirect="{{ path('vib_flies_rack_show',{'id': 0}) | replace({'/0': '/'}) }}" />
+        <span class="input-group-addon"><i class="fa fa-qrcode"></i></span>
+      </div>
+      <div class="col-sm-8">
+        <span class="help-block"></span>
+      </div>
+    </div>
   </div>
 {% endblock list_selector %}
 
