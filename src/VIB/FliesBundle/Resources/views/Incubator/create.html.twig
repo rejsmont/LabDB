@@ -12,8 +12,8 @@
     {% if is_granted('ROLE_ADMIN') or is_granted('DELETE',value) %}
     <a href="{{ path(name ~ '_delete', { 'id': value.id }) }}" class="btn btn-danger">Delete</a>
     {% endif %}
-    <a href="{{ path(name ~ '_show', { 'id': value.id }) }}" class="btn">Cancel</a>
+    <a href="{{ path(name ~ '_show', { 'id': value.id }) }}" class="btn btn-default">Cancel</a>
   {% else %}
-    <a href="{{ path('vib_flies_vial_list') }}" class="btn">Cancel</a>
+    <a href="{{ path('vib_flies_vial_list') }}" class="btn btn-default">Cancel</a>
   {% endif %}
 {% endblock modal_footer %}

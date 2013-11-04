@@ -14,15 +14,15 @@
   {% set fail_fraction = ((fail|length)/(total|length) * 100)|number_format(2) %}
   {% set sterile_fraction = ((sterile|length)/(total|length) * 100)|number_format(2) %}
   <div class="progress">
-    <div class="bar" title="ongoing" style="width: {{ ongoing_fraction }}%;"></div>
-    <div class="bar bar-success" title="successful" style="width: {{ success_fraction }}%;"></div>
-    <div class="bar bar-warning" title="failed" style="width: {{ fail_fraction }}%;"></div>
-    <div class="bar bar-danger" title="sterile" style="width: {{ sterile_fraction }}%;"></div>
+    <div class="progress-bar" title="ongoing" style="width: {{ ongoing_fraction }}%;"></div>
+    <div class="progress-bar bar-success" title="successful" style="width: {{ success_fraction }}%;"></div>
+    <div class="progress-bar bar-warning" title="failed" style="width: {{ fail_fraction }}%;"></div>
+    <div class="progress-bar bar-danger" title="sterile" style="width: {{ sterile_fraction }}%;"></div>
   </div>
   {{ _self.vials('Total crosses',total,'vib_flies_crossvial_show') }}
-  <div class="control-group">
-    <span class="control-label">Temperatures</span>
-    <div class="controls">
+  <div class="form-group">
+    <span class="col-sm-3 control-label">Temperatures</span>
+    <div class="col-sm-9">
       <div class="input-text input-block-level">
         {% for temp in temps %}
           {{ status.temperature(temp) }}
@@ -30,18 +30,18 @@
       </div>
     </div>
   </div>
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#vials">
+  <div class="form-group">
+    <a class="col-sm-3 control-label collapse-toggle" data-toggle="collapse" href="#vials">
       <strong>Details</strong></a>
   </div>
   <div id="vials" class="collapse">
     {{ _self.vials('Ongoing crosses',ongoing,'vib_flies_crossvial_show',ongoing_fraction,'info') }}
     {{ _self.vials('Successful crosses',success,'vib_flies_crossvial_show',success_fraction,'success') }}
     {{ _self.vials('Failed crosses',fail,'vib_flies_crossvial_show',fail_fraction,'warning') }}
-    {{ _self.vials('Sterile crosses',sterile,'vib_flies_crossvial_show',sterile_fraction,'error') }}
+    {{ _self.vials('Sterile crosses',sterile,'vib_flies_crossvial_show',sterile_fraction,'danger') }}
   </div>
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#child">
+  <div class="form-group">
+    <a class="col-sm-3 control-label collapse-toggle" data-toggle="collapse" href="#child">
       <strong>Stocks and crosses</strong></a>
   </div>
   <div id="child" class="collapse">
@@ -51,14 +51,14 @@
 {% endblock modal_body %}
 
 {% block modal_footer %}
-  <a href="{{ path('vib_flies_crossvial_list') }}" class="btn">List</a>
+  <a href="{{ path('vib_flies_crossvial_list') }}" class="btn btn-default">List</a>
 {% endblock modal_footer %}
 
 {% macro vials(label,items,route,fraction,color) %}
 {% set uuid = random() ~ '_' ~ 'vials'  %}
-<div class="control-group">
-  <a class="control-label collapse-toggle" data-toggle="collapse" href="#{{ uuid }}">{{ label }}</a>
-  <div class="controls">
+<div class="form-group">
+  <a class="col-sm-3 control-label collapse-toggle" data-toggle="collapse" href="#{{ uuid }}">{{ label }}</a>
+  <div class="col-sm-9">
     <span class="input-text input-block-level{% if color is not empty %} text-{{ color }}{% endif %}">
       <strong>{{ items | length }}</strong>
       {% if fraction is not empty %}

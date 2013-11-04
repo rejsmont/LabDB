@@ -15,8 +15,8 @@
   {{ s.row("Injection type", entity.injectionType) }}
   {{ s.row("Construct name", entity.constructName) }}
   {{ s.row("Target stock", entity.targetStock, 'vib_flies_stock_show', null, 'stock') }}
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#more">
+  <div class="form-group">
+    <a class="col-sm-3 control-label collapse-toggle" data-toggle="collapse" href="#more">
       <strong>More information</strong></a>
   </div>
   <div id="more" class="collapse">
@@ -25,8 +25,8 @@
     {{ s.row("Embryo count", entity.embryoCount) }}
     {{ s.row("Notes", entity.notes) }}
   </div>
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#vendor">
+  <div class="form-group">
+    <a class="col-sm-3 control-label collapse-toggle" data-toggle="collapse" href="#vendor">
       <strong>Vendor information</strong></a>
   </div>
   <div id="vendor" class="collapse">
@@ -38,8 +38,8 @@
     {% endif %}
     {{ s.row("Order number", entity.orderNo) }}
   </div>
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#development">
+  <div class="form-group">
+    <a class="col-sm-3 control-label collapse-toggle" data-toggle="collapse" href="#development">
       <strong>Development</strong></a>
   </div>
   <div id="development" class="collapse">
@@ -47,8 +47,8 @@
     {{ s.stage(entity) }}
     {{ s.development(entity) }}
   </div>
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#vials">
+  <div class="form-group">
+    <a class="col-sm-3 control-label collapse-toggle" data-toggle="collapse" href="#vials">
       <strong>Vials and stocks</strong></a>
   </div>
   <div id="vials" class="collapse">
@@ -63,6 +63,6 @@
   {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
   <a href="{{ path('vib_flies_injectionvial_edit', { 'id': entity.id }) }}" class="btn btn-primary">Edit</a>
   {% endif %}
-  <a href="{{ path('vib_flies_injectionvial_stats', { 'id': entity.id }) }}" class="btn">Stats</a>
-  <a href="{{ path('vib_flies_injectionvial_list') }}" class="btn">List</a>
+  <a href="{{ path('vib_flies_injectionvial_stats', { 'id': entity.id }) }}" class="btn btn-default">Stats</a>
+  <a href="{{ path('vib_flies_injectionvial_list') }}" class="btn btn-default">List</a>
 {% endblock modal_footer %}

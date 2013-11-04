@@ -14,15 +14,20 @@
 {% endif %}
 <div class="span12">
   {% block list_selector %}
-    <div class="form-inline control-group well">
-      <div class="input-append">
-        <input id="barcode" class="barcode" type="text" placeholder="Scan your barcodes here" value=""
-          onchange="checkRackVial()" data-link="{{ path('vib_flies_ajax_rackvial')}}"/>
-        <span class="add-on"><i class="fa fa-qrcode"></i></span></div>
-      <span class="help-inline"></span>
+    <div class="form-horizontal well">
+      <div class="form-group row">
+        <div class="input-group col-sm-4">
+          <input id="barcode" class="barcode form-control" type="text" placeholder="Scan your barcodes here" value=""
+            onchange="checkRackVial()" data-link="{{ path('vib_flies_ajax_rackvial')}}" />
+          <span class="input-group-addon"><i class="fa fa-qrcode"></i></span>
+        </div>
+        <div class="col-sm-8">
+          <span class="help-block"></span>
+        </div>
+      </div>
     </div>
   {% endblock list_selector %}
-  <table class="table table-bordered table-condensed rack-display" id="rack_{{ entity.id }}">
+  <table class="table table-bordered table-condensed rack-display table-curved" id="rack_{{ entity.id }}">
     <tbody>
       <tr>
         <th><input type="checkbox" id="checkall" checked/></th>
@@ -63,7 +68,7 @@
   {% block list_buttons %}
     {{ l.select_buttons() }}
     <div class="btn-group pull-right">
-      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+      <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
         Rack actions
         <span class="caret"></span>
       </a>

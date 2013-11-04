@@ -48,6 +48,21 @@
 
 }
 
+.select2-dropdown-open.select2-drop-above .select2-choice,
+.select2-dropdown-open.select2-drop-above .select2-choices
+.select2-container.select2-drop-above .select2-choice
+{
+  border-radius: @input-border-radius;
+  background: none;
+  border: 1px solid;
+  border-color: @input-border-focus;
+  outline: none;
+  @shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  .box-shadow(@shadow);
+  @transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  .transition(@transition);
+}
+
 /**
  * Adjust Select2 input heights to match the Bootstrap default.
  */
@@ -159,13 +174,17 @@
 .select2-container .select2-choice div /* 1 */ {
   border-left: 1px solid @input-border;
   background: none;
+  padding: @padding-base-vertical @padding-base-horizontal - 4;
+  width: auto;
   .reset-filter;
 }
 
+.select2-container:hover .select2-choice .select2-arrow,
+.select2-container:hover .select2-choice div,
 .select2-dropdown-open .select2-choice .select2-arrow,
 .select2-dropdown-open .select2-choice div /* 1 */ {
-  border-left-color: transparent;
-  background: none;
+  color: @dropdown-link-hover-color;
+  background-color: @dropdown-link-hover-bg;
   .reset-filter;
 }
 
@@ -178,40 +197,32 @@
 
 .select2-container .select2-choice .select2-arrow b,
 .select2-container .select2-choice div b /* 1 */ {
-  background-position: 0 3px;
+  background: none;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: middle;
+  border-top:   @caret-width-base solid @dropdown-caret-color;
+  border-right: @caret-width-base solid transparent;
+  border-left:  @caret-width-base solid transparent;
+  // Firefox fix for https://github.com/twbs/bootstrap/issues/9538. Once fixed,
+  // we can just straight up remove this.
+  border-bottom: 0 dotted;
+}
+
+.select2-container.select2-drop-above .select2-choice .select2-arrow b,
+.select2-container.select2-drop-above .select2-choice div b /* 1 */ {
+  border-bottom:   @caret-width-base solid @dropdown-caret-color;
+  border-right: @caret-width-base solid transparent;
+  border-left:  @caret-width-base solid transparent;
+  // Firefox fix for https://github.com/twbs/bootstrap/issues/9538. Once fixed,
+  // we can just straight up remove this.
+  border-top: 0 dotted;
 }
 
 .select2-dropdown-open .select2-choice .select2-arrow b,
 .select2-dropdown-open .select2-choice div b /* 1 */ {
-  background-position: -18px 3px;
-}
-
-.select2-container.input-sm .select2-choice .select2-arrow b,
-.input-group-sm .select2-container .select2-choice .select2-arrow b,
-.select2-container.input-sm .select2-choice div b, /* 1 */
-.input-group-sm .select2-container .select2-choice div b /* 1 */ {
-  background-position: 0 1px;
-}
-
-.select2-dropdown-open.input-sm .select2-choice .select2-arrow b,
-.input-group-sm .select2-dropdown-open .select2-choice .select2-arrow b,
-.select2-dropdown-open.input-sm .select2-choice div b, /* 1 */
-.input-group-sm .select2-dropdown-open .select2-choice div b /* 1 */ {
-  background-position: -18px 1px;
-}
-
-.select2-container.input-lg .select2-choice .select2-arrow b,
-.input-group-lg .select2-container .select2-choice .select2-arrow b,
-.select2-container.input-lg .select2-choice div b, /* 1 */
-.input-group-lg .select2-container .select2-choice div b /* 1 */ {
-  background-position: 0 9px;
-}
-
-.select2-dropdown-open.input-lg .select2-choice .select2-arrow b,
-.input-group-lg .select2-dropdown-open .select2-choice .select2-arrow b,
-.select2-dropdown-open.input-lg .select2-choice div b, /* 1 */
-.input-group-lg .select2-dropdown-open .select2-choice div b /* 1 */ {
-  background-position: -18px 9px;
+  background: none;
 }
 
 /**
@@ -265,10 +276,6 @@
   .transition(@transition);
 }
 
-.select2-drop-active {
-  border-color: @input-border-focus;
-}
-
 .select2-drop-auto-width,
 .select2-drop.select2-drop-above.select2-drop-active {
     border-top-color: @input-border-focus;
@@ -302,20 +309,44 @@
 }
 
 .select2-dropdown-open [class^="select2-choice"] {
-  .border-bottom-radius(0) !important;
+  //.border-bottom-radius(0) !important;
 }
 
 .select2-dropdown-open.select2-drop-above [class^="select2-choice"] {
-  .border-top-radius(0) !important;
+  //.border-top-radius(0) !important;
 }
 
 /**
  * Adjust Select2's choices hover and selected styles to match Bootstrap 3's default dropdown styles.
  */
 
+.select2-results {
+  margin: 5px 0;
+  padding: 0;
+  .select2-highlighted {
+    background: none;
+  }
+  .select2-result .select2-result-label {
+    padding: 3px 20px;
+  }
+  .select2-result.select2-highlighted .select2-result-label:before {
+    text-align: center;
+    margin-left: -20px;
+    width: 20px;
+    display: inline-block;
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: @fa-var-check;
+  }
+}
+
 .select2-results .select2-highlighted {
-  color: @dropdown-link-active-color;
-  background-color: @dropdown-link-active-bg;
+  color: @dropdown-link-hover-color;
+  background-color: @dropdown-link-hover-bg;
 }
 
 /**
@@ -407,4 +438,25 @@
       border-left: 1px solid transparent; /* 2 */
     }
   }
+}
+
+.select2-drop.select2-drop-active,
+.select2-drop.select2-drop-above.select2-drop-active
+{
+  outline: none;
+  font-size: @font-size-base;
+  background-color: @dropdown-bg;
+  border: 1px solid @dropdown-fallback-border; // IE8 fallback
+  border: 1px solid @dropdown-border;
+  border-radius: @border-radius-base;
+  .box-shadow(0 6px 12px rgba(0,0,0,.175));
+  background-clip: padding-box;
+}
+
+.select2-drop {
+  margin-top: 2px;
+}
+
+.select2-drop.select2-drop-above {
+  margin-top: -2px;
 }

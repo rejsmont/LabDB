@@ -11,8 +11,8 @@
 {% block modal_footer %}
   <button type="submit" class="btn btn-primary">Save</button>
   {% if source is not null %}
-    <a href="{{ path('vib_flies_vial_show', { 'id': source.id }) }}" class="btn">Cancel</a>
+    <a href="{{ path('vib_flies_vial_show', { 'id': source.id }) }}" class="btn btn-default">Cancel</a>
   {% else %}
-    <a href="{{ path('vib_flies_vial_list') }}" class="btn">Cancel</a>
+    <a href="{{ path('vib_flies_vial_list') }}" class="btn btn-default">Cancel</a>
   {% endif %}
 {% endblock modal_footer %}
