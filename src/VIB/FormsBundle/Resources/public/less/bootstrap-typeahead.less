@@ -40,3 +40,27 @@
   padding: 5px 11px;
   color: @gray-light;
 }
+
+.input-group .twitter-typeahead:first-child .form-control {
+  .border-left-radius(@border-radius-base);
+  &.input-sm {
+    .border-left-radius(@border-radius-small);
+  }
+  &.input-lg {
+    .border-left-radius(@border-radius-large);
+  }
+}
+
+.input-group .twitter-typeahead:last-child .form-control {
+  .border-right-radius(@border-radius-base);
+  &.input-sm {
+    .border-right-radius(@border-radius-small);
+  }
+  &.input-lg {
+    .border-right-radius(@border-radius-large);
+  }
+}
+
+.tt-suggestion .pull-right {
+  margin-left: 30px;
+}

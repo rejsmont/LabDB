@@ -23,6 +23,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
+
 /**
  * RoleAceType class
  *
@@ -44,20 +45,22 @@ class RoleAceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('identity', 'role_typeahead', array(
-                        'label'     => false,
+                        'inline' => true,
+                        'label_render' => false,
                         'required'  => true,
                         'show_legend' => false,
+                        'widget_form_group_attr' => array('class' => 'col-sm-5'),
                         'error_bubbling' => true,
-                        'widget_form_group' => false,
                         'widget_addon_prepend' => array(
                             'icon' => 'group',
-                        )))
+                     )))
                 ->add('permission', 'choice', array(
-                        'label'     => false,
+                        'inline' => true,
+                        'label_render' => false,
+                        'required'  => true,
                         'show_legend' => false,
                         'error_bubbling' => true,
-                        'widget_form_group' => false,
-                        'required'  => true,
+                        'widget_form_group_attr' => array('class' => 'col-sm-4'),
                         'choices' => array(
                             0 => 'None',
                             MaskBuilder::MASK_VIEW => 'View',

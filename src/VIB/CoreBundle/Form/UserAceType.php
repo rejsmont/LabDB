@@ -45,22 +45,22 @@ class UserAceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('identity', 'user_typeahead', array(
+                        'inline' => true,
                         'label_render' => false,
                         'required'  => true,
                         'show_legend' => false,
+                        'widget_form_group_attr' => array('class' => 'col-sm-5'),
                         'error_bubbling' => true,
-                        'horizontal_input_wrapper_class' => "col-sm-4",
-                        'widget_form_group' => false,
                         'widget_addon_prepend' => array(
-                            'icon' => 'user'
-                        )))
+                            'icon' => 'user',
+                     )))
                 ->add('permission', 'choice', array(
+                        'inline' => true,
                         'label_render' => false,
+                        'required'  => true,
                         'show_legend' => false,
                         'error_bubbling' => true,
-                        'horizontal_input_wrapper_class' => "col-sm-4",
-                        'widget_form_group' => false,
-                        'required'  => true,
+                        'widget_form_group_attr' => array('class' => 'col-sm-4'),
                         'choices' => array(
                             0 => 'None',
                             MaskBuilder::MASK_VIEW => 'View',
@@ -68,6 +68,6 @@ class UserAceType extends AbstractType
                             MaskBuilder::MASK_OPERATOR => 'Operator',
                             MaskBuilder::MASK_MASTER => 'Master',
                             MaskBuilder::MASK_OWNER => 'Owner',
-                        )));
+                     )));
     }
 }

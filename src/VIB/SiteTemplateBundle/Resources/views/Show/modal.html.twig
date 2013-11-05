@@ -1,14 +1,16 @@
 {% block content %}
-<div class="well well-modal">
-  <div class="form-horizontal">
-    <div class="modal-header">
-      <h4 class="modal-title">{% block modal_header %}{% endblock modal_header %}</h4>
-    </div>
-    <div class="modal-body">
-      {% block modal_body %}{% endblock modal_body %}
-    </div>
-    <div class="modal-footer">
-      {% block modal_footer %}{% endblock modal_footer %}
+<div class="col-xs-12">
+  <div class="well well-modal">
+    <div class="form-horizontal">
+      <div class="modal-header">
+        <h4 class="modal-title">{% block modal_header %}{% endblock modal_header %}</h4>
+      </div>
+      <div class="modal-body">
+        {% block modal_body %}{% endblock modal_body %}
+      </div>
+      <div class="modal-footer">
+        {% block modal_footer %}{% endblock modal_footer %}
+      </div>
     </div>
   </div>
 </div>

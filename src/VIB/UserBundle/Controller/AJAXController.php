@@ -71,11 +71,11 @@ class AJAXController extends Controller
 
         $options = array();
         foreach ($found as $user) {
-            $options[] = $user->getFullName() . "[[" . $user->getUsername() . "]]";
+            $options[] = array('fullname' => $user->getFullName(), 'username' => $user->getUsername());
         }
 
         $response = new JsonResponse();
-        $response->setData(array('options' => $options));
+        $response->setData($options);
 
         return $response;
     }
@@ -131,7 +131,7 @@ class AJAXController extends Controller
         }
         
         $response = new JsonResponse();
-        $response->setData(array('options' => $options));
+        $response->setData($options);
 
         return $response;
     }

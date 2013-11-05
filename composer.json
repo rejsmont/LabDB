@@ -38,6 +38,7 @@
         "kuleuven/shibboleth-bundle": "dev-master",
         "twbs/bootstrap": "dev-master",
         "twitter/typeahead.js": "dev-master",
+        "twitter/hogan.js": "3.0-dev",
         "fortawesome/font-awesome": "dev-master",
         "eternicode/bootstrap-datepicker": "dev-bs3",
         "ivaynberg/select2": "3.4-dev",
@@ -119,6 +120,19 @@
                 "type": "component",
                 "source": {
                     "url": "https://github.com/ivaynberg/select2.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "version": "3.0-dev",
+                "name": "twitter/hogan.js",
+                "type": "component",
+                "source": {
+                    "url": "https://github.com/twitter/hogan.js.git",
                     "type": "git",
                     "reference": "master"
                 }

@@ -12,7 +12,7 @@
 {% if form is defined %}
 <form action="{{ app.request.requestUri }}" method="post" {{ form_enctype(form) }}>
 {% endif %}
-<div class="span12">
+<div class="col-sm-12">
   {% block list_selector %}
     <div class="form-horizontal well">
       <div class="form-group row">

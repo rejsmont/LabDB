@@ -1,0 +1,26 @@
+// TABLE HEAD BACKGROUNDS
+// -----------------
+// Exact selectors below required to override .table-striped
+
+.collection-items {
+  margin-top: 2px;
+}
+
+.collection-item {
+  margin-bottom: 5px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  &.form-group > div[class^='col-'] {
+    padding-right: 15px;
+    padding-left: 0;
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+.control-label > .btn {
+  margin-top: -5px;
+  margin-left: 10px;
+}

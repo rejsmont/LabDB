@@ -246,11 +246,11 @@ class AJAXController extends AbstractController
         $status = '<div class="status">';
         if ($entity instanceof Vial) {
             if ($entity->isTrashed()) {
-                $status .= '<span title="trashed" class="label status label-inverse"><i class="fa fa-trash"></i></span>';
+                $status .= '<span title="trashed" class="label status label-default"><i class="fa fa-trash-o"></i></span>';
             } elseif ($entity->isAlive()) {
                 $status .= '<span title="alive" class="label status label-success"><i class="fa fa-heart"></i></span>';
             } else {
-                $status .= '<span title="dead" class="label status label-important"><i class="fa fa-remove-circle"></i></span>';
+                $status .= '<span title="dead" class="label status label-danger"><i class="fa fa-times-circle"></i></span>';
             }
             if ($entity->getTemperature() < 21) {
                 $status .= '<span class="label status label-info">' . $entity->getTemperature() . '℃</span>';
@@ -259,15 +259,15 @@ class AJAXController extends AbstractController
             } elseif ($entity->getTemperature() < 28) {
                 $status .= '<span class="label status label-warning">' . $entity->getTemperature() . '℃</span>';
             } else {
-                $status .= '<span class="label status label-important">' . $entity->getTemperature() . '℃</span>';
+                $status .= '<span class="label status label-danger">' . $entity->getTemperature() . '℃</span>';
             }
             if ($entity instanceof CrossVial) {
                 if ($entity->isSuccessful()) {
                     $status .= '<span title="successful" class="label status label-success"><i class="fa fa-ok"></i></span>';
                 } elseif ($entity->isSterile()) {
-                    $status .= '<span title="sterile" class="label status label-important"><i class="fa fa-remove-circle"></i></span>';
+                    $status .= '<span title="sterile" class="label status label-important"><i class="fa fa-times-circle"></i></span>';
                 } elseif (null !== $entity->isSuccessful()) {
-                    $status .= '<span title="failed" class="label status label-warning"><i class="fa fa-remove"></i></span>';
+                    $status .= '<span title="failed" class="label status label-warning"><i class="fa fa-times"></i></span>';
                 }
 
                 $type  = "crossvial";
@@ -283,9 +283,9 @@ class AJAXController extends AbstractController
             if ($vials > 3) {
                 $status .= '<span title="amplified" class="label status label-success"><i class="fa fa-plus-circle"></i></span>';
             } elseif ($vials > 1) {
-                $status .= '<span title="healthy" class="label status label-success"><i class="fa fa-ok-circle"></i></span>';
+                $status .= '<span title="healthy" class="label status label-success"><i class="fa fa-check-circle"></i></span>';
             } elseif ($vials < 1) {
-                $status .= '<span title="dead" class="label status label-important"><i class="fa fa-remove-circle"></i></span>';
+                $status .= '<span title="dead" class="label status label-danger"><i class="fa fa-times-circle"></i></span>';
             } else {
                 $status .= '<span title="expand" class="label status label-warning"><i class="fa fa-minus-circle"></i></span>';
             }

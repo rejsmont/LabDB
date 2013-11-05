@@ -1,17 +1,19 @@
 {% block content %}
-<div class="well well-modal">
-  {% block form_header %}
-  <form action="{{ path('login_check') }}" method="post" class="form-horizontal">
-  {% endblock form_header %}
-  <div class="modal-header">
-    <h4 class="modal-title">{% block modal_header %}{% endblock modal_header %}</h4>
+<div class="col-xs-12">
+  <div class="well well-modal">
+    {% block form_header %}
+    <form action="{{ path('login_check') }}" method="post" class="form-horizontal">
+    {% endblock form_header %}
+    <div class="modal-header">
+      <h4 class="modal-title">{% block modal_header %}{% endblock modal_header %}</h4>
+    </div>
+    <div class="modal-body">
+      {% block modal_body %}{% endblock modal_body %}
+    </div>
+    <div class="modal-footer">
+      {% block modal_footer %}{% endblock modal_footer %}
+    </div>
+    </form>
   </div>
-  <div class="modal-body">
-    {% block modal_body %}{% endblock modal_body %}
-  </div>
-  <div class="modal-footer">
-    {% block modal_footer %}{% endblock modal_footer %}
-  </div>
-  </form>
 </div>
 {% endblock content %}

@@ -1,5 +1,5 @@
-<div class="col-sm-3 col-md-3 pull-right">
-<form id="search-form" action="{{ path('vib_flies_search_result') }}" method="post" {{ form_enctype(form) }} class="navbar-form">
+<form id="search-form" action="{{ path('vib_flies_search_result') }}" method="post" {{ form_enctype(form) }} class="navbar-form navbar-right" style="width:25%">
+  <div class="form-group">
 {% if not msie %}
   <div class="input-group">
     {{ form_widget(form.query) }}
@@ -39,9 +39,9 @@
   {{ form_widget(form.query) }}
   <a class="btn" href="#" onclick="$('#search_form_filter').val(''); $('#search-form').submit();">Search</a>
 {% endif %}
+  </div>
   {{ form_rest(form) }}
 </form>
-</div>
 {% form_theme form _self %}
 {% block form_widget_compound %}{{ form_rest(form) }}{% endblock form_widget_compound %}
 {% block form_row %}{{ form_widget(form) }}{% endblock %}
