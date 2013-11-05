@@ -125,7 +125,7 @@ class InjectionVialControllerTest extends WebTestCase
         $this->assertEquals(1, $crawler->filter('span.input-text.text-info:contains("(100%)")')->count());
         $this->assertEquals(1, $crawler->filter('span.input-text.text-success:contains("(0%)")')->count());
         $this->assertEquals(1, $crawler->filter('span.input-text.text-warning:contains("(0%)")')->count());
-        $this->assertEquals(1, $crawler->filter('span.input-text.text-error:contains("(0%)")')->count());
+        $this->assertEquals(1, $crawler->filter('span.input-text.text-danger:contains("(0%)")')->count());
 
     }
 

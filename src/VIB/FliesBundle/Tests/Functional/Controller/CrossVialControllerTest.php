@@ -146,7 +146,7 @@ class CrossVialControllerTest extends WebTestCase
         $crawler_trashed = $client->request('GET', '/secure/crosses/list/trashed');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler_trashed->filter('td:contains("000012")')->count());
-        $this->assertEquals(1, $crawler_trashed->filter('td i.icon-remove-circle')->count());
+        $this->assertEquals(1, $crawler_trashed->filter('td i.fa-times-circle')->count());
     }
 
     public function testSelectMarkSuccessful()
@@ -165,7 +165,7 @@ class CrossVialControllerTest extends WebTestCase
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
         $result = $client->followRedirect();
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(2, $result->filter('td i.icon-ok')->count());
+        $this->assertEquals(2, $result->filter('td i.fa-check')->count());
     }
 
     public function testSelectMarkFailed()
@@ -183,7 +183,7 @@ class CrossVialControllerTest extends WebTestCase
         $this->assertEquals(302,$client->getResponse()->getStatusCode());
         $result = $client->followRedirect();
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(1, $result->filter('td i.icon-remove')->count());
+        $this->assertEquals(1, $result->filter('td i.fa-times')->count());
 
     }
 
@@ -199,7 +199,7 @@ class CrossVialControllerTest extends WebTestCase
         $this->assertEquals(1, $crawler->filter('span.input-text.text-info:contains("(33.33%)")')->count());
         $this->assertEquals(1, $crawler->filter('span.input-text.text-success:contains("(33.33%)")')->count());
         $this->assertEquals(1, $crawler->filter('span.input-text.text-warning:contains("(16.67%)")')->count());
-        $this->assertEquals(1, $crawler->filter('span.input-text.text-error:contains("(16.67%)")')->count());
+        $this->assertEquals(1, $crawler->filter('span.input-text.text-danger:contains("(16.67%)")')->count());
 
     }
 
