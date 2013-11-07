@@ -56,14 +56,14 @@ class AntibodyType extends AbstractType
                             'secondary' => 'Secondary',
                         )))
                 ->add('type', 'choice', array(
-                        'label'     => false,
+                        'label_render' => false,
                         'required'  => true,
                         'choices' => array(
                             'monoclonal' => 'Monoclonal',
                             'polyclonal' => 'Polyclonal',
                         )))
                 ->add('class', 'choice', array(
-                        'label'     => false,
+                        'label_render' => false,
                         'required'  => true,
                         'choices' => array(
                             'IgG' => 'IgG',
@@ -91,26 +91,27 @@ class AntibodyType extends AbstractType
                         'required' => false))
                 ->add('vendor', 'text', array(
                         'label' => 'Vendor',
-                        'required' => false,
-                        'attr' => array('class' => 'input-block-level')))
+                        'required' => false))
                 ->add('infoURL', 'url', array(
                         'label' => 'Info URL',
                         'required' => false,
-                        'attr' => array('class' => 'input-block-level',
-                                        'placeholder' => 'Paste address here')))
+                        'attr' => array('placeholder' => 'Paste address here')))
                 ->add('applications', 'collection', array(
-                        'type' => new ApplicationType(),
-                        'allow_add' => true,
-                        'allow_delete' => true,
-                        'by_reference' => false,
-                        'prototype' => true,
-                        'show_legend' => false,
-                        'label' => 'Applications',
-                        'widget_add_btn' => array('label' => false, 'icon' => 'plus'),
-                        'options' => array(
-                            'label' => false,
-                            'widget_remove_btn' => array('label' => false, 'icon' => 'remove', 'class' => 'close'),
-                            'widget_form_group' => false)));
+                         'type' => new ApplicationType(),
+                         'allow_add' => true,
+                         'allow_delete' => true,
+                         'by_reference' => false,
+                         'prototype' => true,
+                         'show_legend' => false,
+                         'label' => 'Applications',
+                         'widget_add_btn' => array('label' => false, 'icon' => 'plus'),
+                         'options' => array(
+                             'label' => false,
+                             'horizontal_input_wrapper_class' => 'well',
+                             'widget_remove_btn' => array('label' => false, 'icon' => 'times')
+                         )
+                       )
+                     );
     }
 
     /**
