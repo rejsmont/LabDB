@@ -11,7 +11,7 @@
 {% block modal_body %}
   {{ s.row("Genotype", entity.genotype) }}
   {{ s.row("Source cross", entity.sourceCross , 'vib_flies_crossvial_show', null, 'vial') }}
-  {{ _self.vials("Vials", entity.livingVials, 'vib_flies_stockvial_show') }}
+  {{ _self.vials("<strong>Vials</strong>", entity.livingVials, 'vib_flies_stockvial_show') }}
   {{ s.user("Created by", owner) }}
   {{ s.row("Notes", entity.notes) }}
   <div class="form-group">
@@ -22,7 +22,7 @@
   <div id="more" class="collapse">
     {{ s.row("Vendor", entity.vendor) }}
     <div class="form-group">
-      <span class="control-label col-sm-3">Stock information</span>
+      <label class="control-label col-sm-3">Stock information</label>
       <div class="col-sm-9">
         <span class="input-text">
           {% if entity.infoURL is not empty %}
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="form-group">
-      <span class="control-label col-sm-3">Verified</span>
+      <label class="control-label col-sm-3">Verified</label>
       <div class="col-sm-9">
         <span class="input-text">
           {% if entity.verified %}
@@ -61,7 +61,7 @@
 {% macro vials(label,items,route) %}
 {% set uuid = random() ~ '_' ~ 'vials'  %}
 <div class="form-group">
-  <a class="control-label col-sm-3 collapse-toggle" data-toggle="collapse" href="#{{ uuid }}">{{ label }}</a>
+  <a class="control-label col-sm-3 collapse-toggle" data-toggle="collapse" href="#{{ uuid }}">{{ label|raw }}</a>
   <div class="col-sm-9">
     <div class="input-text input-block-level">
       <strong>{{ items | length }}</strong>

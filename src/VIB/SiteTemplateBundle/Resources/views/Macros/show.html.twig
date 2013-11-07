@@ -117,7 +117,7 @@
 
 {% macro stage(value) %}
 <div class="form-group">
-  <span class="control-label col-sm-3">Stage</span>
+  <label class="control-label col-sm-3">Stage</label>
   <div class="controls col-sm-9">
     {% set progress = (value.progress * 100) % 100 %}
     {% if progress <= 11 %}
