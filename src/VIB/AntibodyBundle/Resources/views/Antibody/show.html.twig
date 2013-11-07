@@ -44,7 +44,7 @@
   <div id="applications" class="collapse">
     {% for application in entity.applications %}
       <div class="form-group">
-        <span class="control-label col-sm-3">{{ loop.index }}.</span>
+        <label class="control-label col-sm-3">{{ loop.index }}.</label>
         <div class="col-sm-9 input-text">
           <a class="collapse-toggle" data-toggle="collapse" href="#application-{{ loop.index }}">
             <strong>{{ application.type }}</strong>
@@ -55,7 +55,7 @@
         {{ s.row("Dilution", '1:' ~ application.dilution) }}
         {{ s.row("Notes", application.notes) }}
         <div class="form-group">
-          <span class="control-label col-sm-3">Verified</span>
+          <label class="control-label col-sm-3">Verified</label>
           <div class="col-sm-9">
             <span class="input-text">
               {% if application.verified %}
