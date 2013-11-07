@@ -13,8 +13,8 @@
   {{ s.row("Host species", entity.hostSpecies) }}
   {{ s.row("Type", entity.order ~ ' ' ~ entity.type) }}
 
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#details"><strong>Details</strong></a>
+  <div class="form-group">
+    <a class="control-label col-sm-3 collapse-toggle" data-toggle="collapse" href="#details"><strong>Details</strong></a>
   </div>
   <div id="details" class="collapse">
     {{ s.row("Class", entity.class) }}
@@ -22,14 +22,14 @@
     {{ s.row("Size", entity.clone) }}
     {{ s.row("Notes", entity.notes) }}
   </div>
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#vendor"><strong>Vendor information</strong></a>
+  <div class="form-group">
+    <a class="control-label col-sm-3 collapse-toggle" data-toggle="collapse" href="#vendor"><strong>Vendor information</strong></a>
   </div>
   <div id="vendor" class="collapse">
     {{ s.row("Vendor", entity.vendor) }}
-    <div class="control-group">
-      <span class="control-label">Data sheet</span>
-      <div class="controls">
+    <div class="form-group">
+      <span class="control-label col-sm-3">Data sheet</span>
+      <div class="col-sm-9">
         <span class="input-text">
           {% if entity.infoURL is not empty %}
             <a href="{{ entity.infoURL }}" target="_blank">{{ entity.infoURL }}</a>
@@ -38,15 +38,15 @@
       </div>
     </div>
   </div>
-  <div class="control-group">
-    <a class="control-label collapse-toggle" data-toggle="collapse" href="#applications"><strong>Applications</strong></a>
+  <div class="form-group">
+    <a class="control-label col-sm-3 collapse-toggle" data-toggle="collapse" href="#applications"><strong>Applications</strong></a>
   </div>
   <div id="applications" class="collapse">
     {% for application in entity.applications %}
-      <div class="control-group">
-        <span class="control-label">{{ loop.index }}.</span>
-        <div class="controls">
-          <a class="input-text collapse-toggle" data-toggle="collapse" href="#application-{{ loop.index }}">
+      <div class="form-group">
+        <span class="control-label col-sm-3">{{ loop.index }}.</span>
+        <div class="col-sm-9 input-text">
+          <a class="collapse-toggle" data-toggle="collapse" href="#application-{{ loop.index }}">
             <strong>{{ application.type }}</strong>
           </a>
         </div>
@@ -54,9 +54,9 @@
       <div id="application-{{ loop.index }}" class="collapse">
         {{ s.row("Dilution", '1:' ~ application.dilution) }}
         {{ s.row("Notes", application.notes) }}
-        <div class="control-group">
-          <span class="control-label">Verified</span>
-          <div class="controls">
+        <div class="form-group">
+          <span class="control-label col-sm-3">Verified</span>
+          <div class="col-sm-9">
             <span class="input-text">
               {% if application.verified %}
                  <i class="fa fa-ok text-success"></i> Yes
