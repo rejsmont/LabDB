@@ -16,13 +16,16 @@
  * limitations under the License.
  */
 
-namespace VIB\CoreBundle\Controller;
+namespace VIB\SearchBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use VIB\CoreBundle\Controller\AbstractController;
-use VIB\CoreBundle\Repository\SearchableRepositoryInterface;
+use VIB\SearchBundle\Repository\SearchableRepositoryInterface;
+
+use VIB\SearchBundle\Form\SearchType;
+use VIB\SearchBundle\Form\AdvancedSearchType;
 
 /**
  * SearchController
@@ -31,22 +34,10 @@ use VIB\CoreBundle\Repository\SearchableRepositoryInterface;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class SearchController extends AbstractController
+abstract class SearchController extends AbstractController
 {
     /**
-     * Handle search request
-     *
-     * @Template()
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function searchAction()
-    {
-        return $this->render('VIBCoreBundle:Search:search.html.twig');
-    }
-    
-    /**
-     * Handle advanced search request
+     * Render advanced search form
      *
      * @Template()
      * @Route("/") 
@@ -56,37 +47,25 @@ class SearchController extends AbstractController
     public function advancedAction()
     {
         $form = $this->createForm(new AdvancedSearchType());
-        return array('form' => $form->createView());
+        return array(
+            'form' => $form->createView(),
+            'realm' => $this->getSearchRealm()
+        );
     }
 
     /**
-     * Render search form
+     * Render quick search form
      *
+     * @Template()
+     * 
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function formAction()
+    public function searchAction()
     {
         $form = $this->createForm(new SearchType());
-        $msie_version = 10;
-        $request = $this->get('request');
-        $user_agent = $request->headers->get('User-Agent');
-        $is_msie = strpos($user_agent, 'MSIE') !== false;
-        if ($is_msie) {
-            $matches = array();
-            preg_match('/MSIE (.*?)\./', $user_agent, $matches);
-            $msie_version = array_key_exists(1, $matches) ? $matches[1] : 0;
-            if ($msie_version < 8) {
-                $msie = true;
-            } else {
-                $msie = false;
-            }
-        } else {
-            $msie = false;
-        }
-
-        return $this->render('VIBCoreBundle:Search:form.html.twig', array(
+        return array(
             'form' => $form->createView(),
-            'msie' => $msie ));
+            'realm' => $this->getSearchRealm() );
     }
 
     /**
@@ -104,7 +83,6 @@ class SearchController extends AbstractController
         $advForm = $this->createForm(new AdvancedSearchType());
         $request = $this->get('request');
         $session = $request->getSession();
-        $securityContext = $this->getSecurityContext();
 
         if ($request->getMethod() == 'POST') {
 
@@ -126,7 +104,7 @@ class SearchController extends AbstractController
             if (false !== $data) {
                 $term = $data['query'];
                 if ('' == $data['filter']) {
-                    $filter = $this->getDefaultFilter();
+                    $filter = $this->getDefaultFilter($term);
                 } else {
                     $filter = $data['filter'];
                 }
@@ -147,55 +125,58 @@ class SearchController extends AbstractController
         $repository = $om->getRepository($this->filterToClass($filter));
         
         if ($repository instanceof SearchableRepositoryInterface) {
-            
-            $terms = $term != '' ? explode(' ',$term) : array();
-            $excluded = $exclude != '' ? explode(' ',$exclude) : array();
-            
-            $resultCount = $repository->getSearchResultCount($terms, $excluded, $options, $securityContext);
-            $result = $repository->getSearchQuery($terms, $excluded, $options, $securityContext)
-                                 ->setHint('knp_paginator.count', $resultCount);
-            $paginator  = $this->getPaginator();
-            $page = $this->getCurrentPage();
-            $entities = $paginator->paginate($result, $page, 25);
-
-            return array('entities' => $entities,
-                         'query' => $term,
-                         'exclude' => $exclude,
-                         'filter' => $filter,
-                         'options' => $options);
+            return $this->handleSearchableRepository($repository, $term, $filter, $exclude, $options);
+        } else {
+            return $this->handleNonSearchableRepository($repository, $term, $filter, $exclude, $options);
         }
-
+    }
+    
+    /**
+     * Handle non-searchable repository classes
+     * 
+     * @param string $term
+     * @param string $filter
+     * @param string $excluded
+     * @param array $options
+     * @return mixed
+     */
+    protected function handleNonSearchableRepository($repository, $term, $filter, $exclude = '', $options = array())
+    {
         return $this->createNotFoundException();
     }
     
     /**
-     * Get default filter
+     * Handle searchable repository classes
      * 
-     * @return string
-     */
-    protected function getDefaultFilter()
+     * @param string $term
+     * @param string $filter
+     * @param string $excluded
+     * @param array $options
+     * @return mixed
+     */    
+    protected function handleSearchableRepository($repository, $term, $filter, $exclude = '', $options = array())
     {
-        return 'entity';
-    }
-    
-    /**
-     * Get search realm
-     * 
-     * @return string
-     */
-    protected function getSearchRealm()
-    {
-        return 'core';
-    }
-    
-    /**
-     * Get class lookup table
-     * 
-     * @return array
-     */
-    protected function getClassLookupTable()
-    {
-        return array('entity' => 'VIB\CoreBundle\Entity\Entity');
+        if (trim($term) == '') {
+            return $this->createNotFoundException();
+        }
+        
+        $securityContext = $this->getSecurityContext();
+        
+        $terms = $term != '' ? explode(' ',$term) : array();
+        $excluded = $exclude != '' ? explode(' ',$exclude) : array();
+
+        $resultCount = $repository->getSearchResultCount($terms, $excluded, $options, $securityContext);
+        $result = $repository->getSearchQuery($terms, $excluded, $options, $securityContext)
+                             ->setHint('knp_paginator.count', $resultCount);
+        $paginator  = $this->getPaginator();
+        $page = $this->getCurrentPage();
+        $entities = $paginator->paginate($result, $page, 25);
+
+        return array('entities' => $entities,
+                     'query' => $term,
+                     'exclude' => $exclude,
+                     'filter' => $filter,
+                     'options' => $options);
     }
     
     /**
@@ -210,4 +191,26 @@ class SearchController extends AbstractController
         
         return key_exists($filter, $lookup) ? $lookup[$filter] : '';
     }
+    
+    /**
+     * Get default filter
+     * 
+     * @param string $term
+     * @return string
+     */
+    abstract protected function getDefaultFilter($term = '');
+    
+    /**
+     * Get search realm
+     * 
+     * @return string
+     */
+    abstract protected function getSearchRealm();
+    
+    /**
+     * Get class lookup table
+     * 
+     * @return array
+     */
+    abstract protected function getClassLookupTable();
 }

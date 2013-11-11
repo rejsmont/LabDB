@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace VIB\CoreBundle\Repository;
+namespace VIB\SearchBundle\Repository;
 
 /**
  * SearchableVialRepository

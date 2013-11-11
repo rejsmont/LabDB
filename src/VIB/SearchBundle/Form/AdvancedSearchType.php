@@ -16,24 +16,24 @@
  * limitations under the License.
  */
 
-namespace VIB\CoreBundle\Form;
+namespace VIB\SearchBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * SearchType class
+ * AdvancedSearchType class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class SearchType extends AbstractType
+class AdvancedSearchType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return "search_form";
+        return "advanced_search_form";
     }
 
     /**
@@ -42,11 +42,16 @@ class SearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('query', 'text', array(
+                        'label' => 'Include terms',
                         'required' => false,
                         'attr' => array(
-                          'class' => 'span2 search-query',
-                          'form' => 'search-form',
-                          'placeholder' => 'Search')))
-                ->add('filter','hidden',array('required' => false));
+                          'class' => 'input-block-level',
+                          'placeholder' => 'separate terms with space')))
+                ->add('exclude', 'text', array(
+                        'label' => 'Exclude terms',
+                        'required' => false,
+                        'attr' => array(
+                          'class' => 'input-block-level',
+                          'placeholder' => 'separate terms with space')));
     }
 }

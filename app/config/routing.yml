@@ -1,22 +1,27 @@
+vib_search:
+    resource: "@VIBSearchBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 vib_antibody:
     resource: "@VIBAntibodyBundle/Controller/"
     type:     annotation
-    prefix:   /secure
+    prefix:   /antibodies
 
 vib_calendar:
     resource: "@VIBCalendarBundle/Controller/"
     type:     annotation
-    prefix:   /
+    prefix:   /calendar
 
 default:
     pattern:  /
     defaults: { _controller: VIBWelcomeBundle:Default:index }
 vib_forms:
     resource: "@VIBFormsBundle/Resources/config/routing.yml"
-    prefix:   /secure
+    prefix:   /_ajax
 vib_flies:
     resource: "@VIBFliesBundle/Resources/config/routing.yml"
-    prefix:   /secure
+    prefix:   /flies
 
 login:
     pattern:   /login
@@ -24,4 +29,4 @@ login:
 login_check:
     pattern:   /login_check
 logout:
-    pattern:   /secure/logout
+    pattern:   /logout

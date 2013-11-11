@@ -30,7 +30,7 @@ use VIB\FliesBundle\Form\AdvancedSearchType;
 /**
  * Description of SearchController
  *
- * @Route("/antibodies/search")
+ * @Route("/search")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */

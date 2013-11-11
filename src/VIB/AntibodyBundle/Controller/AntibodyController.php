@@ -28,7 +28,7 @@ use VIB\AntibodyBundle\Form\AntibodyType;
 /**
  * AntibodyController class
  *
- * @Route("/antibodies")
+ * @Route("/")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */

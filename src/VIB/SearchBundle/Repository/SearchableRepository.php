@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace VIB\CoreBundle\Repository;
+namespace VIB\SearchBundle\Repository;
 
 
 /**
@@ -135,5 +135,25 @@ abstract class SearchableRepository extends EntityRepository implements Searchab
         $fields = array('e.id');
         
         return $fields;
+    }
+    
+    protected function getUser($securityContext)
+    {
+        if (null === $token = $securityContext->getToken()) {
+            return null;
+        }
+
+        if (!is_object($user = $token->getUser())) {
+            return null;
+        }
+
+        return $user;
+    }
+    
+    protected function getPermission($securityContext, $options)
+    {
+        $options['user'] = $this->getUser();
+        $options['permissions'] = in_array('private', $opts) ? array('OWNER') : 
+            ($securityContext->isGranted('ROLE_ADMIN') ? false : array('VIEW'));
     }
 }

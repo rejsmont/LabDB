@@ -35,7 +35,7 @@ class CalendarController extends Controller
     /**
      * Create online calendar for user
      *
-     * @Route("/calendar/{username}.ics")
+     * @Route("/{username}.ics")
      *
      * @param  string                                    $username User to create the calendar for
      * @return Symfony\Component\HttpFoundation\Response

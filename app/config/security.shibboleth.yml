@@ -18,12 +18,14 @@ security:
             anonymous:  ~
             shibboleth: ~
             logout:
-                path: /secure/logout
+                path: /logout
                 target: /
                 success_handler: security.logout.handler.shibboleth
 
     access_control:
-        - { path: ^/secure, roles: ROLE_USER, requires_channel: https }
+        - { path: ^/logout, roles: ROLE_USER, requires_channel: https }
+        - { path: ^/flies, roles: ROLE_USER, requires_channel: https }
+        - { path: ^/antibodies, roles: ROLE_USER, requires_channel: https }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     
     acl:

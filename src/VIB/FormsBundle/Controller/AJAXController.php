@@ -37,7 +37,7 @@ class AJAXController extends Controller
     /**
      * Search for the specified entity by its property
      *
-     * @Route("/_ajax/choices/{class}/{property}", name="VIBFormsBundle_ajax_choices")
+     * @Route("/choices/{class}/{property}", name="VIBFormsBundle_ajax_choices")
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @param  string                                     $class    Entity class to search for
