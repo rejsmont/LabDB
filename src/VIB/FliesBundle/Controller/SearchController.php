@@ -32,27 +32,6 @@ use VIB\SearchBundle\Controller\SearchController as BaseSearchController;
  */
 class SearchController extends BaseSearchController
 {
-    
-    protected function getClassLookupTable() {
-        return array(
-            'vial' => 'VIB\FliesBundle\Entity\Vial',
-            'rack' => 'VIB\FliesBundle\Entity\Rack',
-            'stock' => 'VIB\FliesBundle\Entity\Stock',
-            'crossvial' => 'VIB\FliesBundle\Entity\CrossVial',
-            'injectionvial' => 'VIB\FliesBundle\Entity\InjectionVial',
-        );
-    }
-
-    protected function getDefaultFilter($term = '') {
-        if (preg_match("/^R\d+$/",$term) === 1) {
-            return 'rack';
-        } elseif (is_numeric($term)) {
-            $filter = 'vial';
-        } else {
-            $filter = 'stock';
-        }
-    }
-
     protected function handleNonSearchableRepository($repository, $term, $filter, $exclude = '', $options = array()) {
         switch ($filter) {
             case 'rack':

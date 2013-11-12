@@ -20,6 +20,7 @@ namespace VIB\SearchBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * SearchType class
@@ -42,11 +43,24 @@ class SearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('query', 'text', array(
-                        'required' => false,
-                        'attr' => array(
-                          'class' => 'span2 search-query',
-                          'form' => 'search-form',
-                          'placeholder' => 'Search')))
-                ->add('filter','hidden',array('required' => false));
+                      'required' => false,
+                      'inline'  => true,
+                      'attr'     => array(
+                          'form'        => 'search-form',
+                          'placeholder' => 'Search'
+                      )
+                  )
+              );
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+                        'data_class' => 'VIB\SearchBundle\Search\SearchQuery'
+                    )
+                );
     }
 }

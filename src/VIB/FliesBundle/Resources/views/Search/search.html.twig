@@ -1,3 +1,42 @@
-<form>
-{% render(controller("VIBFliesBundle:Search:form")) %}
+<form id="search-form" action="{{ path('vib_flies_search_result') }}" method="post" {{ form_enctype(form) }} class="navbar-form navbar-right" style="width:25%">
+  <div class="form-group">
+    <div class="input-group">
+      {{ form_widget(form.query) }}
+      <div class="input-group-btn">
+        <button class="btn btn-default" onclick="$('#search-form').submit();">
+          <i class="fa fa-search"></i>
+        </button>
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu pull-right">
+          <li class="first">
+            <a href="#" onclick="$('#search_form_filter').val('stock'); $('#search-form').submit();">
+              <b>Search stocks</b>
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="$('#search_form_filter').val('crossvial'); $('#search-form').submit();">
+              Search crosses
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="$('#search_form_filter').val('injectionvial'); $('#search-form').submit();">
+              Search injections
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li class="last">
+            <a href="{{ path('vib_flies_search_advanced') }}">
+              Advanced search
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {{ form_rest(form) }}
 </form>
+{% form_theme form _self %}
+{% block form_widget_compound %}{{ form_rest(form) }}{% endblock form_widget_compound %}
+{% block form_row %}{{ form_widget(form) }}{% endblock %}
