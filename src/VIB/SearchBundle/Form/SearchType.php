@@ -42,15 +42,15 @@ class SearchType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('query', 'text', array(
-                      'required' => false,
-                      'inline'  => true,
-                      'attr'     => array(
-                          'form'        => 'search-form',
-                          'placeholder' => 'Search'
-                      )
-                  )
-              );
+        $builder->add('terms', 'text', array(
+                'required' => false,
+                'inline'  => true,
+                'attr'     => array(
+                    'form'        => 'search-form',
+                    'placeholder' => 'Search'
+                )
+            )
+        );
     }
     
     /**
@@ -59,8 +59,8 @@ class SearchType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-                        'data_class' => 'VIB\SearchBundle\Search\SearchQuery'
-                    )
-                );
+                'data_class' => 'VIB\SearchBundle\Search\SearchQuery'
+            )
+        );
     }
 }

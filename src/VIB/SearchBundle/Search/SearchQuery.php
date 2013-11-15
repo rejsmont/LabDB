@@ -18,6 +18,8 @@
 
 namespace VIB\SearchBundle\Search;
 
+use JMS\Serializer\Annotation as Serializer;
+
 /**
  * SearchQuery class
  *
@@ -28,6 +30,8 @@ abstract class SearchQuery implements SearchQueryInterface
     /**
      * Search terms
      * 
+     * @Serializer\Type("array")
+     * 
      * @var array
      */
     protected $terms;
@@ -35,12 +39,16 @@ abstract class SearchQuery implements SearchQueryInterface
     /**
      * Excluded terms
      * 
+     * @Serializer\Type("array")
+     * 
      * @var array
      */
     protected $excluded;
     
     /**
      * Is search advanced
+     * 
+     * @Serializer\Type("boolean")
      * 
      * @var boolean
      */

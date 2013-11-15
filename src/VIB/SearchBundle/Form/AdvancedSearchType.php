@@ -41,17 +41,33 @@ class AdvancedSearchType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('query', 'text', array(
-                        'label' => 'Include terms',
-                        'required' => false,
-                        'attr' => array(
-                          'class' => 'input-block-level',
-                          'placeholder' => 'separate terms with space')))
-                ->add('exclude', 'text', array(
-                        'label' => 'Exclude terms',
-                        'required' => false,
-                        'attr' => array(
-                          'class' => 'input-block-level',
-                          'placeholder' => 'separate terms with space')));
+        $builder->add('terms', 'text', array(
+                'label' => 'Include terms',
+                'required' => false,
+                'attr' => array(
+                    'class' => 'input-block-level',
+                    'placeholder' => 'separate terms with space'
+                )
+            )
+        )->add('excluded', 'text', array(
+                'label' => 'Exclude terms',
+                'required' => false,
+                'attr' => array(
+                    'class' => 'input-block-level',
+                    'placeholder' => 'separate terms with space'
+                )
+            )
+        );
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+                'data_class' => 'VIB\SearchBundle\Search\SearchQuery'
+            )
+        );
     }
 }

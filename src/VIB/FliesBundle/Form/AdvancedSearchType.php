@@ -20,6 +20,7 @@ namespace VIB\FliesBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * AdvancedSearchType class
@@ -41,33 +42,55 @@ class AdvancedSearchType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('query', 'text', array(
-                        'label' => 'Include terms',
-                        'required' => false,
-                        'attr' => array(
-                          'placeholder' => 'separate terms with space')))
-                ->add('exclude', 'text', array(
-                        'label' => 'Exclude terms',
-                        'required' => false,
-                        'attr' => array(
-                          'placeholder' => 'separate terms with space')))
-                ->add('filter', 'choice', array(
-                        'label' => 'Scope',
-                        'choices'   => array(
-                            'crossvial' => 'Crosses',
-                            'injectionvial' => 'Injections'),
-                        'expanded' => true,
-                        'empty_value' => 'Stocks',
-                        'empty_data' => 'stock',
-                        'required' => false))
-                ->add('options', 'choice', array(
-                        'label' => 'Options',
-                        'choices'   => array(
-                            'private' => 'Only private',
-                            'dead' => 'Include dead',
-                            'notes' => 'Include comments'),
-                        'expanded' => true,
-                        'multiple' => true,
-                        'required' => false));
+        $builder->add('terms', 'text', array(
+                'label' => 'Include terms',
+                'required' => false,
+                'attr' => array(
+                    'class' => 'input-block-level',
+                    'placeholder' => 'separate terms with space'
+                )
+            )
+        )->add('excluded', 'text', array(
+                'label' => 'Exclude terms',
+                'required' => false,
+                'attr' => array(
+                    'class' => 'input-block-level',
+                    'placeholder' => 'separate terms with space'
+                )
+            )
+        )->add('filter', 'choice', array(
+                'label' => 'Scope',
+                'choices' => array(
+                    'crossvial' => 'Crosses',
+                    'injectionvial' => 'Injections'
+                ),
+                'expanded' => true,
+                'empty_value' => 'Stocks',
+                'empty_data' => 'stock',
+                'required' => false
+            )
+        )->add('options', 'choice', array(
+                'label' => 'Options',
+                'choices'   => array(
+                    'private' => 'Only private',
+                    'dead' => 'Include dead',
+                    'notes' => 'Include comments'
+                ),
+                'expanded' => true,
+                'multiple' => true,
+                'required' => false
+            )
+        );
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+                'data_class' => 'VIB\FliesBundle\Search\SearchQuery'
+            )
+        );
     }
 }

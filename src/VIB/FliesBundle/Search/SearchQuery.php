@@ -18,6 +18,8 @@
 
 namespace VIB\FliesBundle\Search;
 
+use JMS\Serializer\Annotation as Serializer;
+
 use VIB\SearchBundle\Search\SearchQuery as BaseSearchQuery;
 
 /**
@@ -30,10 +32,20 @@ class SearchQuery extends BaseSearchQuery
     /**
      * Search terms
      * 
+     * @Serializer\Type("string")
+     * 
      * @var string
      */
     protected $filter;
 
+    /**
+     * Security context
+     * 
+     * @Serializer\Exclude
+     * 
+     * @var string
+     */
+    protected $securityContext;
     
     /**
      * Construct SearchQuery
@@ -67,7 +79,7 @@ class SearchQuery extends BaseSearchQuery
      */
     public function getFilter() {
         
-        if (null == $this->filter) {
+        if (empty($this->filter)) {
             $term = implode(' ', $this->getTerms());
 
             if (preg_match("/^R\d+$/",$term) === 1) {
@@ -107,5 +119,14 @@ class SearchQuery extends BaseSearchQuery
             'crossvial' => 'VIB\FliesBundle\Entity\CrossVial',
             'injectionvial' => 'VIB\FliesBundle\Entity\InjectionVial',
         );
+    }
+    
+    public function getSecurityContext() {
+        return $this->securityContext;
+    }
+
+    public function setSecurityContext($securityContext) {
+        $this->securityContext = $securityContext;
+        return $this;
     }
 }

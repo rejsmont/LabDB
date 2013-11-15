@@ -96,11 +96,12 @@ abstract class SearchController extends AbstractController
             } elseif ($advancedForm->isValid()) {
                 $searchQuery = $form->getData();
             }
-            $this->saveSearchQuery();
+            $this->saveSearchQuery($searchQuery);
+            
         } else {
-            $this->loadSearchQuery();
+            $searchQuery = $this->loadSearchQuery();
         }
-        
+
         $repository = $this->getObjectManager()->getRepository($searchQuery->getEntityClass());
         
         if ($repository instanceof SearchableRepositoryInterface) {
@@ -108,6 +109,8 @@ abstract class SearchController extends AbstractController
         } else {
             return $this->handleNonSearchableRepository($repository, $searchQuery);
         }
+        
+        throw $this->createNotFoundException();
     }
     
     /**
@@ -117,7 +120,13 @@ abstract class SearchController extends AbstractController
      */
     protected function loadSearchQuery()
     {
-        $session->get($realm . '_search_query', $this->createSearchQuery());
+        $serializer = $this->get('serializer');
+        $serializedQuery = $this->getSession()->get(
+                $this->getSearchRealm() . '_search_query', 
+                $this->createSearchQuery()
+        );
+        
+        return $serializer->deserialize($serializedQuery['object'], $serializedQuery['class'], 'json');
     }
     
     /**
@@ -127,7 +136,12 @@ abstract class SearchController extends AbstractController
      */
     protected function saveSearchQuery($searchQuery)
     {
-        $session->set($realm . '_search_query', $searchQuery);
+        $serializer = $this->get('serializer');
+        $serializedQuery = array(
+            'object' => $serializer->serialize($searchQuery, 'json'),
+            'class' => get_class($searchQuery)
+        );
+        $this->getSession()->set($this->getSearchRealm() . '_search_query', $serializedQuery);
     }
     
     /**
@@ -139,7 +153,7 @@ abstract class SearchController extends AbstractController
      */
     protected function handleNonSearchableRepository($repository, $searchQuery)
     {
-        return $this->createNotFoundException();
+        throw $this->createNotFoundException();
     }
     
     /**
@@ -156,7 +170,7 @@ abstract class SearchController extends AbstractController
         $options = $searchQuery->getOptions();
         
         if (count($terms) == 0) {
-            return $this->createNotFoundException();
+            $this->createNotFoundException();
         }
         
         $resultCount = $repository->getSearchResultCount($terms, $excluded, $options);
@@ -175,18 +189,18 @@ abstract class SearchController extends AbstractController
     /**
      * Get search Query
      * 
+     * @param boolean $advanced
      * @return \VIB\SearchBundle\Search\SearchQueryInterface
      */
-    protected function createSearchQuery($advanced) {
-        return new SearchQuery($advanced);
-    }
+    abstract protected function createSearchQuery($advanced = false);
     
     /**
      * Get search form
      * 
      * @return \VIB\SearchBundle\Form\SearchType
      */
-    protected function createSearchForm() {
+    protected function createSearchForm()
+    {
         return new SearchType();
     }
     
@@ -195,7 +209,8 @@ abstract class SearchController extends AbstractController
      * 
      * @return \VIB\SearchBundle\Form\AdvancedSearchType
      */
-    protected function createAdvancedSearchForm() {
+    protected function createAdvancedSearchForm()
+    {
         return new AdvancedSearchType();
     }
     

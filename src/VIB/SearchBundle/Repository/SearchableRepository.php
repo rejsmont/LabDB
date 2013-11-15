@@ -18,6 +18,7 @@
 
 namespace VIB\SearchBundle\Repository;
 
+use VIB\CoreBundle\Repository\EntityRepository;
 
 /**
  * SearchableRepository

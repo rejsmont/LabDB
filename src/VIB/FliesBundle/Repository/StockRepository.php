@@ -18,7 +18,7 @@
 
 namespace VIB\FliesBundle\Repository;
 
-use VIB\CoreBundle\Repository\EntityRepository;
+use VIB\SearchBundle\Repository\SearchableRepository;
 
 /**
  * StockRepository
