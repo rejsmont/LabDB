@@ -26,7 +26,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/injections/');
+        $crawler = $client->request('GET', '/flies/injections/');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(2, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
@@ -39,7 +39,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/injections/expand');
+        $client->request('GET', '/flies/injections/expand');
         $this->assertEquals(404,$client->getResponse()->getStatusCode());
     }
 
@@ -47,7 +47,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/injections/select');
+        $client->request('GET', '/flies/injections/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
@@ -55,7 +55,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/injections/new');
+        $crawler = $client->request('GET', '/flies/injections/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(18, $crawler->filter('.modal-body label')->count());
     }
@@ -64,7 +64,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/injections/new');
+        $crawler = $client->request('GET', '/flies/injections/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['injectionvial_new[vial][constructName]'] = 'test construct';
@@ -82,7 +82,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/injections/new');
+        $crawler = $client->request('GET', '/flies/injections/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['injectionvial_new[vial][constructName]'] = 'test construct';
@@ -100,7 +100,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/injections/new');
+        $crawler = $client->request('GET', '/flies/injections/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['injectionvial_new[number]'] = 0;
@@ -117,7 +117,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/injections/stats/10');
+        $crawler = $client->request('GET', '/flies/injections/stats/10');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler
                 ->filter('a.control-label:contains("Total vials") + div > span > strong:contains("2")')
@@ -133,7 +133,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler_8 = $client->request('GET', '/secure/injections/show/12');
+        $crawler_8 = $client->request('GET', '/flies/injections/show/12');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(0, $crawler_8->filter('html:contains("Injection vial 000012")')->count());
     }
@@ -142,7 +142,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/injections/show/5');
+        $client->request('GET', '/flies/injections/show/5');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -151,7 +151,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler_8 = $client->request('GET', '/secure/injections/edit/12');
+        $crawler_8 = $client->request('GET', '/flies/injections/edit/12');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(0, $crawler_8->filter(
                 'html:contains("Edit injection vial test construct ➔ stock 1 (000012)")')->count());
@@ -161,7 +161,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/injections/edit/12');
+        $crawler = $client->request('GET', '/flies/injections/edit/12');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['injectionvial[notes]'] = 'This is a test note.';
@@ -176,7 +176,7 @@ class InjectionVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/injections/edit/5');
+        $client->request('GET', '/flies/injections/edit/5');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }

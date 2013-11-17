@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\NoResultException;
 
 use VIB\CoreBundle\Controller\AbstractController;
+use VIB\FliesBundle\Search\SearchQuery;
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\StockVial;
 use VIB\FliesBundle\Entity\CrossVial;
@@ -195,8 +196,10 @@ class AJAXController extends AbstractController
      */
     public function stockSearchAction(Request $request)
     {
-        $terms = explode(' ',$request->query->get('query'));
-        $query = $this->getObjectManager()->getRepository('VIBFliesBundle:Stock')->getSearchQuery($terms);
+        $searchQuery = new SearchQuery();
+        $searchQuery->setSecurityContext($this->getSecurityContext());
+        $searchQuery->setTerms($request->query->get('query'));
+        $query = $this->getObjectManager()->getRepository('VIBFliesBundle:Stock')->getSearchQuery($searchQuery);
         $found = $query->getResult();
 
         $stockNames = array();

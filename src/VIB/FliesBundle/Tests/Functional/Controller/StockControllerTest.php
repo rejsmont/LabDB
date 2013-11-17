@@ -26,7 +26,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/');
+        $crawler = $client->request('GET', '/flies/stocks/');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(3, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
@@ -37,7 +37,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/list/created');
+        $crawler = $client->request('GET', '/flies/stocks/list/created');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(2, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
@@ -48,7 +48,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/list/public');
+        $crawler = $client->request('GET', '/flies/stocks/list/public');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(4, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
@@ -59,7 +59,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/new');
+        $crawler = $client->request('GET', '/flies/stocks/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(13, $crawler->filter('.modal-body label')->count());
     }
@@ -68,7 +68,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/new');
+        $crawler = $client->request('GET', '/flies/stocks/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['stock_new[stock][name]'] = 'stock 5';
@@ -84,7 +84,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/new');
+        $crawler = $client->request('GET', '/flies/stocks/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['stock_new[stock][name]'] = '';
@@ -102,7 +102,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/new');
+        $crawler = $client->request('GET', '/flies/stocks/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['stock_new[stock][name]'] = 'stock 1';
@@ -124,7 +124,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler_5 = $client->request('GET', '/secure/stocks/show/1');
+        $crawler_5 = $client->request('GET', '/flies/stocks/show/1');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(0, $crawler_5->filter('html:contains("Stock stock 1")')->count());
     }
@@ -133,7 +133,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/stocks/show/0');
+        $client->request('GET', '/flies/stocks/show/0');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -142,7 +142,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler_5 = $client->request('GET', '/secure/stocks/edit/1');
+        $crawler_5 = $client->request('GET', '/flies/stocks/edit/1');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler_5->filter('input[value="stock 1"]')->count());
     }
@@ -151,7 +151,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/edit/1');
+        $crawler = $client->request('GET', '/flies/stocks/edit/1');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['stock[notes]'] = 'This is a test note.';
@@ -166,7 +166,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/stocks/edit/0');
+        $client->request('GET', '/flies/stocks/edit/0');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }

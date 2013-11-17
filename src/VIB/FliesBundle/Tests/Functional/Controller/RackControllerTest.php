@@ -26,7 +26,7 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/racks/');
+        $crawler = $client->request('GET', '/flies/racks/');
         $this->assertEquals(404,$client->getResponse()->getStatusCode());
     }
 
@@ -34,7 +34,7 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/racks/new');
+        $crawler = $client->request('GET', '/flies/racks/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(3, $crawler->filter('.modal-body label')->count());
     }
@@ -43,7 +43,7 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/racks/new');
+        $crawler = $client->request('GET', '/flies/racks/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['rack[rack][name]'] = 'Test flies';
@@ -60,7 +60,7 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/racks/new');
+        $crawler = $client->request('GET', '/flies/racks/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['rack[rows]'] = 0;
@@ -75,7 +75,7 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/racks/show/1');
+        $crawler = $client->request('GET', '/flies/racks/show/1');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('html:contains("Rack R000001")')->count());
     }
@@ -84,7 +84,7 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/racks/show/0');
+        $client->request('GET', '/flies/racks/show/0');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -93,7 +93,7 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/racks/edit/2');
+        $crawler = $client->request('GET', '/flies/racks/edit/2');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('html:contains("Edit rack R000002")')->count());
     }
@@ -102,7 +102,7 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/racks/edit/2');
+        $crawler = $client->request('GET', '/flies/racks/edit/2');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['rack[rack][name]'] = 'Test flies modified';
@@ -117,7 +117,7 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $client->request('GET', '/secure/racks/edit/0');
+        $client->request('GET', '/flies/racks/edit/0');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -126,7 +126,7 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $client->request('GET', '/secure/racks/label/1/download');
+        $client->request('GET', '/flies/racks/label/1/download');
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/pdf'));
@@ -136,11 +136,11 @@ class RackControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $vial_crawler = $client->request('GET', '/secure/stocks/vials/show/5');
+        $vial_crawler = $client->request('GET', '/flies/stocks/vials/show/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(0, $vial_crawler->filter('span:contains("25℃")')->count());
 
-        $crawler = $client->request('GET', '/secure/racks/show/1');
+        $crawler = $client->request('GET', '/flies/racks/show/1');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
@@ -151,7 +151,7 @@ class RackControllerTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
 
-        $vial_result = $client->request('GET', '/secure/stocks/vials/show/5');
+        $vial_result = $client->request('GET', '/flies/stocks/vials/show/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $vial_result->filter('span:contains("25℃")')->count());
     }

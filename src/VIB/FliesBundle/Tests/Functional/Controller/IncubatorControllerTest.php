@@ -26,7 +26,7 @@ class IncubatorControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/incubators/');
+        $crawler = $client->request('GET', '/flies/incubators/');
         $this->assertEquals(404,$client->getResponse()->getStatusCode());
     }
 
@@ -34,7 +34,7 @@ class IncubatorControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/incubators/new');
+        $crawler = $client->request('GET', '/flies/incubators/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(2, $crawler->filter('.modal-body label')->count());
     }
@@ -43,7 +43,7 @@ class IncubatorControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/incubators/new');
+        $crawler = $client->request('GET', '/flies/incubators/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['incubator[name]'] = 'Hot incubator';
@@ -59,7 +59,7 @@ class IncubatorControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/incubators/new');
+        $crawler = $client->request('GET', '/flies/incubators/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['incubator[name]'] = '';
@@ -75,7 +75,7 @@ class IncubatorControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/incubators/show/1');
+        $crawler = $client->request('GET', '/flies/incubators/show/1');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('html:contains("Incubator Test incubator")')->count());
     }
@@ -84,7 +84,7 @@ class IncubatorControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/incubators/show/0');
+        $client->request('GET', '/flies/incubators/show/0');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -93,7 +93,7 @@ class IncubatorControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/incubators/edit/2');
+        $crawler = $client->request('GET', '/flies/incubators/edit/2');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('html:contains("Edit incubator Hot incubator")')->count());
     }
@@ -102,7 +102,7 @@ class IncubatorControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/incubators/edit/2');
+        $crawler = $client->request('GET', '/flies/incubators/edit/2');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['incubator[temperature]'] = 16;
@@ -117,7 +117,7 @@ class IncubatorControllerTest extends WebTestCase
     {
         $client = $this->getAdminAuthenticatedClient();
 
-        $client->request('GET', '/secure/incubators/edit/0');
+        $client->request('GET', '/flies/incubators/edit/0');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -126,7 +126,7 @@ class IncubatorControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/incubators/edit/2');
+        $client->request('GET', '/flies/incubators/edit/2');
         $response = $client->getResponse();
         $this->assertEquals(403,$response->getStatusCode());
     }

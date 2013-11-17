@@ -26,7 +26,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/');
+        $crawler = $client->request('GET', '/flies/crosses/');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(2, $crawler->filter(
@@ -39,7 +39,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/crosses/expand');
+        $client->request('GET', '/flies/crosses/expand');
         $this->assertEquals(404,$client->getResponse()->getStatusCode());
     }
 
@@ -47,7 +47,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/crosses/select');
+        $client->request('GET', '/flies/crosses/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
@@ -55,7 +55,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/new');
+        $crawler = $client->request('GET', '/flies/crosses/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(13, $crawler->filter('.modal-body label')->count());
     }
@@ -64,7 +64,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/new');
+        $crawler = $client->request('GET', '/flies/crosses/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['crossvial_new[vial][virgin]'] = '1';
@@ -81,7 +81,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/new');
+        $crawler = $client->request('GET', '/flies/crosses/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['crossvial_new[vial][virgin]'] = '1';
@@ -98,7 +98,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/new');
+        $crawler = $client->request('GET', '/flies/crosses/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['crossvial_new[number]'] = 0;
@@ -114,7 +114,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/new');
+        $crawler = $client->request('GET', '/flies/crosses/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['crossvial_new[vial][virgin]'] = '12';
@@ -130,7 +130,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/select');
+        $crawler = $client->request('GET', '/flies/crosses/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
@@ -143,7 +143,7 @@ class CrossVialControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(0, $result->filter('td:contains("000012")')->count());
 
-        $crawler_trashed = $client->request('GET', '/secure/crosses/list/trashed');
+        $crawler_trashed = $client->request('GET', '/flies/crosses/list/trashed');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler_trashed->filter('td:contains("000012")')->count());
         $this->assertEquals(1, $crawler_trashed->filter('td i.fa-times-circle')->count());
@@ -153,7 +153,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/select');
+        $crawler = $client->request('GET', '/flies/crosses/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
@@ -172,7 +172,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/select');
+        $crawler = $client->request('GET', '/flies/crosses/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Flip')->form();
         $values = $form->getPhpValues();
@@ -191,7 +191,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/stats/12');
+        $crawler = $client->request('GET', '/flies/crosses/stats/12');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler
                 ->filter('a.control-label:contains("Total crosses") + div > span > strong:contains("6")')
@@ -207,7 +207,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler_8 = $client->request('GET', '/secure/crosses/show/8');
+        $crawler_8 = $client->request('GET', '/flies/crosses/show/8');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(0, $crawler_8->filter('html:contains("Cross 000008")')->count());
     }
@@ -216,7 +216,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/crosses/show/5');
+        $client->request('GET', '/flies/crosses/show/5');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -225,7 +225,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler_8 = $client->request('GET', '/secure/crosses/edit/8');
+        $crawler_8 = $client->request('GET', '/flies/crosses/edit/8');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(0, $crawler_8->filter(
                 'html:contains("Edit cross yw ☿ ✕ yw; Sp / CyO ♂ (000008)")')->count());
@@ -235,7 +235,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/crosses/edit/8');
+        $crawler = $client->request('GET', '/flies/crosses/edit/8');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['crossvial[notes]'] = 'This is a test note.';
@@ -250,7 +250,7 @@ class CrossVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/crosses/edit/5');
+        $client->request('GET', '/flies/crosses/edit/5');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }

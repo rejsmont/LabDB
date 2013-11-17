@@ -23,9 +23,9 @@ security:
                 target: /
 
     access_control:
-        - { path: ^/logout, roles: ROLE_USER, requires_channel: https }
-        - { path: ^/flies, roles: ROLE_USER, requires_channel: https }
-        - { path: ^/antibodies, roles: ROLE_USER, requires_channel: https }
+        - { path: ^/logout, roles: ROLE_USER }
+        - { path: ^/flies, roles: ROLE_USER }
+        - { path: ^/antibodies, roles: ROLE_USER }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     
     acl:

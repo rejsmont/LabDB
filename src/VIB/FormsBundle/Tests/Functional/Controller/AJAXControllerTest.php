@@ -26,7 +26,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/choices/VIB%5CFliesBundle%5CEntity%5CStock/genotype?query=CyO');
+        $client->request('GET', '/_ajax/choices/VIB%5CFliesBundle%5CEntity%5CStock/genotype?query=CyO');
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));

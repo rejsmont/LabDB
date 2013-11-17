@@ -26,7 +26,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/vials/');
+        $crawler = $client->request('GET', '/flies/stocks/vials/');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(3, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
@@ -37,7 +37,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/stocks/vials/select');
+        $client->request('GET', '/flies/stocks/vials/select');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
@@ -45,7 +45,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/vials/new');
+        $crawler = $client->request('GET', '/flies/stocks/vials/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(12, $crawler->filter('.modal-body label')->count());
     }
@@ -54,7 +54,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/vials/new');
+        $crawler = $client->request('GET', '/flies/stocks/vials/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['stockvial_new[vial][stock]'] = 'stock 4';
@@ -70,7 +70,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/vials/new');
+        $crawler = $client->request('GET', '/flies/stocks/vials/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['stockvial_new[vial][stock]'] = 'stock 1';
@@ -86,7 +86,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/vials/new');
+        $crawler = $client->request('GET', '/flies/stocks/vials/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['stockvial_new[vial][stock]'] = '';
@@ -102,7 +102,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler_5 = $client->request('GET', '/secure/stocks/vials/show/5');
+        $crawler_5 = $client->request('GET', '/flies/stocks/vials/show/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(0, $crawler_5->filter('html:contains("Stock vial 000005")')->count());
     }
@@ -111,7 +111,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/stocks/vials/show/8');
+        $client->request('GET', '/flies/stocks/vials/show/8');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -120,7 +120,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler_5 = $client->request('GET', '/secure/stocks/vials/edit/5');
+        $crawler_5 = $client->request('GET', '/flies/stocks/vials/edit/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(0, $crawler_5->filter('html:contains("Edit stock vial 000005")')->count());
     }
@@ -129,7 +129,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/stocks/vials/edit/5');
+        $crawler = $client->request('GET', '/flies/stocks/vials/edit/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['stockvial[notes]'] = 'This is a test note.';
@@ -144,7 +144,7 @@ class StockVialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/stocks/vials/edit/8');
+        $client->request('GET', '/flies/stocks/vials/edit/8');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }

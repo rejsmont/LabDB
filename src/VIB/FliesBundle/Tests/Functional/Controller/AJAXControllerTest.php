@@ -26,7 +26,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/_ajax/vials?id=1');
+        $crawler = $client->request('GET', '/flies/_ajax/vials?id=1');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('tr')->count());
         $this->assertEquals(1, $crawler->filter('td:contains("000001")')->count());
@@ -36,7 +36,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/vials?id=1&format=json');
+        $client->request('GET', '/flies/_ajax/vials?id=1&format=json');
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
@@ -47,7 +47,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/vials?id=0');
+        $client->request('GET', '/flies/_ajax/vials?id=0');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -56,7 +56,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/_ajax/vials?id=1&filter=stock');
+        $crawler = $client->request('GET', '/flies/_ajax/vials?id=1&filter=stock');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('tr')->count());
         $this->assertEquals(1, $crawler->filter('td:contains("000001")')->count());
@@ -66,7 +66,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/vials?id=8&filter=stock');
+        $client->request('GET', '/flies/_ajax/vials?id=8&filter=stock');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -75,7 +75,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/_ajax/vials?id=8&filter=cross');
+        $crawler = $client->request('GET', '/flies/_ajax/vials?id=8&filter=cross');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('tr')->count());
         $this->assertEquals(1, $crawler->filter('td:contains("000008")')->count());
@@ -85,7 +85,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/vials?id=1&filter=cross');
+        $client->request('GET', '/flies/_ajax/vials?id=1&filter=cross');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -94,7 +94,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/secure/_ajax/racks/vials?vialID=1&positionID=2');
+        $crawler = $client->request('GET', '/flies/_ajax/racks/vials?vialID=1&positionID=2');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('input[type=checkbox]#select_items_1')->count());
     }
@@ -103,7 +103,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/racks/vials?vialID=1&positionID=1');
+        $client->request('GET', '/flies/_ajax/racks/vials?vialID=1&positionID=1');
         $response = $client->getResponse();
         $this->assertEquals(406,$response->getStatusCode());
     }
@@ -112,7 +112,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/racks/vials/remove?vialID=1&rackID=1');
+        $client->request('GET', '/flies/_ajax/racks/vials/remove?vialID=1&rackID=1');
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
@@ -120,7 +120,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/stocks/search?query=CyO');
+        $client->request('GET', '/flies/_ajax/stocks/search?query=CyO');
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
@@ -131,7 +131,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/popover?type=vial&id=1');
+        $client->request('GET', '/flies/_ajax/popover?type=vial&id=1');
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
@@ -142,7 +142,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/popover?type=vial&id=8');
+        $client->request('GET', '/flies/_ajax/popover?type=vial&id=8');
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
@@ -153,7 +153,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/popover?type=vial&id=0');
+        $client->request('GET', '/flies/_ajax/popover?type=vial&id=0');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -162,7 +162,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/popover?type=stock&id=1');
+        $client->request('GET', '/flies/_ajax/popover?type=stock&id=1');
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
@@ -173,7 +173,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/popover?type=stock&id=0');
+        $client->request('GET', '/flies/_ajax/popover?type=stock&id=0');
         $response = $client->getResponse();
         $this->assertEquals(404,$response->getStatusCode());
     }
@@ -182,7 +182,7 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('GET', '/secure/_ajax/popover?type=test&id=0');
+        $client->request('GET', '/flies/_ajax/popover?type=test&id=0');
         $response = $client->getResponse();
         $this->assertEquals(406,$response->getStatusCode());
     }

@@ -26,7 +26,7 @@ class PrintControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('POST', '/secure/_ajax/autoprint/', array('setting' => 'enabled'));
+        $client->request('POST', '/flies/_ajax/autoprint/', array('setting' => 'enabled'));
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
@@ -34,7 +34,7 @@ class PrintControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $client->request('POST', '/secure/_ajax/labelmode/', array('labelmode' => 'std'));
+        $client->request('POST', '/flies/_ajax/labelmode/', array('labelmode' => 'std'));
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
