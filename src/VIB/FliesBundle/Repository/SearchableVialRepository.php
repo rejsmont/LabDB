@@ -18,6 +18,7 @@
 
 namespace VIB\FliesBundle\Repository;
 
+use VIB\SearchBundle\Repository\SearchableRepositoryInterface;
 use VIB\SearchBundle\Search\SearchQueryInterface;
 use VIB\SearchBundle\Search\ACLSearchQueryInterface;
 use VIB\FliesBundle\Search\SearchQuery;

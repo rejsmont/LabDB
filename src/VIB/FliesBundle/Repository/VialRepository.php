@@ -19,6 +19,7 @@
 namespace VIB\FliesBundle\Repository;
 
 use Doctrine\ORM\Query;
+use VIB\CoreBundle\Doctrine\ObjectManager;
 use VIB\CoreBundle\Repository\EntityRepository;
 
 
@@ -121,7 +122,7 @@ class VialRepository extends EntityRepository
      *
      * @param VIB\CoreBundle\Doctrine\ObjectManager
      */
-    public function setManager(\VIB\CoreBundle\Doctrine\ObjectManager $manager)
+    public function setManager(ObjectManager $manager)
     {
         $this->manager = $manager;
     }

@@ -18,6 +18,8 @@
 
 namespace VIB\FliesBundle\Repository;
 
+use VIB\SearchBundle\Search\SearchQueryInterface;
+use VIB\FliesBundle\Search\SearchQuery;
 
 /**
  * CrossVialRepository
@@ -40,10 +42,10 @@ class CrossVialRepository extends SearchableVialRepository
     /**
      * {@inheritdoc}
      */
-    protected function getSearchFields($options = array())
+    protected function getSearchFields(SearchQueryInterface $search)
     {
         $fields = array('e.maleName', 'e.virginName');
-        if ((key_exists('notes', $options))&&($options['notes'])) {
+        if ($search instanceof SearchQuery ? $search->searchNotes() : false) {
             $fields[] = 'e.notes';
         }
         

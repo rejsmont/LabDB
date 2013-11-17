@@ -18,6 +18,9 @@
 
 namespace VIB\FliesBundle\Repository;
 
+use VIB\SearchBundle\Search\SearchQueryInterface;
+use VIB\FliesBundle\Search\SearchQuery;
+
 /**
  * InjectionVialRepository
  *
@@ -40,9 +43,9 @@ class InjectionVialRepository extends SearchableVialRepository
     /**
      * {@inheritdoc}
      */
-    protected function getSearchQueryBuilder($terms, $excluded = array(), $options = array())
+    protected function getSearchQueryBuilder(SearchQueryInterface $search)
     {
-        return parent::getSearchQueryBuilder($terms, $excluded, $options)
+        return parent::getSearchQueryBuilder($search)
             ->leftJoin('e.targetStock', 's')
             ->leftJoin('e.targetStockVial', 'sv')
             ->leftJoin('sv.stock', 'svs');
@@ -51,9 +54,9 @@ class InjectionVialRepository extends SearchableVialRepository
     /**
      * {@inheritdoc}
      */
-    protected function getSearchResultCountQueryBuilder($terms, $excluded = array(), $options = array())
+    protected function getSearchResultCountQueryBuilder(SearchQueryInterface $search)
     {
-        return parent::getSearchResultCountQueryBuilder($terms, $excluded, $options)
+        return parent::getSearchResultCountQueryBuilder($search)
             ->leftJoin('e.targetStock', 's')
             ->leftJoin('e.targetStockVial', 'sv')
             ->leftJoin('sv.stock', 'svs');
@@ -62,51 +65,20 @@ class InjectionVialRepository extends SearchableVialRepository
     /**
      * {@inheritdoc}
      */
-    protected function getSearchFields($options = array())
+    protected function getSearchFields(SearchQueryInterface $search)
     {
         $fields = array(
             'e.constructName',
             's.name',
             's.genotype',
             'svs.name',
-            'svs.genotype');
-        if ((key_exists('notes', $options))&&($options['notes'])) {
+            'svs.genotype'
+        );
+        if ($search instanceof SearchQuery ? $search->searchNotes() : false) {
             $fields[] = 'e.notes';
         }
         
         return $fields;
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function search($terms, $excluded = array(), $options = array())
-    {
-        $date = new \DateTime();
-        $date->sub(new \DateInterval('P2M'));
-
-        $expr = null;
-        foreach ($terms as $term) {
-            $expr = $qb->expr()->andX(
-                $qb->expr()->orX(
-                    $qb->expr()->like('b.name', '\'%' . $term . '%\''),
-                    $qb->expr()->like('b.genotype', '\'%' . $term . '%\'')
-                ),
-                $expr
-            );
-        }
-        
-        $query = $this->createQueryBuilder('b')
-            ->where('b.setupDate > :date')
-            ->andWhere('b.trashed = false')
-            ->orderBy('b.setupDate', 'DESC')
-            ->addOrderBy('b.id', 'DESC')
-            ->setParameter('date', $date->format('Y-m-d'))
-            ->andWhere('b.maleName like :term_1 or b.virginName like :term_2')
-            ->setParameter('term_1', '%' . $term .'%')
-            ->setParameter('term_2', '%' . $term .'%');
-
-        return $query;
     }
     
     /**
@@ -128,17 +100,17 @@ class InjectionVialRepository extends SearchableVialRepository
 
         $qb = $this->getListQueryBuilder($options);
         $qb->andWhere('e.injectionType = :injection_type')
-           ->andWhere('e.constructName = :construct_name')
-           ->andWhere('e.targetStock = :target_stock')
-           ->andWhere('e.setupDate > :start_date')
-           ->andWhere('e.setupDate <= :stop_date')
-           ->orderBy('e.setupDate', 'ASC')
-           ->addOrderBy('e.id', 'ASC')
-           ->setParameter('injection_type', $injection->getInjectionType())
-           ->setParameter('construct_name', $injection->getConstructName())
-           ->setParameter('target_stock', $injection->getTargetStock())
-           ->setParameter('start_date', $startDate->format('Y-m-d'))
-           ->setParameter('stop_date', $stopDate->format('Y-m-d'));
+            ->andWhere('e.constructName = :construct_name')
+            ->andWhere('e.targetStock = :target_stock')
+            ->andWhere('e.setupDate > :start_date')
+            ->andWhere('e.setupDate <= :stop_date')
+            ->orderBy('e.setupDate', 'ASC')
+            ->addOrderBy('e.id', 'ASC')
+            ->setParameter('injection_type', $injection->getInjectionType())
+            ->setParameter('construct_name', $injection->getConstructName())
+            ->setParameter('target_stock', $injection->getTargetStock())
+            ->setParameter('start_date', $startDate->format('Y-m-d'))
+            ->setParameter('stop_date', $stopDate->format('Y-m-d'));
 
         return $this->aclFilter->apply($qb, array('OWNER'), $owner)->getResult();
     }

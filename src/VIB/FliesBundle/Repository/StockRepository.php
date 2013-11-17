@@ -21,6 +21,7 @@ namespace VIB\FliesBundle\Repository;
 use VIB\SearchBundle\Repository\SearchableRepository;
 use VIB\SearchBundle\Search\SearchQueryInterface;
 use VIB\SearchBundle\Search\ACLSearchQueryInterface;
+use VIB\FliesBundle\Search\SearchQuery;
 
 /**
  * StockRepository
