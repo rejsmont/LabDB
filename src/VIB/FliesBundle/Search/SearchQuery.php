@@ -74,7 +74,8 @@ class SearchQuery extends ACLSearchQuery
      * @return boolean
      */
     public function searchPrivate() {
-        return $this->getOptions()['private'];
+        $options =  $this->getOptions();
+        return $options['private'];
     }
     
     /**
@@ -83,7 +84,8 @@ class SearchQuery extends ACLSearchQuery
      * @return boolean
      */
     public function searchDead() {
-        return $this->getOptions()['dead'];
+        $options =  $this->getOptions();
+        return $options['dead'];
     }
     
     /**
@@ -92,7 +94,8 @@ class SearchQuery extends ACLSearchQuery
      * @return boolean
      */
     public function searchNotes() {
-        return $this->getOptions()['notes'];
+        $options =  $this->getOptions();
+        return $options['notes'];
     }
     
     /**
