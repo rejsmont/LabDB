@@ -4,10 +4,11 @@ php:
   - 5.3
   - 5.4
   - 5.5
-  
+
 before_script:
   - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-  - phpenv config-add .travis.php.ini
+  - echo "memory_limit = 1024M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - composer selfupdate
   - composer install --no-interaction
+
 script: phpunit -c app
