@@ -19,6 +19,8 @@
 namespace VIB\SearchBundle\Repository;
 
 use VIB\CoreBundle\Repository\EntityRepository;
+use VIB\SearchBundle\Search\SearchQueryInterface;
+use VIB\SearchBundle\Search\ACLSearchQueryInterface;
 
 /**
  * SearchableRepository
@@ -30,11 +32,11 @@ abstract class SearchableRepository extends EntityRepository implements Searchab
     /**
      * {@inheritdoc}
      */
-    public function getSearchQuery($terms, $excluded = array(), $options = array())
+    public function getSearchQuery(SearchQueryInterface $search)
     {
-        $qb = $this->getSearchQueryBuilder($terms, $excluded, $options);
-        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
-        $user = isset($options['user']) ? $options['user'] : null;
+        $qb = $this->getSearchQueryBuilder($search);
+        $permissions = $search instanceof ACLSearchQueryInterface ? $search->getPermissions() : array();
+        $user = $search instanceof ACLSearchQueryInterface ? $search->getUser() : null;
         
         return (false === $permissions) ? $qb->getQuery() : $this->aclFilter->apply($qb, $permissions, $user);
     }
@@ -42,39 +44,36 @@ abstract class SearchableRepository extends EntityRepository implements Searchab
     /**
      * Get search QueryBuilder
      * 
-     * @param array $terms
-     * @param array $excluded
-     * @param array $options
-     * @return Doctrine\ORM\QueryBuilder Description
+     * @param VIB\SearchBundle\Search\SearchQueryInterface $search
+     * @return Doctrine\ORM\QueryBuilder
      */
-    protected function getSearchQueryBuilder($terms, $excluded = array(), $options = array())
+    protected function getSearchQueryBuilder(SearchQueryInterface $search)
     {
-        return $this->createQueryBuilder('e')
-                ->add('where', $this->getSearchExpression($terms, $excluded, $options));
+        $qb = $this->createQueryBuilder('e');
+        $expr = $this->getSearchExpression($search);
+        return (null !== $expr) ? $qb->add('where', $expr) : $qb;
     }
     
     /**
      * {@inheritdoc}
      */
-    public function getSearchResultCount($terms, $excluded = array(), $options = array())
+    public function getSearchResultCount(SearchQueryInterface $search)
     {
-        return $this->getSearchResultCountQuery($terms, $excluded, $options)
+        return $this->getSearchResultCountQuery($search)
                 ->getSingleScalarResult();
     }
     
     /**
      * Get search result count Query
      * 
-     * @param type $terms
-     * @param type $excluded
-     * @param type $options
-     * @return 
+     * @param VIB\SearchBundle\Search\SearchQueryInterface $search
+     * @return Doctrine\ORM\Query
      */
-    protected function getSearchResultCountQuery($terms, $excluded = array(), $options = array())
+    protected function getSearchResultCountQuery(SearchQueryInterface $search)
     {
-        $qb = $this->getSearchResultCountQueryBuilder($terms, $excluded, $options);
-        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
-        $user = isset($options['user']) ? $options['user'] : null;
+        $qb = $this->getSearchResultCountQueryBuilder($search);
+        $permissions = $search instanceof ACLSearchQueryInterface ? $search->getPermissions() : array();
+        $user = $search instanceof ACLSearchQueryInterface ? $search->getUser() : null;
         
         return (false === $permissions) ? $qb->getQuery() : $this->aclFilter->apply($qb, $permissions, $user);
     }
@@ -82,41 +81,41 @@ abstract class SearchableRepository extends EntityRepository implements Searchab
     /**
      * Get search result count QueryBuilder
      * 
-     * @param array $terms
-     * @param array $excluded
-     * @param array $options
-     * @return Doctrine\ORM\QueryBuilder Description
+     * @param VIB\SearchBundle\Search\SearchQueryInterface $search
+     * @return Doctrine\ORM\QueryBuilder
      */
-    protected function getSearchResultCountQueryBuilder($terms, $excluded = array(), $options = array())
+    protected function getSearchResultCountQueryBuilder(SearchQueryInterface $search)
     {
-        return $this->createQueryBuilder('e')
-                ->select('count(e.id)')
-                ->add('where', $this->getSearchExpression($terms, $excluded, $options));
+        $qb = $this->createQueryBuilder('e')->select('count(e.id)');
+        $expr = $this->getSearchExpression($search);
+        return (null !== $expr) ? $qb->add('where', $expr) : $qb;
     }
     
     /**
      * Create DQL expression from search terms
      * 
-     * @param array $terms
-     * @param array $excluded
-     * @param array $options
+     * @param VIB\SearchBundle\Search\SearchQueryInterface $search
      * @return \Doctrine\ORM\Query\Expr
      */
-    protected function getSearchExpression($terms, $excluded = array(), $options = array())
+    protected function getSearchExpression(SearchQueryInterface $search)
     {        
+        if ((count($search->getTerms()) + count($search->getExcluded())) < 1) {
+            return null;
+        }
+
         $eb = $this->getEntityManager()->getExpressionBuilder();
         
         $expr = $eb->andX();
-        foreach ($terms as $term) {
+        foreach ($search->getTerms() as $term) {
             $subexpr = $eb->orX();
-            foreach ($this->getSearchFields($options) as $field) {
+            foreach ($this->getSearchFields($search) as $field) {
                 $subexpr->add($eb->like($field, '\'%' . $term . '%\''));
             }
             $expr->add($subexpr);
         }
-        foreach ($excluded as $term) {
+        foreach ($search->getExcluded() as $term) {
             $subexpr = $eb->andX();
-            foreach ($this->getSearchFields($options) as $field) {
+            foreach ($this->getSearchFields($search) as $field) {
                 $subexpr->add($eb->not($eb->like($field, '\'%' . $term . '%\'')));
             }
             $expr->add($subexpr);
@@ -131,30 +130,10 @@ abstract class SearchableRepository extends EntityRepository implements Searchab
      * @param type $options
      * @return array
      */
-    protected function getSearchFields($options = array())
+    protected function getSearchFields(SearchQueryInterface $search)
     {
         $fields = array('e.id');
         
         return $fields;
-    }
-    
-    protected function getUser($securityContext)
-    {
-        if (null === $token = $securityContext->getToken()) {
-            return null;
-        }
-
-        if (!is_object($user = $token->getUser())) {
-            return null;
-        }
-
-        return $user;
-    }
-    
-    protected function getPermission($securityContext, $options)
-    {
-        $options['user'] = $this->getUser();
-        $options['permissions'] = in_array('private', $opts) ? array('OWNER') : 
-            ($securityContext->isGranted('ROLE_ADMIN') ? false : array('VIEW'));
     }
 }

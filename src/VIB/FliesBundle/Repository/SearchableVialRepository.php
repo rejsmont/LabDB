@@ -18,6 +18,10 @@
 
 namespace VIB\FliesBundle\Repository;
 
+use VIB\SearchBundle\Search\SearchQueryInterface;
+use VIB\SearchBundle\Search\ACLSearchQueryInterface;
+use VIB\FliesBundle\Search\SearchQuery;
+
 /**
  * SearchableVialRepository
  *
@@ -28,11 +32,11 @@ abstract class SearchableVialRepository extends VialRepository implements Search
     /**
      * {@inheritdoc}
      */
-    public function getSearchQuery($terms, $excluded = array(), $options = array())
+    public function getSearchQuery(SearchQueryInterface $search)
     {
-        $qb = $this->getSearchQueryBuilder($terms, $excluded, $options);
-        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
-        $user = isset($options['user']) ? $options['user'] : null;
+        $qb = $this->getSearchQueryBuilder($search);
+        $permissions = $search instanceof ACLSearchQueryInterface ? $search->getPermissions() : array();
+        $user = $search instanceof ACLSearchQueryInterface ? $search->getUser() : null;
         
         return (false === $permissions) ? $qb->getQuery() : $this->aclFilter->apply($qb, $permissions, $user);
     }
@@ -40,20 +44,18 @@ abstract class SearchableVialRepository extends VialRepository implements Search
     /**
      * Get search QueryBuilder
      * 
-     * @param array $terms
-     * @param array $excluded
-     * @param array $options
-     * @return Doctrine\ORM\QueryBuilder Description
+     * @param VIB\SearchBundle\Search\SearchQueryInterface $search
+     * @return Doctrine\ORM\QueryBuilder
      */
-    protected function getSearchQueryBuilder($terms, $excluded = array(), $options = array())
+    protected function getSearchQueryBuilder(SearchQueryInterface $search)
     {
         $qb = $this->createQueryBuilder('e')
-                   ->add('where', $this->getSearchExpression($terms, $excluded, $options));
+                   ->add('where', $this->getSearchExpression($search));
         
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
         
-        if (! $options['dead']) {
+        if (!($search instanceof SearchQuery ? $search->searchDead() : false)) {
             $qb->andWhere('e.setupDate > :date')
                ->andWhere('e.trashed = false')
                ->setParameter('date', $date->format('Y-m-d'));
@@ -66,25 +68,23 @@ abstract class SearchableVialRepository extends VialRepository implements Search
     /**
      * {@inheritdoc}
      */
-    public function getSearchResultCount($terms, $excluded = array(), $options = array())
+    public function getSearchResultCount(SearchQueryInterface $search)
     {
-        return $this->getSearchResultCountQuery($terms, $excluded, $options)
+        return $this->getSearchResultCountQuery($search)
                     ->getSingleScalarResult();
     }
     
     /**
      * Get search result count Query
      * 
-     * @param type $terms
-     * @param type $excluded
-     * @param type $options
-     * @return 
+     * @param VIB\SearchBundle\Search\SearchQueryInterface $search
+     * @return Doctrine\ORM\Query
      */
-    protected function getSearchResultCountQuery($terms, $excluded = array(), $options = array())
+    protected function getSearchResultCountQuery(SearchQueryInterface $search)
     {
-        $qb = $this->getSearchResultCountQueryBuilder($terms, $excluded, $options);
-        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
-        $user = isset($options['user']) ? $options['user'] : null;
+        $qb = $this->getSearchResultCountQueryBuilder($search);
+        $permissions = $search instanceof ACLSearchQueryInterface ? $search->getPermissions() : array();
+        $user = $search instanceof ACLSearchQueryInterface ? $search->getUser() : null;
         
         return (false === $permissions) ? $qb->getQuery() : $this->aclFilter->apply($qb, $permissions, $user);
     }
@@ -92,21 +92,19 @@ abstract class SearchableVialRepository extends VialRepository implements Search
     /**
      * Get search result count QueryBuilder
      * 
-     * @param array $terms
-     * @param array $excluded
-     * @param array $options
+     * @param VIB\SearchBundle\Search\SearchQueryInterface $search
      * @return Doctrine\ORM\QueryBuilder Description
      */
-    protected function getSearchResultCountQueryBuilder($terms, $excluded = array(), $options = array())
+    protected function getSearchResultCountQueryBuilder(SearchQueryInterface $search)
     {
         $qb = $this->createQueryBuilder('e')
                    ->select('count(e.id)')
-                    ->add('where', $this->getSearchExpression($terms, $excluded, $options));
+                    ->add('where', $this->getSearchExpression($search));
         
         $date = new \DateTime();
         $date->sub(new \DateInterval('P2M'));
-        
-        if (! $options['dead']) {
+                
+        if (!($search instanceof SearchQuery ? $search->searchDead() : false)) {
             $qb->andWhere('e.setupDate > :date')
                ->andWhere('e.trashed = false')
                ->setParameter('date', $date->format('Y-m-d'));
@@ -118,26 +116,24 @@ abstract class SearchableVialRepository extends VialRepository implements Search
     /**
      * Create DQL expression from search terms
      * 
-     * @param array $terms
-     * @param array $excluded
-     * @param array $options
+     * @param VIB\SearchBundle\Search\SearchQueryInterface $search
      * @return \Doctrine\ORM\Query\Expr
      */
-    protected function getSearchExpression($terms, $excluded = array(), $options = array())
+    protected function getSearchExpression(SearchQueryInterface $search)
     {        
         $eb = $this->getEntityManager()->getExpressionBuilder();
         
         $expr = $eb->andX();
-        foreach ($terms as $term) {
+        foreach ($search->getTerms() as $term) {
             $subexpr = $eb->orX();
-            foreach ($this->getSearchFields($options) as $field) {
+            foreach ($this->getSearchFields($search) as $field) {
                 $subexpr->add($eb->like($field, '\'%' . $term . '%\''));
             }
             $expr->add($subexpr);
         }
-        foreach ($excluded as $term) {
+        foreach ($search->getExcluded() as $term) {
             $subexpr = $eb->andX();
-            foreach ($this->getSearchFields($options) as $field) {
+            foreach ($this->getSearchFields($search) as $field) {
                 $subexpr->add($eb->not($eb->like($field, '\'%' . $term . '%\'')));
             }
             $expr->add($subexpr);
@@ -152,7 +148,7 @@ abstract class SearchableVialRepository extends VialRepository implements Search
      * @param type $options
      * @return array
      */
-    protected function getSearchFields($options = array())
+    protected function getSearchFields(SearchQueryInterface $search)
     {
         $fields = array('e.id');
         

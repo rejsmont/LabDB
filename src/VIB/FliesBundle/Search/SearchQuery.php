@@ -20,14 +20,14 @@ namespace VIB\FliesBundle\Search;
 
 use JMS\Serializer\Annotation as Serializer;
 
-use VIB\SearchBundle\Search\SearchQuery as BaseSearchQuery;
+use VIB\SearchBundle\Search\ACLSearchQuery;
 
 /**
  * SearchQuery class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class SearchQuery extends BaseSearchQuery
+class SearchQuery extends ACLSearchQuery
 {
     /**
      * Search terms
@@ -37,30 +37,62 @@ class SearchQuery extends BaseSearchQuery
      * @var string
      */
     protected $filter;
-
-    /**
-     * Security context
-     * 
-     * @Serializer\Exclude
-     * 
-     * @var string
-     */
-    protected $securityContext;
     
     /**
-     * Construct SearchQuery
+     * Search terms
      * 
+     * @Serializer\Type("array")
+     * 
+     * @var array
+     */
+    protected $opts;
+    
+    /**
+     * {@inheritdoc}
      */
     public function __construct($advanced = false) {
         parent::__construct($advanced);
         $this->filter = null;
+        $this->opts = array();
     }
     
     /**
      * {@inheritdoc}
      */
-    public function getOptions() {
-        return array();
+    public function getOptions() {        
+        $options = array();
+        $options['private'] = in_array('private', $this->opts);
+        $options['dead'] = in_array('dead', $this->opts);
+        $options['notes'] = in_array('notes', $this->opts);
+        
+        return $options;
+    }
+    
+    /**
+     * Search private only
+     * 
+     * @return boolean
+     */
+    public function searchPrivate() {
+        return $this->getOptions()['private'];
+    }
+    
+    /**
+     * Search dead
+     * 
+     * @return boolean
+     */
+    public function searchDead() {
+        return $this->getOptions()['dead'];
+    }
+    
+    /**
+     * Search notes
+     * 
+     * @return boolean
+     */
+    public function searchNotes() {
+        return $this->getOptions()['notes'];
     }
     
     /**
@@ -107,6 +139,24 @@ class SearchQuery extends BaseSearchQuery
     }
     
     /**
+     * Get opts
+     * 
+     * @param string $filter
+     */
+    public function getOpts() {
+        return $this->opts;
+    }
+
+    /**
+     * Set opts
+     * 
+     * @param string $filter
+     */
+    public function setOpts($opts) {
+        $this->opts = $opts;
+    }
+
+    /**
      * Get class lookup table
      * 
      * @return array
@@ -121,12 +171,11 @@ class SearchQuery extends BaseSearchQuery
         );
     }
     
-    public function getSecurityContext() {
-        return $this->securityContext;
-    }
-
-    public function setSecurityContext($securityContext) {
-        $this->securityContext = $securityContext;
-        return $this;
+    /**
+     * {@inheritdoc}
+     */
+    public function getPermissions() {
+        
+        return $this->searchPrivate() ? array('OWNER') : parent::getPermissions();
     }
 }

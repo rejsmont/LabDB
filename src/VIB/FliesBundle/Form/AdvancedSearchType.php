@@ -69,7 +69,7 @@ class AdvancedSearchType extends AbstractType
                 'empty_data' => 'stock',
                 'required' => false
             )
-        )->add('options', 'choice', array(
+        )->add('opts', 'choice', array(
                 'label' => 'Options',
                 'choices'   => array(
                     'private' => 'Only private',

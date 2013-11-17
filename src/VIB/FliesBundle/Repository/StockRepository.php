@@ -19,6 +19,8 @@
 namespace VIB\FliesBundle\Repository;
 
 use VIB\SearchBundle\Repository\SearchableRepository;
+use VIB\SearchBundle\Search\SearchQueryInterface;
+use VIB\SearchBundle\Search\ACLSearchQueryInterface;
 
 /**
  * StockRepository
@@ -105,14 +107,14 @@ class StockRepository extends SearchableRepository
     /**
      * {@inheritdoc}
      */
-    public function getSearchQuery($terms, $excluded = array(), $options = array())
+    public function getSearchQuery(SearchQueryInterface $search)
     {
-        $query = parent::getSearchQuery($terms, $excluded, $options);
-        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
+        $query = parent::getSearchQuery($search);
+        $permissions = $search instanceof ACLSearchQueryInterface ? $search->getPermissions() : array();
         
         if ((false !== $permissions)&&(in_array('OWNER', $permissions))) {
-            $qb = $this->getSearchQueryBuilder($terms, $excluded, $options);
-            $user = isset($options['user']) ? $options['user'] : null;
+            $qb = $this->getSearchQueryBuilder($search);
+            $user = $search instanceof ACLSearchQueryInterface ? $search->getUser() : null;
 
             return $this->aclFilter->apply($qb, $permissions, $user, 'v');
         }
@@ -123,24 +125,24 @@ class StockRepository extends SearchableRepository
     /**
      * {@inheritdoc}
      */
-    protected function getSearchQueryBuilder($terms, $excluded = array(), $options = array())
+    protected function getSearchQueryBuilder(SearchQueryInterface $search)
     {
-        $qb = parent::getSearchQueryBuilder($terms, $excluded, $options);
-        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
+        $qb = parent::getSearchQueryBuilder($search);
+        $permissions = $search instanceof ACLSearchQueryInterface ? $search->getPermissions() : array();
         
         if ((false !== $permissions)&&(in_array('OWNER', $permissions))) {
             $qb->join('e.vials','v');
-            if (! $options['dead']) {
+            if (!($search instanceof SearchQuery ? $search->searchDead() : false)) {
                 $date = new \DateTime();
                 $date->sub(new \DateInterval('P2M'));
                 $qb->andWhere('v.setupDate > :date')
-                   ->andWhere('v.trashed = false')
-                   ->setParameter('date', $date->format('Y-m-d'));
+                    ->andWhere('v.trashed = false')
+                    ->setParameter('date', $date->format('Y-m-d'));
             }
         }
         
         $qb->addSelect('LENGTH(e.name) AS HIDDEN namelength')
-           ->orderBy('namelength')->addOrderBy('e.name');
+            ->orderBy('namelength')->addOrderBy('e.name');
         
         return $qb;
     }
@@ -148,14 +150,14 @@ class StockRepository extends SearchableRepository
     /**
      * {@inheritdoc}
      */
-    public function getSearchResultCountQuery($terms, $excluded = array(), $options = array())
+    public function getSearchResultCountQuery(SearchQueryInterface $search)
     {
-        $query = parent::getSearchResultCountQuery($terms, $excluded, $options);
-        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
+        $query = parent::getSearchResultCountQuery($search);
+        $permissions = $search instanceof ACLSearchQueryInterface ? $search->getPermissions() : array();
         
         if ((false !== $permissions)&&(in_array('OWNER', $permissions))) {
-            $qb = $this->getSearchResultCountQueryBuilder($terms, $excluded, $options);
-            $user = isset($options['user']) ? $options['user'] : null;
+            $qb = $this->getSearchResultCountQueryBuilder($search);
+            $user = $search instanceof ACLSearchQueryInterface ? $search->getUser() : null;
 
             return $this->aclFilter->apply($qb, $permissions, $user, 'v');
         }
@@ -166,14 +168,14 @@ class StockRepository extends SearchableRepository
     /**
      * {@inheritdoc}
      */
-    protected function getSearchResultCountQueryBuilder($terms, $excluded = array(), $options = array())
+    protected function getSearchResultCountQueryBuilder(SearchQueryInterface $search)
     {
-        $qb = parent::getSearchResultCountQueryBuilder($terms, $excluded, $options)->select('count(DISTINCT e.id)');
-        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
+        $qb = parent::getSearchResultCountQueryBuilder($search)->select('count(DISTINCT e.id)');
+        $permissions = $search instanceof ACLSearchQueryInterface ? $search->getPermissions() : array();
         
         if ((false !== $permissions)&&(in_array('OWNER', $permissions))) {
             $qb->join('e.vials','v');
-            if (! $options['dead']) {
+            if (!($search instanceof SearchQuery ? $search->searchDead() : false)) {
                 $date = new \DateTime();
                 $date->sub(new \DateInterval('P2M'));
                 $qb->andWhere('v.setupDate > :date')
@@ -188,10 +190,10 @@ class StockRepository extends SearchableRepository
     /**
      * {@inheritdoc}
      */
-    protected function getSearchFields($options = array())
+    protected function getSearchFields(SearchQueryInterface $search)
     {
         $fields = array('e.name', 'e.genotype');
-        if ((key_exists('notes', $options))&&($options['notes'])) {
+        if ($search instanceof SearchQuery ? $search->searchNotes() : false) {
             $fields[] = 'e.notes';
         }
         

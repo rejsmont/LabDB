@@ -16,30 +16,34 @@
  * limitations under the License.
  */
 
-namespace VIB\SearchBundle\Repository;
-
-use VIB\SearchBundle\Search\SearchQueryInterface;
+namespace VIB\SearchBundle\Search;
 
 /**
- * SearchableVialRepository
+ * SearchQuery class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-interface SearchableRepositoryInterface
+interface ACLSearchQueryInterface
 {
+    
     /**
-     * Get search Query
+     * Set the Security Context
      * 
-     * @param VIB\SearchBundle\Search\SearchQueryInterface $search
-     * @return Doctrine\ORM\Query
+     * @param Symfony\Component\Security\Core\SecurityContextInterface $securityContext
      */
-    public function getSearchQuery(SearchQueryInterface $search);
-        
+    public function setSecurityContext($securityContext);
+    
     /**
-     * Get search result count
-     * 
-     * @param VIB\SearchBundle\Search\SearchQueryInterface $search
-     * @return integer
+     * Get a user from the Security Context
+     *
+     * @return mixed
      */
-    public function getSearchResultCount(SearchQueryInterface $search);
+    public function getUser();
+    
+    /**
+     * Get search permission mask
+     *
+     * @return mixed
+     */
+    public function getPermissions();
 }

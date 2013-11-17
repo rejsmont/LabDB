@@ -94,7 +94,7 @@ abstract class SearchController extends AbstractController
             if ($form->isValid()) {
                 $searchQuery = $form->getData();
             } elseif ($advancedForm->isValid()) {
-                $searchQuery = $form->getData();
+                $searchQuery = $advancedForm->getData();
             }
             $this->saveSearchQuery($searchQuery);
             
@@ -173,8 +173,8 @@ abstract class SearchController extends AbstractController
             $this->createNotFoundException();
         }
         
-        $resultCount = $repository->getSearchResultCount($terms, $excluded, $options);
-        $result = $repository->getSearchQuery($terms, $excluded, $options)
+        $resultCount = $repository->getSearchResultCount($searchQuery);
+        $result = $repository->getSearchQuery($searchQuery)
                              ->setHint('knp_paginator.count', $resultCount);
         $paginator  = $this->getPaginator();
         $page = $this->getCurrentPage();
