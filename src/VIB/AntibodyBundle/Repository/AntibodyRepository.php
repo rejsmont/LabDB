@@ -18,14 +18,25 @@
 
 namespace VIB\AntibodyBundle\Repository;
 
-use VIB\CoreBundle\Repository\EntityRepository;
+use VIB\SearchBundle\Repository\SearchableRepository;
+use VIB\SearchBundle\Search\SearchQueryInterface;
+use VIB\SearchBundle\Search\ACLSearchQueryInterface;
+use VIB\AntibodyBundle\Search\SearchQuery;
 
 /**
  * AntibodyRepository
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class AntibodyRepository extends EntityRepository
+class AntibodyRepository extends SearchableRepository
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSearchFields(SearchQueryInterface $search)
+    {
+        $fields = array('e.antigen', 'e.targetSpecies', 'e.hostSpecies');
+        
+        return $fields;
+    }
 }

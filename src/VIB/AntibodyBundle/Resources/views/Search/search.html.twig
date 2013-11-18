@@ -1,0 +1,42 @@
+<form id="search-form" action="{{ path('vib_antibody_search_result') }}" method="post" {{ form_enctype(form) }} class="navbar-form navbar-right" style="width:25%">
+  <div class="form-group">
+    <div class="input-group">
+      {{ form_widget(form.terms) }}
+      <div class="input-group-btn">
+        <button class="btn btn-default" onclick="$('#search-form').submit();">
+          <i class="fa fa-search"></i>
+        </button>
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu pull-right">
+          <li class="first">
+            <a href="#" onclick="$('#search_form_filter').val('all'); $('#search-form').submit();">
+              <b>Search all</b>
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="$('#search_form_filter').val('primary'); $('#search-form').submit();">
+              Search primary
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="$('#search_form_filter').val('secondary'); $('#search-form').submit();">
+              Search secondary
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li class="last">
+            <a href="{{ path('vib_antibody_search_advanced') }}">
+              Advanced search
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {{ form_rest(form) }}
+</form>
+{% form_theme form _self %}
+{% block form_widget_compound %}{{ form_rest(form) }}{% endblock form_widget_compound %}
+{% block form_row %}{{ form_widget(form) }}{% endblock %}
