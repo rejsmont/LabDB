@@ -39,20 +39,6 @@
   {% endspaceless %}
 {% endblock %}
 
-{% block collection_widget %}
-{% spaceless %}
-    {% set data_prototype_name = form.vars.form.vars.prototype.vars.name|default('__name__') %}
-    <div class="collection-items col-sm-9">
-    {% if form.vars.value|length == 0%}
-        {% for name in prototype_names %}
-            {{ prototype_markup|replace({'__name__': name})|raw }}
-        {% endfor %}
-    {% endif %}
-    {{ block('form_widget') }}
-    </div>
-{% endspaceless %}
-{% endblock collection_widget %}
-
 {% block form_widget_remove_btn %}
 {% spaceless %}
     {% if widget_remove_btn|default(null) %}
