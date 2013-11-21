@@ -2,6 +2,26 @@
 {% use "VIBSiteTemplateBundle:Form:form.html.twig" %}
 {% import "VIBSiteTemplateBundle:Macros:form.html.twig" as f %}
 
+{% form_theme form _self %}
+
+{% block _stock_vendor_widget %}
+  {% spaceless %}
+    {% set attr = attr|merge({
+        'data-link': data_link|default(''),
+        'autocomplete': 'off' }) %}
+    {{ block('form_widget_simple') }}
+  {% endspaceless %}
+{% endblock %}
+
+{% block _stock_vendorId_widget %}
+  {% spaceless %}
+    {% set attr = attr|merge({
+        'data-link': data_link|default(''),
+        'autocomplete': 'off' }) %}
+    {{ block('form_widget_simple') }}
+  {% endspaceless %}
+{% endblock %}
+
 {% block modal_header %}Edit stock{% endblock modal_header %}
 
 {% block modal_footer %}

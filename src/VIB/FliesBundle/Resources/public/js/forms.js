@@ -377,4 +377,36 @@ $(document).ready(function() {
         }
         $('#barcode').focus();
     });
+    
+    $('.fb-vendor').each(function() {
+      var $this = $(this);
+      var $url = $this.data('link') + '?vendor=%QUERY';
+      $this.typeahead({
+        remote:   $url,
+        valueKey: 'stock_center',
+        template: '<p>{{stock_center}}</p>',
+        engine: Hogan
+      });
+    });
+    
+    $('.fb-vendorid').each(function() {
+      var $this = $(this);
+      var $url = $this.data('link') + '?stock=%QUERY&vendor=%VENDOR';
+      $this.typeahead({
+        remote: {
+          url: $url,
+          replace: function(url, query) {
+            var vendor = encodeURIComponent($('.fb-vendor').val());
+            return url.replace('%QUERY', query).replace('%VENDOR', vendor);
+          }
+        },
+        valueKey: 'stock_id',
+        template: '<p><b>Stock {{stock_id}}</b> <small>{{stock_center}}</small></p><p><i>{{stock_genotype}}</i></p>',
+        engine: Hogan
+      }).on('typeahead:selected', function(event, data) {
+         $('.fb-genotype').val(data.stock_genotype);
+         $('.fb-vendor').val(data.stock_center);
+         $('.fb-link').val(data.stock_link);
+      });
+    });
 });

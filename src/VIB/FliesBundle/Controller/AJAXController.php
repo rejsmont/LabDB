@@ -47,6 +47,63 @@ use VIB\FliesBundle\Entity\RackPosition;
 class AJAXController extends AbstractController
 {
     /**
+     * @Route("/fbstock")
+     * @Template()
+     */
+    public function flybaseStockAction(Request $request)
+    {
+        $stock = $request->query->get('stock');
+        $vendor = $request->query->get('vendor', '');
+        $sql = <<<FLYBASE_SQL
+SELECT stockcollection.uniquename AS stock_center,
+    stock.name AS stock_id,
+    'http://flybase.org/reports/' || stock.uniquename || '.html' AS stock_link,
+    genotype.uniquename AS stock_genotype
+    FROM stock
+    JOIN stock_genotype on stock.stock_id = stock_genotype.stock_id
+    JOIN genotype on stock_genotype.genotype_id = genotype.genotype_id
+    JOIN stockcollection_stock on stock.stock_id = stockcollection_stock.stock_id
+    JOIN stockcollection on stockcollection_stock.stockcollection_id = stockcollection.stockcollection_id
+    WHERE stock.name ILIKE :stock
+FLYBASE_SQL;
+        if ($vendor !== '') {
+             $sql .= ' AND stockcollection.uniquename ILIKE :vendor';
+        }
+        $sql .= ' ORDER BY char_length(stock.name), stock.name LIMIT 10';
+        $conn = $this->get('doctrine.dbal.flybase_connection');
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue("stock", "%" . $stock . "%");
+        if ($vendor !== '') {
+            $stmt->bindValue("vendor", "%" . $vendor . "%");
+        }
+        $stmt->execute();
+        $stocks = $stmt->fetchAll();
+        
+        return new JsonResponse($stocks);
+    }
+    
+    /**
+     * @Route("/fbvendor")
+     * @Template()
+     */
+    public function flybaseVendorAction(Request $request)
+    {
+        $vendor = $request->query->get('vendor');
+        $sql = <<<FLYBASE_SQL
+SELECT stockcollection.uniquename AS stock_center
+    FROM stockcollection
+    WHERE stockcollection.uniquename ILIKE :vendor
+FLYBASE_SQL;
+        $conn = $this->get('doctrine.dbal.flybase_connection');
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue("vendor", "%" . $vendor . "%");
+        $stmt->execute();
+        $vendors = $stmt->fetchAll();
+        
+        return new JsonResponse($vendors);
+    }
+    
+    /**
      * Handle vial AJAX request
      *
      * @Route("/vials")

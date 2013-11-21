@@ -4,8 +4,22 @@
 
 {% form_theme form _self %}
 
-{% block _stock_new_stock_row %}
-  {{ form_widget(form) }}
+{% block _stock_new_stock_vendor_widget %}
+  {% spaceless %}
+    {% set attr = attr|merge({
+        'data-link': data_link|default(''),
+        'autocomplete': 'off' }) %}
+    {{ block('form_widget_simple') }}
+  {% endspaceless %}
+{% endblock %}
+
+{% block _stock_new_stock_vendorId_widget %}
+  {% spaceless %}
+    {% set attr = attr|merge({
+        'data-link': data_link|default(''),
+        'autocomplete': 'off' }) %}
+    {{ block('form_widget_simple') }}
+  {% endspaceless %}
 {% endblock %}
 
 {% block modal_header %}New stock{% endblock modal_header %}

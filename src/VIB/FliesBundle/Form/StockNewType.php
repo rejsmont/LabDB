@@ -42,7 +42,12 @@ class StockNewType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('stock', new StockType())
+        $builder->add('stock', new StockType(), array(
+                     'inline' => true,
+                     'label_render' => false,
+                     'horizontal_input_wrapper_class' => 'col-sm-12'
+                )
+            )
                 ->add('size', 'choice', array(
                         'choices'   => array('small' => 'small',
                                              'medium' => 'medium',

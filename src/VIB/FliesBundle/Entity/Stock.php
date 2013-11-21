@@ -42,7 +42,6 @@ class Stock extends NamedEntity
     /**
      * @ORM\Column(type="string", length=255, unique=true, nullable=false)
      * @Serializer\Expose
-     * @Assert\NotBlank(message = "Name must be specified")
      *
      * @var string
      */
@@ -72,6 +71,14 @@ class Stock extends NamedEntity
      * @var string
      */
     protected $vendor;
+    
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Expose
+     *
+     * @var string
+     */
+    protected $vendorId;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -183,9 +190,29 @@ class Stock extends NamedEntity
      *
      * @param string
      */
-    public function setVendor($stockVendor)
+    public function setVendor($vendor)
     {
-        $this->vendor = $stockVendor;
+        $this->vendor = $vendor;
+    }
+    
+    /**
+     * Get vendor
+     *
+     * @return string
+     */
+    public function getVendorId()
+    {
+        return $this->vendorId;
+    }
+
+    /**
+     * Set vendor
+     *
+     * @param string
+     */
+    public function setVendorId($vendorId)
+    {
+        $this->vendorId = $vendorId;
     }
 
     /**

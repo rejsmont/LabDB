@@ -43,9 +43,13 @@ class StockType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array(
-                        'label'     => 'Name'))
+                        'label'     => 'Name')
+                )
                 ->add('genotype', 'text', array(
-                        'label'     => 'Genotype'))
+                        'label'     => 'Genotype',
+                        'attr' => array('class' => 'fb-genotype')
+                    )
+                )
                 ->add('source_cross', 'text_entity', array(
                         'property' => 'id',
                         'class'    => 'VIBFliesBundle:CrossVial',
@@ -55,21 +59,46 @@ class StockType extends AbstractType
                         'attr' => array('class' => 'barcode'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
-                        )))
+                        )
+                    )
+                )
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',
-                        'required' => false))
-                ->add('vendor', 'text', array(
+                        'required' => false
+                    )
+                )
+                ->add('vendor', 'typeahead', array(
                         'label' => 'Vendor',
                         'required' => false,
-                        ))
+                        'attr' => array(
+                            'class' => 'fb-vendor'
+                        ),
+                        'data_route' => 'vib_flies_ajax_flybasevendor'
+                    )
+                )
+                ->add('vendorId', 'typeahead', array(
+                        'label' => 'Vendor ID',
+                        'required' => false,
+                        'attr' => array(
+                            'class' => 'fb-vendorid'
+                        ),
+                        'data_route' => 'vib_flies_ajax_flybasestock'
+                    )
+                )
                 ->add('infoURL', 'url', array(
                         'label' => 'Info URL',
                         'required' => false,
-                        'attr' => array('placeholder' => 'Paste address here')))
+                        'attr' => array(
+                            'placeholder' => 'Paste address here',
+                            'class' => 'fb-link'
+                        )
+                    )
+                )
                 ->add('verified', 'checkbox', array(
                         'label' => '',
-                        'required' => false));
+                        'required' => false
+                    )
+                );
     }
 
     /**
