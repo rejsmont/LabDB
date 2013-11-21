@@ -45,7 +45,7 @@ class RoleAceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('identity', 'role_typeahead', array(
-                        'inline' => true,
+                        'horizontal' => false,
                         'label_render' => false,
                         'required'  => true,
                         'show_legend' => false,
@@ -56,7 +56,7 @@ class RoleAceType extends AbstractType
                             'icon' => 'group',
                      )))
                 ->add('permission', 'choice', array(
-                        'inline' => true,
+                        'horizontal' => false,
                         'label_render' => false,
                         'required'  => true,
                         'show_legend' => false,

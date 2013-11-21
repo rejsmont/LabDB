@@ -45,7 +45,7 @@ class StockNewType extends AbstractType
         $builder->add('stock', new StockType(), array(
                      'horizontal' => false,
                      'label_render' => false,
-                     'horizontal_input_wrapper_class' => 'col-sm-12'
+                     'widget_form_group' => false,
                 )
             )
                 ->add('size', 'choice', array(

@@ -45,7 +45,7 @@ class UserAceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('identity', 'user_typeahead', array(
-                        'inline' => true,
+                        'horizontal' => false,
                         'label_render' => false,
                         'required'  => true,
                         'show_legend' => false,
@@ -56,7 +56,7 @@ class UserAceType extends AbstractType
                             'icon' => 'user',
                      )))
                 ->add('permission', 'choice', array(
-                        'inline' => true,
+                        'horizontal' => false,
                         'label_render' => false,
                         'required'  => true,
                         'show_legend' => false,

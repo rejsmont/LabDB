@@ -44,7 +44,8 @@ class SearchType extends AbstractType
     {
         $builder->add('terms', 'text', array(
                 'required' => false,
-                'inline'  => true,
+                'horizontal' => false,
+                'label_render' => false,
                 'attr'     => array(
                     'form'        => 'search-form',
                     'placeholder' => 'Search'
