@@ -1,3 +1,0 @@
-ajax:
-    resource: "@VIBFormsBundle/Controller/AJAXController.php"
-    type:     annotation
