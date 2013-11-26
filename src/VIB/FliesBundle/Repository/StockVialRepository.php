@@ -51,7 +51,7 @@ class StockVialRepository extends VialRepository
         if (false === $permissions) {
             return $qb->getQuery()->useResultCache(true)->getResult();
         } else {
-            return $this->aclFilter->apply($qb, $permissions, $user)->getResult();
+            return $this->getAclFilter()->apply($qb, $permissions, $user)->getResult();
         }
     }
 }

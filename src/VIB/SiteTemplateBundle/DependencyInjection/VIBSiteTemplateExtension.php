@@ -37,11 +37,5 @@ class VIBSiteTemplateExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-
-        $xmlLoader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $xmlLoader->load('services.xml');
-
-        $yamlLoader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $yamlLoader->load('config.yml');
     }
 }

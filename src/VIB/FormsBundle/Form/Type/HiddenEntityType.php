@@ -18,10 +18,14 @@
 
 namespace VIB\FormsBundle\Form\Type;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 /**
  * Entity as hidden input control
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * @DI\FormType
  */
 class HiddenEntityType extends TextEntityType
 {

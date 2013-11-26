@@ -38,7 +38,7 @@ abstract class SearchableRepository extends EntityRepository implements Searchab
         $permissions = $search instanceof ACLSearchQueryInterface ? $search->getPermissions() : array();
         $user = $search instanceof ACLSearchQueryInterface ? $search->getUser() : null;
         
-        return (false === $permissions) ? $qb->getQuery() : $this->aclFilter->apply($qb, $permissions, $user);
+        return (false === $permissions) ? $qb->getQuery() : $this->getAclFilter()->apply($qb, $permissions, $user);
     }
         
     /**
@@ -75,7 +75,7 @@ abstract class SearchableRepository extends EntityRepository implements Searchab
         $permissions = $search instanceof ACLSearchQueryInterface ? $search->getPermissions() : array();
         $user = $search instanceof ACLSearchQueryInterface ? $search->getUser() : null;
         
-        return (false === $permissions) ? $qb->getQuery() : $this->aclFilter->apply($qb, $permissions, $user);
+        return (false === $permissions) ? $qb->getQuery() : $this->getAclFilter()->apply($qb, $permissions, $user);
     }
     
     /**

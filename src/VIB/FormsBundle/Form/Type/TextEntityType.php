@@ -18,6 +18,8 @@
 
 namespace VIB\FormsBundle\Form\Type;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 use Symfony\Component\Form\AbstractType;
@@ -31,6 +33,8 @@ use VIB\FormsBundle\Form\DataTransformer\EntityToTextTransformer;
  * Entity as text input control
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * @DI\FormType
  */
 class TextEntityType extends AbstractType
 {
@@ -42,6 +46,10 @@ class TextEntityType extends AbstractType
     /**
      * Construct TextEntityType
      *
+     * @DI\InjectParams({
+     *     "registry" = @DI\Inject("doctrine")
+     * })
+     * 
      * @param Doctrine\Common\Persistence\ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
@@ -71,7 +79,7 @@ class TextEntityType extends AbstractType
         $registry = $this->registry;
 
         $emNormalizer = function (Options $options, $em) use ($registry) {
-            /* @var ManagerRegistry $registry */
+            
             if (null !== $em) {
                 return $registry->getManager($em);
             }

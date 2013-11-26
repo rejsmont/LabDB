@@ -18,9 +18,10 @@
 
 namespace VIB\CoreBundle\Repository;
 
-use Doctrine\ORM\EntityRepository as BaseEntityRepository;
-
+use JMS\DiExtraBundle\Annotation as DI;
+use VIB\CoreBundle\Doctrine\ObjectManager;
 use VIB\SecurityBundle\Bridge\Doctrine\AclFilter;
+use Doctrine\ORM\EntityRepository as BaseEntityRepository;
 
 /**
  * EntityRepository
@@ -30,10 +31,60 @@ use VIB\SecurityBundle\Bridge\Doctrine\AclFilter;
 class EntityRepository extends BaseEntityRepository
 {
     /**
-     * @var $aclFilter VIB\SecurityBundle\Bridge\Doctrine\AclFilter
+     * @var VIB\SecurityBundle\Bridge\Doctrine\AclFilter $_aclFilter
      */
-    protected $aclFilter;
+    protected $_aclFilter;
 
+    /**
+     * @var VIB\CoreBundle\Doctrine\ObjectManager $_objectManager
+     */
+    protected $_objectManager;
+    
+    
+    /**
+     * Set the ACL filter service
+     *
+     * @DI\InjectParams({ "aclFilter" = @DI\Inject("vib.security.filter.acl") })
+     * 
+     * @param VIB\SecurityBundle\Bridge\Doctrine\AclFilter $aclFilter
+     */
+    public function setAclFilter(AclFilter $aclFilter)
+    {
+        $this->_aclFilter = $aclFilter;
+    }
+    
+    /**
+     * Return the ACL filter service
+     * 
+     * @return VIB\SecurityBundle\Bridge\Doctrine\AclFilter
+     */
+    protected function getAclFilter()
+    {
+        return $this->_aclFilter;
+    }
+    
+    /**
+     * Set the Object manager service
+     * 
+     * @DI\InjectParams({ "objectManager" = @DI\Inject("vib.doctrine.manager") })
+     * 
+     * @param VIB\CoreBundle\Doctrine\ObjectManager
+     */
+    public function setObjectManager(ObjectManager $objectManager)
+    {
+        $this->_objectManager = $objectManager;
+    }
+    
+    /**
+     * Get the Object manager service
+     * 
+     * @return type VIB\CoreBundle\Doctrine\ObjectManager
+     */
+    protected function getObjectManager()
+    {
+        return $this->_objectManager;
+    }
+    
     /**
      *
      * @param  array                                  $options
@@ -55,7 +106,7 @@ class EntityRepository extends BaseEntityRepository
         $permissions = isset($options['permissions']) ? $options['permissions'] : array();
         $user = isset($options['user']) ? $options['user'] : null;
         
-        return (false === $permissions) ? $qb->getQuery() : $this->aclFilter->apply($qb, $permissions, $user);
+        return (false === $permissions) ? $qb->getQuery() : $this->getAclFilter()->apply($qb, $permissions, $user);
     }
 
     /**
@@ -89,7 +140,7 @@ class EntityRepository extends BaseEntityRepository
         $permissions = isset($options['permissions']) ? $options['permissions'] : null;
         $user = isset($options['user']) ? $options['user'] : null;
         
-        return (false === $permissions) ? $qb->getQuery() : $this->aclFilter->apply($qb, $permissions, $user);
+        return (false === $permissions) ? $qb->getQuery() : $this->getAclFilter()->apply($qb, $permissions, $user);
     }
 
     /**
@@ -104,7 +155,8 @@ class EntityRepository extends BaseEntityRepository
     }
 
     /**
-     *
+     * Get a single Entity by its id
+     * 
      * @param  array                     $options
      * @return Doctrine\ORM\QueryBuilder
      */
@@ -114,7 +166,8 @@ class EntityRepository extends BaseEntityRepository
     }
 
     /**
-     *
+     * Get Entity Query Builder
+     * 
      * @param  array                     $options
      * @return Doctrine\ORM\QueryBuilder
      */
@@ -123,15 +176,5 @@ class EntityRepository extends BaseEntityRepository
         return $this->createQueryBuilder('e')
                 ->where('e.id = :id')
                 ->setParameter('id', $id);
-    }
-
-    /**
-     * Set the ACL filter service
-     *
-     * @param VIB\SecurityBundle\Bridge\Doctrine\AclFilter
-     */
-    public function setAclFilter(AclFilter $aclFilter)
-    {
-        $this->aclFilter = $aclFilter;
     }
 }

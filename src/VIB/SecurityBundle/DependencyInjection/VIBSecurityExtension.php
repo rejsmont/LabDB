@@ -38,19 +38,10 @@ class VIBSecurityExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
-
         if (isset($config['acl_walker'])) {
             $container->setParameter('vib.security.acl_walker', $config['acl_walker']);
         } else {
             $container->setParameter('vib.security.acl_walker', 'VIB\SecurityBundle\Bridge\Doctrine\AclWalker');
-        }
-
-        if (isset($config['acl_class_mapping'])) {
-            $container->setParameter('vib.security.acl_class_mapping', $config['acl_class_mapping']);
-        } else {
-            $container->setParameter('vib.security.acl_class_mapping', array());
         }
     }
 

@@ -96,7 +96,7 @@ class InjectionVialRepository extends SearchableVialRepository
         $startDate->sub(new \DateInterval('P2W'));
         $stopDate->add(new \DateInterval('P2W'));
 
-        $owner = $this->manager->getOwner($injection);
+        $owner = $this->getObjectManager()->getOwner($injection);
 
         $qb = $this->getListQueryBuilder($options);
         $qb->andWhere('e.injectionType = :injection_type')
@@ -112,6 +112,6 @@ class InjectionVialRepository extends SearchableVialRepository
             ->setParameter('start_date', $startDate->format('Y-m-d'))
             ->setParameter('stop_date', $stopDate->format('Y-m-d'));
 
-        return $this->aclFilter->apply($qb, array('OWNER'), $owner)->getResult();
+        return $this->getAclFilter()->apply($qb, array('OWNER'), $owner)->getResult();
     }
 }

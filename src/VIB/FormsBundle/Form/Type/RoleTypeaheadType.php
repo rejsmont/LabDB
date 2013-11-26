@@ -18,6 +18,8 @@
 
 namespace VIB\FormsBundle\Form\Type;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -27,6 +29,8 @@ use VIB\FormsBundle\Form\DataTransformer\RoleToTextTransformer;
  * Bootstrap role typeahead form control
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * @DI\FormType
  */
 class RoleTypeaheadType extends TypeaheadType
 {

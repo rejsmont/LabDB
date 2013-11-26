@@ -18,6 +18,8 @@
 
 namespace VIB\CoreBundle\Doctrine;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManagerDecorator;
@@ -39,6 +41,8 @@ use VIB\SecurityBundle\Bridge\Doctrine\AclFilter;
  * ACL aware implementation of Doctrine\Common\Persistence\ObjectManagerDecorator
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * @DI\Service("vib.doctrine.manager")
  */
 class ObjectManager extends ObjectManagerDecorator
 {
@@ -54,28 +58,25 @@ class ObjectManager extends ObjectManagerDecorator
     protected $aclProvider;
 
     /**
-     * @var \VIB\SecurityBundle\Bridge\Doctrine\AclFilter
-     */
-    protected $aclFilter;
-
-    /**
      * Construct ObjectManager
      *
-     * @param \Doctrine\Common\Persistence\ManagerRegistry                $mr
-     * @param \Symfony\Component\Security\Core\User\UserProviderInterface $userManager
-     * @param \Symfony\Component\Security\Acl\Model\AclProviderInterface  $aclProvider
-     * @param \VIB\SecurityBundle\Bridge\Doctrine\AclFilter               $aclFilter
+     * @DI\InjectParams({
+     *     "managerRegistry" = @DI\Inject("doctrine"),
+     *     "userProvider" = @DI\Inject("user_provider"),
+     *     "aclProvider" = @DI\Inject("security.acl.provider")
+     * })
+     * 
+     * @param Doctrine\Common\Persistence\ManagerRegistry                $managerRegistry
+     * @param Symfony\Component\Security\Core\User\UserProviderInterface $userProvider
+     * @param Symfony\Component\Security\Acl\Model\AclProviderInterface  $aclProvider
      */
-    public function __construct(ManagerRegistry $mr,
+    public function __construct(ManagerRegistry $managerRegistry,
                                 UserProviderInterface $userProvider,
-                                MutableAclProviderInterface $aclProvider,
-                                AclFilter $aclFilter)
+                                MutableAclProviderInterface $aclProvider)
     {
-        $this->wrapped = $mr->getManager();
+        $this->wrapped = $managerRegistry->getManager();
         $this->userProvider = $userProvider;
         $this->aclProvider = $aclProvider;
-        $this->aclFilter = $aclFilter;
-
     }
 
     /**
@@ -292,8 +293,6 @@ class ObjectManager extends ObjectManagerDecorator
 
         if (! $repository instanceof EntityRepository) {
             throw new \ErrorException('Repository must be an instance of VIB\CoreBundle\Repository\EntityRepository');
-        } else {
-            $repository->setAclFilter($this->aclFilter);
         }
 
         return $repository;

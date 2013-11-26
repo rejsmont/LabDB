@@ -18,6 +18,8 @@
 
 namespace VIB\FormsBundle\Form\Type;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -25,6 +27,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  * Bootstrap datepicker form control
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * @DI\FormType
  */
 class DatePickerType extends AbstractType
 {

@@ -22,14 +22,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DoctrineParamConve
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
-
+use Doctrine\Common\Persistence\ManagerRegistry;
 /**
  * DoctrineParamConverter
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * @Service("vib.converter.doctrine")
+ * @Tag("request.param_converter", attributes = {"priority"=2, "converter"="vib.doctrine"})
  */
 class DoctrineParamConverter extends SensioDoctrineParamConverter
 {
+    /**
+     * @DI\InjectParams({"managerRegistry" = @DI\Inject("doctrine")})
+     * 
+     * @param Doctrine\Common\Persistence\ManagerRegistry $registry
+     */
+    public function __construct(ManagerRegistry $registry = null)
+    {
+        parent::__construct($registry);
+    }
+    
     /**
      * Apply the converter
      *

@@ -29,12 +29,7 @@ use VIB\CoreBundle\Repository\EntityRepository;
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class VialRepository extends EntityRepository
-{
-    /**
-     * @var $manager VIB\CoreBundle\Doctrine\ObjectManager
-     */
-    protected $manager;
-    
+{   
     /**
      * {@inheritdoc}
      */
@@ -108,22 +103,12 @@ class VialRepository extends EntityRepository
            ->addGroupBy('e.flipDate')
            ->orderBy('e.setupDate', 'DESC');
 
-        $vials = $this->aclFilter->apply($qb, array('OWNER'), $user)->getResult();
+        $vials = $this->getAclFilter()->apply($qb, array('OWNER'), $user)->getResult();
         $dates = array();
         foreach ($vials as $vial) {
             $dates[] = $vial->getRealFlipDate();
         }
 
         return array_unique($dates, SORT_REGULAR);
-    }
-    
-    /**
-     * Set the object manager service
-     *
-     * @param VIB\CoreBundle\Doctrine\ObjectManager
-     */
-    public function setManager(ObjectManager $manager)
-    {
-        $this->manager = $manager;
     }
 }

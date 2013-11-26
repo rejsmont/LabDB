@@ -21,13 +21,17 @@
 
 namespace VIB\SecurityBundle\Bridge\Doctrine;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Doctrine filter that applies ACL to fetched of entities
@@ -36,23 +40,34 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * @author mailaneel
+ * 
+ * @DI\Service("vib.security.filter.acl")
  */
 class AclFilter
 {
     /**
      * Construct AclFilter
      *
+     * @DI\InjectParams({
+     *     "doctrine" = @DI\Inject("doctrine"),
+     *     "securityContext" = @DI\Inject("security.context"),
+     *     "aclWalker" = @DI\Inject("%vib.security.acl_walker%"),
+     *     "roleHierarchy" = @DI\Inject("%security.role_hierarchy.roles%")
+     * })
+     * 
      * @param Doctrine\Common\Persistence\ManagerRegistry              $doctrine
      * @param Symfony\Component\Security\Core\SecurityContextInterface $securityContext
-     * @param array                                                    $options
+     * @param string                                                   $aclWalker
+     * @param array                                                    $roleHierarchy
      */
-    public function __construct($doctrine, $securityContext, $options = array())
+    public function __construct(ManagerRegistry $doctrine,
+            SecurityContextInterface $securityContext, $aclWalker, $roleHierarchy)
     {
         $this->em = $doctrine->getManager();
         $this->securityContext = $securityContext;
         $this->aclConnection = $doctrine->getConnection('default');
-        $this->aclWalker = $options[0];
-        $this->roleHierarchy = $options[1];
+        $this->aclWalker = $aclWalker;
+        $this->roleHierarchy = $roleHierarchy;
     }
 
     /**

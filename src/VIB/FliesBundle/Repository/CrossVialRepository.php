@@ -67,7 +67,7 @@ class CrossVialRepository extends SearchableVialRepository
         $startDate->sub(new \DateInterval('P2W'));
         $stopDate->add(new \DateInterval('P2W'));
 
-        $owner = $this->manager->getOwner($cross);
+        $owner = $this->getObjectManager()->getOwner($cross);
 
         $qb = $this->getListQueryBuilder($options);
         $qb->andWhere('e.maleName = :male_name')
@@ -81,6 +81,6 @@ class CrossVialRepository extends SearchableVialRepository
            ->setParameter('start_date', $startDate->format('Y-m-d'))
            ->setParameter('stop_date', $stopDate->format('Y-m-d'));
 
-        return $this->aclFilter->apply($qb, array('OWNER'), $owner)->getResult();
+        return $this->getAclFilter()->apply($qb, array('OWNER'), $owner)->getResult();
     }
 }

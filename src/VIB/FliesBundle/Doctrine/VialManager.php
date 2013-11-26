@@ -42,8 +42,6 @@ class VialManager extends ObjectManager
 
         if (! $repository instanceof VialRepository) {
             throw new \ErrorException('Repository must be an instance of VIB\FliesBundle\Repository\VialRepository');
-        } else {
-            $repository->setManager($this);
         }
 
         return $repository;

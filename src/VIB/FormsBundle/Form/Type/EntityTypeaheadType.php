@@ -18,19 +18,23 @@
 
 namespace VIB\FormsBundle\Form\Type;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use JMS\DiExtraBundle\Annotation as DI;
 
+use Symfony\Component\Form\AbstractType;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Bootstrap typeahead form control
+ * Bootstrap entity typeahead form control
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * @DI\FormType
  */
-class EntityTypeaheadType extends TextEntityType
+class EntityTypeaheadType extends AbstractType
 {
     /**
      * @var Symfony\Component\Routing\Router
@@ -39,13 +43,15 @@ class EntityTypeaheadType extends TextEntityType
 
     /**
      * Construct EntityTypeaheadType
-     *
-     * @param Doctrine\Common\Persistence\ManagerRegistry $registry
+     * 
+     * @DI\InjectParams({
+     *     "router" = @DI\Inject("router")
+     * })
+     * 
      * @param Symfony\Component\Routing\Router            $router
      */
-    public function __construct(ManagerRegistry $registry, Router $router)
+    public function __construct(Router $router)
     {
-        $this->registry = $registry;
         $this->router = $router;
     }
 
@@ -91,5 +97,13 @@ class EntityTypeaheadType extends TextEntityType
     public function getName()
     {
         return 'entity_typeahead';
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getParent()
+    {
+        return 'text_entity';
     }
 }

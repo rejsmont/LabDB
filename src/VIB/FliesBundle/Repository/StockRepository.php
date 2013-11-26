@@ -41,7 +41,7 @@ class StockRepository extends SearchableRepository
             $permissions = array('OWNER');
             $user = isset($options['user']) ? $options['user'] : null;
 
-            return $this->aclFilter->apply($qb, $permissions, $user, 'v');
+            return $this->getAclFilter()->apply($qb, $permissions, $user, 'v');
         } else {
             return $query;
         }
@@ -79,7 +79,7 @@ class StockRepository extends SearchableRepository
             $permissions = array('OWNER');
             $user = isset($options['user']) ? $options['user'] : null;
 
-            return $this->aclFilter->apply($qb, $permissions, $user, 'v');
+            return $this->getAclFilter()->apply($qb, $permissions, $user, 'v');
         } else {
             return $query;
         }
@@ -117,7 +117,7 @@ class StockRepository extends SearchableRepository
             $qb = $this->getSearchQueryBuilder($search);
             $user = $search instanceof ACLSearchQueryInterface ? $search->getUser() : null;
 
-            return $this->aclFilter->apply($qb, $permissions, $user, 'v');
+            return $this->getAclFilter()->apply($qb, $permissions, $user, 'v');
         }
             
         return $query;
@@ -160,7 +160,7 @@ class StockRepository extends SearchableRepository
             $qb = $this->getSearchResultCountQueryBuilder($search);
             $user = $search instanceof ACLSearchQueryInterface ? $search->getUser() : null;
 
-            return $this->aclFilter->apply($qb, $permissions, $user, 'v');
+            return $this->getAclFilter()->apply($qb, $permissions, $user, 'v');
         }
             
         return $query;
