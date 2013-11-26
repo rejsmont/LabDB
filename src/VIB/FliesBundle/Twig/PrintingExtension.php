@@ -18,12 +18,17 @@
 
 namespace VIB\FliesBundle\Twig;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use PHP_IPP\IPP\CupsPrintIPP;
 use PHP_IPP\IPP\IPPException;
 
 /**
  * Printing extension
  *
+ * @DI\Service
+ * @DI\Tag("twig.extension")
+ * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class PrintingExtension extends \Twig_Extension
@@ -42,10 +47,15 @@ class PrintingExtension extends \Twig_Extension
     /**
      * Construct PrintingExtension
      *
+     * @DI\InjectParams({
+     *     "printHost" = @DI\Inject("%print_host%"),
+     *     "printQueue" = @DI\Inject("%print_queue%")
+     * })
+     * 
      * @param string $printHost
      * @param string $printQueue
      */
-    public function __construct($printHost,$printQueue)
+    public function __construct($printHost, $printQueue)
     {
         $this->printHost = $printHost;
         $this->printQueue = $printQueue;

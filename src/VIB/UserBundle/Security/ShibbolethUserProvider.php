@@ -18,8 +18,11 @@
 
 namespace VIB\UserBundle\Security;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Security\UserProvider as BaseUserProvider;
+use FOS\UserBundle\Model\UserManagerInterface;
 use KULeuven\ShibbolethBundle\Security\ShibbolethUserProviderInterface;
 use KULeuven\ShibbolethBundle\Security\ShibbolethUserToken;
 
@@ -28,10 +31,24 @@ use VIB\UserBundle\Entity\User;
 /**
  * Shibboleth UserProvider
  *
+ * @DI\Service("vib.user_provider.shibboleth")
+ * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class ShibbolethUserProvider extends BaseUserProvider implements ShibbolethUserProviderInterface
 {
+    /**
+     * @DI\InjectParams({
+     *     "userManager" = @DI\Inject("fos_user.user_manager")
+     * })
+     * 
+     * {@inheritDoc}
+     */
+    public function __construct(UserManagerInterface $userManager)
+    {
+        parent::__construct($userManager);
+    }
+    
     /**
      * Create a new user using shibboleth heders as data source
      *

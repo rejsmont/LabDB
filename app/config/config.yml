@@ -97,4 +97,4 @@ fos_user:
 jms_di_extra:
     locations:
         all_bundles: false
-        bundles: [VIBFliesBundle]
+        bundles: [VIBCoreBundle, VIBFliesBundle, VIBFormsBundle, VIBSecurityBundle, VIBUserBundle]

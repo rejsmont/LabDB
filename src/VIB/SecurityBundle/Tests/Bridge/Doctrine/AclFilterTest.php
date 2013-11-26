@@ -64,8 +64,7 @@ class AclFilterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($entityManager));
         $doctrine->expects($this->once())->method('getConnection')
             ->will($this->returnValue($connection));
-        $options = array(0 => null, 1 => array(), 2 => null);
-        $this->helper = new AclFilter($doctrine, $context, $options);
+        $this->helper = new AclFilter($doctrine, $context, null, array());
         $this->query = new FakeQuery($entityManager);
     }
 }

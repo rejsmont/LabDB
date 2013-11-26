@@ -18,6 +18,9 @@
 
 namespace VIB\UserBundle\EventListener;
 
+
+use JMS\DiExtraBundle\Annotation as DI;
+
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -29,6 +32,9 @@ use VIB\UserBundle\Security\ShibbolethUserProvider;
 /**
  * This listener updates user with shibboleth data upon login
  *
+ * @DI\Service
+ * @DI\Tag("kernel.event_subscriber")
+ * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class ShibbolethLoginListener implements EventSubscriberInterface
@@ -41,6 +47,10 @@ class ShibbolethLoginListener implements EventSubscriberInterface
     /**
      * Construct ShibbolethLoginListener
      *
+     * @DI\InjectParams({
+     *     "userProvider" = @DI\Inject("user_provider")
+     * })
+     * 
      * @param Symfony\Component\Security\Core\User\UserProviderInterface $userProvider
      */
     public function __construct(UserProviderInterface $userProvider)

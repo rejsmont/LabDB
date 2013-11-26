@@ -18,6 +18,8 @@
 
 namespace VIB\FliesBundle\Label;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use VIB\CoreBundle\Doctrine\ObjectManager;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +29,8 @@ use PHP_IPP\IPP\CupsPrintIPP;
 /**
  * Handle PDF Label generation
  *
+ * @DI\Service("vibfolks.pdflabel")
+ * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class PDFLabel
@@ -55,6 +59,13 @@ class PDFLabel
     /**
      * Construct PDFLabel
      *
+     * @DI\InjectParams({
+     *     "om" = @DI\Inject("vib.doctrine.manager"),
+     *     "TCPDF" = @DI\Inject("white_october.tcpdf"),
+     *     "printHost" = @DI\Inject("%print_host%"),
+     *     "printQueue" = @DI\Inject("%print_queue%")
+     * })
+     * 
      * @param \VIB\CoreBundle\Doctrine\ObjectManager               $om
      * @param \WhiteOctober\TCPDFBundle\Controller\TCPDFController $TCPDF
      * @param string                                               $printHost

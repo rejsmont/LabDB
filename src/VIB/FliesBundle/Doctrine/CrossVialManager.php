@@ -18,13 +18,16 @@
 
 namespace VIB\FliesBundle\Doctrine;
 
-use Doctrine\Common\Collections\Collection;
+use JMS\DiExtraBundle\Annotation as DI;
 
+use Doctrine\Common\Collections\Collection;
 use VIB\FliesBundle\Entity\CrossVial;
 
 /**
  * CrossVialManager is a class used to manage common operations on cross vials
  *
+ * @DI\Service("vib.doctrine.crossvial_manager")
+ * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class CrossVialManager extends VialManager
@@ -32,7 +35,7 @@ class CrossVialManager extends VialManager
     /**
      * Mark cross(es) as sterile and trash it (them)
      *
-     * @param  \VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
+     * @param  VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
     public function markSterile($vials)
@@ -55,7 +58,7 @@ class CrossVialManager extends VialManager
     /**
      * Mark cross(es) as successful
      *
-     * @param  \VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
+     * @param  VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
     public function markSuccessful($vials)
@@ -78,7 +81,7 @@ class CrossVialManager extends VialManager
     /**
      * Mark cross(es) as failed
      *
-     * @param  \VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
+     * @param  VIB\FliesBundle\Entity\CrossVial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
     public function markFailed($vials)

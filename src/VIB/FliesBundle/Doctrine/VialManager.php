@@ -18,17 +18,21 @@
 
 namespace VIB\FliesBundle\Doctrine;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use VIB\CoreBundle\Doctrine\ObjectManager;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use \VIB\FliesBundle\Entity\Vial;
-use \VIB\FliesBundle\Entity\Incubator;
+use VIB\FliesBundle\Entity\Vial;
+use VIB\FliesBundle\Entity\Incubator;
 use VIB\FliesBundle\Repository\VialRepository;
 
 /**
  * VialManager is a class used to manage common operations on vials
  *
+ * @DI\Service("vib.doctrine.vial_manager")
+ * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class VialManager extends ObjectManager
@@ -50,10 +54,10 @@ class VialManager extends ObjectManager
     /**
      * Flip vial(s)
      *
-     * @param  \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
+     * @param  VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
      * @param  boolean                                                              $setSource
      * @param  boolean                                                              $trashSource
-     * @return \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection
+     * @return VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection
      * @throws \ErrorException
      */
     public function flip($vials, $setSource = true, $trashSource = false)
@@ -87,7 +91,7 @@ class VialManager extends ObjectManager
     /**
      * Trash vial(s)
      *
-     * @param  \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
+     * @param  VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
     public function trash($vials)
@@ -110,7 +114,7 @@ class VialManager extends ObjectManager
     /**
      * UnTrash vial(s)
      *
-     * @param  \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
+     * @param  VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
     public function untrash($vials)
@@ -133,7 +137,7 @@ class VialManager extends ObjectManager
     /**
      * Mark vial(s) as having their label printed
      *
-     * @param  \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
+     * @param  VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
      * @throws \ErrorException
      */
     public function markPrinted($vials)
@@ -156,8 +160,8 @@ class VialManager extends ObjectManager
     /**
      * Put vials into $incubator
      *
-     * @param \VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
-     * @param \VIB\FliesBundle\Entity\Incubator
+     * @param VIB\FliesBundle\Entity\Vial|\Doctrine\Common\Collections\Collection $vials
+     * @param VIB\FliesBundle\Entity\Incubator
      * @throws \ErrorException
      */
     public function incubate($vials, Incubator $incubator = null)
@@ -180,11 +184,11 @@ class VialManager extends ObjectManager
     /**
      * Expand a vial into multiple vials of arbitrary size
      *
-     * @param  \VIB\FliesBundle\Doctrine\Vial          $vial
+     * @param  VIB\FliesBundle\Doctrine\Vial          $vial
      * @param  integer                                 $count
      * @param  boolean                                 $setSource
      * @param  string                                  $size
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Doctrine\Common\Collections\Collection
      */
     public function expand(Vial $vial, $count = 1, $setSource = true, $size = null)
     {
