@@ -83,7 +83,7 @@ class VialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/flies/vials/expand');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(6, $crawler->filter('.modal-body label')->count());
+        $this->assertEquals(7, $crawler->filter('.modal-body label')->count());
     }
 
     public function testExpandSubmit()
@@ -94,7 +94,7 @@ class VialControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['vial_expand[source]'] = 2;
-        $form['vial_expand[size]'] = 'medium';
+        $form['vial_expand[options][size]'] = 'medium';
         $form['vial_expand[number]'] = 2;
 
         $client->submit($form);
@@ -111,7 +111,7 @@ class VialControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
         $form['vial_expand[source]'] = 0;
-        $form['vial_expand[size]'] = 'medium';
+        $form['vial_expand[options][size]'] = 'medium';
         $form['vial_expand[number]'] = 0;
 
         $result = $client->submit($form);

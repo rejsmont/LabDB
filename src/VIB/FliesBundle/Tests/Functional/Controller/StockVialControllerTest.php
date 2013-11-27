@@ -47,7 +47,7 @@ class StockVialControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/flies/stocks/vials/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(12, $crawler->filter('.modal-body label')->count());
+        $this->assertEquals(10, $crawler->filter('.modal-body label')->count());
     }
 
     public function testCreateSubmitOne()
@@ -57,7 +57,7 @@ class StockVialControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/flies/stocks/vials/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
-        $form['stockvial_new[vial][stock]'] = 'stock 4';
+        $form['stockvial_new[vial][basic][stock]'] = 'stock 4';
         $form['stockvial_new[number]'] = 1;
 
         $client->submit($form);
@@ -73,7 +73,7 @@ class StockVialControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/flies/stocks/vials/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
-        $form['stockvial_new[vial][stock]'] = 'stock 1';
+        $form['stockvial_new[vial][basic][stock]'] = 'stock 1';
         $form['stockvial_new[number]'] = 2;
 
         $client->submit($form);
@@ -89,7 +89,7 @@ class StockVialControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/flies/stocks/vials/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
-        $form['stockvial_new[vial][stock]'] = '';
+        $form['stockvial_new[vial][basic][stock]'] = '';
         $form['stockvial_new[number]'] = 0;
 
         $result = $client->submit($form);
@@ -132,7 +132,7 @@ class StockVialControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/flies/stocks/vials/edit/5');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $form = $crawler->selectButton('Save')->form();
-        $form['stockvial[notes]'] = 'This is a test note.';
+        $form['stockvial[basic][notes]'] = 'This is a test note.';
 
         $client->submit($form);
         $this->assertEquals(302,$client->getResponse()->getStatusCode());

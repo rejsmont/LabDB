@@ -70,8 +70,8 @@ class CrossVialSimpleType extends AbstractType
         $resolver->setDefaults(array(
                 'data_class' => 'VIB\FliesBundle\Entity\CrossVial',
                 'error_mapping' => array(
-                    'maleValid' => 'info.maleName',
-                    'virginValid' => 'info.virginName'
+                    'maleValid' => 'basic.maleName',
+                    'virginValid' => 'basic.virginName'
                  )
             )
         );

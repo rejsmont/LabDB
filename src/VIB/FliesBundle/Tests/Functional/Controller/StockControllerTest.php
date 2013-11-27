@@ -61,7 +61,7 @@ class StockControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/flies/stocks/new');
         $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(14, $crawler->filter('.modal-body label')->count());
+        $this->assertEquals(15, $crawler->filter('.modal-body label')->count());
     }
 
     public function testCreateSubmit()
