@@ -40,12 +40,32 @@
 }
 
 .select2-search input {
+  margin-top: 4px;
+  background: none;
+  .box-shadow(none);
   .bootstrap-input-defaults();
+}
+
+.select2-search input:focus {
+  border-color: @input-border-focus;
+  outline: none;
+}
+
+.select2-search input.select2-active {
+  background: none;
+}
+
+.select2-search input + i.fa {
+  display: none;
+  margin-left: -26px;
+}
+
+.select2-search input.select2-active + i.fa {
+  display: inline-block;
 }
 
 .select2-container .select2-choices .select2-search-field input {
   .box-shadow(none);
-
 }
 
 .select2-dropdown-open.select2-drop-above .select2-choice,
@@ -323,6 +343,10 @@
 .select2-results {
   margin: 5px 0;
   padding: 0;
+  .select2-no-results,
+  .select2-searching {
+    display: none;
+  }
   .select2-highlighted {
     background: none;
   }

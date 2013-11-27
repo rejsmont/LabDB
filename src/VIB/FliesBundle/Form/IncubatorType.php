@@ -44,14 +44,18 @@ class IncubatorType extends AbstractType
     {
         $builder->add('name', 'text', array(
                         'label' => 'Name',
-                        'required' => false))
+                        'required' => false
+                    )
+                )
                 ->add('temperature', 'number', array(
                         'precision' => 2,
-                        'label' => 'Temperature',
-                        'required' => false,
+                        'label'     => 'Temperature',
+                        'required'  => false,
                         'widget_addon_append' => array(
                                 'text' => '℃'
-                        )));
+                        )
+                    )
+                );
     }
 
     /**

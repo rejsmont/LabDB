@@ -42,14 +42,25 @@ class RackType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('rack', new RackSimpleType())
-                ->add('rows','number', array(
+        $builder->add('rack', new RackSimpleType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
+                ->add('rows', 'number', array(
                         'label'       => 'Rows',
                         'constraints' => array(
-                            new Range(array('min' => 1)))))
-                ->add('columns','number', array(
+                            new Range(array('min' => 1))
+                        )
+                    )
+                )
+                ->add('columns', 'number', array(
                         'label'       => 'Columns',
                         'constraints' => array(
-                            new Range(array('min' => 1)))));
+                            new Range(array('min' => 1))
+                        )
+                    )
+                );
     }
 }

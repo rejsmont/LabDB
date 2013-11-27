@@ -2,12 +2,6 @@
 {% use "VIBSiteTemplateBundle:Form:form.html.twig" %}
 {% import "VIBSiteTemplateBundle:Macros:form.html.twig" as f %}
 
-{% form_theme form _self %}
-
-{% block _stockvial_new_vial_row %}
-  {{ form_widget(form) }}
-{% endblock %}
-
 {% block modal_header %}New stock vial{% endblock modal_header %}
 
 {% block modal_footer %}

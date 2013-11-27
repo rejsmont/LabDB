@@ -42,10 +42,18 @@ class CrossVialNewType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('vial', new CrossVialSimpleType())
-                ->add('number','number', array(
+        $builder->add('vial', new CrossVialSimpleType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
+                ->add('number', 'number', array(
                         'label'       => 'Number of crosses',
                         'constraints' => array(
-                            new Range(array('min' => 1)))));
+                            new Range(array('min' => 1))
+                        )
+                    )
+                );
     }
 }

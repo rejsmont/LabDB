@@ -19,6 +19,7 @@ twig:
     form:
         resources:
             - 'VIBFormsBundle:Form:fields.html.twig'
+            - 'VIBFliesBundle:Form:fields.html.twig'
 
 # Doctrine Configuration
 doctrine:

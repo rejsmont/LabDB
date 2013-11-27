@@ -43,23 +43,23 @@ class StockNewType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('stock', new StockType(), array(
-                     'horizontal' => false,
-                     'label_render' => false,
-                     'widget_form_group' => false,
+                         'horizontal' => false,
+                         'label_render' => false,
+                         'widget_form_group' => false,
+                    )
                 )
-            )
-                ->add('size', 'choice', array(
-                        'choices'   => array('small' => 'small',
-                                             'medium' => 'medium',
-                                             'large' => 'large'),
-                        'expanded'  => true,
-                        'label'     => 'Vial size',
-                        'required'  => false,
-                        'empty_value' => false,
-                        ))
+                ->add('options', new Type\VialOptionsType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
                 ->add('number','number', array(
                         'label'       => 'Number of vials',
                         'constraints' => array(
-                            new Range(array('min' => 1)))));
+                            new Range(array('min' => 1))
+                        )
+                    )
+                );
     }
 }

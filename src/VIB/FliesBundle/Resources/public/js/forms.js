@@ -409,4 +409,37 @@ $(document).ready(function() {
          $('.fb-link').val(data.stock_link);
       });
     });
+    
+    $('.foodselect').each(function() {
+      var $this = $(this);
+      var $url = $this.data('link');
+      $this.select2({
+        width: 'resolve',
+        initSelection : function (element, callback) {
+          var data = {id: element.val(), text: element.val()};
+          callback(data);
+        },
+        ajax: {
+          url: $url,
+          dataType: 'json',
+          data: function (term, page) {
+            return {
+              query: term
+            };
+          },
+          results: function (data, page) {
+            return {
+              results: data
+            };
+          }
+        }
+      }).on('select2-open', function() {
+        $('.select2-search').each(function() {
+          var $search = $(this);
+          if ($search.children('i.fa').length === 0) {
+            $search.append('<i class="fa fa-spinner fa-lg fa-spin"></i>');
+          }
+        });
+      });
+    });
 });

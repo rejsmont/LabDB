@@ -16,25 +16,25 @@
  * limitations under the License.
  */
 
-namespace VIB\FliesBundle\Form;
+namespace VIB\FliesBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * VialType class
+ * VialDatesType class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialType extends AbstractType
+class VialDatesType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return "vial";
+        return "vial_dates";
     }
 
     /**
@@ -42,16 +42,13 @@ class VialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('vial', new VialSimpleType(), array(
-                        'horizontal' => false,
-                        'label_render' => false,
-                        'widget_form_group' => false,
-                        'inherit_data' => true
+        $builder->add('setupDate', 'datepicker', array(
+                    'label' => 'Setup date'
                     )
                 )
-                ->add('trashed', 'checkbox', array(
-                        'label'     => '',
-                        'required'  => false
+                ->add('flipDate', 'datepicker', array(
+                    'label' => 'Flip date',
+                    'required'  => false
                     )
                 );
     }
@@ -62,7 +59,7 @@ class VialType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'VIB\FliesBundle\Entity\Vial',
+            'inherit_data' => true
         ));
     }
 }

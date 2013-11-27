@@ -16,25 +16,25 @@
  * limitations under the License.
  */
 
-namespace VIB\FliesBundle\Form;
+namespace VIB\FliesBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * VialType class
+ * VialOptionsType class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialType extends AbstractType
+class VialOptionsType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return "vial";
+        return "vial_options";
     }
 
     /**
@@ -42,16 +42,21 @@ class VialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('vial', new VialSimpleType(), array(
-                        'horizontal' => false,
-                        'label_render' => false,
-                        'widget_form_group' => false,
-                        'inherit_data' => true
+        $builder->add('size', 'choice', array(
+                        'choices' => array(
+                            'small'  => 'small',
+                            'medium' => 'medium',
+                            'large'  => 'large'
+                        ),
+                        'expanded'    => true,
+                        'label'       => 'Vial size',
+                        'required'    => false,
+                        'empty_value' => false
                     )
                 )
-                ->add('trashed', 'checkbox', array(
-                        'label'     => '',
-                        'required'  => false
+                ->add('food', 'food', array(
+                        'label'    => 'Food type',
+                        'required' => false
                     )
                 );
     }
@@ -62,7 +67,7 @@ class VialType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'VIB\FliesBundle\Entity\Vial',
+            'inherit_data' => true
         ));
     }
 }

@@ -12,6 +12,11 @@ vib_forms:
     type:     annotation
     prefix:   /_ajax
 
+vib_user:
+    resource: "@VIBUserBundle/Controller/"
+    type:     annotation
+    prefix:   /_ajax
+
 vib_flies:
     resource: "@VIBFliesBundle/Controller/"
     type:     annotation

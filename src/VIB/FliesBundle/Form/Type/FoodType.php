@@ -16,44 +16,34 @@
  * limitations under the License.
  */
 
-namespace VIB\FliesBundle\Form;
+namespace VIB\FliesBundle\Form\Type;
+
+use JMS\DiExtraBundle\Annotation as DI;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * RackSimpleType class
+ * Bootstrap typeahead form control
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
+ * 
+ * @DI\FormType
  */
-class RackSimpleType extends AbstractType
+class FoodType extends AbstractType
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     */
+    public function getParent()
+    {
+        return 'text';
+    }
+    
+    /**
+     * {@inheritDoc}
      */
     public function getName()
     {
-        return "racksimple";
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->add('name', 'text', array(
-                        'label'    => 'Name',
-                        'required' => true
-                    )
-                );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array('data_class' => 'VIB\FliesBundle\Entity\Rack'));
+        return 'food';
     }
 }

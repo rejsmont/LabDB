@@ -2,12 +2,6 @@
 {% use "VIBSiteTemplateBundle:Form:form.html.twig" %}
 {% import "VIBSiteTemplateBundle:Macros:form.html.twig" as f %}
 
-{% form_theme form _self %}
-
-{% block _rack_rack_row %}
-  {{ form_widget(form) }}
-{% endblock %}
-
 {% block headline %}Racks{% endblock headline %}
 {% block modal_header %}Edit rack {{ form.vars.value.rack }}{% endblock modal_header %}
 

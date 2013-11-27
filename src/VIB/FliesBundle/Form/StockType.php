@@ -42,20 +42,18 @@ class StockType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array(
-                        'label'     => 'Name')
-                )
+        $builder->add('name', 'text', array('label' => 'Name'))
                 ->add('genotype', 'text', array(
-                        'label'     => 'Genotype',
-                        'attr' => array('class' => 'fb-genotype')
+                        'label' => 'Genotype',
+                        'attr'  => array('class' => 'fb-genotype')
                     )
                 )
                 ->add('source_cross', 'text_entity', array(
                         'property' => 'id',
                         'class'    => 'VIBFliesBundle:CrossVial',
-                        'format'    => '%06d',
+                        'format'   => '%06d',
                         'required' => false,
-                        'label'     => 'Source cross',
+                        'label'    => 'Source cross',
                         'attr' => array('class' => 'barcode'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
@@ -63,12 +61,12 @@ class StockType extends AbstractType
                     )
                 )
                 ->add('notes', 'textarea', array(
-                        'label' => 'Notes',
+                        'label'    => 'Notes',
                         'required' => false
                     )
                 )
                 ->add('vendor', 'typeahead', array(
-                        'label' => 'Vendor',
+                        'label'    => 'Vendor',
                         'required' => false,
                         'attr' => array(
                             'class' => 'fb-vendor'
@@ -77,7 +75,7 @@ class StockType extends AbstractType
                     )
                 )
                 ->add('vendorId', 'typeahead', array(
-                        'label' => 'Vendor ID',
+                        'label'    => 'Vendor ID',
                         'required' => false,
                         'attr' => array(
                             'class' => 'fb-vendorid'
@@ -86,16 +84,16 @@ class StockType extends AbstractType
                     )
                 )
                 ->add('infoURL', 'url', array(
-                        'label' => 'Info URL',
+                        'label'    => 'Info URL',
                         'required' => false,
                         'attr' => array(
                             'placeholder' => 'Paste address here',
-                            'class' => 'fb-link'
+                            'class'       => 'fb-link'
                         )
                     )
                 )
                 ->add('verified', 'checkbox', array(
-                        'label' => '',
+                        'label'    => '',
                         'required' => false
                     )
                 );

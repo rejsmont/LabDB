@@ -84,6 +84,12 @@ class Vial extends RackContent
      * @Serializer\Expose
      */
     protected $size;
+    
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Serializer\Expose
+     */
+    protected $food;
 
     /**
      * @var null
@@ -238,6 +244,7 @@ class Vial extends RackContent
             $this->setSetupDate($template->getSetupDate());
             $this->setFlipDate($template->getFlipDate());
             $this->setSize($template->getSize());
+            $this->setFood($template->getFood());
             $this->setNotes($template->getNotes());
             $this->setStorageUnit($template->getStorageUnit());
         }
@@ -323,6 +330,26 @@ class Vial extends RackContent
         $this->size = $size;
     }
 
+    /**
+     * Get food
+     *
+     * @return string
+     */
+    public function getFood()
+    {
+        return ucfirst((null !== $this->food) ? $this->food : 'Normal');
+    }
+
+    /**
+     * Set food
+     *
+     * @param string $size
+     */
+    public function setFood($food)
+    {
+        $this->food = ucfirst($food);
+    }
+    
     /**
      * Add child
      *

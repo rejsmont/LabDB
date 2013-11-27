@@ -42,10 +42,19 @@ class VialNewType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('vial', new VialType())
+        $builder->add('vial', new VialSimpleType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false,
+                        'inherit_data' => true
+                    )
+                )
                 ->add('number','number', array(
                         'label'       => 'Number of vials',
                         'constraints' => array(
-                            new Range(array('min' => 1)))));
+                            new Range(array('min' => 1))
+                        )
+                    )
+                );
     }
 }

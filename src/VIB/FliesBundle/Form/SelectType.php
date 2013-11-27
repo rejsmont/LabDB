@@ -58,13 +58,17 @@ class SelectType extends AbstractType
     {
         $builder->add('action', 'hidden')
                 ->add('items', 'collection', array(
-                      'type'   => 'text_entity',
-                      'allow_add' => true,
-                      'options' => array(
-                          'class' =>  $this->entityClass)))
+                        'type'   => 'text_entity',
+                        'allow_add' => true,
+                        'options' => array(
+                            'class' =>  $this->entityClass
+                        )
+                    )
+                )
                 ->add('incubator', 'hidden_entity', array(
-                      'property'     => 'name',
-                      'class' => 'VIBFliesBundle:Incubator',
-                      ));
+                        'property'     => 'name',
+                        'class' => 'VIBFliesBundle:Incubator',
+                    )
+                );
     }
 }

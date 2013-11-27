@@ -42,10 +42,18 @@ class StockVialNewType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('vial', new StockVialType())
+        $builder->add('vial', new StockVialSimpleType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
                 ->add('number','number', array(
                         'label'       => 'Number of vials',
                         'constraints' => array(
-                            new Range(array('min' => 1)))));
+                            new Range(array('min' => 1))
+                        )
+                    )
+                );
     }
 }

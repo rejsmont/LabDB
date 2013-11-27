@@ -43,15 +43,16 @@ class SearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('terms', 'text', array(
-                'required' => false,
-                'horizontal' => false,
-                'label_render' => false,
-                'attr'     => array(
-                    'form'        => 'search-form',
-                    'placeholder' => 'Search'
+                        'required'     => false,
+                        'horizontal'   => false,
+                        'label_render' => false,
+                        'attr' => array(
+                            'form'        => 'search-form',
+                            'placeholder' => 'Search'
+                        )
+                    )
                 )
-            )
-        )->add('filter', 'hidden', array('required' => false));
+                ->add('filter', 'hidden', array('required' => false));
     }
     
     /**

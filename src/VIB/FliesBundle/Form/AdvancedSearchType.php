@@ -43,44 +43,47 @@ class AdvancedSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('terms', 'text', array(
-                'label' => 'Include terms',
-                'required' => false,
-                'attr' => array(
-                    'class' => 'input-block-level',
-                    'placeholder' => 'separate terms with space'
+                        'label'    => 'Include terms',
+                        'required' => false,
+                        'attr' => array(
+                            'class'       => 'input-block-level',
+                            'placeholder' => 'separate terms with space'
+                        )
+                    )
                 )
-            )
-        )->add('excluded', 'text', array(
-                'label' => 'Exclude terms',
-                'required' => false,
-                'attr' => array(
-                    'class' => 'input-block-level',
-                    'placeholder' => 'separate terms with space'
+                ->add('excluded', 'text', array(
+                        'label'    => 'Exclude terms',
+                        'required' => false,
+                        'attr' => array(
+                            'class'       => 'input-block-level',
+                            'placeholder' => 'separate terms with space'
+                        )
+                    )
                 )
-            )
-        )->add('filter', 'choice', array(
-                'label' => 'Scope',
-                'choices' => array(
-                    'crossvial' => 'Crosses',
-                    'injectionvial' => 'Injections'
-                ),
-                'expanded' => true,
-                'empty_value' => 'Stocks',
-                'empty_data' => 'stock',
-                'required' => false
-            )
-        )->add('opts', 'choice', array(
-                'label' => 'Options',
-                'choices'   => array(
-                    'private' => 'Only private',
-                    'dead' => 'Include dead',
-                    'notes' => 'Include comments'
-                ),
-                'expanded' => true,
-                'multiple' => true,
-                'required' => false
-            )
-        );
+                ->add('filter', 'choice', array(
+                        'label' => 'Scope',
+                        'choices' => array(
+                            'crossvial'     => 'Crosses',
+                            'injectionvial' => 'Injections'
+                        ),
+                        'expanded'    => true,
+                        'empty_value' => 'Stocks',
+                        'empty_data'  => 'stock',
+                        'required'    => false
+                    )
+                )
+                ->add('opts', 'choice', array(
+                        'label'     => 'Options',
+                        'choices' => array(
+                            'private' => 'Only private',
+                            'dead'    => 'Include dead',
+                            'notes'   => 'Include comments'
+                        ),
+                        'expanded' => true,
+                        'multiple' => true,
+                        'required' => false
+                    )
+                );
     }
     
     /**

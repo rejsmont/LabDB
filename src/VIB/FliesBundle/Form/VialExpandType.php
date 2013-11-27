@@ -53,19 +53,22 @@ class VialExpandType extends AbstractType
                             'icon' => 'qrcode'
                         ),
                         'constraints' => array(
-                            new NotNull())))
-                ->add('size', 'choice', array(
-                        'choices'   => array('small' => 'small',
-                                             'medium' => 'medium',
-                                             'large' => 'large'),
-                        'expanded'  => true,
-                        'label'     => 'Destination size',
-                        'required'  => false,
-                        'empty_value' => false,
-                        ))
-                ->add('number','number', array(
+                            new NotNull()
+                        )
+                    )
+                )
+                ->add('options', new Type\VialOptionsType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
+                ->add('number', 'number', array(
                         'label'       => 'Number of vials',
                         'constraints' => array(
-                            new Range(array('min' => 1)))));
+                            new Range(array('min' => 1))
+                        )
+                    )
+                );
     }
 }

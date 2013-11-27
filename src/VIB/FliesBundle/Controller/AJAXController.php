@@ -47,6 +47,33 @@ use VIB\FliesBundle\Entity\RackPosition;
 class AJAXController extends AbstractController
 {
     /**
+     * @Route("/foods")
+     * @Template()
+     */
+    public function foodsAction(Request $request)
+    {
+        $food = $request->query->get('query');
+        
+        $qb = $this->getObjectManager()->getRepository('VIBFliesBundle:Vial')->createQueryBuilder('v');
+        $qb->select('v.food')->groupBy('v.food');
+        $foods = $qb->getQuery()->getArrayResult();
+        
+        $result = array();
+        if (! empty($food)) {
+            $result[] = array('id' => $food,'text' => ucfirst($food));
+        }
+        
+        foreach($foods as $item) {
+            $food = $item['food'];
+            if (null !== $food) {
+                $result[] = array('id' => $food,'text' => ucfirst($food));
+            }
+        }
+        
+        return new JsonResponse($result);
+    }
+    
+    /**
      * @Route("/fbstock")
      * @Template()
      */

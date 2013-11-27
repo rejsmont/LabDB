@@ -42,10 +42,18 @@ class InjectionVialNewType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('vial', new InjectionVialType())
-                ->add('number','number', array(
+        $builder->add('vial', new InjectionVialSimpleType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
+                ->add('number', 'number', array(
                         'label'       => 'Number of vials',
                         'constraints' => array(
-                            new Range(array('min' => 1)))));
+                            new Range(array('min' => 1))
+                        )
+                    )
+                );
     }
 }

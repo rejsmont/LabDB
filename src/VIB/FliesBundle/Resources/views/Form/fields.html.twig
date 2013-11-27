@@ -1,0 +1,8 @@
+{% block food_widget %}
+  {% spaceless %}
+    {% set attr = attr|merge({
+        'class': attr.class|default('') ~ ' foodselect',
+        'data-link': path('vib_flies_ajax_foods') }) %}
+    {{ block('form_widget_simple') }}
+  {% endspaceless %}
+{% endblock %}

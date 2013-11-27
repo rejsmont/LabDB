@@ -34,7 +34,7 @@ class CrossVialSimpleType extends AbstractType
      */
     public function getName()
     {
-        return "crossvialsimple";
+        return "crossvial_simple";
     }
 
     /**
@@ -42,48 +42,24 @@ class CrossVialSimpleType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
-                ->add('flipDate', 'datepicker', array('label' => 'Check date', 'required'  => false))
-                ->add('virgin', 'text_entity', array(
-                        'property' => 'id',
-                        'class' => 'VIBFliesBundle:Vial',
-                        'format'    => '%06d',
-                        'label' => 'Virgin vial',
-                        'attr' => array('class' => 'barcode'),
-                        'widget_addon_append' => array(
-                            'icon' => 'qrcode'
-                        )))
-                ->add('virginName', 'text', array(
-                        'label' => 'Virgin genotype',
-                        'required' => false))
-                ->add('male', 'text_entity', array(
-                        'property'     => 'id',
-                        'class' => 'VIBFliesBundle:Vial',
-                        'format'    => '%06d',
-                        'label' => 'Male vial',
-                        'attr' => array('class' => 'barcode'),
-                        'widget_addon_append' => array(
-                            'icon' => 'qrcode'
-                        )))
-                ->add('maleName', 'text', array(
-                        'label' => 'Male genotype',
-                        'required' => false))
-                ->add('notes', 'textarea', array(
-                        'label' => 'Notes',
-                        'required' => false))
+        $builder->add('basic', new Type\CrossVialType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
+                ->add('options', new Type\VialOptionsType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
                 ->add('storageUnit', 'entity', array(
-                        'property'     => 'name',
-                        'class' => 'VIBFliesBundle:Incubator',
-                        'label' => 'Incubator'))
-                ->add('size', 'choice', array(
-                        'choices'   => array('small' => 'small',
-                                             'medium' => 'medium',
-                                             'large' => 'large'),
-                        'expanded'  => true,
-                        'label'     => 'Vial size',
-                        'required'  => false,
-                        'empty_value' => false,
-                        ));
+                        'property' => 'name',
+                        'class'    => 'VIBFliesBundle:Incubator',
+                        'label'    => 'Incubator'
+                    )
+                );
     }
 
     /**
@@ -92,9 +68,12 @@ class CrossVialSimpleType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'VIB\FliesBundle\Entity\CrossVial',
-            'error_mapping' => array(
-                'maleValid' => 'maleName',
-                'virginValid' => 'virginName')));
+                'data_class' => 'VIB\FliesBundle\Entity\CrossVial',
+                'error_mapping' => array(
+                    'maleValid' => 'info.maleName',
+                    'virginValid' => 'info.virginName'
+                 )
+            )
+        );
     }
 }

@@ -190,13 +190,18 @@ class VialManager extends ObjectManager
      * @param  string                                  $size
      * @return Doctrine\Common\Collections\Collection
      */
-    public function expand(Vial $vial, $count = 1, $setSource = true, $size = null)
+    public function expand(Vial $vial, $count = 1, $setSource = true, $size = null, $food = null)
     {
         $newVials = new ArrayCollection();
         for ($i = 0; $i < $count; $i++) {
             $newVial = $this->flip($vial, $setSource);
-            if (null !== $size) {
-                $newVial->setSize($size);
+            if ((null !== $size)||(null !== $food)) {
+                if (null !== $size) {
+                    $newVial->setSize($size);
+                }
+                if (null !== $food) {
+                    $newVial->setFood($food);
+                }
                 $this->persist($newVial);
             }
             $newVials->add($newVial);

@@ -42,67 +42,48 @@ class CrossVialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
-                ->add('flipDate', 'datepicker', array('label' => 'Check date', 'required'  => false))
-                ->add('virgin', 'text_entity', array(
-                        'property'     => 'id',
-                        'class' => 'VIBFliesBundle:Vial',
-                        'format'    => '%06d',
-                        'label' => 'Virgin vial',
-                        'attr' => array('class' => 'barcode'),
-                        'widget_addon_append' => array(
-                            'icon' => 'qrcode'
-                        )))
-                ->add('virginName', 'text', array(
-                        'label' => 'Virgin genotype',
-                        'required' => false))
-                ->add('male', 'text_entity', array(
-                        'property'     => 'id',
-                        'class' => 'VIBFliesBundle:Vial',
-                        'format'    => '%06d',
-                        'label' => 'Male vial',
-                        'attr' => array('class' => 'barcode'),
-                        'widget_addon_append' => array(
-                            'icon' => 'qrcode'
-                        )))
-                ->add('maleName', 'text', array(
-                        'label' => 'Male genotype',
-                        'required' => false))
-                ->add('notes', 'textarea', array(
-                        'label' => 'Notes',
-                        'required' => false))
+        $builder->add('basic', new Type\CrossVialType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
                 ->add('sourceVial', 'text_entity', array(
                         'property'  => 'id',
                         'class'     => 'VIBFliesBundle:CrossVial',
                         'format'    => '%06d',
-                        'required'  => false,
                         'label'     => 'Flipped from',
-                        'attr' => array('class' => 'barcode'),
+                        'attr'      => array('class' => 'barcode'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
-                        )))
-                ->add('size', 'choice', array(
-                        'choices'   => array('small' => 'small',
-                                             'medium' => 'medium',
-                                             'large' => 'large'),
-                        'expanded'  => true,
-                        'label'     => 'Vial size',
-                        'required'  => false,
-                        'empty_value' => false,
-                        ))
-                ->add('trashed', 'checkbox', array(
-                        'label' => '',
-                        'required' => false))
+                        ),
+                        'required'  => false
+                    )
+                )
+                ->add('options', new Type\VialOptionsType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
                 ->add('outcome', 'choice', array(
-                        'choices' => array('successful' => 'Successful',
-                                           'failed' => 'Failed',
-                                           'sterile' => 'Sterile',
-                                           'undefined' => 'Undefined'),
-                        'expanded' => true,
-                        'label' => 'Outcome',
-                        'required' => false,
+                        'choices' => array(
+                            'successful' => 'Successful',
+                            'failed'     => 'Failed',
+                            'sterile'    => 'Sterile',
+                            'undefined'  => 'Undefined'
+                        ),
                         'empty_value' => false,
-                        ));
+                        'expanded'    => true,
+                        'label'       => 'Outcome',
+                        'required'    => false,
+                    )
+                )
+                ->add('trashed', 'checkbox', array(
+                        'label'    => '',
+                        'required' => false
+                    )
+                );
     }
 
     /**

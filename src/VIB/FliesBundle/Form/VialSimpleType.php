@@ -23,18 +23,18 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * VialType class
+ * VialSimpleType class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialType extends AbstractType
+class VialSimpleType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return "vial";
+        return "vial_simple";
     }
 
     /**
@@ -42,16 +42,31 @@ class VialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('vial', new VialSimpleType(), array(
+        $builder->add('dates', new VialDatesType(), array(
                         'horizontal' => false,
                         'label_render' => false,
-                        'widget_form_group' => false,
-                        'inherit_data' => true
+                        'widget_form_group' => false
                     )
                 )
-                ->add('trashed', 'checkbox', array(
-                        'label'     => '',
+                ->add('notes', 'textarea', array(
+                        'label'     => 'Notes',
                         'required'  => false
+                    )
+                )
+                ->add('sourceVial', 'text_entity', array(
+                        'property'  => 'id',
+                        'class'     => 'VIBFliesBundle:Vial',
+                        'format'    => '%06d',
+                        'required'  => false,
+                        'label'     => 'Flipped from',
+                        'attr'      => array('class' => 'barcode'),
+                        'widget_addon_append' => array('icon' => 'qrcode')
+                    )
+                )
+                ->add('options', new Type\VialOptionsType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
                     )
                 );
     }

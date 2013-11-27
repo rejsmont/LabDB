@@ -54,30 +54,35 @@ class VialGiveType extends AbstractType
                             'icon' => 'qrcode'
                         ),
                         'constraints' => array(
-                            new NotNull())))
+                            new NotNull()
+                        )
+                    )
+                )
                 ->add('user', 'user_typeahead', array(
                         'label'     => 'Recipient',
                         'required'  => true,
                         'widget_addon_append' => array(
                             'icon' => 'user'
-                        )))
+                        )
+                    )
+                )
                 ->add('type', 'choice', array(
-                        'choices'   => array('give' => 'Just give this vial',
-                                             'flip' => 'Flip and give this vial',
-                                             'flipped' => 'Flip this vial and give the flipped vial'),
-                        'expanded'  => true,
-                        'label'     => 'Flip',
-                        'required'  => false,
+                        'choices' => array(
+                            'give'    => 'Just give this vial',
+                            'flip'    => 'Flip and give this vial',
+                            'flipped' => 'Flip this vial and give the flipped vial'
+                        ),
+                        'label'       => 'Flip',
+                        'expanded'    => true,
+                        'required'    => false,
                         'empty_value' => false,
-                        ))
-                ->add('size', 'choice', array(
-                        'choices'   => array('small' => 'small',
-                                             'medium' => 'medium',
-                                             'large' => 'large'),
-                        'expanded'  => true,
-                        'label'     => 'Destination size',
-                        'required'  => false,
-                        'empty_value' => false,
-                        ));
+                    )
+                )
+                ->add('options', new Type\VialOptionsType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                );
     }
 }

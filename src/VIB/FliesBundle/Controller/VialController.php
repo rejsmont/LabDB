@@ -211,7 +211,12 @@ class VialController extends CRUDController
     {
         $om = $this->getObjectManager();
         $source = (null !== $id) ? $this->getEntity($id) : null;
-        $data = array('source' => $source, 'number' => 1, 'size' => 'medium');
+        $data = array(
+            'source' => $source,
+            'number' => 1,
+            'size' => null !== $source ? $source->getSize() : 'medium',
+            'food' => null !== $source ? $source->getFood() : 'Normal'
+        );
         $form = $this->createForm(new VialExpandType(), $data);
         $request = $this->getRequest();
 
@@ -222,8 +227,9 @@ class VialController extends CRUDController
                 $source = $data['source'];
                 $number = $data['number'];
                 $size = $data['size'];
+                $food = $data['food'];
 
-                $vials = $om->expand($source, $number, true, $size);
+                $vials = $om->expand($source, $number, true, $size, $food);
                 $om->flush();
                 $om->createACL($vials, $this->getDefaultACL());
 
@@ -262,7 +268,9 @@ class VialController extends CRUDController
             'source' => $source,
             'user' => null,
             'type' => 'give',
-            'size' => null !== $source ? $source->getSize() : 'medium');
+            'size' => null !== $source ? $source->getSize() : 'medium',
+            'food' => null !== $source ? $source->getFood() : 'Normal'
+        );
         $form = $this->createForm(new VialGiveType(), $data);
         $request = $this->getRequest();
         
@@ -274,6 +282,7 @@ class VialController extends CRUDController
                 $user = $data['user'];
                 $type = $data['type'];
                 $size = $data['size'];
+                $food = $data['food'];
                 
                 if (!($securityContext->isGranted('OWNER',$source)||$securityContext->isGranted('ROLE_ADMIN'))) {
                     throw new AccessDeniedException();
@@ -284,12 +293,14 @@ class VialController extends CRUDController
                         $vial = $om->flip($source);
                         $vial->setPosition($source->getPosition());
                         $vial->setSize($size);
+                        $vial->setFood($food);
                         $om->persist($vial);
                         $om->persist($source);
                         break;
                     case 'flipped':
                         $vial = $om->flip($source);
                         $vial->setSize($size);
+                        $vial->setFood($food);
                         $om->persist($vial);
                         break;
                 }

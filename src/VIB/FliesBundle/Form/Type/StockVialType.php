@@ -16,25 +16,25 @@
  * limitations under the License.
  */
 
-namespace VIB\FliesBundle\Form;
+namespace VIB\FliesBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * VialType class
+ * StockVialType class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialType extends AbstractType
+class StockVialType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return "vial";
+        return "stockvial_basic";
     }
 
     /**
@@ -42,16 +42,21 @@ class VialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('vial', new VialSimpleType(), array(
+        $builder->add('dates', new VialDatesType(), array(
                         'horizontal' => false,
                         'label_render' => false,
-                        'widget_form_group' => false,
-                        'inherit_data' => true
+                        'widget_form_group' => false
                     )
                 )
-                ->add('trashed', 'checkbox', array(
-                        'label'     => '',
-                        'required'  => false
+                ->add('stock', 'entity_typeahead', array(
+                        'property'  => 'name',
+                        'class'     => 'VIBFliesBundle:Stock',
+                        'label'     => 'Stock'
+                    )
+                )
+                ->add('notes', 'textarea', array(
+                        'label' => 'Notes',
+                        'required' => false
                     )
                 );
     }
@@ -62,7 +67,8 @@ class VialType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'VIB\FliesBundle\Entity\Vial',
-        ));
+                 'inherit_data' => true
+            )
+        );
     }
 }

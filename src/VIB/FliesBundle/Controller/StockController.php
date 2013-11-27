@@ -137,11 +137,13 @@ class StockController extends CRUDController
                 $stock = $data['stock'];
                 $number = $data['number'];
                 $size = $data['size'];
+                $food = $data['food'];
 
                 for ($i = 0; $i < $number - 1; $i++) {
                     $vial = new StockVial();
                     $stock->addVial($vial);
                     $vial->setSize($size);
+                    $vial->setFood($food);
                 }
                 $om->persist($stock);
                 $om->flush();

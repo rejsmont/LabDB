@@ -42,60 +42,35 @@ class InjectionVialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('setupDate', 'datepicker', array('label' => 'Injection date'))
-                ->add('flipDate', 'datepicker', array('label' => 'Check date', 'required'  => false))
-                ->add('injectionType', 'choice', array(
-                        'choices'   => array('phiC31' => 'phiC31',
-                                             'P-element' => 'P-element',
-                                             'piggyBac' => 'piggyBac',
-                                             'Minos' => 'Minos',
-                                             'phiC31 RMCE' => 'phiC31 RMCE',
-                                             'Flp RMCE' => 'Flp RMCE',
-                                             'Cre RMCE' => 'Cre RMCE'),
-                        'label'     => 'Injection type',
-                        ))
-                ->add('constructName', 'text', array(
-                        'label' => 'Construct name',
-                        'required' => true))
-                ->add('targetStock', 'entity_typeahead', array(
-                        'property'  => 'name',
-                        'class'     => 'VIBFliesBundle:Stock',
-                        'label'     => 'Target stock',
-                        'required'  => false))
-                ->add('targetStockVial', 'text_entity', array(
+        $builder->add('basic', new Type\InjectionVialType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
+                ->add('sourceVial', 'text_entity', array(
                         'property'  => 'id',
-                        'class'     => 'VIBFliesBundle:StockVial',
+                        'class'     => 'VIBFliesBundle:InjectionVial',
                         'format'    => '%06d',
                         'required'  => false,
-                        'label'     => 'Target stock source vial',
+                        'label'     => 'Flipped from',
                         'attr' => array('class' => 'barcode'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
-                        )))
-                ->add('embryoCount', 'number', array(
-                        'label' => 'Embryo count'))
-                ->add('vendor', 'text', array(
-                        'label' => 'Vendor',
-                        'required' => false))
-                ->add('receiptDate', 'datepicker', array('label' => 'Receipt date', 'required'  => false))
-                ->add('orderNo', 'text', array(
-                        'label' => 'Order number',
-                        'required' => false))
-                ->add('notes', 'textarea', array(
-                        'label' => 'Notes',
-                        'required' => false))
-                ->add('size', 'choice', array(
-                        'choices'   => array('small' => 'small',
-                                             'medium' => 'medium',
-                                             'large' => 'large'),
-                        'expanded'  => true,
-                        'label'     => 'Vial size',
-                        'required'  => false,
-                        'empty_value' => false,
-                        ))
+                         )
+                    )
+                )
+                ->add('options', new Type\VialOptionsType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
                 ->add('trashed', 'checkbox', array(
                         'label' => '',
-                        'required' => false));
+                        'required' => false
+                    )
+                );
     }
 
     /**

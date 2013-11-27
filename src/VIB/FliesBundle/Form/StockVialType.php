@@ -42,15 +42,12 @@ class StockVialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('setupDate', 'datepicker', array('label' => 'Setup date'))
-                ->add('flipDate', 'datepicker', array('label' => 'Flip date', 'required'  => false))
-                ->add('stock', 'entity_typeahead', array(
-                        'property'  => 'name',
-                        'class'     => 'VIBFliesBundle:Stock',
-                        'label'     => 'Stock'))
-                ->add('notes', 'textarea', array(
-                        'label' => 'Notes',
-                        'required' => false))
+        $builder->add('basic', new Type\StockVialType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
                 ->add('sourceVial', 'text_entity', array(
                         'property'  => 'id',
                         'class'     => 'VIBFliesBundle:StockVial',
@@ -60,16 +57,15 @@ class StockVialType extends AbstractType
                         'attr' => array('class' => 'barcode'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
-                         )))
-                ->add('size', 'choice', array(
-                        'choices'   => array('small' => 'small',
-                                             'medium' => 'medium',
-                                             'large' => 'large'),
-                        'expanded'  => true,
-                        'label'     => 'Vial size',
-                        'required'  => false,
-                        'empty_value' => false,
-                        ))
+                         )
+                    )
+                )
+                ->add('options', new Type\VialOptionsType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
+                    )
+                )
                 ->add('trashed', 'checkbox', array(
                         'label' => '',
                         'required' => false));

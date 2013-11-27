@@ -65,6 +65,7 @@
     {% endfor %}
     </tbody>
   </table>
+  <div class="list-buttons">
   {% block list_buttons %}
     {{ l.select_buttons() }}
     <div class="btn-group pull-right">
@@ -93,9 +94,12 @@
     </div>
     {{ l.incubate_button() }}
   {% endblock list_buttons %}
+  </div>
+  <div class="text-center">
   {% block paginator %}
     {% if entities is defined %}{{ knp_pagination_render(entities) }}{% endif %}
   {% endblock paginator %}
+  </div>
 </div>
 {% if form is defined %}
 {{ form_errors(form) }}

@@ -37,7 +37,7 @@ class AJAXController extends Controller
     /**
      * Search for the specified entity by its property
      *
-     * @Route("/_ajax/choices/users", name="vib_user_ajax_choices")
+     * @Route("/choices/users", name="vib_user_ajax_choices")
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -83,7 +83,7 @@ class AJAXController extends Controller
     /**
      * Search for the specified entity by its property
      *
-     * @Route("/_ajax/choices/roles", name="vib_role_ajax_choices")
+     * @Route("/choices/roles", name="vib_role_ajax_choices")
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response

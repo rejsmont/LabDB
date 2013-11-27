@@ -23,18 +23,18 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * VialType class
+ * InjectionVialSimpleType class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialType extends AbstractType
+class InjectionVialSimpleType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return "vial";
+        return "injectionvial_simple";
     }
 
     /**
@@ -42,16 +42,16 @@ class VialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('vial', new VialSimpleType(), array(
+        $builder->add('basic', new Type\InjectionVialType(), array(
                         'horizontal' => false,
                         'label_render' => false,
-                        'widget_form_group' => false,
-                        'inherit_data' => true
+                        'widget_form_group' => false
                     )
                 )
-                ->add('trashed', 'checkbox', array(
-                        'label'     => '',
-                        'required'  => false
+                ->add('options', new Type\VialOptionsType(), array(
+                        'horizontal' => false,
+                        'label_render' => false,
+                        'widget_form_group' => false
                     )
                 );
     }
@@ -62,7 +62,7 @@ class VialType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'VIB\FliesBundle\Entity\Vial',
+            'data_class' => 'VIB\FliesBundle\Entity\InjectionVial',
         ));
     }
 }
