@@ -1,23 +1,5 @@
 {% extends 'VIBSiteTemplateBundle::layout.html.twig' %}
 
-{% block navbar %}
-  <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
-        <a class="brand" href="{{ path('default') }}">LNG FlyDB</a>
-        <div class="nav-collapse">
-        {% render(controller("VIBFliesBundle:Search:form")) %}
-        </div>
-      </div>
-    </div>
-  </div>
-{% endblock navbar %}
-
 {% block container %}
   <div class="{% block container_class %}container{% endblock container_class %}">
     <div class="content exception">
@@ -25,7 +7,7 @@
         {% block main_row %}
         <div class="error-icon">
           {% block error_icon %}
-            <i class="icon-bug text-error"></i>
+            <i class="fa fa-bug text-error"></i>
           {% endblock error_icon %}
         </div>
         <div>
