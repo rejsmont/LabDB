@@ -43,9 +43,14 @@ class StockType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array('label' => 'Name'))
-                ->add('genotype', 'text', array(
-                        'label' => 'Genotype',
-                        'attr'  => array('class' => 'fb-genotype')
+                ->add('genotype', 'genotype_typeahead', array(
+                        'label'    => 'Genotype',
+                        'attr'     => array(
+                            'data-id-source' => 'cross-id',
+                            'class'          => 'fb-genotype'
+                        ),
+                        'data_route' => 'vib_flies_ajax_genotypes',
+                        'required' => false
                     )
                 )
                 ->add('source_cross', 'text_entity', array(
@@ -54,7 +59,7 @@ class StockType extends AbstractType
                         'format'   => '%06d',
                         'required' => false,
                         'label'    => 'Source cross',
-                        'attr' => array('class' => 'barcode'),
+                        'attr' => array('class' => 'barcode cross-id'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
                         )

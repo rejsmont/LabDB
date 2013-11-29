@@ -380,9 +380,9 @@ $(document).ready(function() {
     
     $('.fb-vendor').each(function() {
       var $this = $(this);
-      var $url = $this.data('link') + '?vendor=%QUERY';
+      var url = $this.data('link') + '?vendor=%QUERY';
       $this.typeahead({
-        remote:   $url,
+        remote:   url,
         valueKey: 'stock_center',
         template: '<p>{{stock_center}}</p>',
         engine: Hogan
@@ -391,10 +391,10 @@ $(document).ready(function() {
     
     $('.fb-vendorid').each(function() {
       var $this = $(this);
-      var $url = $this.data('link') + '?stock=%QUERY&vendor=%VENDOR';
+      var url = $this.data('link') + '?stock=%QUERY&vendor=%VENDOR';
       $this.typeahead({
         remote: {
-          url: $url,
+          url: url,
           replace: function(url, query) {
             var vendor = encodeURIComponent($('.fb-vendor').val());
             return url.replace('%QUERY', query).replace('%VENDOR', vendor);
@@ -404,7 +404,7 @@ $(document).ready(function() {
         template: '<p><b>Stock {{stock_id}}</b> <small>{{stock_center}}</small></p><p><i>{{stock_genotype}}</i></p>',
         engine: Hogan
       }).on('typeahead:selected', function(event, data) {
-         $('.fb-genotype').val(data.stock_genotype);
+         $('.fb-genotype').typeahead('setQuery', data.stock_genotype);
          $('.fb-vendor').val(data.stock_center);
          $('.fb-link').val(data.stock_link);
       });
@@ -412,7 +412,7 @@ $(document).ready(function() {
     
     $('.foodselect').each(function() {
       var $this = $(this);
-      var $url = $this.data('link');
+      var url = $this.data('link');
       $this.select2({
         width: 'resolve',
         initSelection : function (element, callback) {
@@ -420,7 +420,7 @@ $(document).ready(function() {
           callback(data);
         },
         ajax: {
-          url: $url,
+          url: url,
           dataType: 'json',
           data: function (term, page) {
             return {
@@ -440,6 +440,20 @@ $(document).ready(function() {
             $search.append('<i class="fa fa-spinner fa-lg fa-spin"></i>');
           }
         });
+      });
+    });
+    $('.genotype-typeahead').each(function() {
+      var $this = $(this);
+      var url = $this.data('link') + '?id=%VIAL&query=%QUERY';
+      var id_source = '.' + $this.data('id-source');
+      $this.typeahead({
+        remote: {
+          url: url,
+          replace: function(url, query) {
+            var vial = encodeURIComponent($(id_source).val());
+            return url.replace('%QUERY', query).replace('%VIAL', vial);
+          }
+        }
       });
     });
 });

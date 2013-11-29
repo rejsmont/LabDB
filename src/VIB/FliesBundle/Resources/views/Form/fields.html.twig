@@ -6,3 +6,13 @@
     {{ block('form_widget_simple') }}
   {% endspaceless %}
 {% endblock %}
+
+{% block genotype_typeahead_widget %}
+  {% spaceless %}
+    {% set attr = attr|merge({
+        'class': attr.class|default('') ~ ' genotype-typeahead',
+        'data-link': data_link|default(''),
+        'autocomplete': 'off' }) %}
+    {{ block('form_widget_simple') }}
+  {% endspaceless %}
+{% endblock %}

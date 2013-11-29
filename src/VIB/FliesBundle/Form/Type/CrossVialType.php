@@ -56,14 +56,18 @@ class CrossVialType extends AbstractType
                         'class'    => 'VIBFliesBundle:Vial',
                         'format'   => '%06d',
                         'label'    => 'Virgin vial',
-                        'attr'     => array('class' => 'barcode'),
+                        'attr'     => array('class' => 'barcode virgin-id'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
                         )
                     )
                 )
-                ->add('virginName', 'text', array(
+                ->add('virginName', 'genotype_typeahead', array(
                         'label'    => 'Virgin genotype',
+                        'attr'     => array(
+                            'data-id-source' => 'virgin-id'
+                        ),
+                        'data_route' => 'vib_flies_ajax_genotypes',
                         'required' => false
                     )
                 )
@@ -72,15 +76,19 @@ class CrossVialType extends AbstractType
                         'class'    => 'VIBFliesBundle:Vial',
                         'format'   => '%06d',
                         'label'    => 'Male vial',
-                        'attr'     => array('class' => 'barcode'),
+                        'attr'     => array('class' => 'barcode male-id'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
                         )
                     )
                 )
-                ->add('maleName', 'text', array(
+                ->add('maleName', 'genotype_typeahead', array(
                         'label'    => 'Male genotype',
-                        'required' => false
+                        'attr'     => array(
+                            'data-id-source' => 'male-id'
+                        ),
+                        'data_route' => 'vib_flies_ajax_genotypes',
+                        'required'   => false
                     )
                 )
                 ->add('notes', 'textarea', array(

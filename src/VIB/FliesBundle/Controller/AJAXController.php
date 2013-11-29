@@ -74,6 +74,38 @@ class AJAXController extends AbstractController
     }
     
     /**
+     * @Route("/genotypes")
+     * @Template()
+     */
+    public function genotypesAction(Request $request)
+    {
+        $id = $request->query->get('id');
+        $query = $request->query->get('query');
+        
+        $om = $this->getObjectManager();
+        try {
+            $vial = $om->find('VIBFliesBundle:Vial', $id);
+        } catch (NoResultException $e) {
+            return new JsonResponse(array());
+        }
+        
+        $genotypes = $vial->getGenotypes();
+        $terms = explode(' ', $query);
+        
+        foreach ($genotypes as $key => $genotype) {
+            $remove = true;
+            foreach ($terms as $term) {
+                $remove = $remove && (strpos($genotype, $term) === false) && (!empty($term));
+            }
+            if ($remove) {
+                unset($genotypes[$key]);
+            }
+        }
+        
+        return new JsonResponse($genotypes);
+    }
+    
+    /**
      * @Route("/fbstock")
      * @Template()
      */
