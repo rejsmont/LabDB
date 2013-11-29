@@ -147,4 +147,12 @@ class StockVial extends Vial implements AltLabelInterface
     {
         return $this->stock;
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getGenotypes()
+    {   
+        return array((null !== $this->getStock()) ? $this->getStock()->getGenotype() : null);
+    }
 }

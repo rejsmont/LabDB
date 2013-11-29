@@ -169,7 +169,7 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
         $vial->setMale($male);
         $this->assertEquals($male, $vial->getMale());
         $this->assertEquals($maleName, $vial->getMaleName());
-        if ($male instanceof CrossVial) {
+        if ((empty($maleName))&&(null != $male)&&(!$male->getGenotype())) {
             $this->assertFalse($vial->isMaleValid());
             $vial->setMaleName('test');
         }
@@ -185,10 +185,8 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
         $vial->setMaleName('');
         $this->assertEmpty($vial->getMaleName());
         $vial->setMale($male);
-        if ($male instanceof StockVial) {
-            $this->assertEquals($male->getStock()->getGenotype(), $vial->getMaleName());
-        } elseif ($male instanceof InjectionVial) {
-            $this->assertEquals($male->getName(), $vial->getMaleName());
+        if ((empty($maleName))&&(null != male)&&(!$male->getGenotype())) {
+            $this->assertEquals($male->getGenotype(), $vial->getVirginName());
         }
         $vial->setMaleName($maleName);
         $this->assertEquals($maleName, $vial->getMaleName());
@@ -205,7 +203,7 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
         $vial->setVirgin($virgin);
         $this->assertEquals($virgin, $vial->getVirgin());
         $this->assertEquals($virginName, $vial->getVirginName());
-        if ($virgin instanceof CrossVial) {
+        if ((empty($virginName))&&(null != $virgin)&&(!$virgin->getGenotype())) {
             $this->assertFalse($vial->isVirginValid());
             $vial->setVirginName('test');
         }
@@ -221,10 +219,8 @@ class CrossVialTest extends \PHPUnit_Framework_TestCase
         $vial->setVirginName('');
         $this->assertEmpty($vial->getVirginName());
         $vial->setVirgin($virgin);
-        if ($virgin instanceof StockVial) {
-            $this->assertEquals($virgin->getStock()->getGenotype(), $vial->getVirginName());
-        } elseif ($virgin instanceof InjectionVial) {
-            $this->assertEquals($virgin->getName(), $vial->getVirginName());
+        if ((empty($virginName))&&(null != $virgin)&&(!$virgin->getGenotype())) {
+            $this->assertEquals($virgin->getGenotype(), $vial->getVirginName());
         }
         $vial->setVirginName($virginName);
         $this->assertEquals($virginName, $vial->getVirginName());

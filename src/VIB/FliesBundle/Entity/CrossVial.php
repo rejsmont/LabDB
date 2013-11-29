@@ -23,6 +23,7 @@ use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use VIB\FliesBundle\Utils\Genetics;
 
 /**
  * CrossVial class
@@ -277,7 +278,7 @@ class CrossVial extends Vial
      */
     public function isParentValid()
     {
-        return (null === $this->getParent())||($this->getType() == $this->getParent()->getType());
+        return (null == $this->getParent())||($this->getType() == $this->getParent()->getType());
     }
 
     /**
@@ -304,12 +305,9 @@ class CrossVial extends Vial
     public function setMale(Vial $male = null)
     {
         $this->male = $male;
-        if ($this->male != null) {
-            if (($this->male instanceof StockVial)&&($this->maleName == '')) {
-                $this->maleName = $this->male->getStock()->getGenotype();
-            } elseif (($this->male instanceof InjectionVial)&&($this->maleName == '')) {
-                $this->maleName = $this->male->getName();
-            }
+        if ((null != $this->male)&&(empty($this->maleName))&&
+                (false !== ($genotype = $this->male->getGenotype()))) {
+            $this->maleName = $genotype;
         } else {
             $this->maleName = '';
         }
@@ -332,13 +330,12 @@ class CrossVial extends Vial
      */
     public function setMaleName($maleName)
     {
-        if ($this->male != null)
-            if (($this->male instanceof StockVial)&&($maleName == '')) {
-                $maleName = $this->male->getStock()->getGenotype();
-            } elseif (($this->male instanceof InjectionVial)&&($maleName == '')) {
-                $maleName = $this->male->getName();
-            }
-        $this->maleName = preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '), $maleName);
+        if ((null != $this->male)&&(empty($maleName))&&
+                (false !== ($genotype = $this->male->getGenotype()))) {
+            $maleName = $genotype;
+        }
+        $this->maleName = 
+                preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '), $maleName);
     }
 
     /**
@@ -370,7 +367,9 @@ class CrossVial extends Vial
      */
     public function isMaleValid()
     {
-        return ! (($this->getMale() instanceof CrossVial)&&(trim($this->getMaleName()) == ""));
+        return (null == $this->male)||
+            ((null != $this->male)&&($this->male->getGenotype() !== false))||
+            ((null != $this->male)&&(!empty($this->maleName)));
     }
 
     /**
@@ -381,12 +380,9 @@ class CrossVial extends Vial
     public function setVirgin(Vial $virgin = null)
     {
         $this->virgin = $virgin;
-        if ($this->virgin != null) {
-            if (($this->virgin instanceof StockVial)&&($this->virginName == '')) {
-                $this->virginName = $this->virgin->getStock()->getGenotype();
-            } elseif (($this->virgin instanceof InjectionVial)&&($this->virginName == '')) {
-                $this->virginName = $this->virgin->getName();
-            }
+        if ((null != $this->virgin)&&(empty($this->virginName))&&
+                (false !== ($genotype = $this->virgin->getGenotype()))) {
+            $this->virginName = $genotype;
         } else {
             $this->virginName = '';
         }
@@ -408,14 +404,13 @@ class CrossVial extends Vial
      * @param string $virginName
      */
     public function setVirginName($virginName)
-    {
-        if ($this->virgin != null)
-            if (($this->virgin instanceof StockVial)&&($virginName == '')) {
-                $virginName = $this->virgin->getStock()->getGenotype();
-            } elseif (($this->virgin instanceof InjectionVial)&&($virginName == '')) {
-                $virginName = $this->virgin->getName();
-            }
-        $this->virginName = preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '), $virginName);
+    {        
+        if ((null != $this->virgin)&&(empty($virginName))&&
+                (false !== ($genotype = $this->virgin->getGenotype()))) {
+            $virginName = $genotype;
+        }
+        $this->virginName = 
+                preg_replace(array('/\s?,\s?/','/\s?\;\s?/','/\s?\\/\s?/'),array(', ','; ',' / '), $virginName);
     }
 
     /**
@@ -447,7 +442,9 @@ class CrossVial extends Vial
      */
     public function isVirginValid()
     {
-        return ! (($this->getVirgin() instanceof CrossVial)&&(trim($this->getVirginName()) == ""));
+        return (null == $this->virgin)||
+            ((null != $this->virgin)&&($this->virgin->getGenotype() !== false))||
+            ((null != $this->virgin)&&(!empty($this->virginName)));
     }
 
     /**
@@ -487,6 +484,14 @@ class CrossVial extends Vial
         }
         
         return $flipDate;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getGenotypes()
+    {
+        return Genetics::cross($this->getVirginName(), $this->getMaleName());
     }
 
     /**

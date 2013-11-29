@@ -144,11 +144,9 @@ class InjectionVial extends Vial implements AltLabelInterface
      */
     public function getAltLabelText()
     {
-        $stock = $this->getTargetStock();
-        if (null !== $stock) {
-            return $this->getConstructName() . " ➔ " . $stock->getGenotype();
-        }
-        return $this->getLabelText();
+        $genotype = $this->getGenotype();
+        
+        return (false !== $genotype) ? $genotype : $this->getConstructName();
     }
 
     /**
@@ -156,7 +154,10 @@ class InjectionVial extends Vial implements AltLabelInterface
      */
     public function getName()
     {
-        return $this->getConstructName() . " ➔ " . $this->getTargetStock();
+        $stock = $this->getTargetStock();
+        
+        return (null !== $stock) ?
+            $this->getConstructName() . " ➔ " . $stock : $this->getConstructName();
     }
     
     /**
@@ -536,5 +537,19 @@ class InjectionVial extends Vial implements AltLabelInterface
         } else {
             return 'undefined';
         }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getGenotypes()
+    {
+        $stock = $this->getTargetStock();
+        
+        return array(
+            (null !== $stock) ?
+                $this->getConstructName() . " ➔ " . $stock->getGenotype() : 
+                $this->getConstructName()
+        );
     }
 }

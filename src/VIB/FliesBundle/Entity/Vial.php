@@ -640,6 +640,28 @@ class Vial extends RackContent
     }
 
     /**
+     * Get genotypes of flies in this vial
+     * 
+     * @return array
+     */
+    public function getGenotypes()
+    {
+        return array();
+    }
+    
+    /**
+     * Return unique genotype of flies in the vial
+     * 
+     * @return string|false
+     */
+    public function getGenotype()
+    {
+        $genotypes = $this->getGenotypes();
+        
+        return (count($genotypes) == 1) ? $genotypes[0] : false;
+    }
+    
+    /**
      * Get vial type
      *
      * @return string
