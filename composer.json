@@ -41,7 +41,7 @@
         "twitter/typeahead.js": "dev-master",
         "twitter/hogan.js": "3.0-dev",
         "fortawesome/font-awesome": "dev-master",
-        "eternicode/bootstrap-datepicker": "dev-bs3",
+        "eternicode/bootstrap-datepicker": "dev-master",
         "ivaynberg/select2": "3.4-dev",
         "jquery/jquery": "1.10.2",
         "jquery/jquery-ui": "1.10.3",
