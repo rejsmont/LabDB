@@ -174,16 +174,23 @@ SELECTQUERY;
             $className = $root->rangeVariableDeclaration->abstractSchemaName;
             $classAlias = $root->rangeVariableDeclaration->aliasIdentificationVariable;
             if (($classAlias == $alias)||(null === $alias)) {
+                
                 return array('alias' => $classAlias,
                              'metadata' => $em->getClassMetadata($className));
             } else {
                 foreach ($root->joins as $join) {
                     $joinAlias = $join->joinAssociationDeclaration->aliasIdentificationVariable;
                     $joinField = $join->joinAssociationDeclaration->joinAssociationPathExpression->associationField;
+                    $joinParent = $join->joinAssociationDeclaration->joinAssociationPathExpression->identificationVariable;
                     if ($joinAlias == $alias) {
-                        $metadata = $em->getClassMetadata($className);
+                        if ($joinParent != $classAlias) {
+                            $data = $this->getEntityFromAlias($query, $joinParent);
+                            $metadata = $data['metadata'];
+                        } else {
+                            $metadata = $em->getClassMetadata($className);
+                        }
                         $joinName = $metadata->associationMappings[$joinField]['targetEntity'];
-
+                        
                         return array('alias' => $joinAlias,
                                      'metadata' => $em->getClassMetadata($joinName));
                     }
@@ -193,7 +200,7 @@ SELECTQUERY;
 
         return null;
     }
-
+    
     /**
      * Get ACL compatible classes for specified class metadata
      *

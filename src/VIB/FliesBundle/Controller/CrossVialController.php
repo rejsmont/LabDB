@@ -160,12 +160,15 @@ class CrossVialController extends VialController
         switch ($action) {
             case 'marksterile':
                 $this->markSterile($vials);
+                $response = $this->getBackBatchResponse();
                 break;
             case 'marksuccessful':
                 $this->markSuccessful($vials);
+                $response = $this->getBackBatchResponse();
                 break;
             case 'markfailed':
                 $this->markFailed($vials);
+                $response = $this->getBackBatchResponse();
                 break;
             default:
                 return parent::handleBatchAction($data);

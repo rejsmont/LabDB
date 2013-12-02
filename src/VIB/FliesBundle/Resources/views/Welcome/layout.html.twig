@@ -1,0 +1,27 @@
+{% extends "VIBSiteTemplateBundle::layout.html.twig" %}
+
+{% block navbar %}
+  {% include 'VIBFliesBundle::navbar.html.twig' %}
+{% endblock navbar %}
+
+{% block headline %}Welcome to FlyDB{% endblock headline %}
+
+{% block content %}{% endblock content %}
+
+{% block header_row %}
+<div class="col-sm-12">
+  {% block page_header %}
+  <div class="page-header">
+        <h1>{{ block('headline') }}</h1>
+  </div>
+  {% endblock page_header %}
+</div>
+{% endblock header_row %}
+
+{% block main_row %}
+<div class="col-sm-12">
+  {% block content_row %}
+    {{ block('content') }}
+  {% endblock content_row %}
+</div>
+{% endblock main_row %}

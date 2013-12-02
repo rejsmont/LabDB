@@ -42,4 +42,40 @@ class RackRepository extends EntityRepository
                 ->where('e.id = :id')
                 ->setParameter('id', $id);
     }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function getRacksWithMyVialsQueryBuilder()
+    {
+        return $this->getListQueryBuilder()
+                ->addSelect('p')
+                ->addSelect('v')
+                ->join('e.positions', 'p')
+                ->join('p.contents', 'v')
+                ->orderBy('e.id');
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function getRacksWithMyVialsQuery()
+    {
+        $qb = $this->getRacksWithMyVialsQueryBuilder();
+        $permissions = array('OWNER');
+        $user = null;
+        
+        return $this->getAclFilter()->apply($qb, $permissions, $user, 'v');
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function getRacksWithMyVials()
+    {
+        return $this->getRacksWithMyVialsQuery()->getResult();
+    }
 }

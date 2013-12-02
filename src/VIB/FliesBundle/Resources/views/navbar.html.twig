@@ -7,11 +7,11 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{{ path('default') }}">LabDB</a>
+      <a class="navbar-brand" href="{{ path('vib_flies_welcome_index') }}">FlyDB</a>
     </div>
     <div class="collapse navbar-collapse navbar-ex1-collapse">
       <ul class="nav navbar-nav">
-        <li class="first dropdown dropdown-split-left">
+        <li class="dropdown dropdown-split-left">
           <a href="{{ path('vib_flies_stock_list') }}">Stocks</a>
           <ul class="dropdown-menu menu_level_1">
             <li><a href="{{ path('vib_flies_stock_list') }}">My stocks</a></li>
@@ -89,6 +89,8 @@
             {% render(controller("VIBFliesBundle:Incubator:menu")) %}
             <li class="divider"></li>
             <li><a href="{{ path('vib_flies_search_advanced') }}">Search</a></li>
+            <li class="divider"></li>
+            <li><a href="{{ path('default') }}">Other databases</a></li>
           </ul>
         </li>
       </ul>

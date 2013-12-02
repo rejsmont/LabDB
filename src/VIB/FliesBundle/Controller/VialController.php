@@ -99,7 +99,7 @@ class VialController extends CRUDController
     public function listAction($filter = null)
     {
         $response = parent::listAction($filter);
-        $formResponse = $this->handleSelectForm(new SelectType($this->getEntityClass()));
+        $formResponse = $this->handleSelectForm(new SelectType($this->getEntityClass()), $filter);
 
         return is_array($formResponse) ? array_merge($response, $formResponse) : $formResponse;
     }
@@ -386,6 +386,7 @@ class VialController extends CRUDController
                 break;
             case 'trash':
                 $this->trashVials($vials);
+                $response = $this->getBackBatchResponse();
                 break;
             case 'untrash':
                 $this->untrashVials($vials);
@@ -599,13 +600,42 @@ class VialController extends CRUDController
         }
 
         $pieces = explode('_',$currentRoute);
-
+        
         if (is_numeric($pieces[count($pieces) - 1])) {
             array_pop($pieces);
         }
         $pieces[count($pieces) - 1] = 'list';
         $route = ($currentRoute == 'default') ? 'default' : implode('_', $pieces);
         $url = $this->generateUrl($route);
+
+        return $this->redirect($url);
+    }
+    
+    /**
+     * Get back to where batch job has started
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function getBackBatchResponse()
+    {
+        $request = $this->getRequest();
+        $currentRoute = $request->attributes->get('_route');
+        $routeArguments = $request->attributes->get('_route_params', null);
+
+        if ($currentRoute == '') {
+            $url = $this->generateUrl('vib_flies_vial_list');
+
+            return $this->redirect($url);
+        }
+
+        $pieces = explode('_',$currentRoute);
+        
+        if (in_array('select', $pieces)) {
+            $pieces[count($pieces) - 1] = 'list';
+        }
+        
+        $route = ($currentRoute == 'default') ? 'default' : implode('_', $pieces);
+        $url = $this->generateUrl($route, $routeArguments);
 
         return $this->redirect($url);
     }

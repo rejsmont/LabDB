@@ -1,0 +1,121 @@
+{% extends "VIBFliesBundle:Welcome:layout.html.twig" %}
+{% import 'VIBSiteTemplateBundle:Macros:status.html.twig' as status %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-4">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a href="">Stock vials</a>
+          <span class="badge pull-right">{{ stockVials.count }}</span>
+        </h3>
+      </div>
+      <div class="panel-body">
+      {{ _self.messages(stockVials, 'vib_flies_stockvial') }}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a href="">Crosses</a>
+          <span class="badge pull-right">28</span>
+        </h3>
+      </div>
+      <div class="panel-body">
+      {{ _self.messages(crossVials, 'vib_flies_crossvial', true) }}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a href="">Injections</a>
+          <span class="badge pull-right">2</span>
+        </h3>
+      </div>
+      <div class="panel-body">
+      {{ _self.messages(injectionVials, 'vib_flies_injectionvial', true) }}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          Racks
+        </h3>
+      </div>
+      {% if racks|length == 0 %}
+      <div class="panel-body">
+        You have no vials stored in racks.
+      </div>
+      {% else %}
+      <ul class="list-group" id="racks">
+        {% for rack in racks %}
+        <li class="list-group-item">
+          <a href="{{ path('vib_flies_rack_show', { 'id': rack.id }) }}"><b>{{ rack }}</b> - {{ rack.name }}</a>
+          <span class="badge pull-right">{{ rack.contents|length }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Incubators</h3>
+      </div>
+      <ul class="list-group" id="incubators">
+        {% for incubator in incubators %}
+        <li class="list-group-item">
+          <b>{{ incubator }}</b>
+          {{ status.temperature(incubator.temperature) }}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% macro messages(vialType, route, check = false) %}
+  {% if check %}
+    {% set todo = 'check' %}
+  {% else %}
+    {% set todo = 'flip' %}
+  {% endif %}
+  {% if vialType.overdue > 0 %}
+  <p>
+    <span class="label label-danger pull-right"><i class="fa fa-exclamation-triangle"></i></span>
+    You should urgently {{ todo }} {{ vialType.overdue }}
+    <a href="{{ path(route ~ '_list_1', { 'filter': 'overdue' }) }}">vial{% if vialType.overdue != 1 %}s{%endif%}</a>.
+  </p>
+  {% endif %}
+  {% if vialType.forgot > 0 %}
+  <p>
+    <span class="label label-warning pull-right"><i class="fa fa-exclamation-triangle"></i></span>
+    You have {{ vialType.forgot }} untrashed dead
+    <a href="{{ path(route ~ '_list_1', { 'filter': 'forgot' }) }}">vial{% if vialType.forgot != 1 %}s{%endif%}</a>.
+  </p>
+  {% endif %}
+  {% if vialType.due > 0 %}
+  <p>
+    <span class="label label-info pull-right"><i class="fa fa-info-circle"></i></span>
+    You should {{ todo }} {{ vialType.due }}
+    <a href="{{ path(route ~ '_list_1', { 'filter': 'due' }) }}">vial{% if vialType.due != 1 %}s{%endif%}</a> soon.
+  </p>
+  {% endif %}
+  {% if vialType.due + vialType.forgot + vialType.overdue == 0 %}
+  <p>
+    <span class="label label-success pull-right"><i class="fa fa-check-circle"></i></span>
+    Your vials are all fine.
+  </p>
+  {% endif %}
+{% endmacro %}
