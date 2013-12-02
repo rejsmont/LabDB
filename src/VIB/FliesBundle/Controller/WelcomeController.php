@@ -86,12 +86,14 @@ class WelcomeController extends AbstractController
         $inOneWeek->add(new \DateInterval('P1W'));
         $index = 1;
         foreach ($vials as $vial) {
-            if ($vial->getRealFlipDate() <= $weekAgo) {
+            if (($vial->getRealFlipDate() <= $weekAgo)&&
+                    (! $vial->wasUsed())) {
                 $stats['overdue'] += 1;
                 if (!isset($stats['overdue_page'])) {
                     $stats['overdue_page'] = ceil($index/25);
                 }
-            } elseif (($vial->getRealFlipDate() > $weekAgo)&&($vial->getRealFlipDate() < $inOneWeek)) {
+            } elseif (($vial->getRealFlipDate() > $weekAgo)&&
+                    ($vial->getRealFlipDate() < $inOneWeek)) {
                 $stats['due'] += 1;
                 if (!isset($stats['due_page'])) {
                     $stats['due_page'] = ceil($index/25);
@@ -108,5 +110,5 @@ class WelcomeController extends AbstractController
         }
         
         return $stats;
-    }
+    }    
 }
