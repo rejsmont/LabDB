@@ -495,6 +495,20 @@ class CrossVial extends Vial
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function wasUsed()
+    {
+        if ($this->getOutcome() != 'undefined') {
+            
+            return true;
+        } else {
+            
+            return parent::wasUsed();
+        }
+    }
+    
+    /**
      * Delay development by 2 days for new crosses
      *
      * @return integer
@@ -503,4 +517,6 @@ class CrossVial extends Vial
     {
         return (null === $this->getParent()) ? 2 : 0;
     }
+    
+    
 }

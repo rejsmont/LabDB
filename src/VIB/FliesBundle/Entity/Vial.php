@@ -662,6 +662,28 @@ class Vial extends RackContent
     }
     
     /**
+     * Was this vial used?
+     * 
+     * @return boolean
+     */
+    public function wasUsed()
+    {
+        if ($this->getChildren()->count() > 0) {
+            
+            return true;
+        } else if ($this->getVirginCrosses()->count() > 0) {
+            
+            return true;
+        } else if ($this->getMaleCrosses()->count() > 0) {
+            
+            return true;
+        } else {
+            
+            return false;
+        }
+    }
+    
+    /**
      * Get vial type
      *
      * @return string
