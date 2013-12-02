@@ -73,22 +73,6 @@ class VialRepository extends EntityRepository
         switch ($filter) {
             case 'all':
                 break;
-            case 'overdue':
-                $builder = $builder->where('e.flipDate <= :weekAgo')
-                                   ->andWhere('e.setupDate > :twoMonthsAgo')
-                                   ->andWhere('e.trashed = false')
-                                   ->setParameter('weekAgo', $weekAgo->format('Y-m-d'))
-                                   ->setParameter('twoMonthsAgo', $twoMonthsAgo->format('Y-m-d'));
-                break;
-            case 'due':
-                $builder = $builder->where('e.flipDate > :weekAgo')
-                                   ->andWhere('e.flipDate < :inOneWeek')
-                                   ->andWhere('e.setupDate > :twoMonthsAgo')
-                                   ->andWhere('e.trashed = false')
-                                   ->setParameter('weekAgo', $weekAgo->format('Y-m-d'))
-                                   ->setParameter('inOneWeek', $inOneWeek->format('Y-m-d'))
-                                   ->setParameter('twoMonthsAgo', $twoMonthsAgo->format('Y-m-d'));
-                break;
             case 'forgot':
                 $builder = $builder->where('e.setupDate <= :twoMonthsAgo')
                                    ->andWhere('e.trashed = false')

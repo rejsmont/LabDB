@@ -73,14 +73,40 @@ class WelcomeController extends AbstractController
         $options['permissions'] = array('OWNER');
         
         $repository = $om->getRepository($class);
+        $vials = $repository->getList($options);
         $stats = array();
-        $stats['count'] = $repository->getListCount($options);
+        $stats['count'] = count($vials);
         $options['filter'] = 'forgot';
         $stats['forgot'] = $repository->getListCount($options);
-        $options['filter'] = 'due';
-        $stats['due'] = $repository->getListCount($options);
-        $options['filter'] = 'overdue';
-        $stats['overdue'] = $repository->getListCount($options);
+        $stats['due'] = 0;
+        $stats['overdue'] = 0;
+        $weekAgo = new \DateTime();
+        $weekAgo->sub(new \DateInterval('P1W'));
+        $inOneWeek = new \DateTime();
+        $inOneWeek->add(new \DateInterval('P1W'));
+        $index = 1;
+        foreach ($vials as $vial) {
+            if ($vial->getRealFlipDate() <= $weekAgo) {
+                $stats['overdue'] += 1;
+                if (!isset($stats['overdue_page'])) {
+                    $stats['overdue_page'] = ceil($index/25);
+                }
+            } elseif (($vial->getRealFlipDate() > $weekAgo)&&($vial->getRealFlipDate() < $inOneWeek)) {
+                $stats['due'] += 1;
+                if (!isset($stats['due_page'])) {
+                    $stats['due_page'] = ceil($index/25);
+                }
+            }
+            $index += 1;
+        }
+        
+        if (!isset($stats['overdue_page'])) {
+            $stats['overdue_page'] = 1;
+        }
+        if (!isset($stats['due_page'])) {
+            $stats['due_page'] = 1;
+        }
+        
         return $stats;
     }
 }

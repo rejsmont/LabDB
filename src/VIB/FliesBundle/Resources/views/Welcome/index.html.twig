@@ -95,7 +95,7 @@
   <p>
     <span class="label label-danger pull-right"><i class="fa fa-exclamation-triangle"></i></span>
     You should urgently {{ todo }} {{ vialType.overdue }}
-    <a href="{{ path(route ~ '_list_1', { 'filter': 'overdue' }) }}">vial{% if vialType.overdue != 1 %}s{%endif%}</a>.
+    <a href="{{ path(route ~ '_list') }}?page={{ vialType.overdue_page }}">vial{% if vialType.overdue != 1 %}s{%endif%}</a>.
   </p>
   {% endif %}
   {% if vialType.forgot > 0 %}
@@ -109,7 +109,7 @@
   <p>
     <span class="label label-info pull-right"><i class="fa fa-info-circle"></i></span>
     You should {{ todo }} {{ vialType.due }}
-    <a href="{{ path(route ~ '_list_1', { 'filter': 'due' }) }}">vial{% if vialType.due != 1 %}s{%endif%}</a> soon.
+    <a href="{{ path(route ~ '_list') }}?page={{ vialType.due_page }}">vial{% if vialType.due != 1 %}s{%endif%}</a> soon.
   </p>
   {% endif %}
   {% if vialType.due + vialType.forgot + vialType.overdue == 0 %}
