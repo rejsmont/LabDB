@@ -382,7 +382,7 @@ FLYBASE_SQL;
             }
             if ($entity instanceof CrossVial) {
                 if ($entity->isSuccessful()) {
-                    $status .= '<span title="successful" class="label status label-success"><i class="fa fa-ok"></i></span>';
+                    $status .= '<span title="successful" class="label status label-success"><i class="fa fa-check"></i></span>';
                 } elseif ($entity->isSterile()) {
                     $status .= '<span title="sterile" class="label status label-important"><i class="fa fa-times-circle"></i></span>';
                 } elseif (null !== $entity->isSuccessful()) {
