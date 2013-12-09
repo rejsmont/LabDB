@@ -22,7 +22,7 @@
             <li><a href="{{ path('vib_flies_vial_expand') }}">Expand stock</a></li>
           </ul>
         </li>
-        <li class="visible-desktop dropdown dropdown-split-right">
+        <li class="dropdown dropdown-split-right">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-caret-down"></i></a>
         </li>
         <li class="dropdown dropdown-split-left">
@@ -35,7 +35,7 @@
             <li><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
           </ul>
         </li>
-        <li class="visible-desktop dropdown dropdown-split-right">
+        <li class="dropdown dropdown-split-right">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-caret-down"></i></a>
         </li>
         <li class="dropdown dropdown-split-left">
@@ -48,8 +48,11 @@
             <li><a href="{{ path('vib_flies_crossvial_select') }}">Select crosses</a></li>
           </ul>
         </li>
-        <li class="visible-desktop dropdown dropdown-split-right">
+        <li class="dropdown dropdown-split-right">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-caret-down"></i></a>
+        </li>
+        <li class="visible-xs">
+          <a href="{{ path('vib_flies_injectionvial_list') }}">Injections</a>
         </li>
         <li class="dropdown dropdown-split-left">
           <a href="{{ path('vib_flies_vial_list') }}">Vials</a>
@@ -62,10 +65,13 @@
               <li><a href="{{ path('vib_flies_vial_give') }}">Give vial</a></li>
           </ul>
         </li>
-        <li class="visible-desktop dropdown dropdown-split-right">
+        <li class="dropdown dropdown-split-right">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-caret-down"></i></a>
         </li>
-        <li class="visible-desktop dropdown last">
+        <li class="visible-xs">
+          <a href="{{ path('vib_flies_search_advanced') }}">Search</a>
+        </li>
+        <li class="dropdown hidden-xs last">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <i class="fa fa-caret-down"></i></a>
           <ul class="dropdown-menu menu_level_1">
             <li class="dropdown-submenu first">
@@ -93,21 +99,35 @@
             <li><a href="{{ path('default') }}">Other databases</a></li>
           </ul>
         </li>
+        {% if app.user is not empty %}
+        <li class="visible-xs">
+          <a href="{{ path('logout') }}">
+            {% if is_granted('ROLE_ADMIN') %}
+              <span class="text-danger">
+            {% endif %}
+              Logout {{ app.user }} <i class="fa fa-user pull-right"></i>
+            {% if is_granted('ROLE_ADMIN') %}
+              </span>
+            {% endif %}
+          </a>
+        </li>
+        {% endif %}
       </ul>
       {% if app.user is not empty %}
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="hidden-xs nav navbar-nav navbar-right">
         <li class="dropdown first last">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             {% if is_granted('ROLE_ADMIN') %}
               <span class="text-danger">
             {% endif %}
-            {{ app.user }}&nbsp;
-            <i class="fa fa-user"></i>
+                <span class="hidden-inline-sm">{{ app.user }}&nbsp;</span>
+                <i class="fa fa-user"></i>
             {% if is_granted('ROLE_ADMIN') %}
               </span>
             {% endif %}
           </a>
           <ul class="dropdown-menu menu_level_1 pull-right">
+            <li class="visible-sm dropdown-header">{{ app.user }}</li>
             <li class="first last"><a href="{{ path('logout') }}">Logout</a></li>
           </ul>
         </li>

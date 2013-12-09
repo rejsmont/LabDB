@@ -1,7 +1,14 @@
-.navbar .nav > li.dropdown-split-right > a {
-  padding-left:4px;
-}
+.navbar .nav > li.dropdown-split-right {
+  @media (max-width: @screen-sm-max) {
+    display: none !important;
+  }
+  & > a {
+    padding-left:4px;
+  }
+} 
 
 .navbar .nav > li.dropdown-split-left > a {
-  padding-right:0;
+  @media (min-width: @screen-md-min) {
+    padding-right:0;
+  }
 }

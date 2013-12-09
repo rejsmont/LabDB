@@ -1,0 +1,199 @@
+//
+// Responsive: Utility classes
+// --------------------------------------------------
+
+
+// Mixins
+.responsive-inline-visibility() {
+  display: inline !important;
+}
+
+.responsive-inline-invisibility() {
+  display: none !important;
+}
+
+// Visibility utilities
+
+.visible-inline-xs {
+  .responsive-inline-invisibility();
+  @media (max-width: @screen-xs-max) {
+    .responsive-inline-visibility();
+  }
+  &.visible-inline-sm {
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+      .responsive-inline-visibility();
+    }
+  }
+  &.visible-inline-md {
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+      .responsive-inline-visibility();
+    }
+  }
+  &.visible-inline-lg {
+    @media (min-width: @screen-lg-min) {
+      .responsive-inline-visibility();
+    }
+  }
+}
+.visible-inline-sm {
+  .responsive-inline-invisibility();
+  &.visible-inline-xs {
+    @media (max-width: @screen-xs-max) {
+      .responsive-inline-visibility();
+    }
+  }
+  @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+    .responsive-inline-visibility();
+  }
+  &.visible-inline-md {
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+      .responsive-inline-visibility();
+    }
+  }
+  &.visible-inline-lg {
+    @media (min-width: @screen-lg-min) {
+      .responsive-inline-visibility();
+    }
+  }
+}
+.visible-inline-md {
+  .responsive-inline-invisibility();
+  &.visible-inline-xs {
+    @media (max-width: @screen-xs-max) {
+      .responsive-inline-visibility();
+    }
+  }
+  &.visible-inline-sm {
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+      .responsive-inline-visibility();
+    }
+  }
+  @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+    .responsive-inline-visibility();
+  }
+  &.visible-inline-lg {
+    @media (min-width: @screen-lg-min) {
+      .responsive-inline-visibility();
+    }
+  }
+}
+.visible-inline-lg {
+  .responsive-inline-invisibility();
+  &.visible-inline-xs {
+    @media (max-width: @screen-xs-max) {
+      .responsive-inline-visibility();
+    }
+  }
+  &.visible-inline-sm {
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+      .responsive-inline-visibility();
+    }
+  }
+  &.visible-inline-md {
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+      .responsive-inline-visibility();
+    }
+  }
+  @media (min-width: @screen-lg-min) {
+    .responsive-inline-visibility();
+  }
+}
+
+.hidden-inline-xs {
+  .responsive-inline-visibility();
+  @media (max-width: @screen-xs-max) {
+    .responsive-inline-invisibility();
+  }
+  &.hidden-inline-sm {
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+      .responsive-inline-invisibility();
+    }
+  }
+  &.hidden-inline-md {
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+      .responsive-inline-invisibility();
+    }
+  }
+  &.hidden-inline-lg {
+    @media (min-width: @screen-lg-min) {
+      .responsive-inline-invisibility();
+    }
+  }
+}
+.hidden-inline-sm {
+  .responsive-inline-visibility();
+  &.hidden-inline-xs {
+    @media (max-width: @screen-xs-max) {
+      .responsive-inline-invisibility();
+    }
+  }
+  @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+    .responsive-inline-invisibility();
+  }
+  &.hidden-inline-md {
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+      .responsive-inline-invisibility();
+    }
+  }
+  &.hidden-inline-lg {
+    @media (min-width: @screen-lg-min) {
+      .responsive-inline-invisibility();
+    }
+  }
+}
+.hidden-inline-md {
+  .responsive-inline-visibility();
+  &.hidden-inline-xs {
+    @media (max-width: @screen-xs-max) {
+      .responsive-inline-invisibility();
+    }
+  }
+  &.hidden-inline-sm {
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+      .responsive-inline-invisibility();
+    }
+  }
+  @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+    .responsive-inline-invisibility();
+  }
+  &.hidden-inline-lg {
+    @media (min-width: @screen-lg-min) {
+      .responsive-inline-invisibility();
+    }
+  }
+}
+.hidden-inline-lg {
+  .responsive-inline-visibility();
+  &.hidden-inline-xs {
+    @media (max-width: @screen-xs-max) {
+      .responsive-inline-invisibility();
+    }
+  }
+  &.hidden-inline-sm {
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+      .responsive-inline-invisibility();
+    }
+  }
+  &.hidden-inline-md {
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+      .responsive-inline-invisibility();
+    }
+  }
+  @media (min-width: @screen-lg-min) {
+    .responsive-inline-invisibility();
+  }
+}
+
+// Print utilities
+.visible-inline-print {
+  .responsive-inline-invisibility();
+}
+
+@media print {
+  .visible-inline-print {
+    .responsive-inline-visibility();
+  }
+  .hidden-inline-print {
+    .responsive-inline-invisibility();
+  }
+}
