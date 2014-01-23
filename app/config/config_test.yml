@@ -36,12 +36,6 @@ services:
         tags: [{ name: 'twig.extension' }]
 
 doctrine:
-    orm:
-        metadata_cache_driver: apc
-        result_cache_driver: apc
-        query_cache_driver: apc
-
-doctrine:
     dbal:
         driver:   pdo_sqlite
         host:     ~

@@ -33,3 +33,9 @@ By default authentication uses login form against SQL database.
 Please take a look at FOS user bundle documentation to learn
 how to create user entries
 (https://github.com/FriendsOfSymfony/FOSUserBundle).
+
+To populate database with example data (including two example users) execute:
+
+```
+$ app/console doctrine:fixtures:load --fixtures=src/VIB/UserBundle/Tests/DataFixtures --fixtures=src/VIB/FliesBundle/Tests/DataFixtures --env=prod',
+```
