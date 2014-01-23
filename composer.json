@@ -153,10 +153,6 @@
                   "psr-0": { "PHP_IPP": ["lib/"] }
                 }
             }
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/rmoreas/ShibbolethBundle.git"
         }
     ]
 }
