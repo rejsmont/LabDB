@@ -27,6 +27,7 @@ You may need to adjust permissions of app/cache and app/logs directories
 $ APACHEUSER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data' | grep -v root | head -1 | cut -d\  -f1`
 $ sudo setfacl -R -m u:"$APACHEUSER":rwX -m u:`whoami`:rwX app/cache app/logs
 $ sudo setfacl -dR -m u:"$APACHEUSER":rwX -m u:`whoami`:rwX app/cache app/logs
+
 ```
 
 By default authentication uses login form against SQL database.
@@ -38,4 +39,5 @@ To populate database with example data (including two example users) execute:
 
 ```
 $ app/console doctrine:fixtures:load --fixtures=src/VIB/UserBundle/Tests/DataFixtures --fixtures=src/VIB/FliesBundle/Tests/DataFixtures --env=prod',
+
 ```
