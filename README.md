@@ -7,7 +7,7 @@ Requirements:
 * php 5.3
 * php5-memcache and memcached server
 * php5 driver for your database platform (php5-mysql, php5-pgsql)
-* apache
+* apache (or any other web server supporting php)
 
 To install FlyDB, do the following:
 
