@@ -19,6 +19,7 @@ $ curl -s https://getcomposer.org/installer | php
 $ composer.phar install
 $ app/console assetic:dump --env=prod
 $ app/console doctrine:schema:create --env=prod
+
 ```
 
 You may need to adjust permissions of app/cache and app/logs directories
