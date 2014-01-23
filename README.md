@@ -2,14 +2,14 @@ FlyDB
 =========================
 [![Build Status](https://travis-ci.org/rejsmont/LabDB.png)](https://travis-ci.org/rejsmont/LabDB)
 
-Requirements:
+### Requirements:
 
 * php 5.3
 * php5-memcache and memcached server
 * php5 driver for your database platform (php5-mysql, php5-pgsql)
 * apache (or any other web server supporting php)
 
-To install FlyDB, do the following:
+### To install FlyDB, do the following:
 
 ```
 $ git clone https://github.com/rejsmont/LabDB.git
@@ -44,3 +44,13 @@ $ app/console doctrine:fixtures:load --fixtures=src/VIB/UserBundle/Tests/DataFix
 ```
 
 Of course you will have to set up your web server and point the document root to `LabDB/web`.
+
+### Upgrading is easy
+
+Just pull the latest version from github and update vendors
+
+```
+$ git pull
+$ composer update 
+
+```
