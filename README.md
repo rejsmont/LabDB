@@ -32,9 +32,9 @@ $ sudo setfacl -dR -m u:"$APACHEUSER":rwX -m u:`whoami`:rwX app/cache app/logs
 ```
 
 By default authentication uses login form against SQL database.
-Please take a look at FOS user bundle documentation to learn
-how to create user entries
-(https://github.com/FriendsOfSymfony/FOSUserBundle).
+Please take a look at [FOS user bundle documentation](https://github.com/FriendsOfSymfony/FOSUserBundle)
+to learn how to create user entries
+.
 
 To populate database with example data (including two example users) execute:
 
@@ -42,3 +42,5 @@ To populate database with example data (including two example users) execute:
 $ app/console doctrine:fixtures:load --fixtures=src/VIB/UserBundle/Tests/DataFixtures --fixtures=src/VIB/FliesBundle/Tests/DataFixtures --env=prod',
 
 ```
+
+Of course you will have to set up your web server and point the document root to `LabDB/web`.
