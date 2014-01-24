@@ -58,4 +58,4 @@ $ composer update
 ### Need more help?
 
 Have a look at [Symfony framework documentation](http://symfony.com/doc/current/book/index.html) - LabDB uses Symfony
-framework. You can also request support from the author. Contributions are welcome!
+framework. You can also request support from the author. Contributions are welcome. Donations are even more welcome :)
