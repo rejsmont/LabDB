@@ -11,8 +11,9 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "2.3.*",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "doctrine/doctrine-bundle": "1.2.*",
+        "doctrine/orm": "2.4.*@dev",
+        "doctrine/common": "2.4.*@dev",
+        "doctrine/doctrine-bundle": "dev-master#7b1c579193df840655726b72fd1cbd66f94a5b84",
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "twig/extensions": "1.0.*",
         "symfony/assetic-bundle": "2.3.*",
