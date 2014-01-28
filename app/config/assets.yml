@@ -7,7 +7,7 @@ assetic:
     filters:
         less:
             node:       /usr/bin/node
-            node_paths: [/usr/lib/nodejs]
+            node_paths: [/usr/lib/node_modules/]
             apply_to:   "\.less$"
         cssrewrite: ~
         cssembed:
