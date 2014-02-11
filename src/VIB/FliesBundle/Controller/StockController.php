@@ -142,14 +142,18 @@ class StockController extends CRUDController
                 for ($i = 0; $i < $number - 1; $i++) {
                     $vial = new StockVial();
                     $stock->addVial($vial);
+                }
+                
+                $vials = $stock->getVials();
+                
+                foreach ($vials as $vial) {
                     $vial->setSize($size);
                     $vial->setFood($food);
                 }
+                
                 $om->persist($stock);
                 $om->flush();
                 $om->createACL($stock,$this->getDefaultACL());
-
-                $vials = $stock->getVials();
                 $vm->createACL($vials,$this->getDefaultACL());
 
                 $this->addSessionFlash('success', 'Stock ' . $stock . ' was created.');
