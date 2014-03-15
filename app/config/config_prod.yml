@@ -1,6 +1,6 @@
 imports:
     - { resource: config.yml }
-    - { resource: security.shibboleth.yml }
+    - { resource: security.yml }
 
 doctrine:
     orm:
