@@ -40,7 +40,7 @@ to learn how to create user entries
 To populate database with example data (including two example users) execute:
 
 ```
-$ app/console doctrine:fixtures:load --fixtures=src/VIB/UserBundle/Tests/DataFixtures --fixtures=src/VIB/FliesBundle/Tests/DataFixtures --env=prod',
+$ app/console doctrine:fixtures:load --fixtures=src/VIB/UserBundle/Tests/DataFixtures --fixtures=src/VIB/FliesBundle/Tests/DataFixtures --env=prod
 
 ```
 
