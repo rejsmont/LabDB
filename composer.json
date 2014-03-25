@@ -38,6 +38,7 @@
         "sabre/vobject": "2.0.*",
         "rejsmont/php-ipp": "0.21",
         "kuleuven/shibboleth-bundle": "dev-master",
+        "oyejorge/less.php": "~1.7-dev",
         "twbs/bootstrap": "dev-master",
         "twitter/typeahead.js": "dev-master",
         "twitter/hogan.js": "3.0-dev",

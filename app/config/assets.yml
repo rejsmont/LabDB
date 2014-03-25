@@ -1,14 +1,14 @@
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
-#    bundles:        [VIBSiteTemplateBundle, VIBFliesBundle]
     use_controller: false
     read_from:      %kernel.root_dir%/../web
     filters:
-        less:
-            node:       /usr/bin/node
-            node_paths: [/usr/lib/node_modules/]
+        lessphp:
+            file:       %kernel.root_dir%/../vendor/oyejorge/less.php/lessc.inc.php
             apply_to:   "\.less$"
+            presets:
+                fa-font-path: "'/duplo'"
         cssrewrite: ~
         cssembed:
             jar:        %kernel.root_dir%/../vendor/packagist/cssembed-bin/bin/cssembed.jar
