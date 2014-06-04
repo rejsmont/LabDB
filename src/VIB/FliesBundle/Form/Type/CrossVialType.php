@@ -43,12 +43,14 @@ class CrossVialType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('setupDate', 'datepicker', array(
-                        'label' => 'Setup date'
+                        'label' => 'Setup date',
+                        'horizontal' => true
                     )
                 )
                 ->add('flipDate', 'datepicker', array(
                         'label'    => 'Check date',
-                        'required' => false
+                        'required' => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('virgin', 'text_entity', array(
@@ -59,7 +61,8 @@ class CrossVialType extends AbstractType
                         'attr'     => array('class' => 'barcode virgin-id'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
-                        )
+                        ),
+                        'horizontal' => true
                     )
                 )
                 ->add('virginName', 'genotype_typeahead', array(
@@ -68,7 +71,8 @@ class CrossVialType extends AbstractType
                             'data-id-source' => 'virgin-id'
                         ),
                         'data_route' => 'vib_flies_ajax_genotypes',
-                        'required' => false
+                        'required' => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('male', 'text_entity', array(
@@ -79,7 +83,8 @@ class CrossVialType extends AbstractType
                         'attr'     => array('class' => 'barcode male-id'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
-                        )
+                        ),
+                        'horizontal' => true
                     )
                 )
                 ->add('maleName', 'genotype_typeahead', array(
@@ -88,12 +93,14 @@ class CrossVialType extends AbstractType
                             'data-id-source' => 'male-id'
                         ),
                         'data_route' => 'vib_flies_ajax_genotypes',
-                        'required'   => false
+                        'required'   => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('notes', 'textarea', array(
                         'label'    => 'Notes',
-                        'required' => false
+                        'required' => false,
+                        'horizontal' => true
                     )
                 );
     }

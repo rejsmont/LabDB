@@ -51,12 +51,14 @@ class VialOptionsType extends AbstractType
                         'expanded'    => true,
                         'label'       => 'Vial size',
                         'required'    => false,
-                        'empty_value' => false
+                        'empty_value' => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('food', 'food', array(
                         'label'    => 'Food type',
-                        'required' => false
+                        'required' => false,
+                        'horizontal' => true
                     )
                 );
     }

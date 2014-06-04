@@ -43,12 +43,14 @@ class VialDatesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('setupDate', 'datepicker', array(
-                    'label' => 'Setup date'
+                        'label' => 'Setup date',
+                        'horizontal' => true
                     )
                 )
                 ->add('flipDate', 'datepicker', array(
-                    'label' => 'Flip date',
-                    'required'  => false
+                        'label' => 'Flip date',
+                        'required'  => false,
+                        'horizontal' => true
                     )
                 );
     }

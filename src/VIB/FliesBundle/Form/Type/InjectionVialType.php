@@ -45,7 +45,8 @@ class InjectionVialType extends AbstractType
         $builder->add('setupDate', 'datepicker', array('label' => 'Injection date'))
                 ->add('flipDate', 'datepicker', array(
                         'label' => 'Check date',
-                        'required'  => false
+                        'required'  => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('injectionType', 'choice', array(
@@ -59,18 +60,21 @@ class InjectionVialType extends AbstractType
                             'Cre RMCE'    => 'Cre RMCE'
                         ),
                         'label' => 'Injection type',
+                        'horizontal' => true
                     )
                 )
                 ->add('constructName', 'text', array(
                         'label' => 'Construct name',
-                        'required' => true
+                        'required' => true,
+                        'horizontal' => true
                     )
                 )
                 ->add('targetStock', 'entity_typeahead', array(
                         'property'  => 'name',
                         'class'     => 'VIBFliesBundle:Stock',
                         'label'     => 'Target stock',
-                        'required'  => false
+                        'required'  => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('targetStockVial', 'text_entity', array(
@@ -82,31 +86,37 @@ class InjectionVialType extends AbstractType
                         'attr' => array('class' => 'barcode'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
-                        )
+                        ),
+                        'horizontal' => true
                     )
                 )
                 ->add('embryoCount', 'number', array(
-                        'label' => 'Embryo count'
+                        'label' => 'Embryo count',
+                        'horizontal' => true
                     )
                 )
                 ->add('vendor', 'text', array(
                         'label' => 'Vendor',
-                        'required' => false
+                        'required' => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('receiptDate', 'datepicker', array(
                         'label' => 'Receipt date',
-                        'required'  => false
+                        'required'  => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('orderNo', 'text', array(
                         'label' => 'Order number',
-                        'required' => false
+                        'required' => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('notes', 'textarea', array(
                         'label' => 'Notes',
-                        'required' => false
+                        'required' => false,
+                        'horizontal' => true
                     )
                 );
     }

@@ -42,7 +42,11 @@ class StockType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('label' => 'Name'))
+        $builder->add('name', 'text', array(
+                        'label' => 'Name',
+                        'horizontal' => true
+                    )
+                )
                 ->add('genotype', 'genotype_typeahead', array(
                         'label'    => 'Genotype',
                         'attr'     => array(
@@ -50,7 +54,8 @@ class StockType extends AbstractType
                             'class'          => 'fb-genotype'
                         ),
                         'data_route' => 'vib_flies_ajax_genotypes',
-                        'required' => false
+                        'required'   => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('source_cross', 'text_entity', array(
@@ -62,12 +67,14 @@ class StockType extends AbstractType
                         'attr' => array('class' => 'barcode cross-id'),
                         'widget_addon_append' => array(
                             'icon' => 'qrcode'
-                        )
+                        ),
+                        'horizontal' => true
                     )
                 )
                 ->add('notes', 'textarea', array(
                         'label'    => 'Notes',
-                        'required' => false
+                        'required' => false,
+                        'horizontal' => true
                     )
                 )
                 ->add('vendor', 'typeahead', array(
@@ -76,7 +83,8 @@ class StockType extends AbstractType
                         'attr' => array(
                             'class' => 'fb-vendor'
                         ),
-                        'data_route' => 'vib_flies_ajax_flybasevendor'
+                        'data_route' => 'vib_flies_ajax_flybasevendor',
+                        'horizontal' => true
                     )
                 )
                 ->add('vendorId', 'typeahead', array(
@@ -85,7 +93,8 @@ class StockType extends AbstractType
                         'attr' => array(
                             'class' => 'fb-vendorid'
                         ),
-                        'data_route' => 'vib_flies_ajax_flybasestock'
+                        'data_route' => 'vib_flies_ajax_flybasestock',
+                        'horizontal' => true
                     )
                 )
                 ->add('infoURL', 'url', array(
@@ -94,12 +103,14 @@ class StockType extends AbstractType
                         'attr' => array(
                             'placeholder' => 'Paste address here',
                             'class'       => 'fb-link'
-                        )
+                        ),
+                        'horizontal' => true
                     )
                 )
                 ->add('verified', 'checkbox', array(
                         'label'    => '',
-                        'required' => false
+                        'required' => false,
+                        'horizontal' => true
                     )
                 );
     }

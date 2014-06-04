@@ -57,7 +57,8 @@ class CrossVialSimpleType extends AbstractType
                 ->add('storageUnit', 'entity', array(
                         'property' => 'name',
                         'class'    => 'VIBFliesBundle:Incubator',
-                        'label'    => 'Incubator'
+                        'label'    => 'Incubator',
+                        'horizontal' => true
                     )
                 );
     }
