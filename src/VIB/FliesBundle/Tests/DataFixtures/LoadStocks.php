@@ -49,7 +49,7 @@ class LoadStocks extends AbstractFixture implements OrderedFixtureInterface, Con
     public function load(ObjectManager $manager)
     {
         $manager = $this->container->get('vib.doctrine.manager');
-
+        
         $user_acl = array(
             array('identity' => $this->getReference('user'),
                   'permission' => MaskBuilder::MASK_OWNER),

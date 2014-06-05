@@ -170,7 +170,6 @@ class RackControllerTest extends WebTestCase
         $rack = $repository->find(1);
         $rack->setStorageUnit(null);
         $om->persist($rack);
-
         $om->flush();
     }
 
