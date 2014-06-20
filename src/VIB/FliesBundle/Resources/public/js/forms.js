@@ -381,11 +381,21 @@ $(document).ready(function() {
     $('.fb-vendor').each(function() {
       var $this = $(this);
       var url = $this.data('link') + '?vendor=%QUERY';
-      $this.typeahead({
-        remote:   url,
-        valueKey: 'stock_center',
-        template: '<p>{{stock_center}}</p>',
-        engine: Hogan
+      var template = Hogan.compile('<p>{{stock_center}}</p>');
+      var source = new Bloodhound({
+        datumTokenizer: function(d) { 
+          return Bloodhound.tokenizers.whitespace(d.stock_center); 
+        },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: url
+      });
+      source.initialize();
+      $this.typeahead(null,{
+        displayKey: 'stock_center',
+        templates: {
+          suggestion: function (d) { return template.render(d); }
+        },
+        source: source.ttAdapter()       
       });
     });
     
