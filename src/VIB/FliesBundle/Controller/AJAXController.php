@@ -91,6 +91,7 @@ class AJAXController extends AbstractController
         
         $genotypes = $vial->getGenotypes();
         $terms = explode(' ', $query);
+        $export = array();
         
         foreach ($genotypes as $key => $genotype) {
             $remove = true;
@@ -99,10 +100,12 @@ class AJAXController extends AbstractController
             }
             if ($remove) {
                 unset($genotypes[$key]);
+            } else {
+                $export[] = array('genotype' => $genotype);
             }
         }
         
-        return new JsonResponse($genotypes);
+        return new JsonResponse($export);
     }
     
     /**

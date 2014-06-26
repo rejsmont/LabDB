@@ -402,20 +402,30 @@ $(document).ready(function() {
     $('.fb-vendorid').each(function() {
       var $this = $(this);
       var url = $this.data('link') + '?stock=%QUERY&vendor=%VENDOR';
-      $this.typeahead({
+      var template = Hogan.compile('<p><b>Stock {{stock_id}}</b> <small>{{stock_center}}</small></p><p><i>{{stock_genotype}}</i></p>');
+      var source = new Bloodhound({
+        datumTokenizer: function(d) { 
+          return Bloodhound.tokenizers.whitespace(d.stock_id); 
+        },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
           url: url,
           replace: function(url, query) {
             var vendor = encodeURIComponent($('.fb-vendor').val());
             return url.replace('%QUERY', query).replace('%VENDOR', vendor);
           }
+        }
+      });
+      source.initialize();
+      $this.typeahead(null,{
+        displayKey: 'stock_id',
+        templates: {
+          suggestion: function (d) { return template.render(d); }
         },
-        valueKey: 'stock_id',
-        template: '<p><b>Stock {{stock_id}}</b> <small>{{stock_center}}</small></p><p><i>{{stock_genotype}}</i></p>',
-        engine: Hogan
+        source: source.ttAdapter()       
       }).on('typeahead:selected', function(event, data) {
-         $('.fb-genotype').typeahead('setQuery', data.stock_genotype);
-         $('.fb-vendor').val(data.stock_center);
+         $('.fb-genotype').typeahead('val', data.stock_genotype);
+         $('.fb-vendor').typeahead('val', data.stock_center);
          $('.fb-link').val(data.stock_link);
       });
     });
@@ -456,7 +466,11 @@ $(document).ready(function() {
       var $this = $(this);
       var url = $this.data('link') + '?id=%VIAL&query=%QUERY';
       var id_source = '.' + $this.data('id-source');
-      $this.typeahead({
+      var source = new Bloodhound({
+        datumTokenizer: function(d) { 
+          return Bloodhound.tokenizers.whitespace(d.genotype); 
+        },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
           url: url,
           replace: function(url, query) {
@@ -464,6 +478,11 @@ $(document).ready(function() {
             return url.replace('%QUERY', query).replace('%VIAL', vial);
           }
         }
+      });
+      source.initialize();
+      $this.typeahead(null,{
+        displayKey: 'genotype',
+        source: source.ttAdapter()       
       });
     });
 });
