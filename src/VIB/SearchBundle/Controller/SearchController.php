@@ -95,7 +95,10 @@ abstract class SearchController extends AbstractController
                 $searchQuery = $form->getData();
             } elseif ($advancedForm->isValid()) {
                 $searchQuery = $advancedForm->getData();
+            } else {
+                throw $this->createNotFoundException(); 
             }
+            
             $this->saveSearchQuery($searchQuery);
             
         } else {
