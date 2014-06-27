@@ -93,6 +93,8 @@ function checkVial(filter) {
 
 /**
  * Handles vial barcode input for rack vial selection form
+ * 
+ * TODO: add logic for detailed view
  */
 function checkRackVial() {
   
