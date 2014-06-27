@@ -88,3 +88,26 @@ th.dates {
     float: left;
   }
 }
+
+.panel > .table-bordered,
+.panel-collapse > .table-bordered {
+  border: none;
+  border-top: 1px solid @table-border-color;
+  border-bottom: 1px solid @table-border-color;
+  td:first-child,
+  th:first-child {
+    border-left: none;
+  }
+  td:last-child,
+  th:last-child {
+    border-right: none;
+  }
+  &:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+    tr:last-child > td,
+    tr:last-child > th {
+      border-bottom: none;  
+    }
+  }
+}

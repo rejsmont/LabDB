@@ -1,5 +1,6 @@
 {% extends "VIBFliesBundle:Vial:layout.html.twig" %}
 {% import "VIBSiteTemplateBundle:Macros:list.html.twig" as l %}
+{% import 'VIBSiteTemplateBundle:Macros:status.html.twig' as status %}
 
 {% if form is defined %}
   {% form_theme form _self %}
@@ -31,84 +32,151 @@
       </div>
     </div>
   {% endblock list_selector %}
-  <table class="table table-bordered table-condensed rack-display table-curved" id="rack_{{ entity.id }}">
-    <tbody>
-      <tr>
-        <th><input type="checkbox" id="checkall" checked/></th>
-      {% for i in 1..entity.columns %}
-        <th>
-          {{ entity.position(1,i).column }}
-        </th>
-      {% endfor %}
-      </tr>
-    {% set first = true %}
-    {% set order = 0 %}
-    {% for i in 1..entity.rows %}
-      <tr>
-        <th>
-          {{ entity.position(i,1).row }}
-          <input type="checkbox" class="checkrow" checked/>
-        </th>
-        {% for j in 1..entity.columns %}
-          {% if entity.position(i,j).isEmpty %}
-            {% if first == true %}
-              {% set first = false %}
-              <td id="position_{{ entity.position(i,j).id }}" class="empty info"></td>
-            {% else %}
-              <td id="position_{{ entity.position(i,j).id }}" class="empty"></td>
-            {% endif %}
-          {% else %}
-            {% set content = entity.position(i,j).content %}
-            {% if content.isOverDue() or content.isDead() %}
-              <td id="position_{{ entity.position(i,j).id }}" class="danger">
-            {% elseif content.isDue() %}
-              <td id="position_{{ entity.position(i,j).id }}" class="warning">
-            {% else %}
-              <td id="position_{{ entity.position(i,j).id }}" class="success">
-            {% endif %}
-              {% include 'VIBFliesBundle:Rack:position.html.twig' with {'content': content, 'rackID': entity.id, 'order': order} %}
-              {% set order = order + 1 %}
-            </td>
-          {% endif %}
-        {% endfor %}
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  <div class="list-buttons">
-  {% block list_buttons %}
-    {{ l.select_buttons() }}
-    <div class="btn-group pull-right">
-      <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-        Rack actions
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu">
-        <li class="first">
-          <a href="{{ path('vib_flies_rack_printlabel', { 'id': entity.id }) }}">Print label</a>
-        </li>
-        <li>
-          <a href="{{ path('vib_flies_rack_downloadlabel', { 'id': entity.id }) }}">Download PDF</a>
-        </li>
-        <li class="divider"></li>
-        {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
-        <li>
-          <a href="{{ path('vib_flies_rack_edit', { 'id': entity.id }) }}">Edit</a>
-        </li>
-        {% endif %}
-        <li class="last"onclick="clearRack(this,{{ entity.id }})"
-            data-link="{{ path('vib_flies_ajax_rackvialremove') }}">
-          <a href="#">Clear contents</a>
-        </li>
-      </ul>
+  
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+            Rack view
+          </a>
+        </h4>
+      </div>
+      <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="panel-body">
+          <table class="table table-bordered table-condensed rack-display table-curved" id="rack_{{ entity.id }}">
+            <tbody>
+              <tr>
+                <th><input type="checkbox" id="checkall" checked/></th>
+              {% for i in 1..entity.columns %}
+                <th>
+                  {{ entity.position(1,i).column }}
+                </th>
+              {% endfor %}
+              </tr>
+            {% set first = true %}
+            {% set order = 0 %}
+            {% for i in 1..entity.rows %}
+              <tr>
+                <th>
+                  {{ entity.position(i,1).row }}
+                  <input type="checkbox" class="checkrow" checked/>
+                </th>
+                {% for j in 1..entity.columns %}
+                  {% if entity.position(i,j).isEmpty %}
+                    {% if first == true %}
+                      {% set first = false %}
+                      <td id="position_{{ entity.position(i,j).id }}" class="empty info"></td>
+                    {% else %}
+                      <td id="position_{{ entity.position(i,j).id }}" class="empty"></td>
+                    {% endif %}
+                  {% else %}
+                    {% set content = entity.position(i,j).content %}
+                    {% if content.isOverDue() or content.isDead() %}
+                      <td id="position_{{ entity.position(i,j).id }}" class="danger">
+                    {% elseif content.isDue() %}
+                      <td id="position_{{ entity.position(i,j).id }}" class="warning">
+                    {% else %}
+                      <td id="position_{{ entity.position(i,j).id }}" class="success">
+                    {% endif %}
+                      {% include 'VIBFliesBundle:Rack:position.html.twig' with {'content': content, 'rackID': entity.id, 'order': order} %}
+                      {% set order = order + 1 %}
+                    </td>
+                  {% endif %}
+                {% endfor %}
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          <div class="list-buttons">
+          {% block list_buttons %}
+            {{ l.select_buttons() }}
+            <div class="btn-group pull-right">
+              <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                Rack actions
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="first">
+                  <a href="{{ path('vib_flies_rack_printlabel', { 'id': entity.id }) }}">Print label</a>
+                </li>
+                <li>
+                  <a href="{{ path('vib_flies_rack_downloadlabel', { 'id': entity.id }) }}">Download PDF</a>
+                </li>
+                <li class="divider"></li>
+                {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
+                <li>
+                  <a href="{{ path('vib_flies_rack_edit', { 'id': entity.id }) }}">Edit</a>
+                </li>
+                {% endif %}
+                <li class="last"onclick="clearRack(this,{{ entity.id }})"
+                    data-link="{{ path('vib_flies_ajax_rackvialremove') }}">
+                  <a href="#">Clear contents</a>
+                </li>
+              </ul>
+            </div>
+            {{ l.incubate_button() }}
+          {% endblock list_buttons %}
+          </div>
+        </div>
+      </div>
     </div>
-    {{ l.incubate_button() }}
-  {% endblock list_buttons %}
-  </div>
-  <div class="text-center">
-  {% block paginator %}
-    {% if entities is defined %}{{ knp_pagination_render(entities) }}{% endif %}
-  {% endblock paginator %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+            Detailed vial list
+          </a>
+        </h4>
+      </div>
+      <div id="collapseTwo" class="panel-collapse collapse">
+        <table class="table table-striped table-bordered table-condensed" {% block table_attr %}{% endblock table_attr %}>
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>ID</th>
+              <th>Contents</th>
+              <th class="dates">
+                <div>Setup date</div><div>Flip date</div>
+              </th>
+              <th>From</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% set order = 0 %}
+          {% for i in 1..entity.rows %}
+            {% for j in 1..entity.columns %}
+              {% if not entity.position(i,j).isEmpty %}
+                {% set content = entity.position(i,j).content %}
+                <tr>
+                  {% if order is not defined or order is empty %}
+                    {% set order = entity.id %}
+                  {% endif %}
+                  <td>{{ entity.position(i,j).row }}{{ entity.position(i,j).column }}</td>
+                  <td>{{ l.link(content, 'vib_flies_vial_show', false, null, 'vial') }}</td>
+                  <td>{% spaceless %}{% if content.type == 'stock' %}
+                        {{ l.link(content.stock, 'vib_flies_stock_show', true, null, 'stock') }}
+                      {% elseif content.type == 'cross' %}
+                        {{ l.link(content, 'vib_flies_crossvial_show', true, content.name, 'vial') }}
+                      {% elseif content.type == 'injection' %}
+                        {{ l.link(content, 'vib_flies_injectionvial_show', true, content.name, 'vial') }}
+                      {% endif %}{% endspaceless %}</td>
+                  <td class="dates">
+                    <div>{{ content.setupDate | date("d‑m‑Y") }}</div>
+                    <div>{{ content.realFlipDate | date("d‑m‑Y") }}</div>
+                  </td>
+                  <td>{{ l.link(content.parent, 'vib_flies_vial_show', true, null, 'vial') }}</td>
+                  <td>{{ status.vial(content) }}</td>
+                </tr>
+                {% set order = order + 1 %}
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 {% if form is defined %}

@@ -520,12 +520,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "247bd099b8f74eed3d7bdb42a5e0bb1af1925dce"
+                "reference": "e7a917e9eddd38e9fb37afd6ef95e1b542304a53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/247bd099b8f74eed3d7bdb42a5e0bb1af1925dce",
-                "reference": "247bd099b8f74eed3d7bdb42a5e0bb1af1925dce",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/e7a917e9eddd38e9fb37afd6ef95e1b542304a53",
+                "reference": "e7a917e9eddd38e9fb37afd6ef95e1b542304a53",
                 "shasum": ""
             },
             "require": {
@@ -586,21 +586,20 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2014-06-19 21:21:27"
+            "time": "2014-06-27 13:03:59"
         },
         {
             "name": "doctrine/doctrine-bundle",
             "version": "dev-master",
-            "target-dir": "Doctrine/Bundle/DoctrineBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "7fc096f725dc6878d2d754cf8e674a13c86a2a24"
+                "reference": "e604136b2bfb95cfcade987ec21d69bf65975b71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/7fc096f725dc6878d2d754cf8e674a13c86a2a24",
-                "reference": "7fc096f725dc6878d2d754cf8e674a13c86a2a24",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/e604136b2bfb95cfcade987ec21d69bf65975b71",
+                "reference": "e604136b2bfb95cfcade987ec21d69bf65975b71",
                 "shasum": ""
             },
             "require": {
@@ -632,8 +631,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Doctrine\\Bundle\\DoctrineBundle": ""
+                "psr-4": {
+                    "Doctrine\\Bundle\\DoctrineBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -668,7 +667,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2014-06-13 13:38:13"
+            "time": "2014-06-21 16:09:36"
         },
         {
             "name": "doctrine/doctrine-cache-bundle",
@@ -1883,12 +1882,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/knp-components.git",
-                "reference": "ec65f549d46e9a7b7f9872a3ed63db743e077dc0"
+                "reference": "e2c38ab0b105d9ecf05b923305205e8d0d99643f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/knp-components/zipball/ec65f549d46e9a7b7f9872a3ed63db743e077dc0",
-                "reference": "ec65f549d46e9a7b7f9872a3ed63db743e077dc0",
+                "url": "https://api.github.com/repos/KnpLabs/knp-components/zipball/e2c38ab0b105d9ecf05b923305205e8d0d99643f",
+                "reference": "e2c38ab0b105d9ecf05b923305205e8d0d99643f",
                 "shasum": ""
             },
             "require": {
@@ -1936,7 +1935,7 @@
                 "pager",
                 "paginator"
             ],
-            "time": "2014-01-21 11:19:41"
+            "time": "2014-06-26 11:31:09"
         },
         {
             "name": "knplabs/knp-menu",
@@ -2228,12 +2227,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "25b16e801979098cb2f120e697bfce454b18bf23"
+                "reference": "0951050a1e9bc3a031c780e8e5a8c94bdeb9d9c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/25b16e801979098cb2f120e697bfce454b18bf23",
-                "reference": "25b16e801979098cb2f120e697bfce454b18bf23",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/0951050a1e9bc3a031c780e8e5a8c94bdeb9d9c4",
+                "reference": "0951050a1e9bc3a031c780e8e5a8c94bdeb9d9c4",
                 "shasum": ""
             },
             "require": {
@@ -2288,7 +2287,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-06-04 16:30:04"
+            "time": "2014-06-20 14:09:34"
         },
         {
             "name": "mopa/bootstrap-bundle",
@@ -2907,12 +2906,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioGeneratorBundle.git",
-                "reference": "8b7a33aa3d22388443b6de0b0cf184122e9f60d2"
+                "reference": "dfde3b45dd7bc7b9ff8e6bbedcb9911b99abc2dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/8b7a33aa3d22388443b6de0b0cf184122e9f60d2",
-                "reference": "8b7a33aa3d22388443b6de0b0cf184122e9f60d2",
+                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/dfde3b45dd7bc7b9ff8e6bbedcb9911b99abc2dd",
+                "reference": "dfde3b45dd7bc7b9ff8e6bbedcb9911b99abc2dd",
                 "shasum": ""
             },
             "require": {
@@ -2948,7 +2947,7 @@
                 }
             ],
             "description": "This bundle generates code for you",
-            "time": "2014-04-28 14:01:06"
+            "time": "2014-06-26 06:37:02"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2956,12 +2955,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "7b048deea4ee9c49c70c40a15f4045f8dff765bc"
+                "reference": "0ad7a82115989ae6274b583d7d1beec04cb69b51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/7b048deea4ee9c49c70c40a15f4045f8dff765bc",
-                "reference": "7b048deea4ee9c49c70c40a15f4045f8dff765bc",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/0ad7a82115989ae6274b583d7d1beec04cb69b51",
+                "reference": "0ad7a82115989ae6274b583d7d1beec04cb69b51",
                 "shasum": ""
             },
             "require": {
@@ -3002,7 +3001,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2014-06-13 11:45:24"
+            "time": "2014-06-20 15:48:17"
         },
         {
             "name": "symfony/assetic-bundle",
@@ -3178,16 +3177,15 @@
         {
             "name": "symfony/swiftmailer-bundle",
             "version": "dev-master",
-            "target-dir": "Symfony/Bundle/SwiftmailerBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/SwiftmailerBundle.git",
-                "reference": "85840a287403e53268e212f892607e01cc61b6da"
+                "reference": "8555303e89445133442d4f687d2773b21751d101"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/SwiftmailerBundle/zipball/85840a287403e53268e212f892607e01cc61b6da",
-                "reference": "85840a287403e53268e212f892607e01cc61b6da",
+                "url": "https://api.github.com/repos/symfony/SwiftmailerBundle/zipball/8555303e89445133442d4f687d2773b21751d101",
+                "reference": "8555303e89445133442d4f687d2773b21751d101",
                 "shasum": ""
             },
             "require": {
@@ -3211,8 +3209,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Symfony\\Bundle\\SwiftmailerBundle": ""
+                "psr-4": {
+                    "Symfony\\Bundle\\SwiftmailerBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3233,7 +3231,7 @@
             ],
             "description": "Symfony SwiftmailerBundle",
             "homepage": "http://symfony.com",
-            "time": "2014-04-29 13:05:02"
+            "time": "2014-06-21 16:10:01"
         },
         {
             "name": "symfony/symfony",
@@ -3241,12 +3239,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "7d4f4f276a1460e9e490169c4ef888bae4a62cc7"
+                "reference": "fa2d337b9985242f0264504a005369ab7365b1fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/7d4f4f276a1460e9e490169c4ef888bae4a62cc7",
-                "reference": "7d4f4f276a1460e9e490169c4ef888bae4a62cc7",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/fa2d337b9985242f0264504a005369ab7365b1fc",
+                "reference": "fa2d337b9985242f0264504a005369ab7365b1fc",
                 "shasum": ""
             },
             "require": {
@@ -3343,7 +3341,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2014-06-19 09:31:20"
+            "time": "2014-06-27 11:00:13"
         },
         {
             "name": "tecnick.com/tcpdf",
@@ -3351,7 +3349,7 @@
             "source": {
                 "type": "git",
                 "url": "git://git.code.sf.net/p/tcpdf/code",
-                "reference": "905f0af8af99a7fc86587009c9a80f9b6c8cbd5f"
+                "reference": "e750c674f6ce1e7c428af10e75d1510fa075fe3b"
             },
             "require": {
                 "php": ">=5.3.0"
@@ -3400,7 +3398,7 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2014-06-19 23:27:24"
+            "time": "2014-06-25 16:30:22"
         },
         {
             "name": "twbs/bootstrap",
@@ -3742,17 +3740,130 @@
     ],
     "packages-dev": [
         {
+            "name": "ocramius/instantiator",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ocramius/Instantiator.git",
+                "reference": "cc754c2289ffd4483c319f6ed6ee88ce21676f64"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ocramius/Instantiator/zipball/cc754c2289ffd4483c319f6ed6ee88ce21676f64",
+                "reference": "cc754c2289ffd4483c319f6ed6ee88ce21676f64",
+                "shasum": ""
+            },
+            "require": {
+                "ocramius/lazy-map": "1.0.*",
+                "php": "~5.3"
+            },
+            "require-dev": {
+                "athletic/athletic": "~0.1.8",
+                "ext-phar": "*",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "2.0.*@ALPHA"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Instantiator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://ocramius.github.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
+            "homepage": "https://github.com/Ocramius/Instantiator",
+            "keywords": [
+                "constructor",
+                "instantiate"
+            ],
+            "time": "2014-06-15 11:44:46"
+        },
+        {
+            "name": "ocramius/lazy-map",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ocramius/LazyMap.git",
+                "reference": "5c77102e225d225ae2d74d5f2cc488527834b821"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ocramius/LazyMap/zipball/5c77102e225d225ae2d74d5f2cc488527834b821",
+                "reference": "5c77102e225d225ae2d74d5f2cc488527834b821",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "athletic/athletic": "~0.1.7",
+                "phpmd/phpmd": "1.5.*",
+                "phpunit/phpunit": ">=3.7",
+                "satooshi/php-coveralls": "~0.6",
+                "squizlabs/php_codesniffer": "1.4.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "LazyMap\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://ocramius.github.io/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A library that provides lazy instantiation logic for a map of objects",
+            "homepage": "https://github.com/Ocramius/LazyMap",
+            "keywords": [
+                "lazy",
+                "lazy instantiation",
+                "lazy loading",
+                "map",
+                "service location"
+            ],
+            "time": "2014-05-01 22:15:23"
+        },
+        {
             "name": "phpunit/php-code-coverage",
             "version": "2.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "58401826c8cfc8fd689b60026e91c337df374bca"
+                "reference": "c8decd0f7c2098bb281dff36ffcaa5f8a64adc8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/58401826c8cfc8fd689b60026e91c337df374bca",
-                "reference": "58401826c8cfc8fd689b60026e91c337df374bca",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/c8decd0f7c2098bb281dff36ffcaa5f8a64adc8f",
+                "reference": "c8decd0f7c2098bb281dff36ffcaa5f8a64adc8f",
                 "shasum": ""
             },
             "require": {
@@ -3804,7 +3915,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-05-26 14:55:24"
+            "time": "2014-06-24 06:28:42"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -3945,12 +4056,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "955c24b708f8bfd6a05f303217a8dac3a443d531"
+                "reference": "a0802561692c3b2bb0ed972f7ffafbfab068e580"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/955c24b708f8bfd6a05f303217a8dac3a443d531",
-                "reference": "955c24b708f8bfd6a05f303217a8dac3a443d531",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/a0802561692c3b2bb0ed972f7ffafbfab068e580",
+                "reference": "a0802561692c3b2bb0ed972f7ffafbfab068e580",
                 "shasum": ""
             },
             "require": {
@@ -3987,7 +4098,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2014-05-12 05:34:42"
+            "time": "2014-06-26 07:15:38"
         },
         {
             "name": "phpunit/phpunit",
@@ -4069,15 +4180,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "32f97c9198be565b6051983c70dc8d8e758725f4"
+                "reference": "269280ed3ae3eb354894f2f76ccbe0d529e5a39a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/32f97c9198be565b6051983c70dc8d8e758725f4",
-                "reference": "32f97c9198be565b6051983c70dc8d8e758725f4",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/269280ed3ae3eb354894f2f76ccbe0d529e5a39a",
+                "reference": "269280ed3ae3eb354894f2f76ccbe0d529e5a39a",
                 "shasum": ""
             },
             "require": {
+                "ocramius/instantiator": "~1.0",
                 "php": ">=5.3.3",
                 "phpunit/php-text-template": "~1.2"
             },
@@ -4118,7 +4230,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2014-06-12 07:22:27"
+            "time": "2014-06-22 08:11:45"
         },
         {
             "name": "sebastian/comparator",
