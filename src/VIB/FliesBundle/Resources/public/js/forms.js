@@ -100,9 +100,8 @@ function checkRackVial() {
     var vialID = parseInt(barcode.match(/\d+$/),10);
     
     if (barcode.match(/^\d+$/) == null) {
-        $('#barcode').parents('.control-group').addClass('error');
-        $('#barcode').addClass('error');
-        $('#barcode').parents('.input-append').siblings('span.help-inline').html(form_error('Wrong barcode format'));
+        $('#barcode').parents('.form-group').addClass('has-error');
+        $('#barcode').parents('.form-group').find('span.help-block').html(form_error('Wrong barcode format'));
         $('#barcode').val('');
         $('#barcode').parents('form').find(':input').blur();
         $('#barcode').focus();
@@ -118,9 +117,8 @@ function checkRackVial() {
     checkboxName = "#select_items_" + vialID;    
     checkbox = $(checkboxName);
     
-    $('#barcode').parents('.control-group').removeClass('error');
-    $('#barcode').removeClass('error');
-    $('#barcode').parents('.input-append').siblings('span.help-inline').html('');
+    $('#barcode').parents('.form-group').removeClass('has-error');
+    $('#barcode').parents('.form-group').find('span.help-block').html('');
     
     if(checkbox.length) {
         if (checkbox.is(':checked')) {
@@ -161,14 +159,12 @@ function checkRackVial() {
         });
         request.fail(
             function(xhr, ajaxOptions, thrownError) {
-                $('#barcode').parents('.control-group').addClass('error');
-                $('#barcode').addClass('error');
-                $('#barcode').parents('.input-append').siblings('span.help-inline').html(form_error(xhr.responseText));
+                $('#barcode').parents('.form-group').addClass('has-error');
+                $('#barcode').parents('.form-group').find('span.help-block').html(form_error(xhr.responseText));
         });
     } else {
-      $('#barcode').parents('.control-group').addClass('error');
-      $('#barcode').addClass('error');
-      $('#barcode').parents('.input-append').siblings('span.help-inline').html(form_error('Rack is full'));
+      $('#barcode').parents('.form-group').addClass('has-error');
+      $('#barcode').parents('.form-group').find('span.help-block').html(form_error('Rack is full'));
     }
 
     $('#barcode').val('');

@@ -14,15 +14,19 @@
 {% endif %}
 <div class="col-sm-12">
   {% block list_selector %}
-    <div class="form-horizontal well">
-      <div class="form-group row">
-        <div class="input-group col-sm-4">
-          <input id="barcode" class="barcode form-control" type="text" placeholder="Scan your barcodes here" value=""
-            onchange="checkRackVial()" data-link="{{ path('vib_flies_ajax_rackvial')}}" autofocus="autofocus"/>
-          <span class="input-group-addon"><i class="fa fa-qrcode"></i></span>
-        </div>
-        <div class="col-sm-8">
-          <span class="help-block"></span>
+    <div class="well">
+      <div class="form-inline">
+        <div class="form-group row">
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input id="barcode" class="barcode form-control" type="text" placeholder="Scan your barcodes here" value=""
+                     onchange="checkRackVial()" data-link="{{ path('vib_flies_ajax_rackvial')}}" autofocus="autofocus"/>
+              <span class="input-group-addon"><i class="fa fa-qrcode"></i></span>
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <span class="help-block"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -55,7 +59,13 @@
             {% endif %}
           {% else %}
             {% set content = entity.position(i,j).content %}
-            <td id="position_{{ entity.position(i,j).id }}" class="success">
+            {% if content.isOverDue() or content.isDead() %}
+              <td id="position_{{ entity.position(i,j).id }}" class="danger">
+            {% elseif content.isDue() %}
+              <td id="position_{{ entity.position(i,j).id }}" class="warning">
+            {% else %}
+              <td id="position_{{ entity.position(i,j).id }}" class="success">
+            {% endif %}
               {% include 'VIBFliesBundle:Rack:position.html.twig' with {'content': content, 'rackID': entity.id, 'order': order} %}
               {% set order = order + 1 %}
             </td>

@@ -638,6 +638,16 @@ class Vial extends RackContent
 
         return (($this->getSetupDate() > $date ? true : false) && (! $this->isTrashed()));
     }
+    
+    /**
+     * Is vial dead
+     *
+     * @return boolean
+     */
+    public function isDead()
+    {
+        return ! $this->isAlive();
+    }
 
     /**
      * Get genotypes of flies in this vial
@@ -681,6 +691,36 @@ class Vial extends RackContent
             
             return false;
         }
+    }
+    
+    /**
+     * Should this vial be flipped soon?
+     * 
+     * @return boolean
+     */
+    public function isDue()
+    {
+        $weekAgo = new \DateTime();
+        $weekAgo->sub(new \DateInterval('P1W'));
+        $inOneWeek = new \DateTime();
+        $inOneWeek->add(new \DateInterval('P1W'));
+        
+        return (($this->getRealFlipDate() > $weekAgo)&&
+                ($this->getRealFlipDate() < $inOneWeek));
+    }
+    
+    /**
+     * Should have this vial been flipped long time ago?
+     * 
+     * @return boolean
+     */
+    public function isOverDue()
+    {
+        $weekAgo = new \DateTime();
+        $weekAgo->sub(new \DateInterval('P1W'));
+        
+        return (($this->getRealFlipDate() <= $weekAgo)&&
+                (! $this->wasUsed()));
     }
     
     /**

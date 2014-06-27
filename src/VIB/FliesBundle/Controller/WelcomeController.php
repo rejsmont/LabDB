@@ -80,20 +80,14 @@ class WelcomeController extends AbstractController
         $stats['forgot'] = $repository->getListCount($options);
         $stats['due'] = 0;
         $stats['overdue'] = 0;
-        $weekAgo = new \DateTime();
-        $weekAgo->sub(new \DateInterval('P1W'));
-        $inOneWeek = new \DateTime();
-        $inOneWeek->add(new \DateInterval('P1W'));
         $index = 1;
         foreach ($vials as $vial) {
-            if (($vial->getRealFlipDate() <= $weekAgo)&&
-                    (! $vial->wasUsed())) {
+            if ($vial->isOverDue()) {
                 $stats['overdue'] += 1;
                 if (!isset($stats['overdue_page'])) {
                     $stats['overdue_page'] = ceil($index/25);
                 }
-            } elseif (($vial->getRealFlipDate() > $weekAgo)&&
-                    ($vial->getRealFlipDate() < $inOneWeek)) {
+            } elseif ($vial->isDue()) {
                 $stats['due'] += 1;
                 if (!isset($stats['due_page'])) {
                     $stats['due_page'] = ceil($index/25);
