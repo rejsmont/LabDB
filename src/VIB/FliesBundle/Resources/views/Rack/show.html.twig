@@ -149,7 +149,7 @@
             {% for j in 1..entity.columns %}
               {% if not entity.position(i,j).isEmpty %}
                 {% set content = entity.position(i,j).content %}
-                <tr>
+                <tr id="detail_{{ entity.position(i,j).id }}">
                   {% if order is not defined or order is empty %}
                     {% set order = entity.id %}
                   {% endif %}
@@ -170,6 +170,11 @@
                   <td>{{ status.vial(content) }}</td>
                 </tr>
                 {% set order = order + 1 %}
+              {% else %}
+                <tr id="detail_{{ entity.position(i,j).id }}" class="hidden">
+                  <td>{{ entity.position(i,j).row }}{{ entity.position(i,j).column }}</td>
+                  <td colspan="5"></td>
+                </tr>
               {% endif %}
             {% endfor %}
           {% endfor %}
