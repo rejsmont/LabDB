@@ -33,21 +33,21 @@
     </div>
   {% endblock list_selector %}
   
-  <div class="panel-group" id="accordion">
+  <div class="panel-group" id="rack">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          <a data-toggle="collapse" data-parent="#rack" href="#rack-view">
             Rack view
           </a>
         </h4>
       </div>
-      <div id="collapseOne" class="panel-collapse collapse in">
+      <div id="rack-view" class="panel-collapse collapse in">
         <div class="panel-body">
           <table class="table table-bordered table-condensed rack-display table-curved" id="rack_{{ entity.id }}">
             <tbody>
               <tr>
-                <th><input type="checkbox" id="checkall" checked/></th>
+                <th><input type="checkbox" class="checkall" checked/></th>
               {% for i in 1..entity.columns %}
                 <th>
                   {{ entity.position(1,i).column }}
@@ -124,16 +124,16 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+          <a data-toggle="collapse" data-parent="#rack" href="#rack-detail">
             Detailed vial list
           </a>
         </h4>
       </div>
-      <div id="collapseTwo" class="panel-collapse collapse">
+      <div id="rack-detail" class="panel-collapse collapse">
         <table class="table table-striped table-bordered table-condensed" {% block table_attr %}{% endblock table_attr %}>
           <thead>
             <tr>
-              <th>Position</th>
+              <th><input type="checkbox" class="checkall" checked></th>
               <th>ID</th>
               <th>Contents</th>
               <th class="dates">
@@ -150,24 +150,8 @@
               {% if not entity.position(i,j).isEmpty %}
                 {% set content = entity.position(i,j).content %}
                 <tr id="detail_{{ entity.position(i,j).id }}">
-                  {% if order is not defined or order is empty %}
-                    {% set order = entity.id %}
-                  {% endif %}
-                  <td>{{ entity.position(i,j).row }}{{ entity.position(i,j).column }}</td>
-                  <td>{{ l.link(content, 'vib_flies_vial_show', false, null, 'vial') }}</td>
-                  <td>{% spaceless %}{% if content.type == 'stock' %}
-                        {{ l.link(content.stock, 'vib_flies_stock_show', true, null, 'stock') }}
-                      {% elseif content.type == 'cross' %}
-                        {{ l.link(content, 'vib_flies_crossvial_show', true, content.name, 'vial') }}
-                      {% elseif content.type == 'injection' %}
-                        {{ l.link(content, 'vib_flies_injectionvial_show', true, content.name, 'vial') }}
-                      {% endif %}{% endspaceless %}</td>
-                  <td class="dates">
-                    <div>{{ content.setupDate | date("d‑m‑Y") }}</div>
-                    <div>{{ content.realFlipDate | date("d‑m‑Y") }}</div>
-                  </td>
-                  <td>{{ l.link(content.parent, 'vib_flies_vial_show', true, null, 'vial') }}</td>
-                  <td>{{ status.vial(content) }}</td>
+                    {% include 'VIBFliesBundle:Rack:detail.html.twig' with
+                        {'content': content, 'position': entity.position(i,j), 'order': order} %}
                 </tr>
                 {% set order = order + 1 %}
               {% else %}
@@ -180,6 +164,11 @@
           {% endfor %}
           </tbody>
         </table>
+        <div class="panel-body">
+          <div class="list-buttons">
+          {{ l.select_buttons() }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -190,3 +179,17 @@
 </form>
 {% endif %}
 {% endblock %}
+
+{% block foot_script_additional %}
+  {{ parent() }}
+  <script type="text/javascript">
+    $("[id^=select_items_]").bind("change", function() {
+      var id = "#" + $(this).attr('id').replace("select_items_", "select_detail_items_");
+      $(id).prop("checked", $(this).prop("checked"));
+    });
+    $("[id^=select_detail_items_]").bind("change", function() {
+      var id = "#" + $(this).attr('id').replace("select_detail_items_", "select_items_");
+      $(id).prop("checked", $(this).prop("checked"));
+    });
+  </script>
+{% endblock foot_script_additional %}

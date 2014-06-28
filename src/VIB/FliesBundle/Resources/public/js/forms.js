@@ -143,8 +143,8 @@ function checkRackVial() {
             data: { vialID: vialID, positionID: positionID, rackID: rackID, order: order }
         });
         request.done(
-            function(response) {
-                position.html(response).removeClass('empty').removeClass('info').addClass('success')
+            function(json) {
+                position.html(json.position).removeClass('empty').removeClass('info').addClass(json.class)
                     .stop().css("background-color","")
                     .effect("highlight", {color: "green"}, 5000);
                 position.find('.popover-trigger').hover(function(e) {
@@ -190,7 +190,7 @@ function removeVial(e,vialID,rackID) {
           success: function() {
             var cell = $('#select_items_' + vialID).parents('td')
             $('.rack-display').find('td.info').removeClass('info');
-            cell.html('').removeClass('success').addClass('empty info')
+            cell.html('').removeClass('success warning danger').addClass('empty info')
                 .stop().css("background-color","")
                 .effect("highlight", {color: "red"}, 5000);
           }
@@ -211,7 +211,7 @@ function clearRack(e,rackID) {
           data: {rackID: rackID},
           success: function() {
             var cells = $('.rack-display').find('td')
-            cells.html('').removeClass('info success').addClass('empty')
+            cells.html('').removeClass('info success warning danger').addClass('empty')
             $(cells[0]).addClass('info');
             cells.stop().css("background-color","")
                 .effect("highlight", {color: "red"}, 5000);
@@ -350,10 +350,11 @@ $(document).ready(function() {
         return preventEnterSubmit(e);
     });
 
-    $('#checkall').click(function () {
+    $('.checkall').click(function () {
         var checked = $(this).is(":checked");
         $(this).parents('table').find('tbody :checkbox').each(function(index) {
            $(this).prop("checked", checked);
+           $(this).change();
         });
     });
     
@@ -361,6 +362,7 @@ $(document).ready(function() {
         var checked = $(this).is(":checked");
         $(this).parents('tr').find(':checkbox').each(function(index) {
            $(this).prop("checked", checked);
+           $(this).change();
         });
     });
    

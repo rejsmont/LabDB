@@ -208,7 +208,6 @@ FLYBASE_SQL;
      * Handle rack vial AJAX request
      *
      * @Route("/racks/vials")
-     * @Template()
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -248,7 +247,24 @@ FLYBASE_SQL;
         $om->persist($vial);
         $om->flush();
 
-        return array('content' => $vial, 'rackID' => $rackID, 'order' => $order);
+        $positionView = $this->renderView("VIBFliesBundle:Rack:position.html.twig",
+                array('content' => $vial, 'rackID' => $rackID, 'order' => $order));
+        
+        $detailView = $this->renderView("VIBFliesBundle:AJAX:detailVial.html.twig",
+                array('content' => $vial, 'rackID' => $rackID, 'order' => $order));
+        
+        if ($vial->isDead() || $vial->isOverDue()) {
+            $class = "danger";
+        } elseif ($vial->isDue()) {
+            $class = "warning";
+        } else {
+            $class = "success";
+        }
+        
+        $response = new JsonResponse();
+        $response->setData(array('position' => $positionView, 'detail' => $detailView, 'class' => $class));
+
+        return $response;
     }
 
     /**
@@ -416,8 +432,8 @@ FLYBASE_SQL;
         }
         $status .= '</div>';
         $owner = $om->getOwner($entity);
-        $html = $this->render('VIBFliesBundle:AJAX:popover.html.twig',
-                array('type' => $type, 'entity' => $entity, 'owner' => $owner, 'rack' => $rack))->getContent();
+        $html = $this->renderView('VIBFliesBundle:AJAX:popover.html.twig',
+                array('type' => $type, 'entity' => $entity, 'owner' => $owner, 'rack' => $rack));
         $title = "<b>" . $etype . " " . $entity . "</b>" . $status;
 
         $response = new JsonResponse();
