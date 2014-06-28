@@ -155,10 +155,7 @@
                 </tr>
                 {% set order = order + 1 %}
               {% else %}
-                <tr id="detail_{{ entity.position(i,j).id }}" class="hidden">
-                  <td>{{ entity.position(i,j).row }}{{ entity.position(i,j).column }}</td>
-                  <td colspan="5"></td>
-                </tr>
+                <tr id="detail_{{ entity.position(i,j).id }}" class="hidden"></tr>
               {% endif %}
             {% endfor %}
           {% endfor %}

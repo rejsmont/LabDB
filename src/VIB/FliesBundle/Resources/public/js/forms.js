@@ -113,11 +113,16 @@ function checkRackVial() {
     var position = $('.rack-display').find('td.empty.info');
     var positionID = position.length ? position.attr('id').replace("position_", "") : null;
     var rackID = $('.rack-display').attr('id').replace("rack_", "");
+    var detail = $('#detail_' + positionID);
     var checkboxName;
     var checkbox;
+    var detailCheckboxName;
+    var detailCheckbox;
         
-    checkboxName = "#select_items_" + vialID;    
+    checkboxName = "#select_items_" + vialID;
     checkbox = $(checkboxName);
+    detailCheckboxName = "#select_detail_items_" + vialID;
+    detailCheckbox = $(detailCheckboxName);
     
     $('#barcode').parents('.form-group').removeClass('has-error');
     $('#barcode').parents('.form-group').find('span.help-block').html('');
@@ -125,11 +130,17 @@ function checkRackVial() {
     if(checkbox.length) {
         if (checkbox.is(':checked')) {
             checkbox.removeAttr('checked');
+            detailCheckbox.removeAttr('checked');
             checkbox.parents('td').stop().css("background-color","")
+                .effect("highlight", {color: "red"}, 5000);
+            detailCheckbox.parents('tr').children('td').stop().css("background-color","")
                 .effect("highlight", {color: "red"}, 5000);
         } else {
             checkbox.prop("checked", true);
+            detailCheckbox.prop("checked", true);
             checkbox.parents('td').stop().css("background-color","")
+                .effect("highlight", {color: "green"}, 5000);
+            detailCheckbox.parents('tr').children('td').stop().css("background-color","")
                 .effect("highlight", {color: "green"}, 5000);
         }
     } else if(position.length) {
@@ -149,6 +160,20 @@ function checkRackVial() {
                     .effect("highlight", {color: "green"}, 5000);
                 position.find('.popover-trigger').hover(function(e) {
                     popoverHover($(this), e);
+                });
+                position.find("[id^=select_items_]").bind("change", function() {
+                  var id = "#" + $(this).attr('id').replace("select_items_", "select_detail_items_");
+                  $(id).prop("checked", $(this).prop("checked"));
+                });
+                detail.html(json.detail).removeClass('hidden')
+                    .children('td').stop().css("background-color","")
+                    .effect("highlight", {color: "green"}, 5000);
+                detail.find('.popover-trigger').hover(function(e) {
+                    popoverHover($(this), e);
+                });
+                detail.find("[id^=select_detail_items_]").bind("change", function() {
+                  var id = "#" + $(this).attr('id').replace("select_detail_items_", "select_items_");
+                  $(id).prop("checked", $(this).prop("checked"));
                 });
                 if (emptyPositions.length > 1) {
                   var index = emptyPositions.index(position);
@@ -188,11 +213,13 @@ function removeVial(e,vialID,rackID) {
           type: 'get',
           data: {vialID: vialID, rackID: rackID},
           success: function() {
-            var cell = $('#select_items_' + vialID).parents('td')
+            var cell = $('#select_items_' + vialID).parents('td');
             $('.rack-display').find('td.info').removeClass('info');
             cell.html('').removeClass('success warning danger').addClass('empty info')
                 .stop().css("background-color","")
                 .effect("highlight", {color: "red"}, 5000);
+            var detail = $('#select_detail_items_' + vialID).parents('tr');
+            detail.html('').addClass('hidden');
           }
     });
 }

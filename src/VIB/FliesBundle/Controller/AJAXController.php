@@ -250,8 +250,8 @@ FLYBASE_SQL;
         $positionView = $this->renderView("VIBFliesBundle:Rack:position.html.twig",
                 array('content' => $vial, 'rackID' => $rackID, 'order' => $order));
         
-        $detailView = $this->renderView("VIBFliesBundle:AJAX:detailVial.html.twig",
-                array('content' => $vial, 'rackID' => $rackID, 'order' => $order));
+        $detailView = $this->renderView("VIBFliesBundle:Rack:detail.html.twig",
+                array('content' => $vial, 'position' => $position, 'order' => $order));
         
         if ($vial->isDead() || $vial->isOverDue()) {
             $class = "danger";
