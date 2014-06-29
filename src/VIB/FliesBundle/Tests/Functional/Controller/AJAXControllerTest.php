@@ -94,9 +94,11 @@ class AJAXControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/flies/_ajax/racks/vials?vialID=1&positionID=2');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertEquals(1, $crawler->filter('input[type=checkbox]#select_items_1')->count());
+        $client->request('GET', '/flies/_ajax/racks/vials?vialID=1&positionID=2');
+        $response = $client->getResponse();
+        $this->assertTrue($response->isSuccessful());
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
+        $this->assertRegExp('/select_items_1/', $response->getContent());
     }
 
     public function testRackVialError()

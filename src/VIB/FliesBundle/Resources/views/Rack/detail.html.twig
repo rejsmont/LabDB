@@ -10,7 +10,7 @@
 {% endif %}
 
 {% if order is not defined or order is empty %}
-  {% set order = entity.id %}
+  {% set order = content.id %}
 {% endif %}
 
 <td><input type="checkbox" id="select_detail_items_{{ content.id }}" checked />
