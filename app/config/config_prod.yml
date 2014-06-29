@@ -4,9 +4,18 @@ imports:
 
 doctrine:
     orm:
-        metadata_cache_driver: memcache
-        result_cache_driver: memcache
-        query_cache_driver: memcache
+        metadata_cache_driver:
+            type: memcache
+            host: %memcached_host%
+            port: %memcached_port%
+        result_cache_driver:
+            type: memcache
+            host: %memcached_host%
+            port: %memcached_port%
+        query_cache_driver:
+            type: memcache
+            host: %memcached_host%
+            port: %memcached_port%
 
 monolog:
     handlers:
