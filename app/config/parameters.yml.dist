@@ -1,13 +1,13 @@
 parameters:
     database_driver:   pdo_mysql
     database_host:     localhost
-    database_port:     ~
+    database_port:     3306
     database_name:     symfony
     database_user:     root
     database_password: ~
 
     memcached_host:    localhost
-    memcached_port:    ~
+    memcached_port:    11211
 
     mailer_transport:  smtp
     mailer_host:       localhost
