@@ -267,6 +267,7 @@ class Vial extends RackContent
     public function setSetupDate($setupDate)
     {
         $this->setupDate = $setupDate;
+        $this->updateStorageConditions();
     }
 
     /**
