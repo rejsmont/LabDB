@@ -180,6 +180,7 @@ class Vial extends RackContent
         } else {
             $this->resetDates();
         }
+        $this->updateStorageConditions();
     }
 
     /**
