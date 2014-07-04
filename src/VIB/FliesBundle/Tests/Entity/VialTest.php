@@ -392,7 +392,7 @@ class FakeVial extends Vial
     {
         parent::__construct($template, $flip);
         $this->id = 1;
-        $this->setupDate = new \DateTime('2000-01-01 00:00:00');
+        $this->setSetupDate(new \DateTime('2000-01-01 00:00:00'));
         $maleCross = new CrossVial();
         $virginCross = new CrossVial();
         $this->maleCrosses->add($maleCross);
