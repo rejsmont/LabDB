@@ -23,6 +23,7 @@ use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 use VIB\CoreBundle\Entity\NamedEntity;
 use VIB\StorageBundle\Entity\StorageUnitInterface;
@@ -101,6 +102,22 @@ class Incubator extends NamedEntity implements StorageUnitInterface, Termocontro
     }
 
     /**
+     * Get living vials
+     *
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getLivingVials()
+    {
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P2M'));
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('trashed', false))
+            ->andWhere(Criteria::expr()->gt('setupDate', $date));
+
+        return $this->getVials()->matching($criteria);
+    }
+    
+    /**
      * {@inheritdoc}
      */    
     public function getContents() {
@@ -124,5 +141,15 @@ class Incubator extends NamedEntity implements StorageUnitInterface, Termocontro
     public function setTemperature($temperature)
     {
         $this->temperature = $temperature;
+        
+        foreach ($this->getRacks() as $rack) {
+            foreach ($rack->getContents() as $vial) {
+                $vial->updateStorageConditions();
+            }
+        }
+        
+        foreach ($this->getLivingVials() as $vial) {
+            $vial->updateStorageConditions();
+        }
     }
 }

@@ -79,9 +79,16 @@ class Rack extends BaseRack implements LabelInterface, StorageUnitContentInterfa
      */
     public function setStorageUnit(StorageUnitInterface $unit = null)
     {
+        $prevUnit = $this->incubator;
         $this->incubator = $unit;
+        
+        if ($prevUnit !== $unit) {
+            foreach ($this->getContents() as $vial) {
+                $vial->updateStorageConditions();
+            }
+        }
     }
-
+    
     /**
      * {@inheritdoc}
      */
@@ -111,5 +118,5 @@ class Rack extends BaseRack implements LabelInterface, StorageUnitContentInterfa
     protected function getPositionsProperty() {
         return 'positions';
     }
-
+    
 }

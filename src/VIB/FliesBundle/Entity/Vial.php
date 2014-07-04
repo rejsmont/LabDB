@@ -27,6 +27,8 @@ use Doctrine\Common\Collections\Criteria;
 
 use VIB\CoreBundle\Entity\NamedEntityInterface;
 use VIB\StorageBundle\Entity\RackContent;
+use VIB\StorageBundle\Entity\RackInterface;
+use VIB\StorageBundle\Entity\RackPositionInterface;
 use VIB\StorageBundle\Entity\StorageUnitInterface;
 use VIB\StorageBundle\Entity\StorageUnitContentInterface;
 use VIB\StorageBundle\Entity\TermocontrolledInterface;
@@ -72,6 +74,12 @@ class Vial extends RackContent
      * @Serializer\Expose
      */
     protected $flipDate;
+    
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Serializer\Expose
+     */
+    protected $defaultFlipDate;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -145,7 +153,7 @@ class Vial extends RackContent
      * @ORM\Column(type="float", nullable=true)
      */
     protected $temperature;
-
+    
     /**
      * Construct a new vial
      *
@@ -157,7 +165,7 @@ class Vial extends RackContent
      */
     public function __construct(Vial $template = null, $flip = true)
     {
-        $this->temperature = 21.00;
+        $this->temperature = null;
         $this->children = new ArrayCollection();
         $this->virginCrosses = new ArrayCollection();
         $this->maleCrosses = new ArrayCollection();
@@ -552,8 +560,27 @@ class Vial extends RackContent
      */
     public function setStorageUnit(StorageUnitInterface $unit = null) {
         $this->incubator = $unit;
+        $this->updateStorageConditions();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function setPosition(RackPositionInterface $position = null)
+    {
+        parent::setPosition($position);
+        $this->updateStorageConditions();
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setRack(RackInterface $rack = null)
+    {
+        parent::setRack($rack);
+        $this->updateStorageConditions();
+    }
+    
     /**
      * {@inheritdoc}
      */
@@ -567,14 +594,26 @@ class Vial extends RackContent
      */
     public function getTemperature()
     {
+        if (null === $this->temperature) {
+            $this->updateTemperature();
+        }
+        return $this->temperature;
+    }
+    
+    /**
+     * 
+     */
+    protected function getStorageUnitTemperature()
+    {
         $unit = $this->getStorageUnit();
         if (($unit instanceof TermocontrolledInterface)&&(! $this->isTrashed())) {
+            
             return $unit->getTemperature();
-        } else {
-            return ($this->temperature !== null) ? $this->temperature : 21.00;
         }
+        
+        return null;
     }
-
+    
     /**
      * Get generation time
      *
@@ -605,15 +644,11 @@ class Vial extends RackContent
      */
     public function getDefaultFlipDate()
     {
-        $interval = new \DateInterval('P' . 2 * $this->getGenerationTime() . 'D');
-        if (null !== $this->getSetupDate()) {
-            $flipDate = clone $this->getSetupDate();
-            $flipDate->add($interval);
-        } else {
-            $flipDate = null;
+        if (null === $this->defaultFlipDate) {
+            $this->updateDefaultFlipDate();
         }
         
-        return $flipDate;
+        return $this->defaultFlipDate;
     }
 
     /**
@@ -721,6 +756,44 @@ class Vial extends RackContent
         
         return (($this->getRealFlipDate() <= $weekAgo)&&
                 (! $this->wasUsed()));
+    }
+    
+    /**
+     * Update temperature
+     */
+    protected function updateTemperature()
+    {
+        $storageUnitTemperature = $this->getStorageUnitTemperature();
+        if (null !== $storageUnitTemperature) {
+            $this->temperature = $storageUnitTemperature;
+        } elseif ((null === $this->temperature)||($this->isAlive())) {
+            $this->temperature = 21.00;
+        }
+    }
+    
+    /**
+     * Update default flip date
+     */
+    protected function updateDefaultFlipDate()
+    {
+        $interval = new \DateInterval('P' . 2 * $this->getGenerationTime() . 'D');
+        if (null !== $this->getSetupDate()) {
+            $flipDate = clone $this->getSetupDate();
+            $flipDate->add($interval);
+        } else {
+            $flipDate = null;
+        }
+        
+        $this->defaultFlipDate = $flipDate;        
+    }
+    
+    /**
+     * Update temperature and default flip date
+     */
+    public function updateStorageConditions()
+    {
+        $this->updateTemperature();
+        $this->updateDefaultFlipDate();
     }
     
     /**
