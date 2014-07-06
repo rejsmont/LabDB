@@ -47,7 +47,7 @@ class VialDatesType extends AbstractType
                         'horizontal' => true
                     )
                 )
-                ->add('flipDate', 'datepicker', array(
+                ->add('storedFlipDate', 'datepicker', array(
                         'label' => 'Flip date',
                         'required'  => false,
                         'horizontal' => true

@@ -11,7 +11,7 @@
 
 {% block modal_body %}
   {{ s.row("Injection date", entity.setupDate | date("d F Y")) }}
-  {{ s.row("Check date", entity.realFlipDate | date("d F Y")) }}
+  {{ s.row("Check date", entity.flipDate | date("d F Y")) }}
   {{ s.row("Injection type", entity.injectionType) }}
   {{ s.row("Construct name", entity.constructName) }}
   {{ s.row("Target stock", entity.targetStock, 'vib_flies_stock_show', null, 'stock') }}

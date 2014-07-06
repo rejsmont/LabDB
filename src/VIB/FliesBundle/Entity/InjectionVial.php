@@ -112,7 +112,7 @@ class InjectionVial extends Vial implements AltLabelInterface
     /**
      * Construct InjectionVial
      *
-     * @param \VIB\FliesBundle\Entity\InjectionVial $parent
+     * @param \VIB\FliesBundle\Entity\InjectionVial $template
      * @param boolean                               $flip
      */
     public function __construct(Vial $template = null, $flip = false)
@@ -242,7 +242,7 @@ class InjectionVial extends Vial implements AltLabelInterface
     /**
      * Set injection type
      *
-     * @param string $injectionType
+     * @param string $constructName
      */
     public function setConstructName($constructName) {
         $this->constructName = $constructName;
@@ -251,7 +251,7 @@ class InjectionVial extends Vial implements AltLabelInterface
     /**
      * Set target stock
      *
-     * @param \VIB\FliesBundle\Entity\Stock $stock
+     * @param \VIB\FliesBundle\Entity\Stock $targetStock
      */
     public function setTargetStock(Stock $targetStock = null)
     {
@@ -397,28 +397,9 @@ class InjectionVial extends Vial implements AltLabelInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultFlipDate()
+    public function getFlipInterval()
     {
-        $parent = $this->getParent();
-        if (null !== $parent) {
-            
-            return $parent->getDefaultFlipDate();
-        }
-        $interval = new \DateInterval('P' . $this->getGenerationTime() . 'D');
-        $setup = clone $this->getSetupDate();
-        $setup->add($interval);
-
-        return $setup;
-    }
-
-    /**
-     * Delay development by 2 days for new crosses
-     *
-     * @return integer
-     */
-    protected function getDelay()
-    {
-        return (null === $this->getParent()) ? 2 : 0;
+        return new \DateInterval('P' . $this->getGenerationTime() . 'D');
     }
     
     /**

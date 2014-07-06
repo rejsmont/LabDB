@@ -76,10 +76,10 @@ class Vial extends RackContent
     protected $flipDate;
     
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      * @Serializer\Expose
      */
-    protected $defaultFlipDate;
+    protected $flipDateAuto;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -165,6 +165,7 @@ class Vial extends RackContent
      */
     public function __construct(Vial $template = null, $flip = true)
     {
+        $this->flipDateAuto = true;
         $this->temperature = null;
         $this->children = new ArrayCollection();
         $this->virginCrosses = new ArrayCollection();
@@ -232,13 +233,13 @@ class Vial extends RackContent
     {
         $this->setSetupDate(new \DateTime());
         if ((null !== $template)&&
-            (null !== $template->getFlipDate())&&
+            (null !== $template->getStoredFlipDate())&&
             (null !== $template->getSetupDate())) {
             $flipDate = new \DateTime();
-            $flipDate->add($template->getSetupDate()->diff($template->getFlipDate()));
-            $this->setFlipDate($flipDate);
+            $flipDate->add($template->getSetupDate()->diff($template->getStoredFlipDate()));
+            $this->setStoredFlipDate($flipDate);
         } else {
-            $this->setFlipDate(null);
+            $this->setStoredFlipDate(null);
         }
     }
 
@@ -251,7 +252,7 @@ class Vial extends RackContent
     {
         if (null !== $template) {
             $this->setSetupDate($template->getSetupDate());
-            $this->setFlipDate($template->getFlipDate());
+            $this->setStoredFlipDate($template->getStoredFlipDate());
             $this->setSize($template->getSize());
             $this->setFood($template->getFood());
             $this->setNotes($template->getNotes());
@@ -267,7 +268,7 @@ class Vial extends RackContent
     public function setSetupDate($setupDate)
     {
         $this->setupDate = $setupDate;
-        $this->updateDefaultFlipDate();
+        $this->updateFlipDate();
     }
 
     /**
@@ -281,25 +282,59 @@ class Vial extends RackContent
     }
 
     /**
-     * Set flipDate
-     *
-     * @param DateTime $flipDate
-     */
-    public function setFlipDate($flipDate)
-    {
-        $this->flipDate = $flipDate;
-    }
-
-    /**
      * Get flipDate
      *
      * @return DateTime
      */
     public function getFlipDate()
     {
-        return $this->flipDate;
+        return (null !== $this->flipDate) ? $this->flipDate : $this->getDefaultFlipDate();
     }
 
+    /**
+     * Set flipDate
+     *
+     * @param DateTime $flipDate
+     */
+    public function setStoredFlipDate($flipDate)
+    {
+        if (null !== $flipDate) {
+            $this->flipDate = $flipDate;
+            $this->flipDateAuto = false;
+        } else {
+            $this->flipDateAuto = true;
+            $this->flipDate = $this->getDefaultFlipDate();
+        }
+    }
+    
+    /**
+     * Get stored flip date
+     *
+     * @return DateTime
+     */
+    public function getStoredFlipDate()
+    {
+        return $this->flipDateAuto ? null : $this->flipDate;
+    }
+    
+    /**
+     * Get default flip date
+     * 
+     * @return DateTime
+     */
+    public function getDefaultFlipDate()
+    {
+        $interval = $this->getFlipInterval();
+        if (null !== $this->getSetupDate()) {
+            $flipDate = clone $this->getSetupDate();
+            $flipDate->add($interval);
+        } else {
+            $flipDate = null;
+        }
+
+        return $flipDate;
+    }
+    
     /**
      * Set notes
      *
@@ -353,7 +388,7 @@ class Vial extends RackContent
     /**
      * Set food
      *
-     * @param string $size
+     * @param string $food
      */
     public function setFood($food)
     {
@@ -541,8 +576,10 @@ class Vial extends RackContent
     {
         $this->trashed = $trashed;
         if ($trashed) {
-            $this->temperature = $this->getTemperature();
             $this->setPosition(null);
+            $this->setStorageUnit(null);
+        } else {
+            $this->updateStorageConditions();
         }
     }
 
@@ -603,7 +640,9 @@ class Vial extends RackContent
     }
     
     /**
+     * Get temperature of the storage unit this vial is in
      * 
+     * @return float|null
      */
     protected function getStorageUnitTemperature()
     {
@@ -627,6 +666,16 @@ class Vial extends RackContent
     }
 
     /**
+     * Get interval between setup and flip dates
+     * 
+     * @return DateInterval
+     */
+    protected function getFlipInterval()
+    {
+        return new \DateInterval('P' . 2 * $this->getGenerationTime() . 'D');
+    }
+    
+    /**
      * Get progress
      *
      * @return float
@@ -637,30 +686,6 @@ class Vial extends RackContent
         $interval = $this->getSetupDate()->diff($today);
 
         return $interval->format('%a') / $this->getGenerationTime();
-    }
-
-    /**
-     * Get default flip date
-     *
-     * @return DateTime
-     */
-    public function getDefaultFlipDate()
-    {
-        if (null === $this->defaultFlipDate) {
-            $this->updateDefaultFlipDate();
-        }
-        
-        return $this->defaultFlipDate;
-    }
-
-    /**
-     * Get set or calculated value for flip date
-     *
-     * @return DateTime
-     */
-    public function getRealFlipDate()
-    {
-        return (null !== $this->getFlipDate()) ? $this->getFlipDate() : $this->getDefaultFlipDate();
     }
 
     /**
@@ -742,8 +767,8 @@ class Vial extends RackContent
         $inOneWeek = new \DateTime();
         $inOneWeek->add(new \DateInterval('P1W'));
         
-        return (($this->getRealFlipDate() > $weekAgo)&&
-                ($this->getRealFlipDate() < $inOneWeek));
+        return (($this->getFlipDate() > $weekAgo)&&
+                ($this->getFlipDate() < $inOneWeek));
     }
     
     /**
@@ -756,7 +781,7 @@ class Vial extends RackContent
         $weekAgo = new \DateTime();
         $weekAgo->sub(new \DateInterval('P1W'));
         
-        return (($this->getRealFlipDate() <= $weekAgo)&&
+        return (($this->getFlipDate() <= $weekAgo)&&
                 (! $this->wasUsed()));
     }
     
@@ -776,17 +801,11 @@ class Vial extends RackContent
     /**
      * Update default flip date
      */
-    protected function updateDefaultFlipDate()
+    protected function updateFlipDate()
     {
-        $interval = new \DateInterval('P' . 2 * $this->getGenerationTime() . 'D');
-        if (null !== $this->getSetupDate()) {
-            $flipDate = clone $this->getSetupDate();
-            $flipDate->add($interval);
-        } else {
-            $flipDate = null;
+        if ($this->flipDateAuto) {
+            $this->flipDate = $this->getDefaultFlipDate();
         }
-        
-        $this->defaultFlipDate = $flipDate;        
     }
     
     /**
@@ -795,7 +814,7 @@ class Vial extends RackContent
     public function updateStorageConditions()
     {
         $this->updateTemperature();
-        $this->updateDefaultFlipDate();
+        $this->updateFlipDate();
     }
     
     /**

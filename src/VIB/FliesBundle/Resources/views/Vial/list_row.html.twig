@@ -25,7 +25,7 @@
     {% endif %}{% endspaceless %}</td>
 <td class="dates">
   <div>{{ entity.setupDate | date("d‑m‑Y") }}</div>
-  <div>{{ entity.realFlipDate | date("d‑m‑Y") }}</div>
+  <div>{{ entity.flipDate | date("d‑m‑Y") }}</div>
 </td>
 <td>{{ l.link(entity.parent, 'vib_flies_vial_show', true, null, 'vial') }}</td>
 <td>{{ status.vial(entity) }}</td>

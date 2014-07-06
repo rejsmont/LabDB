@@ -45,7 +45,10 @@ class VialTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($vial->isLabelPrinted());
         $this->assertFalse($vial->isTrashed());
         $this->assertEquals($this->date, $vial->getSetupDate());
-        $this->assertNull($vial->getFlipDate());
+        $date = clone $this->date;
+        $date->add(new \DateInterval('P26D'));
+        $this->assertEquals($date, $vial->getFlipDate());
+        $this->assertNull($vial->getStoredFlipDate());
         $this->assertNull($vial->getNotes());
         $this->assertEquals('medium', $vial->getSize());
         $this->assertNull($vial->getPosition());
@@ -113,10 +116,10 @@ class VialTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider vialProvider
      */
-    public function testFlipDate($vial)
+    public function testStoredFlipDate($vial)
     {
-        $vial->setFlipDate($date = $this->date);
-        $this->assertEquals($date, $vial->getFlipDate());
+        $vial->setStoredFlipDate($date = $this->date);
+        $this->assertEquals($date, $vial->getStoredFlipDate());
     }
 
     /**
@@ -330,11 +333,11 @@ class VialTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider vialProvider
      */
-    public function testGetRealFlipDate($vial)
+    public function testGetFlipDate($vial)
     {
-        $this->assertEquals($vial->getDefaultFlipDate(),$vial->getRealFlipDate());
-        $vial->setFlipDate($date = $this->date);
-        $this->assertEquals($date, $vial->getRealFlipDate());
+        $this->assertEquals($vial->getDefaultFlipDate(),$vial->getFlipDate());
+        $vial->setStoredFlipDate($date = $this->date);
+        $this->assertEquals($date, $vial->getFlipDate());
     }
 
     /**

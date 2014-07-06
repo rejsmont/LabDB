@@ -10,7 +10,7 @@
 
 {% block modal_body %}
   {{ s.row("Setup date", entity.setupDate | date("d F Y")) }}
-  {{ s.row("Flip date", entity.realFlipDate | date("d F Y")) }}
+  {{ s.row("Flip date", entity.flipDate | date("d F Y")) }}
   {{ s.row("Stock", entity.stock, 'vib_flies_stock_show', null, 'stock', entity.stock.genotype) }}
   <div class="form-group">
     <a class="control-label col-sm-3 collapse-toggle" data-toggle="collapse" href="#more"><strong>More information</strong></a>

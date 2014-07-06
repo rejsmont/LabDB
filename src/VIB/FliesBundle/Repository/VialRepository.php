@@ -115,7 +115,7 @@ class VialRepository extends EntityRepository
         $vials = $this->getAclFilter()->apply($qb, array('OWNER'), $user)->getResult();
         $dates = array();
         foreach ($vials as $vial) {
-            $dates[] = $vial->getRealFlipDate();
+            $dates[] = $vial->getFlipDate();
         }
 
         return array_unique($dates, SORT_REGULAR);
