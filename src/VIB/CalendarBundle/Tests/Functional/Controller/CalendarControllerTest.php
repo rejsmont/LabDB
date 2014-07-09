@@ -29,6 +29,9 @@ class CalendarControllerTest extends WebTestCase
         $client->request('GET', '/calendar/jdoe.ics');
         $response = $client->getResponse();
         $this->assertTrue($response->isSuccessful());
+        echo "\n";
+        var_dump($response);
+        echo "\n";
         $this->assertTrue($response->headers->contains('Content-Type', 'text/calendar; charset=utf-8'));
     }
 
