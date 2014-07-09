@@ -11,4 +11,4 @@ before_script:
   - composer selfupdate
   - composer install --no-interaction
 
-script: phpunit -c app
+script: bin/phpunit -c app
