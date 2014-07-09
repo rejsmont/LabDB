@@ -18,8 +18,11 @@
 
 namespace VIB\FliesBundle\Repository;
 
+use VIB\CoreBundle\Filter\ListFilterInterface;
 use VIB\SearchBundle\Search\SearchQueryInterface;
+use VIB\FliesBundle\Filter\VialFilter;
 use VIB\FliesBundle\Search\SearchQuery;
+use VIB\FliesBundle\Entity\CrossVial;
 
 /**
  * CrossVialRepository
@@ -31,9 +34,9 @@ class CrossVialRepository extends SearchableVialRepository
     /**
      * {@inheritdoc}
      */
-    protected function getListQueryBuilder($options = array())
+    protected function getListQueryBuilder(ListFilterInterface $filter = null)
     {
-        return parent::getListQueryBuilder($options)
+        return parent::getListQueryBuilder($filter)
             ->addSelect('m, v')
             ->leftJoin('e.male', 'm')
             ->leftJoin('e.virgin', 'v');
@@ -57,10 +60,11 @@ class CrossVialRepository extends SearchableVialRepository
      *
      * @param CrossVial $cross
      */
-    public function findSimilar($cross)
+    public function findSimilar(CrossVial $cross)
     {
-        $options = array();
-        $options['filter'] = 'all';
+        $filter = new VialFilter();
+        $filter->setAccess('shared');
+        $filter->setFilter('all');
 
         $startDate = clone $cross->getSetupDate();
         $stopDate = clone $cross->getSetupDate();
@@ -69,7 +73,7 @@ class CrossVialRepository extends SearchableVialRepository
 
         $owner = $this->getObjectManager()->getOwner($cross);
 
-        $qb = $this->getListQueryBuilder($options);
+        $qb = $this->getListQueryBuilder($filter);
         $qb->andWhere('e.maleName = :male_name')
            ->andWhere('e.virginName = :virgin_name')
            ->andWhere('e.setupDate > :start_date')
@@ -81,6 +85,6 @@ class CrossVialRepository extends SearchableVialRepository
            ->setParameter('start_date', $startDate->format('Y-m-d'))
            ->setParameter('stop_date', $stopDate->format('Y-m-d'));
 
-        return $this->getAclFilter()->apply($qb, array('OWNER'), $owner)->getResult();
+        return $this->getAclFilter()->apply($qb, $filter->getPermissions(), $owner)->getResult();
     }
 }

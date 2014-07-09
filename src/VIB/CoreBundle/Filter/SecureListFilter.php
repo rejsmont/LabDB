@@ -38,9 +38,9 @@ class SecureListFilter implements ListFilterInterface, SecureFilterInterface {
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
-    public function __construct(Request $request, SecurityContextInterface $securityContext = null)
+    public function __construct(Request $request = null, SecurityContextInterface $securityContext = null)
     {
-        $this->access = $request->get('access', 'private');
+        $this->access = (null !== $request) ? $request->get('access', 'private') : 'private';
         $this->securityContext = $securityContext;
     }
     

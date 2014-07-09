@@ -33,6 +33,8 @@ use VIB\FliesBundle\Form\StockNewType;
 use VIB\FliesBundle\Entity\Stock;
 use VIB\FliesBundle\Entity\StockVial;
 
+use VIB\FliesBundle\Filter\VialFilter;
+
 /**
  * StockController class
  *
@@ -83,10 +85,12 @@ class StockController extends CRUDController
         $stock = $this->getEntity($id);
         $response = parent::showAction($stock);
         $om = $this->getObjectManager();
-
-        $options = array('user' => $this->getUser(), 'permissions' => array('OWNER'));
+        
+        $filter = new VialFilter(null, $this->getSecurityContext());
+        $filter->setAccess('private');
+        
         $myVials = $om->getRepository('VIB\FliesBundle\Entity\StockVial')
-                      ->findLivingVialsByStock($stock, $options);
+                      ->findLivingVialsByStock($stock, $filter);
 
         $small = new ArrayCollection();
         $medium = new ArrayCollection();

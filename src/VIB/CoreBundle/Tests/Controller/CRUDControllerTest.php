@@ -250,8 +250,8 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
     private function getFakeObjectManager()
     {
         $map = array(
-          array('VIB\CoreBundle\Entity\Entity', 0, array(), null),
-          array('VIB\CoreBundle\Entity\Entity', 1, array(), new Entity())
+          array('VIB\CoreBundle\Entity\Entity', 0, null, null),
+          array('VIB\CoreBundle\Entity\Entity', 1, null, new Entity())
         );
 
         $om = $this->getMockBuilder('VIB\CoreBundle\Doctrine\ObjectManager')
@@ -263,7 +263,7 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
         $om->expects($this->any())
             ->method('find')
             ->will($this->returnValueMap($map));
-
+        
         return $om;
     }
 

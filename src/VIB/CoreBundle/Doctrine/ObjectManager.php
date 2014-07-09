@@ -35,6 +35,8 @@ use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 use VIB\CoreBundle\Repository\EntityRepository;
+use VIB\CoreBundle\Filter\ListFilterInterface;
+use VIB\CoreBundle\Filter\EntityFilterInterface;
 use VIB\SecurityBundle\Bridge\Doctrine\AclFilter;
 
 /**
@@ -299,33 +301,59 @@ class ObjectManager extends ObjectManagerDecorator
     }
 
     /**
-     * {@inheritdoc}
+     * Finds an object by its identifier.
+     *
+     * This is just a convenient shortcut for getRepository($className)->find($id).
+     *
+     * @param string $className The class name of the object to find.
+     * @param mixed  $id        The identity of the object to find.
+     * @param VIB\CoreBundle\Filter\EntityFilterInterface $filter
+     * 
+     * @return object The found object.
      */
-    public function find($className, $id, $options = array())
+    public function find($className, $id, $filter = null)
     {
+        if (($filter !== null)&&(! $filter instanceof EntityFilterInterface)) {
+            throw new \InvalidArgumentException('Argument 3 passed to '
+                    . get_class($this) . ' must be an instance of '
+                    . 'VIB\CoreBundle\Filter\EntityFilterInterface, '
+                    . ((($type = gettype($filter)) == 'object') ? get_class($filter) : $type)
+                    . ' given');
+        }
+        
         $repository = $this->getRepository($className);
-
-        return $repository->getEntity($id, $options);
+        
+        return $repository->getEntity($id, $filter);
     }
 
     /**
-     * {@inheritdoc}
+     * Finds all entities of the specified type.
+     *
+     * @param string $className The class name of the objects to find.
+     * @param VIB\CoreBundle\Filter\ListFilterInterface $filter
+     * 
+     * @return Doctrine\Common\Collections\Collection The entities.
      */
-    public function findAll($className, $options = array())
+    public function findAll($className, ListFilterInterface $filter = null)
     {
         $repository = $this->getRepository($className);
 
-        return $repository->getList($options);
+        return $repository->getList($filter);
     }
 
     /**
-     * {@inheritdoc}
+     * Counts all entities of the specified type.
+     * 
+     * @param string $className The class name of the objects to find.
+     * @param VIB\CoreBundle\Filter\ListFilterInterface $filter
+     * 
+     * @return integer Number of entities.
      */
-    public function countAll($className, $options = array())
+    public function countAll($className, ListFilterInterface $filter = null)
     {
         $repository = $this->getRepository($className);
 
-        return $repository->getListCount($options);
+        return $repository->getListCount($filter);
     }
     
     /**

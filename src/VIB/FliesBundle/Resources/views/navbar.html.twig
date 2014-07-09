@@ -28,8 +28,8 @@
         <li class="dropdown dropdown-split-left">
           <a href="{{ path('vib_flies_stockvial_list') }}">Stock vials</a>
           <ul class="dropdown-menu menu_level_1">
-            <li><a href="{{ path('vib_flies_stockvial_list') }}">My vials</a></li>
-            <li><a href="{{ path('vib_flies_stockvial_list_1',{ 'filter': 'public' }) }}">Public vials</a></li>
+            <li><a href="{{ path('vib_flies_stockvial_list') }}">Private vials</a></li>
+            <li><a href="{{ path('vib_flies_stockvial_list_1',{ 'access': 'public' }) }}">Public vials</a></li>
             <li class="divider"></li>
             <li><a href="{{ path('vib_flies_stockvial_select') }}">Select vials</a></li>
             <li><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
@@ -41,8 +41,8 @@
         <li class="dropdown dropdown-split-left">
           <a href="{{ path('vib_flies_crossvial_list') }}">Crosses</a>
           <ul class="dropdown-menu menu_level_1">
-            <li><a href="{{ path('vib_flies_crossvial_list') }}">My crosses</a></li>
-            <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'public' }) }}">Public crosses</a></li>
+            <li><a href="{{ path('vib_flies_crossvial_list') }}">Private crosses</a></li>
+            <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'access': 'public' }) }}">Public crosses</a></li>
             <li class="divider"></li>
             <li><a href="{{ path('vib_flies_crossvial_create') }}">New cross</a></li>
             <li><a href="{{ path('vib_flies_crossvial_select') }}">Select crosses</a></li>
@@ -57,8 +57,8 @@
         <li class="dropdown dropdown-split-left">
           <a href="{{ path('vib_flies_vial_list') }}">Vials</a>
           <ul class="dropdown-menu menu_level_1">
-            <li><a href="{{ path('vib_flies_vial_list') }}">My vials</a></li>
-            <li><a href="{{ path('vib_flies_vial_list_1',{ 'filter': 'public' }) }}">Public vials</a></li>
+            <li><a href="{{ path('vib_flies_vial_list') }}">Private vials</a></li>
+            <li><a href="{{ path('vib_flies_vial_list_1',{ 'access': 'public' }) }}">Public vials</a></li>
             <li class="divider"></li>
             <li><a href="{{ path('vib_flies_vial_select') }}">Select vials</a></li>
             <li><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
@@ -79,7 +79,7 @@
               <ul class="dropdown-menu menu_level_2">
                 <li><a href="{{ path('vib_flies_injectionvial_list') }}">My injections</a></li>
                 <li>
-                  <a href="{{ path('vib_flies_injectionvial_list_1',{ 'filter': 'public' }) }}">Public injections</a>
+                  <a href="{{ path('vib_flies_injectionvial_list_1',{ 'access': 'public' }) }}">Public injections</a>
                 </li>
                 <li class="divider"></li>
                 <li><a href="{{ path('vib_flies_injectionvial_create') }}">New injection</a></li>

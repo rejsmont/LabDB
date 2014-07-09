@@ -47,20 +47,26 @@ class VialFilter extends SecureListFilter implements SortFilterInterface {
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
-    public function __construct(Request $request, SecurityContextInterface $securityContext = null)
+    public function __construct(Request $request = null, SecurityContextInterface $securityContext = null)
     {
         parent::__construct($request, $securityContext);
-        
-        if ($request->get('resolver', 'off') == 'on') {
-            $this->setHealth($request->get('health','living'));
-            $this->setLiving($request->get('living','all'));
-            $this->setDead($request->get('dead','all'));
-            $this->redirect = true;
+
+        if (null !== $request) {
+            if ($request->get('resolver', 'off') == 'on') {
+                $this->setHealth($request->get('health', 'living'));
+                $this->setLiving($request->get('living', 'all'));
+                $this->setDead($request->get('dead', 'all'));
+                $this->redirect = true;
+            } else {
+                $this->setFilter($request->get('filter', 'living'));
+                $this->redirect = false;
+            }
         } else {
-            $this->setFilter($request->get('filter','living'));
+            $this->setFilter('living');
             $this->redirect = false;
         }
         
+        $this->sort = 'setup';
     }
 
     /**

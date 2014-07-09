@@ -143,7 +143,7 @@ class CrossVialControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(0, $result->filter('td:contains("000012")')->count());
 
-        $crawler_trashed = $client->request('GET', '/flies/crosses/list/trashed');
+        $crawler_trashed = $client->request('GET', '/flies/crosses/list/private/trashed');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler_trashed->filter('td:contains("000012")')->count());
         $this->assertEquals(1, $crawler_trashed->filter('td i.fa-times-circle')->count());

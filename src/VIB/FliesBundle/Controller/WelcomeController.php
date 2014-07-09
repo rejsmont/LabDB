@@ -26,6 +26,8 @@ use VIB\CoreBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use VIB\FliesBundle\Filter\VialFilter;
+
 /**
  * Default controller for FliesBundle
  *
@@ -67,41 +69,22 @@ class WelcomeController extends AbstractController
     protected function getVialStatistics($class)
     {
         $om = $this->getObjectManager();
-        
-        $options = array();
-        $options['filter'] = null;
-        $options['permissions'] = array('OWNER');
-        
         $repository = $om->getRepository($class);
-        $vials = $repository->getList($options);
+
+        $filter = new VialFilter(null, $this->getSecurityContext());
+        $filter->setAccess('shared');        
+        $vials = $repository->getList($filter);
         $stats = array();
         $stats['count'] = count($vials);
-        $options['filter'] = 'forgot';
-        $stats['forgot'] = $repository->getListCount($options);
-        $stats['due'] = 0;
-        $stats['overdue'] = 0;
-        $index = 1;
-        foreach ($vials as $vial) {
-            if ($vial->isOverDue()) {
-                $stats['overdue'] += 1;
-                if (!isset($stats['overdue_page'])) {
-                    $stats['overdue_page'] = ceil($index/25);
-                }
-            } elseif ($vial->isDue()) {
-                $stats['due'] += 1;
-                if (!isset($stats['due_page'])) {
-                    $stats['due_page'] = ceil($index/25);
-                }
-            }
-            $index += 1;
-        }
+
+        $filter->setFilter('forgot');
+        $stats['forgot'] = $repository->getListCount($filter);
         
-        if (!isset($stats['overdue_page'])) {
-            $stats['overdue_page'] = 1;
-        }
-        if (!isset($stats['due_page'])) {
-            $stats['due_page'] = 1;
-        }
+        $filter->setFilter('due');
+        $stats['due'] = $repository->getListCount($filter);
+        
+        $filter->setFilter('overdue');
+        $stats['overdue'] = $repository->getListCount($filter);
         
         return $stats;
     }    

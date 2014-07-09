@@ -1,20 +1,19 @@
-{% extends "VIBFliesBundle::layout.html.twig" %}
+{% extends "VIBFliesBundle:Vial:layout.html.twig" %}
+
+{% set display_action = path('vib_flies_crossvial_list') %}
+{% set vials_name = 'crosses' %}
 
 {% block headline %}Crosses{% endblock headline %}
 
-{% block content_sidebar %}
-<ul class="nav nav-list well">
-  <li class="nav-header">My crosses</li>
-  <li><a href="{{ path('vib_flies_crossvial_list') }}">Alive</a></li>
-  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'trashed' }) }}">Trashed</a></li>
-  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'dead' }) }}">Dead</a></li>
-  <li class="nav-header">Public crosses</li>
-  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'public' }) }}">Alive</a></li>
-  <li><a href="{{ path('vib_flies_crossvial_list_1',{ 'filter': 'all' }) }}">All</a></li>
-  <li class="nav-header">Actions</li>
-  <li><a href="{{ path('vib_flies_crossvial_create') }}">New cross</a></li>
-  <li><a href="{{ path('vib_flies_crossvial_select') }}">Select crosses</a></li>
-  <li><a href="{{ path('vib_flies_vial_give') }}">Give vial</a></li>
-</ul>
-{{ parent() }}
-{% endblock content_sidebar %}
+{% block sidebar_actions %}
+<div class="panel panel-default panel-condensed">
+  <div class="panel-heading">
+    <h3 class="panel-title"><a data-toggle="collapse" href="#actions">Actions</a></h3>
+  </div>
+  <ul id="actions" class="list-group collapse in">
+    <li class="list-group-item"><a href="{{ path('vib_flies_crossvial_create') }}">New cross</a></li>
+    <li class="list-group-item"><a href="{{ path('vib_flies_crossvial_select') }}">Select crosses</a></li>
+    <li class="list-group-item"><a href="{{ path('vib_flies_vial_give') }}">Give vial</a></li>
+  </ul>
+</div>
+{% endblock sidebar_actions %}

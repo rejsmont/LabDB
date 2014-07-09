@@ -431,6 +431,7 @@ class VialController extends CRUDController
         if ($request->getMethod() == 'POST') {
             $form->bind($request);
             if ($form->isValid()) {
+                
                 return $this->handleBatchAction($form->getData());
             }
         }

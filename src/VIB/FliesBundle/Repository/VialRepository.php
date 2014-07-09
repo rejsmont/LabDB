@@ -64,7 +64,7 @@ class VialRepository extends NewEntityRepository
      * @param  VIB\CoreBundle\Filter\ListFilterInterface  $filter
      * @return Doctrine\ORM\QueryBuilder
      */
-    protected function applyQueryBuilderFilter($builder, ListFilterInterface $filter)
+    protected function applyQueryBuilderFilter($builder, ListFilterInterface $filter = null)
     {
         $filterName = ($filter instanceof VialFilter) ? $filter->getFilter() : null;
         
@@ -212,18 +212,18 @@ class VialRepository extends NewEntityRepository
      */
     public function getFlipDates($user)
     {
-        $qb = $this->getListQueryBuilder();
-        $qb->groupBy('e.setupDate')
-           ->addGroupBy('e.incubator')
-           ->addGroupBy('e.flipDate')
-           ->orderBy('e.setupDate', 'DESC');
+        $builder = $this->createQueryBuilder('e')
+                ->select('e.flipDate')
+                ->groupBy('e.flipDate')
+                ->orderBy('e.flipDate', 'DESC');
 
-        $vials = $this->getAclFilter()->apply($qb, array('OWNER'), $user)->getResult();
+        $result = $this->getAclFilter()->apply($builder, array('OPERATOR'), $user)->getArrayResult();
         $dates = array();
-        foreach ($vials as $vial) {
-            $dates[] = $vial->getFlipDate();
+        
+        foreach ($result as $date) {
+            $dates[] = $date['flipDate'];
         }
-
-        return array_unique($dates, SORT_REGULAR);
+        
+        return $dates;
     }
 }

@@ -18,6 +18,8 @@
 
 namespace VIB\FliesBundle\Repository;
 
+use VIB\CoreBundle\Filter\ListFilterInterface;
+use VIB\FliesBundle\Entity\Stock;
 
 /**
  * StockVialRepository
@@ -29,29 +31,34 @@ class StockVialRepository extends VialRepository
     /**
      * {@inheritdoc}
      */
-    protected function getListQueryBuilder($options = array())
+    protected function getListQueryBuilder(ListFilterInterface $filter = null)
     {
-        return parent::getListQueryBuilder($options)
+        return parent::getListQueryBuilder($filter)
             ->addSelect('s')
             ->leftJoin('e.stock', 's');
     }
     
     /**
      *
-     * @param  type                                   $stock
+     * @param  VIB\FliesBundle\Entity\Stock              $stock
+     * @param  VIB\CoreBundle\Filter\ListFilterInterface $filter
      * @return Doctrine\Common\Collections\Collection
      */
-    public function findLivingVialsByStock($stock, $options = array())
+    public function findLivingVialsByStock(Stock $stock, ListFilterInterface $filter = null)
     {
-        $qb = $this->getListQueryBuilder($options)
+        $qb = $this->getListQueryBuilder($filter)
                    ->andWhere('e.stock = :stock')
                    ->setParameter('stock', $stock);
-        $permissions = isset($options['permissions']) ? $options['permissions'] : array();
-        $user = isset($options['user']) ? $options['user'] : null;
-        if (false === $permissions) {
-            return $qb->getQuery()->useResultCache(true)->getResult();
+        
+        if ($filter instanceof SecureFilterInterface) {
+            $permissions = $filter->getPermissions();
+            $user = $filter->getUser();
         } else {
-            return $this->getAclFilter()->apply($qb, $permissions, $user)->getResult();
+            $permissions = array();
+            $user = null;
         }
+
+        return (false === $permissions) ? $qb->getQuery()->getResult() :
+            $this->getAclFilter()->apply($qb, $permissions, $user)->getResult();
     }
 }

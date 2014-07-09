@@ -1,41 +1,50 @@
 {% extends "VIBFliesBundle::layout.html.twig" %}
 
+{% if display_action is not defined %}
+  {% set display_action = path('vib_flies_vial_list') %}
+{% endif %}
+{% if vials_name is not defined %}
+  {% set vials_name = 'vials' %}
+{% endif %}
+
 {% block headline %}Vials{% endblock headline %}
 
 {% block content_sidebar %}
-<form class="panel panel-default panel-condensed" action="{{ app.request.requestUri }}" method="GET">
+{% block sidebar_display %}
+<form class="panel panel-default panel-condensed" action="{{ display_action }}" method="GET">
   <div class="panel-heading">
-    <h3 class="panel-title"><a data-toggle="collapse" href="#filters">Display options</a></h3>
+    <h3 class="panel-title"><a data-toggle="collapse" href="#dislpay">List options</a></h3>
   </div>
-  <ul id="filters" class="list-group collapse in">
+  <ul id="dislpay" class="list-group collapse in">
+    {% block sidebar_display_filters %}
     <li class="list-group-item">
       <h5>Filters</h5>
       <ul>
         <li>
           <label>
               <input class="toggle-children" type="radio" name="health" id="health_living" value="living"
-                {{ filter.health == 'living' ? 'checked' }} >
-            Living vials
+                {{ (filter is not defined or filter.health == 'living') ? 'checked' }} >
+            Living {{ vials_name }}
           </label>
-          <ul class="collapse {{ filter.health == 'living' ? 'in' }}">
+          <ul class="collapse {{ (filter is not defined or filter.health == 'living') ? 'in' }}">
             <li>
               <label>
                 <input type="radio" name="living" id="living_all" value="all"
-                  {{ filter.living == 'all' ? 'checked' }} >
+                  {{ (filter is not defined or filter.living == 'all') ? 'checked' }} >
                 All
               </label>
             </li>
             <li>
               <label>
                 <input type="radio" name="living" id="living_due" value="due"
-                  {{ filter.living == 'due' ? 'checked' }} >
+                  {{ (filter is defined and filter.living == 'due') ? 'checked' }} >
                 Due
               </label>
             </li>
             <li>
               <label>
                 <input type="radio" name="living" id="living_overdue" value="overdue"
-                  {{ filter.living == 'overdue' ? 'checked' }} >
+                  {{ (filter is defined and filter.living == 'overdue') ? 'checked' }} >
                 Overdue
               </label>
             </li>
@@ -44,28 +53,28 @@
         <li>
           <label>
             <input class="toggle-children" type="radio" name="health" id="health_dead" value="dead"
-              {{ filter.health == 'dead' ? 'checked' }} >
-            Dead vials
+              {{ (filter is defined and filter.health == 'dead') ? 'checked' }} >
+            Dead {{ vials_name }}
           </label>
-          <ul class="collapse {{ filter.health == 'dead' ? 'in' }}">
+          <ul class="collapse {{ (filter is defined and filter.health == 'dead') ? 'in' }}">
             <li>
               <label>
                 <input type="radio" name="dead" id="dead_all" value="all"
-                  {{ filter.dead == 'all' ? 'checked' }} >
+                  {{ (filter is defined and filter.dead == 'all') ? 'checked' }} >
                 All
               </label>
             </li>
             <li>
               <label>
                 <input type="radio" name="dead" id="dead_due" value="trashed"
-                  {{ filter.dead == 'trashed' ? 'checked' }} >
+                  {{ (filter is defined and filter.dead == 'trashed') ? 'checked' }} >
                 Trashed
               </label>
             </li>
             <li>
               <label>
                 <input type="radio" name="dead" id="dead_forgotten" value="forgot"
-                  {{ filter.dead == 'forgot' ? 'checked' }} >
+                  {{ (filter is defined and filter.dead == 'forgot') ? 'checked' }} >
                 Forgotten
               </label>
             </li>
@@ -74,37 +83,51 @@
         <li>
           <label>
             <input class="toggle-children" type="radio" name="health" id="health_dead" value="all"
-              {{ filter.health == 'all' ? 'checked' }} >
-            All vials
+              {{ (filter is defined and filter.health == 'all') ? 'checked' }} >
+            All {{ vials_name }}
           </label>
         </li>
       </ul>
     </li>
+    {% endblock sidebar_display_filters %}
+    {% block sidebar_display_access %}
     <li class="list-group-item">
       <h5>Access</h5>
       <ul>
         <li>
           <label>
             <input class="toggle-children" type="radio" name="access" id="access_private" value="private"
-              {{ filter.access == 'private' ? 'checked' }} >
-            Private vials
+              {{ (filter is not defined or filter.access == 'private') ? 'checked' }} >
+            Private {{ vials_name }}
+          </label>
+        </li>
+        <li>
+          <label>
+            <input class="toggle-children" type="radio" name="access" id="access_shared" value="shared"
+              {{ (filter is defined and filter.access == 'shared') ? 'checked' }} >
+            Shared {{ vials_name }}
           </label>
         </li>
         <li>
           <label>
             <input class="toggle-children" type="radio" name="access" id="access_public" value="public"
-              {{ filter.access == 'public' ? 'checked' }} >
-            Public vials
+              {{ (filter is defined and filter.access == 'public') ? 'checked' }} >
+            Public {{ vials_name }}
           </label>
         </li>
       </ul>
     </li>
+    {% endblock sidebar_display_access %}
     <li class="panel-footer">
       <input type="hidden" name="resolver" value="on">
-      <button type="submit" class="btn btn-primary btn-sm btn-block">Apply filters</button>
+      <button type="submit" class="btn btn-primary btn-sm btn-block">
+        List {{ vials_name }}
+      </button>
     </li>
   </ul>
 </form>
+{% endblock sidebar_display %} 
+{% block sidebar_actions %}
 <div class="panel panel-default panel-condensed">
   <div class="panel-heading">
     <h3 class="panel-title"><a data-toggle="collapse" href="#actions">Actions</a></h3>
@@ -115,5 +138,6 @@
     <li class="list-group-item"><a href="{{ path('vib_flies_vial_give') }}">Give vial</a></li>
   </ul>
 </div>
+{% endblock sidebar_actions %}
 {{ parent() }}
 {% endblock content_sidebar %}

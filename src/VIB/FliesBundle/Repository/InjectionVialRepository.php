@@ -18,8 +18,12 @@
 
 namespace VIB\FliesBundle\Repository;
 
+use VIB\CoreBundle\Filter\ListFilterInterface;
 use VIB\SearchBundle\Search\SearchQueryInterface;
+use VIB\FliesBundle\Filter\VialFilter;
 use VIB\FliesBundle\Search\SearchQuery;
+use VIB\FliesBundle\Entity\InjectionVial;
+
 
 /**
  * InjectionVialRepository
@@ -31,9 +35,9 @@ class InjectionVialRepository extends SearchableVialRepository
     /**
      * {@inheritdoc}
      */
-    protected function getListQueryBuilder($options = array())
+    protected function getListQueryBuilder(ListFilterInterface $filter = null)
     {
-        return parent::getListQueryBuilder($options)
+        return parent::getListQueryBuilder($filter)
             ->addSelect('s, sv, svs')
             ->leftJoin('e.targetStock', 's')
             ->leftJoin('e.targetStockVial', 'sv')
@@ -84,12 +88,13 @@ class InjectionVialRepository extends SearchableVialRepository
     /**
      * Find similar injections
      *
-     * @param InjectionVial $cross
+     * @param InjectionVial $injection
      */
-    public function findSimilar($injection)
+    public function findSimilar(InjectionVial $injection)
     {
-        $options = array();
-        $options['filter'] = 'all';
+        $filter = new VialFilter();
+        $filter->setAccess('shared');
+        $filter->setFilter('all');
 
         $startDate = clone $injection->getSetupDate();
         $stopDate = clone $injection->getSetupDate();
@@ -98,7 +103,7 @@ class InjectionVialRepository extends SearchableVialRepository
 
         $owner = $this->getObjectManager()->getOwner($injection);
 
-        $qb = $this->getListQueryBuilder($options);
+        $qb = $this->getListQueryBuilder($filter);
         $qb->andWhere('e.injectionType = :injection_type')
             ->andWhere('e.constructName = :construct_name')
             ->andWhere('e.targetStock = :target_stock')
@@ -112,6 +117,6 @@ class InjectionVialRepository extends SearchableVialRepository
             ->setParameter('start_date', $startDate->format('Y-m-d'))
             ->setParameter('stop_date', $stopDate->format('Y-m-d'));
 
-        return $this->getAclFilter()->apply($qb, array('OWNER'), $owner)->getResult();
+        return $this->getAclFilter()->apply($qb, $filter->getPermissions(), $owner)->getResult();
     }
 }

@@ -37,7 +37,7 @@ class VialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/flies/vials/list/trashed');
+        $crawler = $client->request('GET', '/flies/vials/list/private/trashed');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(1, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(
@@ -48,7 +48,7 @@ class VialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/flies/vials/list/dead');
+        $crawler = $client->request('GET', '/flies/vials/list/private/dead');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(2, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(2, $crawler->filter(
@@ -70,7 +70,7 @@ class VialControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/flies/vials/list/all');
+        $crawler = $client->request('GET', '/flies/vials/list/public/all');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(10, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(

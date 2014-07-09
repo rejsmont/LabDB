@@ -301,8 +301,11 @@ abstract class CRUDController extends AbstractController
             return $id;
         }
         $om = $this->getObjectManager();
+        
+        //print_r($om);
+        
         try {
-            $entity = $om->find($this->getEntityClass(),$id);
+            $entity = $om->find($class, $id);
             if ($entity instanceof $class) {
                 return $entity;
             }
