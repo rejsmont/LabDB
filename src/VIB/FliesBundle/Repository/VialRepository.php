@@ -20,20 +20,23 @@ namespace VIB\FliesBundle\Repository;
 
 use Doctrine\ORM\Query;
 use VIB\CoreBundle\Doctrine\ObjectManager;
-use VIB\CoreBundle\Repository\EntityRepository;
-
+use VIB\CoreBundle\Filter\ListFilterInterface;
+use VIB\CoreBundle\Filter\EntityFilterInterface;
+use VIB\CoreBundle\Filter\SecureFilterInterface;
+use VIB\CoreBundle\Repository\NewEntityRepository;
+use VIB\FliesBundle\Filter\VialFilter;
 
 /**
  * VialRepository
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialRepository extends EntityRepository
+class VialRepository extends NewEntityRepository
 {   
     /**
      * {@inheritdoc}
      */
-    protected function getListQueryBuilder($options = array())
+    protected function getListQueryBuilder(ListFilterInterface $filter = null)
     {
         $builder = $this->createQueryBuilder('e')
                         ->addSelect('o')
@@ -41,63 +44,166 @@ class VialRepository extends EntityRepository
                         ->orderBy('e.setupDate','DESC')
                         ->addOrderBy('e.id','DESC');
 
-        return $this->applyQueryBuilderFilter($builder, $options);
+        return $this->applyQueryBuilderFilter($builder, $filter);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getCountQueryBuilder($options = array())
+    protected function getCountQueryBuilder(ListFilterInterface $filter = null)
     {
         $builder =  $this->createQueryBuilder('e')
                          ->select('count(e.id)');
 
-        return $this->applyQueryBuilderFilter($builder, $options);
+        return $this->applyQueryBuilderFilter($builder, $filter);
     }
 
     /**
      *
-     * @param  Doctrine\ORM\QueryBuilder $builder
-     * @param  array                     $options
+     * @param  Doctrine\ORM\QueryBuilder                  $builder
+     * @param  VIB\CoreBundle\Filter\ListFilterInterface  $filter
      * @return Doctrine\ORM\QueryBuilder
      */
-    protected function applyQueryBuilderFilter($builder, $options = array())
+    protected function applyQueryBuilderFilter($builder, ListFilterInterface $filter)
+    {
+        $filterName = ($filter instanceof VialFilter) ? $filter->getFilter() : null;
+        
+        switch ($filterName) {
+            case 'all':
+                return $builder;
+            case 'forgot':
+                return $this->applyForgotFilter($builder);
+            case 'dead':
+                return $this->applyDeadFilter($builder);
+            case 'trashed':
+                return $this->applyTrashedFilter($builder);
+            case 'due':
+                return $this->applyDueFilter($builder);
+            case 'overdue':
+                return $this->applyOverDueFilter($builder);
+            default:
+                return $this->applyLivingFilter($builder);
+        }
+    }
+
+    /**
+     * 
+     * @param  Doctrine\ORM\QueryBuilder  $builder
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    protected function applyForgotFilter($builder)
+    {
+        return $builder->where('e.setupDate <= :twoMonthsAgo')
+                       ->andWhere('e.trashed = false')
+                       ->setParameter('twoMonthsAgo', $this->twoMonthsAgo()->format('Y-m-d'));
+    }
+    
+    /**
+     * 
+     * @param  Doctrine\ORM\QueryBuilder  $builder
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    protected function applyDeadFilter($builder)
+    {
+        return $builder->where('e.setupDate <= :twoMonthsAgo')
+                       ->orWhere('e.trashed = true')
+                       ->setParameter('twoMonthsAgo', $this->twoMonthsAgo()->format('Y-m-d'));
+    }
+    
+    /**
+     * 
+     * @param  Doctrine\ORM\QueryBuilder  $builder
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    protected function applyTrashedFilter($builder)
+    {
+        return $builder->where('e.setupDate > :twoMonthsAgo')
+                       ->andWhere('e.trashed = true')
+                       ->setParameter('twoMonthsAgo', $this->twoMonthsAgo()->format('Y-m-d'));
+    }
+    
+    /**
+     * 
+     * @param  Doctrine\ORM\QueryBuilder  $builder
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    protected function applyLivingFilter($builder)
+    {
+        return $builder->where('e.setupDate > :twoMonthsAgo')
+                       ->andWhere('e.trashed = false')
+                       ->setParameter('twoMonthsAgo', $this->twoMonthsAgo()->format('Y-m-d'));
+    }
+    
+    /**
+     * 
+     * @param  Doctrine\ORM\QueryBuilder  $builder
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    protected function applyDueFilter($builder)
+    {
+        return $this->applyLivingFilter($builder)
+            ->andWhere('e.flipDate > :weekAgo')
+            ->andWhere('e.flipDate < :inOneWeek')
+            ->setParameter('weekAgo', $this->weekAgo()->format('Y-m-d'))
+            ->setParameter('inOneWeek', $this->inOneWeek()->format('Y-m-d'));
+    }
+
+    /**
+     * 
+     * @param  Doctrine\ORM\QueryBuilder  $builder
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    protected function applyOverDueFilter($builder)
+    {
+        return $this->applyLivingFilter($builder)
+            ->andWhere('e.flipDate <= :weekAgo')
+            ->andWhere('e.virginCrosses is EMPTY')
+            ->andWhere('e.maleCrosses is EMPTY')
+            ->andWhere('e.id NOT IN (SELECT sv.id FROM VIB\FliesBundle\Entity\StockVial sv WHERE sv.children IS NOT EMPTY)')
+            ->andWhere('e.id NOT IN (SELECT cv.id FROM VIB\FliesBundle\Entity\CrossVial cv WHERE cv.children IS NOT EMPTY)')
+            ->andWhere('e.id NOT IN (SELECT iv.id FROM VIB\FliesBundle\Entity\InjectionVial iv WHERE iv.children IS NOT EMPTY)')
+            ->setParameter('weekAgo', $this->weekAgo()->format('Y-m-d'));
+    }
+    
+    /**
+     * Return date two months ago
+     * 
+     * @return \DateTime
+     */
+    protected function twoMonthsAgo()
     {
         $twoMonthsAgo = new \DateTime();
         $twoMonthsAgo->sub(new \DateInterval('P2M'));
+        
+        return $twoMonthsAgo;
+    }
+    
+    /**
+     * Return date one week ago
+     * 
+     * @return \DateTime
+     */
+    protected function weekAgo()
+    {
         $weekAgo = new \DateTime();
         $weekAgo->sub(new \DateInterval('P1W'));
+        
+        return $weekAgo;
+    }
+    
+    /**
+     * Return date in one week
+     * 
+     * @return \DateTime
+     */
+    protected function inOneWeek()
+    {
         $inOneWeek = new \DateTime();
         $inOneWeek->add(new \DateInterval('P1W'));
-        $filter = isset($options['filter']) ? $options['filter'] : null;
-        switch ($filter) {
-            case 'all':
-                break;
-            case 'forgot':
-                $builder = $builder->where('e.setupDate <= :twoMonthsAgo')
-                                   ->andWhere('e.trashed = false')
-                                   ->setParameter('twoMonthsAgo', $twoMonthsAgo->format('Y-m-d'));
-                break;
-            case 'dead':
-                $builder = $builder->where('e.setupDate <= :twoMonthsAgo')
-                                   ->orWhere('e.trashed = true')
-                                   ->setParameter('twoMonthsAgo', $twoMonthsAgo->format('Y-m-d'));
-                break;
-            case 'trashed':
-                $builder = $builder->where('e.setupDate > :twoMonthsAgo')
-                                   ->andWhere('e.trashed = true')
-                                   ->setParameter('twoMonthsAgo', $twoMonthsAgo->format('Y-m-d'));
-                break;
-            default:
-                $builder = $builder->where('e.setupDate > :twoMonthsAgo')
-                                   ->andWhere('e.trashed = false')
-                                   ->setParameter('twoMonthsAgo', $twoMonthsAgo->format('Y-m-d'));
-                break;
-        }
-
-        return $builder;
+        
+        return $inOneWeek;
     }
-
+    
     /**
      * Return dates when $user should flip vials
      *

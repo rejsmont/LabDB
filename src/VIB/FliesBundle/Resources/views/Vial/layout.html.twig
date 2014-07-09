@@ -3,18 +3,117 @@
 {% block headline %}Vials{% endblock headline %}
 
 {% block content_sidebar %}
-<ul class="nav nav-list well">
-  <li class="nav-header">My vials</li>
-  <li><a href="{{ path('vib_flies_vial_list') }}">Alive</a></li>
-  <li><a href="{{ path('vib_flies_vial_list_1',{ 'filter': 'trashed' }) }}">Trashed vials</a></li>
-  <li><a href="{{ path('vib_flies_vial_list_1',{ 'filter': 'dead' }) }}">Dead vials</a></li>
-  <li class="nav-header">Public vials</li>
-  <li><a href="{{ path('vib_flies_vial_list_1',{ 'filter': 'public' }) }}">Alive</a></li>
-  <li><a href="{{ path('vib_flies_vial_list_1',{ 'filter': 'all' }) }}">All</a></li>
-  <li class="nav-header">Actions</li>
-  <li><a href="{{ path('vib_flies_vial_select') }}">Select vials</a></li>
-  <li><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
-  <li><a href="{{ path('vib_flies_vial_give') }}">Give vial</a></li>
-</ul>
+<form class="panel panel-default panel-condensed" action="{{ app.request.requestUri }}" method="GET">
+  <div class="panel-heading">
+    <h3 class="panel-title"><a data-toggle="collapse" href="#filters">Display options</a></h3>
+  </div>
+  <ul id="filters" class="list-group collapse in">
+    <li class="list-group-item">
+      <h5>Filters</h5>
+      <ul>
+        <li>
+          <label>
+              <input class="toggle-children" type="radio" name="health" id="health_living" value="living"
+                {{ filter.health == 'living' ? 'checked' }} >
+            Living vials
+          </label>
+          <ul class="collapse {{ filter.health == 'living' ? 'in' }}">
+            <li>
+              <label>
+                <input type="radio" name="living" id="living_all" value="all"
+                  {{ filter.living == 'all' ? 'checked' }} >
+                All
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="living" id="living_due" value="due"
+                  {{ filter.living == 'due' ? 'checked' }} >
+                Due
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="living" id="living_overdue" value="overdue"
+                  {{ filter.living == 'overdue' ? 'checked' }} >
+                Overdue
+              </label>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <label>
+            <input class="toggle-children" type="radio" name="health" id="health_dead" value="dead"
+              {{ filter.health == 'dead' ? 'checked' }} >
+            Dead vials
+          </label>
+          <ul class="collapse {{ filter.health == 'dead' ? 'in' }}">
+            <li>
+              <label>
+                <input type="radio" name="dead" id="dead_all" value="all"
+                  {{ filter.dead == 'all' ? 'checked' }} >
+                All
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="dead" id="dead_due" value="trashed"
+                  {{ filter.dead == 'trashed' ? 'checked' }} >
+                Trashed
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="dead" id="dead_forgotten" value="forgot"
+                  {{ filter.dead == 'forgot' ? 'checked' }} >
+                Forgotten
+              </label>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <label>
+            <input class="toggle-children" type="radio" name="health" id="health_dead" value="all"
+              {{ filter.health == 'all' ? 'checked' }} >
+            All vials
+          </label>
+        </li>
+      </ul>
+    </li>
+    <li class="list-group-item">
+      <h5>Access</h5>
+      <ul>
+        <li>
+          <label>
+            <input class="toggle-children" type="radio" name="access" id="access_private" value="private"
+              {{ filter.access == 'private' ? 'checked' }} >
+            Private vials
+          </label>
+        </li>
+        <li>
+          <label>
+            <input class="toggle-children" type="radio" name="access" id="access_public" value="public"
+              {{ filter.access == 'public' ? 'checked' }} >
+            Public vials
+          </label>
+        </li>
+      </ul>
+    </li>
+    <li class="panel-footer">
+      <input type="hidden" name="resolver" value="on">
+      <button type="submit" class="btn btn-primary btn-sm btn-block">Apply filters</button>
+    </li>
+  </ul>
+</form>
+<div class="panel panel-default panel-condensed">
+  <div class="panel-heading">
+    <h3 class="panel-title"><a data-toggle="collapse" href="#actions">Actions</a></h3>
+  </div>
+  <ul id="actions" class="list-group collapse in">
+    <li class="list-group-item"><a href="{{ path('vib_flies_vial_select') }}">Select vials</a></li>
+    <li class="list-group-item"><a href="{{ path('vib_flies_vial_expand') }}">Expand vial</a></li>
+    <li class="list-group-item"><a href="{{ path('vib_flies_vial_give') }}">Give vial</a></li>
+  </ul>
+</div>
 {{ parent() }}
 {% endblock content_sidebar %}

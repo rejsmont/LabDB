@@ -512,4 +512,15 @@ $(document).ready(function() {
         source: source.ttAdapter()       
       });
     });
+    
+    $('.toggle-children').change(function() {
+      var name = $(this).prop('name');
+      $('[name="' + name + '"]').each(function() {
+        if ($(this).is(':checked')) {
+          $(this).closest('li').children('ul').addClass('in');
+        } else {
+          $(this).closest('li').children('ul').removeClass('in');
+        }
+      });
+    });
 });

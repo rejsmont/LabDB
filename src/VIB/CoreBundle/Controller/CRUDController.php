@@ -278,7 +278,7 @@ abstract class CRUDController extends AbstractController
                 $message = 'Changes to ' . $this->getEntityName() . ' ' . $entity . ' permissions were saved.';
                 $this->addSessionFlash('success', $message);
                 $route = str_replace("_permissions", "_show", $request->attributes->get('_route'));
-                $url = $this->generateUrl($route,array('id' => $entity->getId()));
+                $url = $this->generateUrl($route, array('id' => $entity->getId()));
 
                 return $this->redirect($url);
             }

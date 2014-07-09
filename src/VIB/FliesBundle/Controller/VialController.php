@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\SatisfiesParentSecurityPolicy;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\AbstractType;
 
 use Doctrine\Common\Collections\Collection;
@@ -29,6 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\CoreBundle\Controller\CRUDController;
 
+use VIB\FliesBundle\Filter\VialFilter;
 use VIB\FliesBundle\Label\PDFLabel;
 
 use VIB\FliesBundle\Form\VialType;
@@ -89,16 +91,32 @@ class VialController extends CRUDController
      * List vials
      *
      * @Route("/")
-     * @Route("/list/{filter}")
+     * @Route("/list/{access}/{filter}", defaults={"access" = "private", "filter" = "living"})
+     * @Route("/list/{access}/{filter}/sort/{sorting}", defaults={"access" = "private", "filter" = "living", "sorting" = "setup"})
      * @Template()
      * @SatisfiesParentSecurityPolicy
      *
-     * @param  integer                                    $page
+     * @param  \Symfony\Component\HttpFoundation\Request    $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction($filter = null)
+    public function listAction(Request $request)
     {
-        $response = parent::listAction($filter);
+        $filter = new VialFilter($request, $this->getSecurityContext());
+        
+        if ($filter->needRedirect()) {
+            
+            return $this->getFilterRedirect($filter);
+        }
+        
+        $paginator  = $this->getPaginator();
+        $page = $this->getCurrentPage();
+        $repository = $this->getObjectManager()->getRepository($this->getEntityClass());
+        $count = $repository->getListCount($filter);
+        $query = $repository->getListQuery($filter)->setHint('knp_paginator.count', $count);
+        $entities = $paginator->paginate($query, $page, 25, array('distinct' => false));
+        
+        $response = array('entities' => $entities, 'filter' => $filter);
+        
         $formResponse = $this->handleSelectForm(new SelectType($this->getEntityClass()), $filter);
 
         return is_array($formResponse) ? array_merge($response, $formResponse) : $formResponse;
@@ -582,7 +600,7 @@ class VialController extends CRUDController
             $this->addSessionFlash('success', $count . ' vials were put in ' . $incubator . '.');
         }
     }
-
+    
     /**
      * Get default batch action response
      *
@@ -650,6 +668,35 @@ class VialController extends CRUDController
         $request = $this->getRequest();
         $route = str_replace("_vial_", "_" . $vial->getType() . "vial_", $request->attributes->get('_route'));
         $url = $this->generateUrl($route, array('id' => $vial->getId()));
+
+        return $this->redirect($url);
+    }
+    
+    /**
+     *
+     * @param  \VIB\FliesBundle\Filter\VialFilter             $filter
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function getFilterRedirect(VialFilter $filter)
+    {
+        $request = $this->getRequest();
+        $currentRoute = $request->attributes->get('_route');
+        
+        if ($currentRoute == '') {
+            $route = 'vib_flies_vial_list_2';
+        } else {
+            $pieces = explode('_',$currentRoute);
+            if (! is_numeric($pieces[count($pieces) - 1])) {
+                $pieces[] = '2';
+            }
+            $route = ($currentRoute == 'default') ? 'vib_flies_vial_list_2' : implode('_', $pieces);
+        }
+
+        $url = $this->generateUrl($route, array(
+            'access' => $filter->getAccess(),
+            'filter' => $filter->getFilter(),
+            'sorting' => $filter->getSort()
+        ));
 
         return $this->redirect($url);
     }

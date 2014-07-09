@@ -135,4 +135,31 @@ div.status {
   margin-bottom: 0;
 }
 
-/* tbody td, tbody th, thead td, thead th, tfoot td, tfoot th */
+.list-group {
+  h5 {
+    margin-top: 0;
+  }
+  ul {
+    list-style: none;
+    padding-left: 20px;
+    label {
+      font-weight: normal;
+    }
+  }
+  & > .list-group-item { 
+    & > ul {
+      padding-left: 0;
+      li > label > input {
+        margin-right: 4px;
+      }
+    }
+  }
+} 
+
+.panel.panel-condensed {
+  .panel-heading,
+  .list-group-item,
+  .panel-footer {
+    padding: 7px 10px;
+  }  
+}
