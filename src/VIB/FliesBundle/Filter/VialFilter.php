@@ -171,27 +171,33 @@ class VialFilter extends SecureListFilter implements SortFilterInterface {
             case 'dead':
                 $this->health = 'dead';
                 $this->dead = 'all';
+                $this->living = 'all';
                 break;
             case 'forgot':
                 $this->health = 'dead';
                 $this->dead = 'forgot';
+                $this->living = 'all';
                 break;
             case 'trashed':
                 $this->health = 'dead';
                 $this->dead = 'trashed';
+                $this->living = 'all';
                 break;
             case 'due':
                 $this->health = 'living';
                 $this->living = 'due';
+                $this->dead = 'all';
                 break;
             case 'overdue':
                 $this->health = 'living';
                 $this->living = 'overdue';
+                $this->dead = 'all';
                 break;
             case 'living':
             default:
                 $this->health = 'living';
                 $this->living = 'all';
+                $this->dead = 'all';
                 break;
         }
     }
