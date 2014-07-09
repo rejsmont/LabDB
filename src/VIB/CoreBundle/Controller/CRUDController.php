@@ -24,6 +24,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Doctrine\ORM\NoResultException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -73,8 +74,10 @@ abstract class CRUDController extends AbstractController
      * @param  string $filter
      * @return array
      */
-    public function listAction($filter = null)
+    public function listAction(Request $request)
     {
+        $filter = $request->get('filter', null);
+        
         $paginator  = $this->getPaginator();
         $page = $this->getCurrentPage();
         $repository = $this->getObjectManager()->getRepository($this->getEntityClass());

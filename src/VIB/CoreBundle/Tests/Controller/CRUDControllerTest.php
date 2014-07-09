@@ -32,9 +32,10 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testListAction()
     {
+        
         $this->controller->expects($this->atLeastOnce())->method('getObjectManager')
             ->will($this->returnValue($this->objectManager));
-        $result = $this->controller->listAction();
+        $result = $this->controller->listAction($this->getFakeRequest());
         $this->assertArrayHasKey('entities', $result);
         $this->assertArrayHasKey('filter', $result);
         $this->assertNull($result['entities']);
@@ -43,9 +44,16 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testListActionFilter()
     {
-        $this->controller->expects($this->atLeastOnce())->method('getObjectManager')
-            ->will($this->returnValue($this->objectManager));
-        $result = $this->controller->listAction('test');
+        $request = $this->getFakeRequest();
+        $request->expects($this->once())
+                ->method('get')
+                ->with($this->equalTo('filter'), $this->isNull())
+                ->will($this->returnValue('test'));
+        $this->controller
+                ->expects($this->atLeastOnce())
+                ->method('getObjectManager')
+                ->will($this->returnValue($this->objectManager));
+        $result = $this->controller->listAction($request);
         $this->assertArrayHasKey('entities', $result);
         $this->assertArrayHasKey('filter', $result);
         $this->assertNull($result['entities']);
