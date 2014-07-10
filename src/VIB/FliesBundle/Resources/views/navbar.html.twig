@@ -15,8 +15,8 @@
           <a href="{{ path('vib_flies_stock_list') }}">Stocks</a>
           <ul class="dropdown-menu menu_level_1">
             <li><a href="{{ path('vib_flies_stock_list') }}">My stocks</a></li>
-            <li><a href="{{ path('vib_flies_stock_list_1',{ 'filter': 'created' }) }}">Stocks I created</a></li>
-            <li><a href="{{ path('vib_flies_stock_list_1',{ 'filter': 'public' }) }}">Public stocks</a></li>
+            <li><a href="{{ path('vib_flies_stock_list_1',{ 'access': 'private' }) }}">Stocks I created</a></li>
+            <li><a href="{{ path('vib_flies_stock_list_1',{ 'access': 'public' }) }}">Public stocks</a></li>
             <li class="divider"></li>
             <li><a href="{{ path('vib_flies_stock_create') }}">New stock</a></li>
             <li><a href="{{ path('vib_flies_vial_expand') }}">Expand stock</a></li>
