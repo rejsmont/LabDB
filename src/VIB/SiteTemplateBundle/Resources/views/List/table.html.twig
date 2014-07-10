@@ -4,20 +4,23 @@
 {% endif %}
 <div class="col-sm-12">
   {% block list_selector %}{% endblock list_selector %}
-  <table class="table table-striped table-bordered table-condensed table-curved" {% block table_attr %}{% endblock table_attr %}>
-    <thead>
-      <tr>{% block list_header %}{% endblock list_header %}</tr>
-    </thead>
-    <tbody>
-    {% if entities is defined %}
-      {% set order = 0 %}
-      {% for entity in entities %}
-        <tr>{% block list_item %}{% endblock list_item %}</tr>
-        {% set order = order + 1 %}
-      {% endfor %}
-    {% endif %}
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-condensed table-curved"
+           {% block table_attr %}{% endblock table_attr %}>
+      <thead>
+        <tr>{% block list_header %}{% endblock list_header %}</tr>
+      </thead>
+      <tbody>
+      {% if entities is defined %}
+        {% set order = 0 %}
+        {% for entity in entities %}
+          <tr>{% block list_item %}{% endblock list_item %}</tr>
+          {% set order = order + 1 %}
+        {% endfor %}
+      {% endif %}
+      </tbody>
+    </table>
+  </div>
   {% if block('list_buttons') %}
     <div class="list-buttons">{{ block('list_buttons') }}</div>
   {% endif %}

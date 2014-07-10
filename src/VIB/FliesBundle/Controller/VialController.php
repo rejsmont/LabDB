@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\SatisfiesParentSecurityPolicy;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\AbstractType;
 
 use Doctrine\Common\Collections\Collection;
@@ -104,7 +105,18 @@ class VialController extends CRUDController
         $response = parent::listAction();
         $formResponse = $this->handleSelectForm(new SelectType($this->getEntityClass()));
 
-        return is_array($formResponse) ? array_merge($response, $formResponse) : $formResponse;
+        if ($response instanceof Response) {
+            
+            return $response;
+        } 
+        
+        if ($formResponse instanceof Response) {
+            
+            return $formResponse;
+        } 
+        
+        return ((is_array($response))&&(is_array($formResponse))) ?
+            array_merge($response, $formResponse) : $response;
     }
 
     /**
