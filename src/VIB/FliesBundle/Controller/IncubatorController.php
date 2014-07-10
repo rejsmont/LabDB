@@ -22,8 +22,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\SatisfiesParentSecurityPolicy;
 
-use Symfony\Component\HttpFoundation\Request;
-
 use VIB\CoreBundle\Controller\CRUDController;
 
 use VIB\FliesBundle\Form\IncubatorType;
@@ -60,7 +58,7 @@ class IncubatorController extends CRUDController
      *
      * @SatisfiesParentSecurityPolicy
      */
-    public function listAction(Request $request)
+    public function listAction()
     {
         throw $this->createNotFoundException();
     }

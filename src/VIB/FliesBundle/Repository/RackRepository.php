@@ -19,6 +19,7 @@
 namespace VIB\FliesBundle\Repository;
 
 use VIB\CoreBundle\Repository\EntityRepository;
+use VIB\CoreBundle\Filter\EntityFilterInterface;
 
 /**
  * RackRepository
@@ -30,7 +31,7 @@ class RackRepository extends EntityRepository
     /**
      * {@inheritdoc}
      */
-    protected function getEntityQueryBuilder($id, $options = array())
+    protected function getEntityQueryBuilder($id, EntityFilterInterface $filter = null)
     {
         return $this->createQueryBuilder('e')
                 ->addSelect('o')
