@@ -19,6 +19,7 @@
 namespace VIB\CoreBundle\Tests\Controller;
 
 use VIB\CoreBundle\Entity\Entity;
+use VIB\CoreBundle\Filter\SecureListFilter;
 
 class CRUDControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,17 +48,23 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
         $request = $this->getFakeRequest();
         $request->expects($this->once())
                 ->method('get')
-                ->with($this->equalTo('filter'), $this->isNull())
+                ->with($this->equalTo('access'), $this->equalTo('private'), $this->equalTo(false))
                 ->will($this->returnValue('test'));
+        $filter = new SecureListFilter($request);
         $this->controller
                 ->expects($this->atLeastOnce())
                 ->method('getObjectManager')
                 ->will($this->returnValue($this->objectManager));
+        $this->controller
+                ->expects($this->once())
+                ->method('getFilter')
+                ->will($this->returnValue($filter));
         $result = $this->controller->listAction($request);
         $this->assertArrayHasKey('entities', $result);
         $this->assertArrayHasKey('filter', $result);
         $this->assertNull($result['entities']);
-        $this->assertEquals('test', $result['filter']);
+        $this->assertEquals($filter, $result['filter']);
+        $this->assertEquals('test', $result['filter']->getAccess());
     }
 
     public function testShowAction()
@@ -203,7 +210,7 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
     private function getFakeController()
     {
         $methods = array(
-            'getCurrentPage', 'getPaginator', 'getObjectManager',
+            'getCurrentPage', 'getPaginator', 'getObjectManager', 'getFilter',
             'getSecurityContext', 'getUser', 'getAclFilter', 'getEntityClass',
             'createForm','getRequest', 'addSessionFlash', 'generateUrl', 'redirect'
         );

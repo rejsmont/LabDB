@@ -1,22 +1,45 @@
-<div class="nav-list well">
-  <div class="nav-header">Printer settings</div>
-  <label class="checkbox">
-    <input type="checkbox" id="autoprint"
-           {% if autoprint %}checked {% elseif not can_print() %}disabled {% endif %}
-           data-link="{{ path('vib_flies_print_setautoprint') }}" onchange="setAutoPrint(this)"/>
-    Automagic label printing
-  </label>
-  <div class="nav-header">Label settings</div>
-  <label class="radio">
-    <input type="radio" name="labelmode" id="labelmode_std" value="std"
-           {% if labelmode != "alt" %}checked {% endif %}
-           data-link="{{ path('vib_flies_print_setlabelmode') }}" onclick="setLabelMode(this)"/>
-    Standard labels
-  </label>
-  <label class="radio">
-    <input type="radio" name="labelmode" id="labelmode_alt" value="alt"
-           {% if labelmode == "alt" %}checked {% endif %}
-           data-link="{{ path('vib_flies_print_setlabelmode') }}" onclick="setLabelMode(this)"/>
-    Alternative labels
-  </label>
+<div class="panel panel-default panel-condensed" action="{{ path('vib_flies_stock_list') }}" method="GET">
+  <div class="panel-heading">
+    <h3 class="panel-title"><a data-toggle="collapse" href="#printer-label">Label settings</a></h3>
+  </div>
+  <ul id="printer-label" class="list-group collapse in">
+    {% block sidebar_print %}
+    <li class="list-group-item">
+      <h5>Printer settings</h5>
+      <ul>
+        <li>
+          <label>
+            <input type="checkbox" id="autoprint"
+                   {% if autoprint %}checked {% elseif not can_print() %}disabled {% endif %}
+                   data-link="{{ path('vib_flies_print_setautoprint') }}" onchange="setAutoPrint(this)"/>
+              Automagic label printing
+          </label>
+        </li>
+      </ul>
+    </li>
+    {% endblock sidebar_print %}
+    {% block sidebar_label %}
+    <li class="list-group-item">
+      <h5>Label content</h5>
+      <ul>
+        <li>
+          <label>
+            <input type="radio" name="labelmode" id="labelmode_std" value="std"
+                   {% if labelmode != "alt" %}checked {% endif %}
+                   data-link="{{ path('vib_flies_print_setlabelmode') }}" onclick="setLabelMode(this)"/>
+              Standard labels
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="radio" name="labelmode" id="labelmode_alt" value="alt"
+                   {% if labelmode == "alt" %}checked {% endif %}
+                   data-link="{{ path('vib_flies_print_setlabelmode') }}" onclick="setLabelMode(this)"/>
+              Alternative labels
+          </label>
+        </li>
+      </ul>
+    </li>
+    {% endblock sidebar_label %}
+  </ul>
 </div>

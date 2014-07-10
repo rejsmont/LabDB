@@ -37,7 +37,7 @@ class StockControllerTest extends WebTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $crawler = $client->request('GET', '/flies/stocks/list/created');
+        $crawler = $client->request('GET', '/flies/stocks/list/private');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertEquals(2, $crawler->filter('tbody > tr')->count());
         $this->assertEquals(1, $crawler->filter(

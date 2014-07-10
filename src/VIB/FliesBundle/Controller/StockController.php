@@ -20,10 +20,13 @@ namespace VIB\FliesBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\SatisfiesParentSecurityPolicy;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\CoreBundle\Controller\CRUDController;
+use VIB\CoreBundle\Filter\RedirectFilterInterface;
 
 use VIB\FliesBundle\Label\PDFLabel;
 
@@ -33,6 +36,7 @@ use VIB\FliesBundle\Form\StockNewType;
 use VIB\FliesBundle\Entity\Stock;
 use VIB\FliesBundle\Entity\StockVial;
 
+use VIB\FliesBundle\Filter\StockFilter;
 use VIB\FliesBundle\Filter\VialFilter;
 
 /**
@@ -70,6 +74,22 @@ class StockController extends CRUDController
         return new StockType();
     }
 
+    /**
+     * List stocks
+     *
+     * @Route("/")
+     * @Route("/list/{access}", defaults={"access" = "owned"})
+     * @Route("/list/{access}/sort/{sorting}", defaults={"access" = "mtnt", "sorting" = "name"})
+     * @Template()
+     * @SatisfiesParentSecurityPolicy
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listAction()
+    {
+        return parent::listAction();
+    }
+    
     /**
      * Show stock
      *
@@ -211,5 +231,42 @@ class StockController extends CRUDController
 
             return false;
         }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilterRedirect(RedirectFilterInterface $filter)
+    {
+        $request = $this->getRequest();
+        $currentRoute = $request->attributes->get('_route');
+        
+        if ($currentRoute == '') {
+            $route = 'vib_flies_stock_list_1';
+        } else {
+            $pieces = explode('_',$currentRoute);
+            if (! is_numeric($pieces[count($pieces) - 1])) {
+                $pieces[] = '2';
+            }
+            $route = ($currentRoute == 'default') ? 'vib_flies_vial_list_1' : implode('_', $pieces);
+        }
+
+        $routeParameters = ($filter instanceof StockFilter) ?
+            array(
+                'access' => $filter->getAccess(),
+                'sorting' => $filter->getSort()) :
+            array();
+        
+        $url = $this->generateUrl($route, $routeParameters);
+        
+        return $this->redirect($url);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilter()
+    {
+        return new StockFilter($this->getRequest(), $this->getSecurityContext());
     }
 }

@@ -23,7 +23,7 @@ use VIB\CoreBundle\Doctrine\ObjectManager;
 use VIB\CoreBundle\Filter\ListFilterInterface;
 use VIB\CoreBundle\Filter\EntityFilterInterface;
 use VIB\CoreBundle\Filter\SecureFilterInterface;
-use VIB\CoreBundle\Repository\NewEntityRepository;
+use VIB\CoreBundle\Repository\EntityRepository;
 use VIB\FliesBundle\Filter\VialFilter;
 
 /**
@@ -31,7 +31,7 @@ use VIB\FliesBundle\Filter\VialFilter;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialRepository extends NewEntityRepository
+class VialRepository extends EntityRepository
 {   
     /**
      * {@inheritdoc}

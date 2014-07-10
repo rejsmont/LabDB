@@ -30,6 +30,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 use VIB\CoreBundle\Form\AclType;
+use VIB\CoreBundle\Filter\RedirectFilterInterface;
 
 /**
  * Base class for CRUD operations CRUDController
@@ -71,46 +72,25 @@ abstract class CRUDController extends AbstractController
      * @Template()
      * @Secure(roles="ROLE_USER, ROLE_ADMIN")
      *
-     * @param  string $filter
-     * @return array
+     * @return Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Request $request)
+    public function listAction()
     {
-        $filter = $request->get('filter', null);
+        $filter = $this->getFilter();
+        
+        if (($filter instanceof RedirectFilterInterface)&&($filter->needRedirect())) {
+            
+            return $this->getFilterRedirect($filter);
+        }
         
         $paginator  = $this->getPaginator();
         $page = $this->getCurrentPage();
         $repository = $this->getObjectManager()->getRepository($this->getEntityClass());
-        $options = $this->getListOptions($filter);
-        $count = $repository->getListCount($options);
-        $query = $repository->getListQuery($options)->setHint('knp_paginator.count', $count);
+        $count = $repository->getListCount($filter);
+        $query = $repository->getListQuery($filter)->setHint('knp_paginator.count', $count);
         $entities = $paginator->paginate($query, $page, 25, array('distinct' => false));
         
         return array('entities' => $entities, 'filter' => $filter);
-    }
-
-    /**
-     *
-     * @param  string $filter
-     * @return array
-     */
-    protected function getListOptions($filter = null)
-    {
-        $securityContext = $this->getSecurityContext();
-        $options = array();
-        $options['filter'] = $filter;
-        $options['user'] = $this->getUser();
-        switch ($filter) {
-            case 'public':
-            case 'all':
-                $options['permissions'] = $securityContext->isGranted('ROLE_ADMIN') ? false : array('VIEW');
-                break;
-            default:
-                $options['permissions'] = array('OWNER');
-                break;
-        }
-
-        return $options;
     }
 
     /**
@@ -336,6 +316,26 @@ abstract class CRUDController extends AbstractController
                   'permission' => MaskBuilder::MASK_VIEW));
     }
 
+    /**
+     *
+     * @param  VIB\CoreBundle\Filter\RedirectFilterInterface  $filter
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    protected function getFilterRedirect(RedirectFilterInterface $filter)
+    {
+        return $this->createNotFoundException();
+    }
+    
+    /**
+     * Get filter
+     *
+     * @return VIB\CoreBundle\Filter\ListFilterInterface
+     */
+    protected function getFilter()
+    {
+        return null;
+    }
+    
     /**
      * Get create form
      *

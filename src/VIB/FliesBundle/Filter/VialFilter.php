@@ -23,13 +23,14 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use VIB\CoreBundle\Filter\SecureListFilter;
 use VIB\CoreBundle\Filter\SortFilterInterface;
+use VIB\CoreBundle\Filter\RedirectFilterInterface;
 
 /**
  * Description of VialFilter
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VialFilter extends SecureListFilter implements SortFilterInterface {
+class VialFilter extends SecureListFilter implements SortFilterInterface, RedirectFilterInterface {
     
     protected $health;
     
@@ -42,7 +43,7 @@ class VialFilter extends SecureListFilter implements SortFilterInterface {
     protected $redirect;
     
     /**
-     * Construct EntityFilter
+     * Construct VialFilter
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
@@ -203,9 +204,7 @@ class VialFilter extends SecureListFilter implements SortFilterInterface {
     }
     
     /**
-     * Is list redirect needed?
-     * 
-     * @return boolean
+     * {@inheritdoc}
      */
     public function needRedirect()
     {

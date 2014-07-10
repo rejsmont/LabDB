@@ -29,6 +29,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\CoreBundle\Controller\CRUDController;
+use VIB\CoreBundle\Filter\RedirectFilterInterface;
 
 use VIB\FliesBundle\Filter\VialFilter;
 use VIB\FliesBundle\Label\PDFLabel;
@@ -96,28 +97,12 @@ class VialController extends CRUDController
      * @Template()
      * @SatisfiesParentSecurityPolicy
      *
-     * @param  \Symfony\Component\HttpFoundation\Request    $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Request $request)
+    public function listAction()
     {
-        $filter = new VialFilter($request, $this->getSecurityContext());
-        
-        if ($filter->needRedirect()) {
-            
-            return $this->getFilterRedirect($filter);
-        }
-        
-        $paginator  = $this->getPaginator();
-        $page = $this->getCurrentPage();
-        $repository = $this->getObjectManager()->getRepository($this->getEntityClass());
-        $count = $repository->getListCount($filter);
-        $query = $repository->getListQuery($filter)->setHint('knp_paginator.count', $count);
-        $entities = $paginator->paginate($query, $page, 25, array('distinct' => false));
-        
-        $response = array('entities' => $entities, 'filter' => $filter);
-        
-        $formResponse = $this->handleSelectForm(new SelectType($this->getEntityClass()), $filter);
+        $response = parent::listAction();
+        $formResponse = $this->handleSelectForm(new SelectType($this->getEntityClass()));
 
         return is_array($formResponse) ? array_merge($response, $formResponse) : $formResponse;
     }
@@ -674,11 +659,9 @@ class VialController extends CRUDController
     }
     
     /**
-     *
-     * @param  \VIB\FliesBundle\Filter\VialFilter             $filter
-     * @return \Symfony\Component\HttpFoundation\Response
+     * {@inheritdoc}
      */
-    private function getFilterRedirect(VialFilter $filter)
+    protected function getFilterRedirect(RedirectFilterInterface $filter)
     {
         $request = $this->getRequest();
         $currentRoute = $request->attributes->get('_route');
@@ -693,12 +676,23 @@ class VialController extends CRUDController
             $route = ($currentRoute == 'default') ? 'vib_flies_vial_list_2' : implode('_', $pieces);
         }
 
-        $url = $this->generateUrl($route, array(
-            'access' => $filter->getAccess(),
-            'filter' => $filter->getFilter(),
-            'sorting' => $filter->getSort()
-        ));
-
+        $routeParameters = ($filter instanceof VialFilter) ?
+            array(
+                'access' => $filter->getAccess(),
+                'filter' => $filter->getFilter(),
+                'sorting' => $filter->getSort()) :
+            array();
+        
+        $url = $this->generateUrl($route, $routeParameters);
+        
         return $this->redirect($url);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilter()
+    {
+        return new VialFilter($this->getRequest(), $this->getSecurityContext());
     }
 }

@@ -3,15 +3,68 @@
 {% block headline %}Stocks{% endblock headline %}
 
 {% block content_sidebar %}
-<ul class="nav nav-list well">
-  <li class="nav-header">List</li>
-  <li><a href="{{ path('vib_flies_stock_list') }}">My stocks</a></li>
-  <li><a href="{{ path('vib_flies_stock_list_1',{ 'filter': 'created' }) }}">Stocks I created</a></li>
-  <li><a href="{{ path('vib_flies_stock_list_1',{ 'filter': 'public' }) }}">Public stocks</a></li>
-  <li class="nav-header">Actions</li>
-  <li><a href="{{ path('vib_flies_stock_create') }}">New stock</a></li>
-  <li><a href="{{ path('vib_flies_vial_expand') }}">Expand stock</a></li>
-  <li><a href="{{ path('vib_flies_vial_give') }}">Give vial</a></li>
-</ul>
+{% block sidebar_display %}
+<form class="panel panel-default panel-condensed" action="{{ path('vib_flies_stock_list') }}" method="GET">
+  <div class="panel-heading">
+    <h3 class="panel-title"><a data-toggle="collapse" href="#dislpay">List options</a></h3>
+  </div>
+  <ul id="dislpay" class="list-group collapse in">
+    {% block sidebar_display_access %}
+    <li class="list-group-item">
+      <h5>Access</h5>
+      <ul>
+        <li>
+          <label>
+            <input class="toggle-children" type="radio" name="access" id="access_mtnt" value="mtnt"
+              {{ (filter is  defined and filter.access == 'mtnt') ? 'checked' }} >
+            Maintained stocks
+          </label>
+        </li>
+        <li>
+          <label>
+            <input class="toggle-children" type="radio" name="access" id="access_private" value="private"
+              {{ (filter is  defined and filter.access == 'private') ? 'checked' }} >
+            Private stocks
+          </label>
+        </li>
+        <li>
+          <label>
+            <input class="toggle-children" type="radio" name="access" id="access_shared" value="shared"
+              {{ (filter is defined and filter.access == 'shared') ? 'checked' }} >
+            Shared stocks
+          </label>
+        </li>
+        <li>
+          <label>
+            <input class="toggle-children" type="radio" name="access" id="access_public" value="public"
+              {{ (filter is defined and filter.access == 'public') ? 'checked' }} >
+            Public stocks
+          </label>
+        </li>
+      </ul>
+    </li>
+    {% endblock sidebar_display_access %}
+    <li class="panel-footer">
+      <input type="hidden" name="resolver" value="on">
+      <button type="submit" class="btn btn-primary btn-sm btn-block">
+        List stocks
+      </button>
+    </li>
+  </ul>
+</form>
+{% endblock sidebar_display %} 
+{% block sidebar_actions %}
+<div class="panel panel-default panel-condensed">
+  <div class="panel-heading">
+    <h3 class="panel-title"><a data-toggle="collapse" href="#actions">Actions</a></h3>
+  </div>
+  <ul id="actions" class="list-group collapse in">
+    <li class="list-group-item"><a href="{{ path('vib_flies_stock_create') }}">New stock</a></li>
+    <li class="list-group-item"><a href="{{ path('vib_flies_vial_expand') }}">Expand stock</a></li>
+    <li class="list-group-item"><a href="{{ path('vib_flies_stock_create') }}">New stock vial</a></li>
+    <li class="list-group-item"><a href="{{ path('vib_flies_vial_give') }}">Give vial</a></li>
+  </ul>
+</div>
+{% endblock sidebar_actions %}
 {{ parent() }}
 {% endblock content_sidebar %}

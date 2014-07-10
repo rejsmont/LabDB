@@ -18,10 +18,12 @@
 
 namespace VIB\FliesBundle\Repository;
 
+use VIB\CoreBundle\Filter\ListFilterInterface;
 use VIB\SearchBundle\Repository\SearchableRepository;
 use VIB\SearchBundle\Search\SearchQueryInterface;
 use VIB\SearchBundle\Search\ACLSearchQueryInterface;
 use VIB\FliesBundle\Search\SearchQuery;
+use VIB\FliesBundle\Filter\StockFilter;
 
 /**
  * StockRepository
@@ -33,28 +35,33 @@ class StockRepository extends SearchableRepository
     /**
      * {@inheritdoc}
      */
-    public function getListQuery($options = array())
+    public function getListQuery(ListFilterInterface $filter = null)
     {
-        $query = parent::getListQuery($options);
-        if ($options['filter'] == '') {
-            $qb = $this->getListQueryBuilder($options);
+        $access = ($filter instanceof StockFilter) ? $filter->getAccess() : null;
+        $user = ($filter instanceof SecureFilterInterface) ? $filter->getUser() : null;
+        
+        if ($access == 'mtnt') {
+            $qb = $this->getListQueryBuilder($filter);
             $permissions = array('OWNER');
-            $user = isset($options['user']) ? $options['user'] : null;
-
+            
             return $this->getAclFilter()->apply($qb, $permissions, $user, 'v');
         } else {
-            return $query;
+            
+            return parent::getListQuery($filter);
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getListQueryBuilder($options = array())
+    protected function getListQueryBuilder(ListFilterInterface $filter = null)
     {
         $qb = $this->createQueryBuilder('e')
                    ->orderBy('e.name');
-        if ($options['filter'] == '') {
+        
+        $access = ($filter instanceof StockFilter) ? $filter->getAccess() : null;
+        
+        if ($access == 'mtnt') {
             $date = new \DateTime();
             $date->sub(new \DateInterval('P2M'));
 
@@ -71,28 +78,33 @@ class StockRepository extends SearchableRepository
     /**
      * {@inheritdoc}
      */
-    public function getCountQuery($options = array())
+    public function getCountQuery(ListFilterInterface $filter = null)
     {
-        $query = parent::getCountQuery($options);
-        if ($options['filter'] == '') {
-            $qb = $this->getCountQueryBuilder($options);
+        $access = ($filter instanceof StockFilter) ? $filter->getAccess() : null;
+        $user = ($filter instanceof SecureFilterInterface) ? $filter->getUser() : null;
+        
+        if ($access == 'mtnt') {
+            $qb = $this->getCountQueryBuilder($filter);
             $permissions = array('OWNER');
-            $user = isset($options['user']) ? $options['user'] : null;
-
+            
             return $this->getAclFilter()->apply($qb, $permissions, $user, 'v');
         } else {
-            return $query;
+            
+            return parent::getCountQuery($filter);
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getCountQueryBuilder($options = array())
+    protected function getCountQueryBuilder(ListFilterInterface $filter = null)
     {
         $qb = $this->createQueryBuilder('e')
                    ->select('count(DISTINCT e.id)');
-        if ($options['filter'] == '') {
+        
+        $access = ($filter instanceof StockFilter) ? $filter->getAccess() : null;
+        
+        if ($access == 'mtnt') {
             $date = new \DateTime();
             $date->sub(new \DateInterval('P2M'));
 
