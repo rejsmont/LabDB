@@ -8,7 +8,7 @@
   <div class="panel-heading">
     <h3 class="panel-title"><a data-toggle="collapse" href="#dislpay">List options</a></h3>
   </div>
-  <ul id="dislpay" class="list-group collapse in">
+  <ul id="dislpay" class="list-group collapse mobile-collapsed in">
     {% block sidebar_display_access %}
     <li class="list-group-item">
       <h5>Access</h5>
@@ -58,7 +58,7 @@
   <div class="panel-heading">
     <h3 class="panel-title"><a data-toggle="collapse" href="#actions">Actions</a></h3>
   </div>
-  <ul id="actions" class="list-group collapse in">
+  <ul id="actions" class="list-group collapse mobile-collapsed in">
     <li class="list-group-item"><a href="{{ path('vib_flies_stock_create') }}">New stock</a></li>
     <li class="list-group-item"><a href="{{ path('vib_flies_vial_expand') }}">Expand stock</a></li>
     <li class="list-group-item"><a href="{{ path('vib_flies_stockvial_create') }}">New stock vial</a></li>

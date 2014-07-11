@@ -523,4 +523,8 @@ $(document).ready(function() {
         }
       });
     });
+    
+    if ($('.navbar-toggle').is(':visible')) {
+      $('.mobile-collapsed.in').removeClass('in');
+    }
 });
