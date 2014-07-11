@@ -17,40 +17,18 @@
 </p>
 <hr>
 <h3>Updates and new features:</h3>
+<p>
+  There was a major update to the database. The welcome page may display inconsistent data until all of your
+  living vials have been flipped and have gone through one lifecycle. Please read the changelog carefully and
+  familiarize yourself with new features. In case of questions, you can always contant
+  <a href="mailto:radoslaw@ejsmont.net">webmaster</a> for support.
+</p>
 <ul>
   <li>
     <b>ANTIBODIES !!!</b><br/>
     <span class="muted">Now we have more than flies in the database. Check out our cool antibodies!</span>
   </li>
-  <li>
-    <b>Menu redesigned.</b><br/>
-    <span class="muted">The menu has been designed from scratch to provide easier
-      and more intuitive access to database features.</span>
-  </li>
-  <li>
-    <b>Racks - you can store your vials in barcoded racks.</b><br/>
-    <span class="muted">To create a rack, go to Tools→New rack.<br/>
-      To view a rack just scan its barcode into search or vial selection field.</span>
-  </li>
-  <li>
-    <b>Autoprint - barcodes are printed automagically.</b><br/>
-    <span class="muted">Autoprint can be enabled/disabled from the sidebar.</span>
-  </li>
-  <li>
-    <b>Alternative labels for stock vials.</b><br/>
-    <span class="muted">
-      Like concise labels with stock name only? Stick to standard labels.
-      Or maybe you prefer the whole genotype printed? Use alternative labels!
-    </span>
-  </li>
-  <li>
-    <b>Flip & trash batch action - less clicking.</b><br/>
-    <span class="muted">Flip your vials and trash the old vials.<br/>
-      New vials are places where the old one were</span>
-  </li>
-  <li>
-    <b>Many bugfixes and UI improvements.</b>
-  </li>
+  
 </ul>
 {% endblock content %}
 
@@ -68,9 +46,7 @@
 {% block main_row %}
 <div class="col-sm-12">
   {% block content_row %}
-  <div class="row">
-      {{ block('content') }}
-  </div>
+    {{ block('content') }}
   {% endblock content_row %}
 </div>
 {% endblock main_row %}

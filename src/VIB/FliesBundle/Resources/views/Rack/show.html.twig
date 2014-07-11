@@ -45,51 +45,51 @@
       <div id="rack-view" class="panel-collapse collapse in">
         <div class="panel-body">
           <div class="table-responsive">
-            <table class="table table-bordered table-condensed rack-display table-curved" id="rack_{{ entity.id }}">
-              <tbody>
-                <tr>
-                  <th><input type="checkbox" class="checkall" checked/></th>
-                {% for i in 1..entity.columns %}
-                  <th>
-                    {{ entity.position(1,i).column }}
-                  </th>
-                {% endfor %}
-                </tr>
-              {% set first = true %}
-              {% set order = 0 %}
-              {% for i in 1..entity.rows %}
-                <tr>
-                  <th>
-                    {{ entity.position(i,1).row }}
-                    <input type="checkbox" class="checkrow" checked/>
-                  </th>
-                  {% for j in 1..entity.columns %}
-                    {% if entity.position(i,j).isEmpty %}
-                      {% if first == true %}
-                        {% set first = false %}
-                        <td id="position_{{ entity.position(i,j).id }}" class="empty info"></td>
-                      {% else %}
-                        <td id="position_{{ entity.position(i,j).id }}" class="empty"></td>
-                      {% endif %}
-                    {% else %}
-                      {% set content = entity.position(i,j).content %}
-                      {% if content.isOverDue() or content.isDead() %}
-                        <td id="position_{{ entity.position(i,j).id }}" class="danger">
-                      {% elseif content.isDue() %}
-                        <td id="position_{{ entity.position(i,j).id }}" class="warning">
-                      {% else %}
-                        <td id="position_{{ entity.position(i,j).id }}" class="success">
-                      {% endif %}
-                        {% include 'VIBFliesBundle:Rack:position.html.twig' with
-                           {'content': content, 'rackID': entity.id, 'order': order} %}
-                        {% set order = order + 1 %}
-                      </td>
-                    {% endif %}
-                  {% endfor %}
-                </tr>
+          <table class="table table-bordered table-condensed rack-display table-curved" id="rack_{{ entity.id }}">
+            <tbody>
+              <tr>
+                <th><input type="checkbox" class="checkall" checked/></th>
+              {% for i in 1..entity.columns %}
+                <th>
+                  {{ entity.position(1,i).column }}
+                </th>
               {% endfor %}
-              </tbody>
-            </table>
+              </tr>
+            {% set first = true %}
+            {% set order = 0 %}
+            {% for i in 1..entity.rows %}
+              <tr>
+                <th>
+                  {{ entity.position(i,1).row }}
+                  <input type="checkbox" class="checkrow" checked/>
+                </th>
+                {% for j in 1..entity.columns %}
+                  {% if entity.position(i,j).isEmpty %}
+                    {% if first == true %}
+                      {% set first = false %}
+                      <td id="position_{{ entity.position(i,j).id }}" class="empty info"></td>
+                    {% else %}
+                      <td id="position_{{ entity.position(i,j).id }}" class="empty"></td>
+                    {% endif %}
+                  {% else %}
+                    {% set content = entity.position(i,j).content %}
+                    {% if content.isOverDue() or content.isDead() %}
+                      <td id="position_{{ entity.position(i,j).id }}" class="danger">
+                    {% elseif content.isDue() %}
+                      <td id="position_{{ entity.position(i,j).id }}" class="warning">
+                    {% else %}
+                      <td id="position_{{ entity.position(i,j).id }}" class="success">
+                    {% endif %}
+                      {% include 'VIBFliesBundle:Rack:position.html.twig' with
+                         {'content': content, 'rackID': entity.id, 'order': order} %}
+                      {% set order = order + 1 %}
+                    </td>
+                  {% endif %}
+                {% endfor %}
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
           </div>
           <div class="list-buttons">
           {% block list_buttons %}
@@ -133,6 +133,7 @@
         </h4>
       </div>
       <div id="rack-detail" class="panel-collapse collapse">
+        <div class="table-responsive">
         <table class="table table-striped table-bordered table-condensed" {% block table_attr %}{% endblock table_attr %}>
           <thead>
             <tr>
@@ -164,6 +165,7 @@
           {% endfor %}
           </tbody>
         </table>
+        </div>
         <div class="panel-body">
           <div class="list-buttons">
           {{ l.select_buttons() }}

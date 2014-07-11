@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fd6b374a8759ff6998d12b5ef426a0c1",
+    "hash": "e3eb16dc0b0c58dda81894bc960e4100",
     "packages": [
         {
             "name": "components/bootstrap",
@@ -169,12 +169,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "d9b1a37e9351ddde1f19f09a02e3d6ee92e82efd"
+                "reference": "0db097b6c15e2e9547b1098e1caa66aa07598c3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/d9b1a37e9351ddde1f19f09a02e3d6ee92e82efd",
-                "reference": "d9b1a37e9351ddde1f19f09a02e3d6ee92e82efd",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/0db097b6c15e2e9547b1098e1caa66aa07598c3b",
+                "reference": "0db097b6c15e2e9547b1098e1caa66aa07598c3b",
                 "shasum": ""
             },
             "require": {
@@ -234,7 +234,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2014-07-06 15:52:21"
+            "time": "2014-07-10 13:30:26"
         },
         {
             "name": "doctrine/cache",
@@ -949,12 +949,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "84f8ef5ca46f02f3001af47ba25fc917c776a247"
+                "reference": "406e1770627cfe0c949f036bd9f49e6e3dde9ad5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/84f8ef5ca46f02f3001af47ba25fc917c776a247",
-                "reference": "84f8ef5ca46f02f3001af47ba25fc917c776a247",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/406e1770627cfe0c949f036bd9f49e6e3dde9ad5",
+                "reference": "406e1770627cfe0c949f036bd9f49e6e3dde9ad5",
                 "shasum": ""
             },
             "require": {
@@ -1017,7 +1017,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-06-10 11:49:09"
+            "time": "2014-07-11 03:13:19"
         },
         {
             "name": "eternicode/bootstrap-datepicker",
@@ -2300,12 +2300,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phiamo/MopaBootstrapBundle.git",
-                "reference": "04c2a90"
+                "reference": "0e25e59"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/04c2a901ca44299a841a36f5e54c0d122917615b",
-                "reference": "04c2a90",
+                "reference": "0e25e59",
                 "shasum": ""
             },
             "require": {
@@ -2357,7 +2357,7 @@
                 "form",
                 "template"
             ],
-            "time": "2014-05-19 20:03:35"
+            "time": "2014-01-16 23:43:43"
         },
         {
             "name": "mopa/composer-bridge",
@@ -2719,12 +2719,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/RobLoach/component-installer.git",
-                "reference": "c2e456e7644885f786169e52f590719aa5a8a7d8"
+                "reference": "225068e491c5059d006a7841257540979f082012"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/c2e456e7644885f786169e52f590719aa5a8a7d8",
-                "reference": "c2e456e7644885f786169e52f590719aa5a8a7d8",
+                "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/225068e491c5059d006a7841257540979f082012",
+                "reference": "225068e491c5059d006a7841257540979f082012",
                 "shasum": ""
             },
             "require": {
@@ -2756,7 +2756,7 @@
                 }
             ],
             "description": "Allows installation of Components via Composer.",
-            "time": "2013-09-08 14:10:00"
+            "time": "2014-07-10 16:19:44"
         },
         {
             "name": "sabre/vobject",
@@ -3243,12 +3243,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "162a025c5dc723aa75d8d88be81108e3285f2fd5"
+                "reference": "ea45769aaba270d05010bb36c23e25ad6fceb55a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/162a025c5dc723aa75d8d88be81108e3285f2fd5",
-                "reference": "162a025c5dc723aa75d8d88be81108e3285f2fd5",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/ea45769aaba270d05010bb36c23e25ad6fceb55a",
+                "reference": "ea45769aaba270d05010bb36c23e25ad6fceb55a",
                 "shasum": ""
             },
             "require": {
@@ -3345,7 +3345,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2014-07-09 17:02:56"
+            "time": "2014-07-11 09:32:34"
         },
         {
             "name": "tecnick.com/tcpdf",
@@ -3353,7 +3353,7 @@
             "source": {
                 "type": "git",
                 "url": "git://git.code.sf.net/p/tcpdf/code",
-                "reference": "e750c674f6ce1e7c428af10e75d1510fa075fe3b"
+                "reference": "196ef5e4f7944bbed99e56a8683136c14a7378d8"
             },
             "require": {
                 "php": ">=5.3.0"
@@ -3402,7 +3402,7 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2014-06-25 16:30:22"
+            "time": "2014-07-09 18:21:01"
         },
         {
             "name": "twbs/bootstrap",

@@ -22,20 +22,45 @@ $(document).ready(function () {
   $('.date').datepicker();
   $('.ajax-typeahead').each(function() {
     var $this = $(this);
-    var $url = $this.data('link') + '?query=%QUERY';
-    $this.typeahead({
-      remote: $url
+    var url = $this.data('link') + '?query=%QUERY';
+    var source = new Bloodhound({
+      datumTokenizer: function(d) { 
+        return Bloodhound.tokenizers.whitespace(d.value); 
+      },
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      remote: {
+        url: url,
+        filter: function(list) {
+          return $.map(list, function(value) { return { value: value }; });
+        }
+      }
     });
+    source.initialize();
+    $this.typeahead(null,{
+      source: source.ttAdapter()
+    });
+    $this.closest('.input-group').children('span.twitter-typeahead').css("display", "table-cell");
   });
   $('.user-typeahead').each(function() {
     var $this = $(this);
-    var $url = $this.data('link') + '?query=%QUERY';
-    $this.typeahead({
-      remote: $url,
-      valueKey: 'username',
-      template: '<p>{{fullname}} <strong class="pull-right">{{username}}</strong></p>',
-      engine: Hogan
+    var url = $this.data('link') + '?query=%QUERY';
+    var template = Hogan.compile('<p>{{fullname}} <strong class="pull-right">{{username}}</strong></p>');
+    var source = new Bloodhound({
+      datumTokenizer: function(d) { 
+        return Bloodhound.tokenizers.whitespace(d.username); 
+      },
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      remote: url
     });
+    source.initialize();
+    $this.typeahead(null,{
+      displayKey: 'username',
+      templates: {
+        suggestion: function (d) { return template.render(d); }
+      },
+      source: source.ttAdapter()       
+    });
+    $this.closest('.input-group').children('span.twitter-typeahead').css("display", "table-cell");
   });
   $('.select2').not('.select2-container').not('.select2-offscreen').select2({
     width: 'resolve',
@@ -49,23 +74,48 @@ $(document).ready(function () {
     }
     $btn.collection('add');
     e.preventDefault();
-      $('.date').datepicker();
-    $('.ajax-typeahead').each(function() {
+    $('.date').datepicker();
+    $('input.ajax-typeahead').not('.tt-hint').not('.tt-input').each(function() {
       var $this = $(this);
-      var $url = $this.data('link') + '?query=%QUERY';
-      $this.typeahead({
-        remote: $url
+      var url = $this.data('link') + '?query=%QUERY';
+      var source = new Bloodhound({
+        datumTokenizer: function(d) { 
+          return Bloodhound.tokenizers.whitespace(d.value); 
+        },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+          url: url,
+          filter: function(list) {
+            return $.map(list, function(value) { return { value: value }; });
+          }
+        }
       });
+      source.initialize();
+      $this.typeahead(null,{
+        source: source.ttAdapter()       
+      });
+      $this.closest('.input-group').children('span.twitter-typeahead').css("display", "table-cell");
     });
-    $('.user-typeahead').each(function() {
+    $('input.user-typeahead').not('.tt-hint').not('.tt-input').each(function() {
       var $this = $(this);
-      var $url = $this.data('link') + '?query=%QUERY';
-      $this.typeahead({
-        remote: $url,
-        valueKey: 'username',
-        template: '<p>{{fullname}} <strong class="pull-right">{{username}}</strong></p>',
-        engine: Hogan
+      var url = $this.data('link') + '?query=%QUERY';
+      var template = Hogan.compile('<p>{{fullname}} <strong class="pull-right">{{username}}</strong></p>');
+      var source = new Bloodhound({
+        datumTokenizer: function(d) { 
+          return Bloodhound.tokenizers.whitespace(d.username); 
+        },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: url
       });
+      source.initialize();
+      $this.typeahead(null,{
+        displayKey: 'username',
+        templates: {
+          suggestion: function (d) { return template.render(d); }
+        },
+        source: source.ttAdapter()       
+      });
+      $this.closest('.input-group').children('span.twitter-typeahead').css("display", "table-cell");
     });
     $('.select2').not('.select2-container').not('.select2-offscreen').select2({
       width: 'resolve',

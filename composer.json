@@ -27,7 +27,7 @@
         "jms/security-extra-bundle": "~1.5.1",
         "jms/di-extra-bundle": "~1.4.0",
         "jms/serializer-bundle": "~0.13.0",
-        "mopa/bootstrap-bundle": "dev-master#04c2a90",
+        "mopa/bootstrap-bundle": "dev-master#0e25e59",
         "knplabs/knp-paginator-bundle": "~2.3.3",
         "knplabs/knp-components": "~1.2.5",
         "knplabs/knp-menu-bundle": "~1.1.2",
