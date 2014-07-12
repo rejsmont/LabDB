@@ -527,4 +527,11 @@ $(document).ready(function() {
     if ($('.navbar-toggle').is(':visible')) {
       $('.mobile-collapsed.in').removeClass('in');
     }
+    
+    $('#search_form_terms').keypress(function (e) {
+      if (e.which === 13) {
+        $('form#search-form').submit();
+        return false;
+      }
+    });
 });
