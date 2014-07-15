@@ -207,7 +207,7 @@ class RackController extends CRUDController
     public function deleteAction($id)
     {
         $response = parent::deleteAction($id);
-        $url = $this->generateUrl('vib_flies_vial_list');
+        $url = $this->generateUrl('vib_flies_welcome_index');
 
         return is_array($response) ? $response : $this->redirect($url);
     }

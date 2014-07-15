@@ -82,6 +82,14 @@ class ObjectManager extends ObjectManagerDecorator
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function remove($object) {
+        $this->removeACL($object);
+        parent::remove($object);
+    }
+    
+    /**
      * Create ACL for object(s)
      *
      * @param object $objects

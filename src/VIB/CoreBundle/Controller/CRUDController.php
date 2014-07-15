@@ -25,6 +25,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\ORM\NoResultException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -209,9 +210,12 @@ abstract class CRUDController extends AbstractController
             $om->flush();
             $this->addSessionFlash('success', $message);
             $route = str_replace("_delete", "_list", $request->attributes->get('_route'));
-            $url = $this->generateUrl($route);
-
-            return $this->redirect($url);
+            try {
+                $url = $this->generateUrl($route);
+                return $this->redirect($url);
+            } catch (RouteNotFoundException $e) {
+                return $this->redirect('default');
+            }
         }
 
         return array('entity' => $entity);

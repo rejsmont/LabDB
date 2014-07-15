@@ -64,6 +64,23 @@ class IncubatorController extends CRUDController
     }
 
     /**
+     * Delete incubator
+     *
+     * @Route("/delete/{id}")
+     * @Template()
+     *
+     * @param  mixed                                     $id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction($id)
+    {
+        $response = parent::deleteAction($id);
+        $url = $this->generateUrl('vib_flies_welcome_index');
+
+        return is_array($response) ? $response : $this->redirect($url);
+    }
+    
+    /**
      * Generate links for putting stuff into incubator
      *
      * @Template()
