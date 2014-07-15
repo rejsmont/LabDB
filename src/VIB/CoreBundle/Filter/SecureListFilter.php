@@ -40,7 +40,7 @@ class SecureListFilter implements ListFilterInterface, SecureFilterInterface {
      */
     public function __construct(Request $request = null, SecurityContextInterface $securityContext = null)
     {
-        $this->access = (null !== $request) ? $request->get('access', 'private') : 'private';
+        $this->access = (null !== $request) ? $request->get('access', 'shared') : 'shared';
         $this->securityContext = $securityContext;
     }
     

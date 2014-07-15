@@ -246,7 +246,14 @@ class VialController extends CRUDController
 
                 $vials = $om->expand($source, $number, true, $size, $food);
                 $om->flush();
-                $om->createACL($vials, $this->getDefaultACL());
+                
+                foreach ($vials as $vial) {
+                    $sourceVial = $vial->getParent();
+                    $securityContext = $this->getSecurityContext();
+                    $acl = ($securityContext->isGranted('OPERATOR', $sourceVial)) ?
+                        $om->getACL($sourceVial) : $this->getDefaultACL();
+                    $om->createACL($vial, $acl);
+                }
 
                 $message = (($count = count($vials)) == 1) ?
                     ucfirst($this->getEntityName()) . ' ' . $source . ' was flipped.' :
@@ -299,7 +306,7 @@ class VialController extends CRUDController
                 $size = $data['size'];
                 $food = $data['food'];
                 
-                if (!($securityContext->isGranted('OWNER',$source)||$securityContext->isGranted('ROLE_ADMIN'))) {
+                if (!($securityContext->isGranted('OWNER', $source)||$securityContext->isGranted('ROLE_ADMIN'))) {
                     throw new AccessDeniedException();
                 }
                 
@@ -536,7 +543,15 @@ class VialController extends CRUDController
         $om = $this->getObjectManager();
         $flippedVials = $om->flip($vials, true, $trash);
         $om->flush();
-        $om->createACL($flippedVials,$this->getDefaultACL());
+        
+        foreach ($flippedVials as $flippedVial) {
+            $sourceVial = $flippedVial->getParent();
+            $securityContext = $this->getSecurityContext();
+            $acl = ($securityContext->isGranted('OPERATOR', $sourceVial)) ?
+                $om->getACL($sourceVial) : $this->getDefaultACL();
+            $om->createACL($flippedVials, $acl);
+        }
+        
         if (($count = count($flippedVials)) == 1) {
             $this->addSessionFlash('success', '1 vial was flipped.' .
                                    ($trash ? ' Source vial was trashed.' : ''));

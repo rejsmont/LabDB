@@ -63,20 +63,20 @@ class VialManager extends ObjectManager
     public function flip($vials, $setSource = true, $trashSource = false)
     {
         if (($vial = $vials) instanceof Vial) {
-            $vialClass = str_replace("Proxies\\__CG__\\","",get_class($vial));
-            $newVial = new $vialClass($vial,$setSource);
+            $vialClass = str_replace("Proxies\\__CG__\\", "", get_class($vial));
+            $newVial = new $vialClass($vial, $setSource);
             if ($trashSource) {
                 $newVial->setPosition($vial->getPosition());
                 $vial->setTrashed(true);
                 $this->persist($vial);
             }
             $this->persist($newVial);
-
+            
             return $newVial;
         } elseif ($vials instanceof Collection) {
             $newVials = new ArrayCollection();
             foreach ($vials as $vial) {
-                $newVials->add($this->flip($vial,$setSource,$trashSource));
+                $newVials->add($this->flip($vial, $setSource, $trashSource));
             }
 
             return $newVials;
