@@ -242,6 +242,8 @@ function clearRack(e,rackID) {
             $(cells[0]).addClass('info');
             cells.stop().css("background-color","")
                 .effect("highlight", {color: "red"}, 5000);
+            var details = $('#rack-detail').find('tbody').find('tr');
+            details.html('').addClass('hidden');
           }
     });
 }
