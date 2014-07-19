@@ -716,7 +716,11 @@ class VialController extends CRUDController
             }
         }
         
-        return $this->render('VIBFliesBundle:Vial:batch_edit.html.twig', array('form' => $form->createView()));
+        $pattern = "#Controller\\\([a-zA-Z]*)Controller#";
+        $matches = array();
+        preg_match($pattern, $request->get('_controller'), $matches);
+        
+        return $this->render('VIBFliesBundle:' . $matches[1] . ':batch_edit.html.twig', array('form' => $form->createView()));
     }
     
     /**
@@ -807,7 +811,11 @@ class VialController extends CRUDController
             }
         }
         
-        return $this->render('VIBFliesBundle:Vial:batch_permissions.html.twig', array('form' => $form->createView()));        
+        $pattern = "#Controller\\\([a-zA-Z]*)Controller#";
+        $matches = array();
+        preg_match($pattern, $request->get('_controller'), $matches);
+        
+        return $this->render('VIBFliesBundle:' . $matches[1] . ':batch_permissions.html.twig', array('form' => $form->createView()));        
     }
     
     /**

@@ -1,0 +1,14 @@
+{% extends "VIBFliesBundle:Vial:batch_edit.html.twig" %}
+
+{% block modal_header %}Batch edit stock vials{% endblock modal_header %}
+
+{% block form_header %}
+<form action="{{ path('vib_flies_stockvial_editvials') }}"
+      method="post" {{ form_enctype(form) }}
+      class="form-horizontal">
+{% endblock form_header %}
+
+{% block modal_footer %}
+  <button type="submit" class="btn btn-primary">Save</button>
+  <a href="{{ path('vib_flies_stockvial_list') }}" class="btn btn-default">Cancel</a>
+{% endblock modal_footer %}
