@@ -1,0 +1,50 @@
+{% extends "VIBFliesBundle:Vial:layout.html.twig" %}
+{% use "VIBSiteTemplateBundle:Form:form.html.twig" %}
+{% import "VIBSiteTemplateBundle:Macros:form.html.twig" as f %}
+
+{% block modal_header %}Batch edit vials{% endblock modal_header %}
+
+{% block form_header %}
+<form action="{{ path('vib_flies_vial_editvials') }}"
+      method="post" {{ form_enctype(form) }}
+      class="form-horizontal">
+{% endblock form_header %}
+
+{% block modal_body %}
+  {{ _self.vials("Edited vials", form.vars.value.vials, 'vib_flies_vial_show', null, 'vial') }}
+  {{ parent() }}
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  <button type="submit" class="btn btn-primary">Save</button>
+  <a href="{{ path('vib_flies_vial_list') }}" class="btn btn-default">Cancel</a>
+{% endblock modal_footer %}
+
+{% macro vials(label,items,route) %}
+{% set uuid = random() ~ '_' ~ 'vials'  %}
+<div class="form-group">
+  <a class="col-sm-3 control-label collapse-toggle" data-toggle="collapse" href="#{{ uuid }}">
+    <strong>{{ label }}</strong>
+  </a>
+  <div class="col-sm-9">
+    <span class="input-text input-block-level">
+      <strong>{{ items | length }}</strong>
+    </span>
+    <ul id="{{ uuid }}" class="collapse unstyled input-text">
+    {% for item in items %}
+      <li>{% spaceless %}
+        {% if is_granted('ROLE_ADMIN') or is_granted('VIEW',item) %}
+            {% set uuid = random() ~ '_' ~ item.id  %}
+            <span class="popover-trigger" id="span_{{ uuid }}"
+                  data-placement="bottom" data-container="#span_{{ uuid }}"
+                  data-delay="500" data-link="{{ path('vib_flies_ajax_popover')}}"
+                  data-type="vial" data-id="{{ item.id }}">
+              <a href="{{ path(route, { 'id': item.id }) }}">{{ item }}</a>
+            </span>
+        {% else %}{{ item }}{% endif %}
+        {% endspaceless %}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endmacro %}

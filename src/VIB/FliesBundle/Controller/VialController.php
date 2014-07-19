@@ -25,11 +25,13 @@ use JMS\SecurityExtraBundle\Annotation\SatisfiesParentSecurityPolicy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use VIB\CoreBundle\Controller\CRUDController;
+use VIB\CoreBundle\Form\AclType;
 use VIB\CoreBundle\Filter\RedirectFilterInterface;
 
 use VIB\FliesBundle\Filter\VialFilter;
@@ -40,6 +42,8 @@ use VIB\FliesBundle\Form\VialNewType;
 use VIB\FliesBundle\Form\VialExpandType;
 use VIB\FliesBundle\Form\SelectType;
 use VIB\FliesBundle\Form\VialGiveType;
+use VIB\FliesBundle\Form\BatchVialType;
+use VIB\FliesBundle\Form\BatchVialAclType;
 
 use VIB\FliesBundle\Entity\Vial;
 use VIB\FliesBundle\Entity\Incubator;
@@ -417,6 +421,12 @@ class VialController extends CRUDController
                 $incubator = $data['incubator'];
                 $this->incubateVials($vials, $incubator);
                 break;
+            case 'edit':
+                $response = $this->editVials($vials);
+                break;
+            case 'permissions':
+                $response = $this->permissionsVials($vials);
+                break;
         }
 
         return $response;
@@ -477,7 +487,7 @@ class VialController extends CRUDController
 
             return true;
         } else {
-            $this->addSessionFlash('error', 'There was an error printing labels. The print server said: ' . $jobStatus);
+            $this->addSessionFlash('danger', 'There was an error printing labels. The print server said: ' . $jobStatus);
 
             return false;
         }
@@ -612,6 +622,192 @@ class VialController extends CRUDController
         } else {
             $this->addSessionFlash('success', $count . ' vials were put in ' . $incubator . '.');
         }
+    }
+    
+    /**
+     * Batch edit vials
+     *
+     * @Route("/batch/edit")
+     * 
+     * @param \Doctrine\Common\Collections\Collection $vials
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editVials(Collection $vials = null)
+    {
+        $om = $this->getObjectManager();
+        $securityContext = $this->getSecurityContext();
+        $template = array(
+            'setupDate' => null,
+            'flipDate' => null,
+            'size' => null,
+            'food' => null
+        );
+        $removed = 0;
+        if (null !== $vials) {
+            foreach ($vials as $vial) {
+                if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('EDIT', $vial))) {
+                    $vials->removeElement($vial);
+                    $removed++;
+                }
+            }
+        } else {
+            $vials = new ArrayCollection();
+        }
+                
+        if ($removed > 0) {
+            if ($removed == 1) {
+                $this->addSessionFlash('danger', 'You do not have sufficient permissions to edit 1 vial.'
+                        . ' Changes will not apply to this vial.');
+            } else {
+                $this->addSessionFlash('danger', 'You do not have sufficient permissions to edit ' . $removed . ' vials.'
+                        . ' Changes will not apply to these vials.');
+            }
+        }
+                
+        $data = array(
+            'template' => $template,
+            'vials' => $vials
+        );
+        
+        $form = $this->createForm(new BatchVialType(), $data);
+        $request = $this->getRequest();
+        $action = 'editvials';
+        
+        if (($request->getMethod() == 'POST')&&(substr($request->get('_route'), -strlen($action)) === $action)) {
+            $form->bind($request);
+            if ($form->isValid()) {
+                
+                $data = $form->getData();
+                $template = $data['template'];
+                $vials = $data['vials'];
+                
+                foreach ($vials as $vial) {
+                    if (null !== ($setupDate = $template['setupDate'])) {
+                        $vial->setSetupDate($setupDate);
+                    }
+                    if (null !== ($flipDate = $template['flipDate'])) {
+                        $vial->setStoredFlipDate($flipDate);
+                    }
+                    if (null !== ($size = $template['size'])) {
+                        $vial->setSize($size);
+                    }
+                    if (null !== ($food = $template['food'])) {
+                        $vial->setFood($food);
+                    }
+                    
+                    $om->persist($vial);
+                }
+                
+                $om->flush();
+                
+                if (($count = count($vials)) == 1) {
+                    $this->addSessionFlash('success', 'Changes to 1 vial were saved.');
+                } else {
+                    $this->addSessionFlash('success', 'Changes to ' . $count . ' vials were saved.');
+                }
+
+                return $this->getDefaultBatchResponse();;
+            }
+        } else {
+            if (count($vials) == 0) {
+                $this->addSessionFlash('danger', 'There was nothing to edit.');
+
+                return $this->getDefaultBatchResponse();;
+            }
+        }
+        
+        return $this->render('VIBFliesBundle:Vial:batch_edit.html.twig', array('form' => $form->createView()));
+    }
+    
+    /**
+     * Batch change permissions for vials
+     *
+     * @Route("/batch/permissions")
+     * 
+     * @param \Doctrine\Common\Collections\Collection $vials
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function permissionsVials(Collection $vials = null)
+    {
+        $om = $this->getObjectManager();
+        $acl_array = $this->getDefaultACL();
+        $securityContext = $this->getSecurityContext();        
+        $removed = 0;
+        if (null !== $vials) {
+            foreach ($vials as $vial) {
+                if (!($securityContext->isGranted('ROLE_ADMIN')||$securityContext->isGranted('MASTER', $vial))) {
+                    $vials->removeElement($vial);
+                    $removed++;
+                }
+            }
+        } else {
+            $vials = new ArrayCollection();
+        }
+                
+        if ($removed > 0) {
+            if ($removed == 1) {
+                $this->addSessionFlash('danger', 'You do not have sufficient permissions to change permissions'
+                        . ' for 1 vial. Changes will not apply to this vial.');
+            } else {
+                $this->addSessionFlash('danger', 'You do not have sufficient permissions to change permissions'
+                        . ' for ' . $removed . ' vials. Changes will not apply to these vials.');
+            }
+        }
+
+        $acl = array(
+            'user_acl' => array(),
+            'role_acl' => array()
+        );
+                
+        foreach($acl_array as $acl_entry) {
+            $identity = $acl_entry['identity'];
+            if ($identity instanceof UserInterface) {
+                $acl['user_acl'][] = $acl_entry;
+            } else if (is_string($identity)) {
+                $acl['role_acl'][] = $acl_entry;
+            }
+        }
+        
+        $data = array(
+            'acl' => $acl,
+            'vials' => $vials
+        );
+        
+        $form = $this->createForm(new \VIB\FliesBundle\Form\BatchVialAclType(), $data);
+        
+        $request = $this->getRequest();
+        $action = 'permissionsvials';
+        
+        if (($request->getMethod() == 'POST')&&(substr($request->get('_route'), -strlen($action)) === $action)) {
+            $form->bind($request);
+            if ($form->isValid()) {
+                
+                $data = $form->getData();
+                $acl = $data['acl'];
+                $acl_array = array_merge($acl['user_acl'], $acl['role_acl']);
+                $vials = $data['vials'];
+                
+                foreach ($vials as $vial) {
+                    $om->updateACL($vial, $acl_array);
+                }
+                                
+                if (($count = count($vials)) == 1) {
+                    $this->addSessionFlash('success', 'Changes to 1 vial permissions were saved.');
+                } else {
+                    $this->addSessionFlash('success', 'Changes to ' . $count . ' vials permissions were saved.');
+                }
+                
+                return $this->getDefaultBatchResponse();
+            }
+        } else {
+            if (count($vials) == 0) {
+                $this->addSessionFlash('danger', 'There was nothing to edit.');
+
+                return $this->getDefaultBatchResponse();
+            }
+        }
+        
+        return $this->render('VIBFliesBundle:Vial:batch_permissions.html.twig', array('form' => $form->createView()));        
     }
     
     /**

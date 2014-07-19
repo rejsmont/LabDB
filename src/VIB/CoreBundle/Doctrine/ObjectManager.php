@@ -147,7 +147,6 @@ class ObjectManager extends ObjectManagerDecorator
             try {
                 $acl = $aclProvider->findAcl($objectIdentity);
                 $diff = $this->diffACL($acl, $acl_array);
-                print_r($diff);
                 $this->updateAclEntries($acl, $diff['update']);
                 $this->deleteAclEntries($acl, $diff['delete']);
                 $this->insertAclEntries($acl, $diff['insert']);

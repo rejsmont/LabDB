@@ -96,11 +96,28 @@
   </ul>
 </div>
 {% else %}
-  <button class="btn btn-default" onclick="$('#select_action').val('label'); $('form').submit();">
-    Download label PDF
-  </button>
+<button class="btn btn-default" onclick="$('#select_action').val('label'); $('form').submit();">
+  Download label PDF
+</button>
 {% endif %}
 {% endspaceless %}{% endmacro %}
+
+{% macro batch_button() %}
+<div class="btn-group pull-right">
+  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+    Batch
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li onclick="$('#select_action').val('edit'); $('form').submit();">
+      <a href="#">Edit</a>
+    </li>
+    <li onclick="$('#select_action').val('permissions'); $('form').submit();">
+      <a href="#">Permissions</a>
+    </li>
+  </ul>
+</div>
+{% endmacro batch_button %}
 
 {% macro incubate_button() %}
   {% render(controller("VIBFliesBundle:Incubator:incubate")) %}

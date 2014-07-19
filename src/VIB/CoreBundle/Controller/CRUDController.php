@@ -137,11 +137,11 @@ abstract class CRUDController extends AbstractController
             if ($form->isValid()) {
                 $om->persist($entity);
                 $om->flush();
-                $om->createACL($entity,$this->getDefaultACL());
+                $om->createACL($entity, $this->getDefaultACL());
                 $message = ucfirst($this->getEntityName()) . ' ' . $entity . ' was created.';
                 $this->addSessionFlash('success', $message);
                 $route = str_replace("_create", "_show", $request->attributes->get('_route'));
-                $url = $this->generateUrl($route,array('id' => $entity->getId()));
+                $url = $this->generateUrl($route, array('id' => $entity->getId()));
 
                 return $this->redirect($url);
             }
@@ -288,9 +288,7 @@ abstract class CRUDController extends AbstractController
             return $id;
         }
         $om = $this->getObjectManager();
-        
-        //print_r($om);
-        
+                
         try {
             $entity = $om->find($class, $id);
             if ($entity instanceof $class) {
