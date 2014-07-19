@@ -48,7 +48,7 @@ class CRUDControllerTest extends \PHPUnit_Framework_TestCase
         $request = $this->getFakeRequest();
         $request->expects($this->once())
                 ->method('get')
-                ->with($this->equalTo('access'), $this->equalTo('private'), $this->equalTo(false))
+                ->with($this->equalTo('access'), $this->equalTo('shared'), $this->equalTo(false))
                 ->will($this->returnValue('test'));
         $filter = new SecureListFilter($request);
         $this->controller

@@ -716,7 +716,7 @@ class VialController extends CRUDController
             }
         }
         
-        $pattern = "#Controller\\\([a-zA-Z]*)Controller#";
+        $pattern = "/Controller\\\([a-zA-Z]*)Controller/";
         $matches = array();
         preg_match($pattern, $request->get('_controller'), $matches);
         
@@ -811,7 +811,7 @@ class VialController extends CRUDController
             }
         }
         
-        $pattern = "#Controller\\\([a-zA-Z]*)Controller#";
+        $pattern = "/Controller\\\([a-zA-Z]*)Controller/";
         $matches = array();
         preg_match($pattern, $request->get('_controller'), $matches);
         
