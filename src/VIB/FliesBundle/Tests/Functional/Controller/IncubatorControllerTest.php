@@ -139,7 +139,6 @@ class IncubatorControllerTest extends WebTestCase
         $qb = $repository->createQueryBuilder('s')->where('s.id > 1');
         $incubators = $qb->getQuery()->getResult();
         foreach ($incubators as $incubator) {
-            $om->removeACL($incubator);
             $om->remove($incubator);
         }
         $om->flush();

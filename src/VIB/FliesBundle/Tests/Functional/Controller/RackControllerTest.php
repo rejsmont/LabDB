@@ -164,7 +164,6 @@ class RackControllerTest extends WebTestCase
         $qb = $repository->createQueryBuilder('r')->where('r.id > 1');
         $racks = $qb->getQuery()->getResult();
         foreach ($racks as $rack) {
-            $om->removeACL($rack);
             $om->remove($rack);
         }
         $rack = $repository->find(1);

@@ -96,7 +96,7 @@ class ObjectManager extends ObjectManagerDecorator
      * @param array  $acl
      */
     public function createACL($objects, array $acl_array)
-    {
+    {        
         if ($objects instanceof Collection) {
             foreach ($objects as $object) {
                 $this->createACL($object, $acl_array);

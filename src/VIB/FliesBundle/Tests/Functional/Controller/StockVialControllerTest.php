@@ -157,7 +157,6 @@ class StockVialControllerTest extends WebTestCase
         $qb = $repository->createQueryBuilder('v')->where('v.id > 10');
         $vials = $qb->getQuery()->getResult();
         foreach ($vials as $vial) {
-            $vm->removeACL($vial);
             $vm->remove($vial);
         }
         $vm->flush();

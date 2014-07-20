@@ -180,7 +180,6 @@ class StockControllerTest extends WebTestCase
         $stocks = $qb->getQuery()->getResult();
         foreach ($stocks as $stock) {
             $om->removeACL($stock->getVials());
-            $om->removeACL($stock);
             $om->remove($stock);
         }
         $om->flush();
@@ -189,7 +188,6 @@ class StockControllerTest extends WebTestCase
         $qb = $repository->createQueryBuilder('v')->where('v.id > 10');
         $vials = $qb->getQuery()->getResult();
         foreach ($vials as $vial) {
-            $vm->removeACL($vial);
             $vm->remove($vial);
         }
         $vm->flush();

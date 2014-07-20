@@ -559,7 +559,7 @@ class VialController extends CRUDController
             $securityContext = $this->getSecurityContext();
             $acl = ($securityContext->isGranted('OPERATOR', $sourceVial)) ?
                 $om->getACL($sourceVial) : $this->getDefaultACL();
-            $om->createACL($flippedVials, $acl);
+            $om->createACL($flippedVial, $acl);
         }
         
         if (($count = count($flippedVials)) == 1) {
