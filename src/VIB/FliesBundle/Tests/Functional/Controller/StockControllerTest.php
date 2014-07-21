@@ -174,7 +174,7 @@ class StockControllerTest extends WebTestCase
     public static function tearDownAfterClass()
     {
         $client = static::createClient();
-        $om = $client->getContainer()->get('vib.doctrine.manager');
+        $om = $client->getContainer()->get('vib.doctrine.registry')->getManagerForClass('VIB\CoreBundle\Entity\Entity');
         $repository = $om->getRepository('VIB\FliesBundle\Entity\Stock');
         $qb = $repository->createQueryBuilder('s')->where('s.id > 4');
         $stocks = $qb->getQuery()->getResult();
@@ -183,7 +183,7 @@ class StockControllerTest extends WebTestCase
             $om->remove($stock);
         }
         $om->flush();
-        $vm = $client->getContainer()->get('vib.doctrine.vial_manager');
+        $vm = $client->getContainer()->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Vial');
         $repository = $vm->getRepository('VIB\FliesBundle\Entity\Vial');
         $qb = $repository->createQueryBuilder('v')->where('v.id > 10');
         $vials = $qb->getQuery()->getResult();

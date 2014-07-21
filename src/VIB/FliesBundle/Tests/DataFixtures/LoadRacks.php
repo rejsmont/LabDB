@@ -48,7 +48,7 @@ class LoadRacks extends AbstractFixture implements OrderedFixtureInterface, Cont
      */
     public function load(ObjectManager $manager)
     {
-        $manager = $this->container->get('vib.doctrine.manager');
+        $manager = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Rack');
 
         $user_acl = array(
             array('identity' => $this->getReference('user'),

@@ -47,6 +47,14 @@ use VIB\FliesBundle\Entity\RackPosition;
 class AJAXController extends AbstractController
 {
     /**
+     * {@inheritdoc}
+     */
+    protected function getObjectManager($object = null)
+    {
+        return parent::getObjectManager('VIB\CoreBundle\Entity\Entity');
+    }
+    
+    /**
      * @Route("/foods")
      * @Template()
      */

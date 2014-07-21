@@ -41,11 +41,12 @@ class AbstractController extends Controller
     /**
      * Get object manager
      *
+     * @param  object|string $object
      * @return \VIB\CoreBundle\Doctrine\ObjectManager
      */
-    protected function getObjectManager()
+    protected function getObjectManager($object = null)
     {
-        return $this->get('vib.doctrine.manager');
+        return $this->get('vib.doctrine.registry')->getManagerForClass($object);
     }
 
     /**

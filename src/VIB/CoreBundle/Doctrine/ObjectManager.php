@@ -45,6 +45,7 @@ use VIB\SecurityBundle\Bridge\Doctrine\AclFilter;
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
  * @DI\Service("vib.doctrine.manager")
+ * @DI\Tag("vibcore.object_manager")
  */
 class ObjectManager extends ObjectManagerDecorator
 {
@@ -58,7 +59,7 @@ class ObjectManager extends ObjectManagerDecorator
      * @var \Symfony\Component\Security\Acl\Model\MutableAclProviderInterface
      */
     protected $aclProvider;
-
+    
     /**
      * Construct ObjectManager
      *
@@ -81,6 +82,16 @@ class ObjectManager extends ObjectManagerDecorator
         $this->aclProvider = $aclProvider;
     }
 
+    /**
+     * Get the class this Manager is used for
+     * 
+     * @return string
+     */
+    public function getManagedClass()
+    {
+        return 'VIB\CoreBundle\Entity\Entity';
+    }
+    
     /**
      * {@inheritdoc}
      */

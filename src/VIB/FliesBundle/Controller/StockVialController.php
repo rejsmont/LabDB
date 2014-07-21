@@ -102,7 +102,7 @@ class StockVialController extends VialController
         if ($id instanceof $class) {
             return $id;
         }
-        $om = $this->get('vib.doctrine.manager');
+        $om = $this->getObjectManager($class);
         $entity = $om->getRepository($class)->find($id);
         if ($entity instanceof $class) {
             return $entity;

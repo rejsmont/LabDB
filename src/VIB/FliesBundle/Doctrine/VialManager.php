@@ -32,11 +32,20 @@ use VIB\FliesBundle\Repository\VialRepository;
  * VialManager is a class used to manage common operations on vials
  *
  * @DI\Service("vib.doctrine.vial_manager")
+ * @DI\Tag("vibcore.object_manager")
  * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class VialManager extends ObjectManager
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getManagedClass()
+    {
+        return 'VIB\FliesBundle\Entity\Vial';
+    }
+    
     /**
      * {@inheritdoc}
      */

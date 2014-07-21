@@ -21,6 +21,7 @@ namespace VIB\FliesBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
+use VIB\CoreBundle\Entity\SecuredEntityInterface;
 use VIB\StorageBundle\Entity\Rack as BaseRack;
 use VIB\StorageBundle\Entity\StorageUnitInterface;
 use VIB\StorageBundle\Entity\StorageUnitContentInterface;
@@ -35,7 +36,8 @@ use VIB\FliesBundle\Label\LabelInterface;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Rack extends BaseRack implements LabelInterface, StorageUnitContentInterface, TermocontrolledInterface
+class Rack extends BaseRack implements SecuredEntityInterface,
+        LabelInterface, StorageUnitContentInterface, TermocontrolledInterface
 {
     /**
      * @ORM\OneToMany(targetEntity="RackPosition", mappedBy="rack", cascade={"persist", "remove"}, orphanRemoval=true, fetch="EXTRA_LAZY")

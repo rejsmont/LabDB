@@ -134,7 +134,7 @@ class IncubatorControllerTest extends WebTestCase
     public static function tearDownAfterClass()
     {
         $client = static::createClient();
-        $om = $client->getContainer()->get('vib.doctrine.manager');
+        $om = $client->getContainer()->get('vib.doctrine.registry')->getManagerForClass('VIB\CoreBundle\Entity\Entity');
         $repository = $om->getRepository('VIB\FliesBundle\Entity\Incubator');
         $qb = $repository->createQueryBuilder('s')->where('s.id > 1');
         $incubators = $qb->getQuery()->getResult();

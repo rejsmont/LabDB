@@ -319,7 +319,7 @@ class VialControllerTest extends WebTestCase
     public static function tearDownAfterClass()
     {
         $client = static::createClient();
-        $vm = $client->getContainer()->get('vib.doctrine.vial_manager');
+        $vm = $client->getContainer()->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Vial');;
         $repository = $vm->getRepository('VIB\FliesBundle\Entity\Vial');
         $qb = $repository->createQueryBuilder('v')->where('v.id > 10');
         $vials = $qb->getQuery()->getResult();

@@ -66,6 +66,16 @@ abstract class CRUDController extends AbstractController
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getObjectManager($object = null)
+    {
+        $object = (null == $object) ? $this->getEntityClass() : $object;
+        
+        return parent::getObjectManager($object);
+    }
+    
+    /**
      * List entities
      *
      * @Route("/")

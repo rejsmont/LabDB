@@ -47,16 +47,6 @@ class CrossVialController extends VialController
     }
 
     /**
-     * Get object manager
-     *
-     * @return \VIB\FliesBundle\Doctrine\CrossVialManager
-     */
-    protected function getObjectManager()
-    {
-        return $this->get('vib.doctrine.crossvial_manager');
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getCreateForm()

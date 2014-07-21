@@ -79,10 +79,9 @@ class NewRackCommand extends Command
         $this->container = $this->getApplication()->getKernel()->getContainer();
         $user = $this->container->get('user_provider')->loadUserByUsername($input->getArgument('owner'));
 
-        $om = $this->container->get('vib.doctrine.manager');
-        $em = $this->container->get('doctrine')->getManager();
+        $om = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\CoreBundle\Entity\Entity');
 
-        $em->getConnection()->beginTransaction();
+        $om->getConnection()->beginTransaction();
 
         $racks = new ArrayCollection();
 
@@ -111,8 +110,8 @@ class NewRackCommand extends Command
                 echo $jobStatus . "\n";
             }
         } else {
-            $em->getConnection()->rollback();
-            $em->close();
+            $om->getConnection()->rollback();
+            $om->close();
         }
     }
 

@@ -27,6 +27,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 
 use VIB\CoreBundle\Entity\NamedEntity;
+use VIB\CoreBundle\Entity\SecuredEntityInterface;
 
 /**
  * Stock class
@@ -37,7 +38,7 @@ use VIB\CoreBundle\Entity\NamedEntity;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Stock extends NamedEntity
+class Stock extends NamedEntity implements SecuredEntityInterface
 {
     /**
      * @ORM\Column(type="string", length=255, unique=true, nullable=false)

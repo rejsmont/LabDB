@@ -24,13 +24,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 use Sabre\VObject;
+use VIB\CoreBundle\Controller\AbstractController;
 
 /**
  * Controller for online ics calendars
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class CalendarController extends Controller
+class CalendarController extends AbstractController
 {
     /**
      * Create online calendar for user
@@ -43,7 +44,7 @@ class CalendarController extends Controller
     public function calendarAction($username)
     {
         $user = $this->get('user_provider')->loadUserByUsername($username);
-        $om = $this->get('vib.doctrine.manager');
+        $om = $this->getObjectManager('VIB\FliesBundle\Entity\Vial');
         $calendar = VObject\Component::create('VCALENDAR');
         $calendar->VERSION = '2.0';
         $field = 'X-WR-CALNAME';

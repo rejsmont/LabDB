@@ -16,28 +16,13 @@
  * limitations under the License.
  */
 
-namespace VIB\CoreBundle;
-
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use VIB\CoreBundle\DependencyInjection\ManagerCompilerPass;
+namespace VIB\CoreBundle\Entity;
 
 /**
- * VIBCoreBundle
+ * Secured entity interface
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VIBCoreBundle extends Bundle
+interface SecuredEntityInterface
 {
-    /**
-     * Build the bundle
-     * 
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-     */
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(new ManagerCompilerPass());
-    }
 }

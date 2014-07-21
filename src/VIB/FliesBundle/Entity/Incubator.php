@@ -26,6 +26,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 
 use VIB\CoreBundle\Entity\NamedEntity;
+use VIB\CoreBundle\Entity\SecuredEntityInterface;
 use VIB\StorageBundle\Entity\StorageUnitInterface;
 use VIB\StorageBundle\Entity\TermocontrolledInterface;
 
@@ -37,7 +38,7 @@ use VIB\StorageBundle\Entity\TermocontrolledInterface;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Incubator extends NamedEntity implements StorageUnitInterface, TermocontrolledInterface
+class Incubator extends NamedEntity implements SecuredEntityInterface, StorageUnitInterface, TermocontrolledInterface
 {
     /**
      * @ORM\OneToMany(targetEntity="Rack", mappedBy="incubator", fetch="EXTRA_LAZY")

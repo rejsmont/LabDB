@@ -27,11 +27,20 @@ use VIB\FliesBundle\Entity\CrossVial;
  * CrossVialManager is a class used to manage common operations on cross vials
  *
  * @DI\Service("vib.doctrine.crossvial_manager")
+ * @DI\Tag("vibcore.object_manager")
  * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class CrossVialManager extends VialManager
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getManagedClass()
+    {
+        return 'VIB\FliesBundle\Entity\CrossVial';
+    }
+    
     /**
      * Mark cross(es) as sterile and trash it (them)
      *

@@ -48,7 +48,7 @@ class LoadInjectionVials extends AbstractFixture implements OrderedFixtureInterf
      */
     public function load(ObjectManager $manager)
     {
-        $manager = $this->container->get('vib.doctrine.vial_manager');
+        $manager = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\InjectionVial');
 
         $user_acl = array(
             array('identity' => $this->getReference('user'),

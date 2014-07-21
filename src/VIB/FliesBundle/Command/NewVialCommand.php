@@ -82,11 +82,10 @@ class NewVialCommand extends Command
         $this->container = $this->getApplication()->getKernel()->getContainer();
         $user = $this->container->get('user_provider')->loadUserByUsername($input->getArgument('owner'));
 
-        $om = $this->container->get('vib.doctrine.manager');
-        $vm = $this->container->get('vib.doctrine.vial_manager');
-        $em = $this->container->get('doctrine')->getManager();
+        $om = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\CoreBundle\Entity\Entity');
+        $vm = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Vial');
 
-        $em->getConnection()->beginTransaction();
+        $om->getConnection()->beginTransaction();
 
         $vials = new ArrayCollection();
 
@@ -118,7 +117,7 @@ class NewVialCommand extends Command
         $vm->createACL($vials, $this->getDefaultACL($user));
         $message = 'Everything seems to be OK. Commit?';
         if ($dialog->askConfirmation($output, '<question>' . $message . '</question>', true)) {
-            $em->getConnection()->commit();
+            $om->getConnection()->commit();
             if ($input->getOption('print')) {
                 echo "Will print labels now.\n";
                 $pdf = $this->container->get('vibfolks.pdflabel');
@@ -131,8 +130,8 @@ class NewVialCommand extends Command
                 echo $jobStatus . "\n";
             }
         } else {
-            $em->getConnection()->rollback();
-            $em->close();
+            $om->getConnection()->rollback();
+            $om->close();
         }
     }
 

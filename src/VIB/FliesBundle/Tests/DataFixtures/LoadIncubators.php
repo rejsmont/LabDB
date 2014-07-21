@@ -48,7 +48,7 @@ class LoadIncubators extends AbstractFixture implements OrderedFixtureInterface,
      */
     public function load(ObjectManager $manager)
     {
-        $manager = $this->container->get('vib.doctrine.vial_manager');
+        $manager = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Incubator');
 
         $user_acl = array(
             array('identity' => $this->getReference('user'),

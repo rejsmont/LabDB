@@ -146,7 +146,7 @@ class StockController extends CRUDController
     public function createAction()
     {
         $om = $this->getObjectManager();
-        $vm = $this->get('vib.doctrine.vial_manager');
+        $vm = $this->getObjectManager('VIB\FliesBundle\Entity\Vial');
         $class = $this->getEntityClass();
         $stock = new $class();
         $existingStock = null;

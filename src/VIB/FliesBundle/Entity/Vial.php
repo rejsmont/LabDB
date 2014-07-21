@@ -26,6 +26,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 
 use VIB\CoreBundle\Entity\NamedEntityInterface;
+use VIB\CoreBundle\Entity\SecuredEntityInterface;
 use VIB\StorageBundle\Entity\RackContent;
 use VIB\StorageBundle\Entity\RackInterface;
 use VIB\StorageBundle\Entity\RackPositionInterface;
@@ -60,7 +61,8 @@ use VIB\FliesBundle\Label\LabelDateInterface;
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class Vial extends RackContent
-    implements NamedEntityInterface, StorageUnitContentInterface, TermocontrolledInterface, LabelDateInterface
+    implements NamedEntityInterface, SecuredEntityInterface,
+        StorageUnitContentInterface, TermocontrolledInterface, LabelDateInterface
 {
     /**
      * @ORM\Column(type="date")

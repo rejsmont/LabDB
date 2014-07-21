@@ -159,7 +159,7 @@ class RackControllerTest extends WebTestCase
     public static function tearDownAfterClass()
     {
         $client = static::createClient();
-        $om = $client->getContainer()->get('vib.doctrine.manager');
+        $om = $client->getContainer()->get('vib.doctrine.registry')->getManagerForClass('VIB\CoreBundle\Entity\Entity');
         $repository = $om->getRepository('VIB\FliesBundle\Entity\Rack');
         $qb = $repository->createQueryBuilder('r')->where('r.id > 1');
         $racks = $qb->getQuery()->getResult();

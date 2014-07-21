@@ -68,16 +68,6 @@ class VialController extends CRUDController
     }
 
     /**
-     * Get object manager
-     *
-     * @return \VIB\FliesBundle\Doctrine\VialManager
-     */
-    protected function getObjectManager()
-    {
-        return $this->get('vib.doctrine.vial_manager');
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getCreateForm()

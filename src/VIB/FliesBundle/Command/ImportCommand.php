@@ -92,9 +92,8 @@ class ImportCommand extends Command
         $dialog = $this->getHelperSet()->get('dialog');
         $this->container = $this->getApplication()->getKernel()->getContainer();
 
-        $om = $this->container->get('vib.doctrine.manager');
-        $vm = $this->container->get('vib.doctrine.vial_manager');
-        $em = $this->container->get('doctrine')->getManager();
+        $om = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\CoreBundle\Entity\Entity');
+        $vm = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\StockVial');
 
         $stocks = array();
         $stock_register = array();
@@ -164,7 +163,7 @@ class ImportCommand extends Command
             }
         }
         
-        $em->getConnection()->beginTransaction();
+        $om->getConnection()->beginTransaction();
         
         foreach ($stocks as $user_name => $user_stocks) {
             
@@ -188,8 +187,8 @@ class ImportCommand extends Command
                 $om->flush();
                 $output->writeln("");
                 $output->write("Creating ACLs...");
-                $om->createACL($userStocks,$this->getDefaultACL($user));
-                $vm->createACL($userVials,$this->getDefaultACL($user));
+                $om->createACL($userStocks, $this->getDefaultACL($user));
+                $vm->createACL($userVials, $this->getDefaultACL($user));
                 $output->writeln(" done");
             } else {
                 $output->writeln("<error>User " . $user_name . " does not exits. Skipping!</error>");
@@ -236,10 +235,10 @@ class ImportCommand extends Command
         
         $message = 'Stocks and vials have been created. Commit?';
         if ($dialog->askConfirmation($output, '<question>' . $message . '</question>', true)) {
-            $em->getConnection()->commit();
+            $om->getConnection()->commit();
         } else {
-            $em->getConnection()->rollback();
-            $em->close();
+            $om->getConnection()->rollback();
+            $om->close();
         }
     }
 

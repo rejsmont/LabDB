@@ -48,7 +48,7 @@ class LoadStocks extends AbstractFixture implements OrderedFixtureInterface, Con
      */
     public function load(ObjectManager $manager)
     {
-        $manager = $this->container->get('vib.doctrine.manager');
+        $manager = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Stock');
         
         $user_acl = array(
             array('identity' => $this->getReference('user'),
