@@ -28,7 +28,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  * 
- * @DI\Service("vib.flies.listener.rack")
+ * @DI\Service("vib.flies.listener.incubator")
  * @DI\Tag("doctrine.event_listener", attributes = {"event" = "onFlush"})
  */
 class IncubatorDoctrineListener
