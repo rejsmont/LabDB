@@ -18,8 +18,10 @@
 
 namespace VIB\FliesBundle\Listener;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
 use VIB\FliesBundle\Entity\Incubator;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 
 /**
  * IncubatorDoctrineListener class

@@ -95,6 +95,9 @@ class ImportCommand extends Command
         $om = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\CoreBundle\Entity\Entity');
         $vm = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\StockVial');
 
+        $om->disableAutoAcl();
+        $vm->disableAutoAcl();
+        
         $stocks = array();
         $stock_register = array();
         $vials = array();
@@ -187,8 +190,8 @@ class ImportCommand extends Command
                 $om->flush();
                 $output->writeln("");
                 $output->write("Creating ACLs...");
-                $om->createACL($userStocks, $this->getDefaultACL($user));
-                $vm->createACL($userVials, $this->getDefaultACL($user));
+                $om->createACL($userStocks, $user);
+                $vm->createACL($userVials, $user);
                 $output->writeln(" done");
             } else {
                 $output->writeln("<error>User " . $user_name . " does not exits. Skipping!</error>");
@@ -227,7 +230,7 @@ class ImportCommand extends Command
                 }
                 $output->writeln("");
                 $vm->flush();
-                $vm->createACL($userVials, $this->getDefaultACL($user));
+                $vm->createACL($userVials, $user);
             } else {
                 $output->writeln("<error>User " . $user_name . " does not exits. Skipping!</error>");
             }
@@ -240,15 +243,9 @@ class ImportCommand extends Command
             $om->getConnection()->rollback();
             $om->close();
         }
-    }
-
-    protected function getDefaultACL($user)
-    {
-        return array(
-            array('identity' => $user,
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW));
+        
+        $om->enableAutoAcl();
+        $vm->enableAutoAcl();
     }
     
     protected function getStockData($vendor, $stock)

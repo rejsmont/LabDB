@@ -24,6 +24,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManagerDecorator;
 
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -51,14 +52,24 @@ class ObjectManager extends ObjectManagerDecorator
 {
 
     /**
-     * @var \Symfony\Component\Security\Core\User\UserProviderInterface
+     * @var Symfony\Component\Security\Core\User\UserProviderInterface
      */
     protected $userProvider;
 
     /**
-     * @var \Symfony\Component\Security\Acl\Model\MutableAclProviderInterface
+     * @var Symfony\Component\Security\Acl\Model\MutableAclProviderInterface
      */
     protected $aclProvider;
+    
+    /**
+     * @var Symfony\Component\Security\Core\SecurityContextInterface
+     */
+    protected $securityContext;
+    
+    /**
+     * @var boolean
+     */
+    protected $isAutoAclEnabled;
     
     /**
      * Construct ObjectManager
@@ -66,22 +77,27 @@ class ObjectManager extends ObjectManagerDecorator
      * @DI\InjectParams({
      *     "managerRegistry" = @DI\Inject("doctrine"),
      *     "userProvider" = @DI\Inject("user_provider"),
-     *     "aclProvider" = @DI\Inject("security.acl.provider")
+     *     "aclProvider" = @DI\Inject("security.acl.provider"),
+     *     "securityContext" = @DI\Inject("security.context", required=false)
      * })
      * 
      * @param Doctrine\Common\Persistence\ManagerRegistry                $managerRegistry
      * @param Symfony\Component\Security\Core\User\UserProviderInterface $userProvider
      * @param Symfony\Component\Security\Acl\Model\AclProviderInterface  $aclProvider
+     * @param Symfony\Component\Security\Core\SecurityContextInterface   $securityContext
      */
     public function __construct(ManagerRegistry $managerRegistry,
                                 UserProviderInterface $userProvider,
-                                MutableAclProviderInterface $aclProvider)
+                                MutableAclProviderInterface $aclProvider,
+                                SecurityContextInterface $securityContext = null)
     {
         $this->wrapped = $managerRegistry->getManager();
         $this->userProvider = $userProvider;
         $this->aclProvider = $aclProvider;
+        $this->securityContext = $securityContext;
+        $this->isAutoAclEnabled = true;
     }
-
+    
     /**
      * Get the class this Manager is used for
      * 
@@ -93,30 +109,28 @@ class ObjectManager extends ObjectManagerDecorator
     }
     
     /**
-     * {@inheritdoc}
-     */
-    public function remove($object) {
-        $this->removeACL($object);
-        parent::remove($object);
-    }
-    
-    /**
      * Create ACL for object(s)
      *
      * @param object $objects
-     * @param array  $acl
+     * @param array  $acl_param
      */
-    public function createACL($objects, array $acl_array)
-    {        
+    public function createACL($objects, $acl_param = null)
+    {
         if ($objects instanceof Collection) {
             foreach ($objects as $object) {
-                $this->createACL($object, $acl_array);
+                $this->createACL($object, $acl_param);
             }
         } else {
-            $objectIdentity = ObjectIdentity::fromDomainObject($objects);
+            $object = $objects;
+            if (null === $acl_param) {
+                $acl_param = $this->getDefaultACL($object);
+            } elseif (($user = $acl_param) instanceof UserInterface) {
+                $acl_param = $this->getDefaultACL($object, $user);
+            }
+            $objectIdentity = ObjectIdentity::fromDomainObject($object);
             $aclProvider = $this->aclProvider;
             $acl = $aclProvider->createAcl($objectIdentity);
-            $this->insertAclEntries($acl, $acl_array);
+            $this->insertAclEntries($acl, $acl_param);
             $aclProvider->updateAcl($acl);
         }
     }
@@ -133,7 +147,8 @@ class ObjectManager extends ObjectManagerDecorator
                 $this->removeACL($object);
             }
         } else {
-            $objectIdentity = ObjectIdentity::fromDomainObject($objects);
+            $object = $objects;
+            $objectIdentity = ObjectIdentity::fromDomainObject($object);
             $aclProvider = $this->aclProvider;
             try {
                 $aclProvider->deleteAcl($objectIdentity);
@@ -153,8 +168,9 @@ class ObjectManager extends ObjectManagerDecorator
                 $this->updateACL($object, $acl_array);
             }
         } else {
+            $object = $objects;
             $aclProvider = $this->aclProvider;
-            $objectIdentity = ObjectIdentity::fromDomainObject($objects);
+            $objectIdentity = ObjectIdentity::fromDomainObject($object);
             try {
                 $acl = $aclProvider->findAcl($objectIdentity);
                 $diff = $this->diffACL($acl, $acl_array);
@@ -375,6 +391,32 @@ class ObjectManager extends ObjectManagerDecorator
     }
     
     /**
+     * Enable automatic ACL setting
+     */
+    public function enableAutoAcl()
+    {
+        $this->isAutoAclEnabled = true;
+    }
+    
+    /**
+     * Enable automatic ACL setting
+     */
+    public function disableAutoAcl()
+    {
+        $this->isAutoAclEnabled = false;
+    }
+    
+    /**
+     * Is automatic ACL setting enabled
+     * 
+     * @return boolean
+     */
+    public function isAutoAclEnabled()
+    {
+        return $this->isAutoAclEnabled;
+    }
+    
+    /**
      * 
      * @param type $ace
      * @return null
@@ -467,5 +509,50 @@ class ObjectManager extends ObjectManagerDecorator
             }
             $acl->insertObjectAce($identity, $permission);
         }
+    }
+    
+    /**
+     * Get a user from the Security Context
+     *
+     * @throws \LogicException If SecurityBundle is not available
+     * 
+     * @return mixed
+     */
+    protected function getUser()
+    {
+        if (null === $this->securityContext) {
+            throw new \LogicException('The SecurityBundle is not registered in your application.');
+        }
+
+        if (null === $token = $this->securityContext->getToken()) {
+            return;
+        }
+
+        if (!is_object($user = $token->getUser())) {
+            return;
+        }
+
+        return $user;
+    }
+    
+    /**
+     * 
+     * @param type $object
+     * @return type
+     */
+    public function getDefaultACL($object = null, $user = null)
+    {
+        $user = (null === $user) ? $this->getUser() : $user;
+        $acl = array();
+        
+        if (null !== $user) {
+            $acl[] = array('identity' => $user,
+                           'permission' => MaskBuilder::MASK_OWNER);
+        }
+        
+        $acl[] = array('identity' => 'ROLE_USER',
+                       'permission' => MaskBuilder::MASK_VIEW);
+        
+        return $acl;
     }
 }

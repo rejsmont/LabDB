@@ -46,23 +46,21 @@ class LoadCrossVials extends AbstractFixture implements OrderedFixtureInterface,
     /**
      * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $vm)
     {
-        $manager = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\CrossVial');
-
-        $user_acl = array(
-            array('identity' => $this->getReference('user'),
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW)
-        );
+        $vm = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\CrossVial');
+        $vm->disableAutoAcl();
+        
+        $user = $this->getReference('user');
 
         $vial = new CrossVial();
         $vial->setVirgin($this->getReference('stock_1')->getVials()->first());
         $vial->setMale($this->getReference('stock_2')->getVials()->first());
-        $manager->persist($vial);
-        $manager->flush();
-        $manager->createACL($vial, $user_acl);
+        $vm->persist($vial);
+        $vm->flush();
+        $vm->createACL($vial, $user);
+        
+        $vm->enableAutoAcl();
     }
 
     /**

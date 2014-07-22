@@ -80,7 +80,7 @@ class NewRackCommand extends Command
         $user = $this->container->get('user_provider')->loadUserByUsername($input->getArgument('owner'));
 
         $om = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\CoreBundle\Entity\Entity');
-
+        $om->disableAutoAcl();
         $om->getConnection()->beginTransaction();
 
         $racks = new ArrayCollection();
@@ -96,7 +96,7 @@ class NewRackCommand extends Command
         $output->writeln("Objects imported. Flushing DB buffer.");
         $om->flush();
         $output->writeln("Creating ACLs.");
-        $om->createACL($racks, $this->getDefaultACL($user));
+        $om->createACL($racks, $user);
         $message = 'Everything seems to be OK. Commit?';
         if ($dialog->askConfirmation($output, '<question>' . $message . '</question>', true)) {
             $em->getConnection()->commit();
@@ -113,14 +113,6 @@ class NewRackCommand extends Command
             $om->getConnection()->rollback();
             $om->close();
         }
-    }
-
-    protected function getDefaultACL($user)
-    {
-        return array(
-            array('identity' => $user,
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW));
+        $om->enableAutoAcl();
     }
 }

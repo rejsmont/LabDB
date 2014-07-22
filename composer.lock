@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8a1c11fad396bede090db54cc7bf7069",
+    "hash": "e3d5438809e82437551d131b515779f1",
     "packages": [
         {
             "name": "components/bootstrap",
@@ -521,12 +521,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "8cbfefe03ff2d1a2246dfb6e98b84e4b36622e6f"
+                "reference": "0b51b8185e19e557175f95bb755fcd1da74cdda0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/8cbfefe03ff2d1a2246dfb6e98b84e4b36622e6f",
-                "reference": "8cbfefe03ff2d1a2246dfb6e98b84e4b36622e6f",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/0b51b8185e19e557175f95bb755fcd1da74cdda0",
+                "reference": "0b51b8185e19e557175f95bb755fcd1da74cdda0",
                 "shasum": ""
             },
             "require": {
@@ -560,23 +560,20 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/",
-                    "role": "Creator"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com",
-                    "homepage": "http://www.instaclick.com"
-                },
-                {
                     "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
                 {
                     "name": "Benjamin Eberlei",
                     "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
                 }
             ],
             "description": "Database Abstraction Layer",
@@ -587,7 +584,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2014-07-08 17:17:49"
+            "time": "2014-07-21 12:40:23"
         },
         {
             "name": "doctrine/doctrine-bundle",
@@ -2293,12 +2290,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "8228d1ee833dbec710161ac179d1fb9ff6cd6f28"
+                "reference": "61145103b6521d04c0386d1ea6899437df9d45e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/8228d1ee833dbec710161ac179d1fb9ff6cd6f28",
-                "reference": "8228d1ee833dbec710161ac179d1fb9ff6cd6f28",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/61145103b6521d04c0386d1ea6899437df9d45e2",
+                "reference": "61145103b6521d04c0386d1ea6899437df9d45e2",
                 "shasum": ""
             },
             "require": {
@@ -2345,8 +2342,7 @@
                 {
                     "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
-                    "homepage": "http://seld.be",
-                    "role": "Developer"
+                    "homepage": "http://seld.be"
                 }
             ],
             "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
@@ -2356,7 +2352,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-06-30 13:24:53"
+            "time": "2014-07-19 19:11:34"
         },
         {
             "name": "mopa/bootstrap-bundle",
@@ -3032,12 +3028,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioGeneratorBundle.git",
-                "reference": "80f2946ede8275fa86358d28e8b3fcf453525062"
+                "reference": "2799cd07c721660c9e1067d6d79ecc7e74dfb5a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/80f2946ede8275fa86358d28e8b3fcf453525062",
-                "reference": "80f2946ede8275fa86358d28e8b3fcf453525062",
+                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/2799cd07c721660c9e1067d6d79ecc7e74dfb5a4",
+                "reference": "2799cd07c721660c9e1067d6d79ecc7e74dfb5a4",
                 "shasum": ""
             },
             "require": {
@@ -3073,7 +3069,7 @@
                 }
             ],
             "description": "This bundle generates code for you",
-            "time": "2014-07-07 09:25:53"
+            "time": "2014-07-09 09:39:28"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3306,12 +3302,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/SwiftmailerBundle.git",
-                "reference": "8555303e89445133442d4f687d2773b21751d101"
+                "reference": "bff639d4cbe9787272967f4cb3e3accdfbb2653c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/SwiftmailerBundle/zipball/8555303e89445133442d4f687d2773b21751d101",
-                "reference": "8555303e89445133442d4f687d2773b21751d101",
+                "url": "https://api.github.com/repos/symfony/SwiftmailerBundle/zipball/bff639d4cbe9787272967f4cb3e3accdfbb2653c",
+                "reference": "bff639d4cbe9787272967f4cb3e3accdfbb2653c",
                 "shasum": ""
             },
             "require": {
@@ -3357,7 +3353,7 @@
             ],
             "description": "Symfony SwiftmailerBundle",
             "homepage": "http://symfony.com",
-            "time": "2014-06-21 16:10:01"
+            "time": "2014-07-09 09:12:30"
         },
         {
             "name": "symfony/symfony",
@@ -3365,12 +3361,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "ea45769aaba270d05010bb36c23e25ad6fceb55a"
+                "reference": "9572918064b10704975506c7a4bb2a41aa0307ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/ea45769aaba270d05010bb36c23e25ad6fceb55a",
-                "reference": "ea45769aaba270d05010bb36c23e25ad6fceb55a",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/9572918064b10704975506c7a4bb2a41aa0307ac",
+                "reference": "9572918064b10704975506c7a4bb2a41aa0307ac",
                 "shasum": ""
             },
             "require": {
@@ -3467,7 +3463,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2014-07-11 09:32:34"
+            "time": "2014-07-18 09:07:06"
         },
         {
             "name": "tecnick.com/tcpdf",
@@ -3475,7 +3471,7 @@
             "source": {
                 "type": "git",
                 "url": "git://git.code.sf.net/p/tcpdf/code",
-                "reference": "196ef5e4f7944bbed99e56a8683136c14a7378d8"
+                "reference": "979432f754965bc13960776df51cb28eabfc0938"
             },
             "require": {
                 "php": ">=5.3.0"
@@ -3524,7 +3520,7 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2014-07-09 18:21:01"
+            "time": "2014-07-16 17:59:23"
         },
         {
             "name": "twbs/bootstrap",
@@ -3623,12 +3619,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "11ea5976e38413a7a65cd2e0e2b1da9d969af513"
+                "reference": "5fd428ed7603ea63998716995c123c99648aab26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/11ea5976e38413a7a65cd2e0e2b1da9d969af513",
-                "reference": "11ea5976e38413a7a65cd2e0e2b1da9d969af513",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/5fd428ed7603ea63998716995c123c99648aab26",
+                "reference": "5fd428ed7603ea63998716995c123c99648aab26",
                 "shasum": ""
             },
             "require": {
@@ -3672,7 +3668,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2014-07-07 12:54:10"
+            "time": "2014-07-08 13:46:25"
         },
         {
             "name": "twitter/hogan.js",
@@ -3686,16 +3682,16 @@
         },
         {
             "name": "twitter/typeahead.js",
-            "version": "v0.10.3",
+            "version": "v0.10.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twitter/typeahead.js.git",
-                "reference": "99dfe14852f459faaa30b574b7cc19a3f3c6450f"
+                "reference": "8daea184f4be3461712c56ea5ca7436b21a66f9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twitter/typeahead.js/zipball/99dfe14852f459faaa30b574b7cc19a3f3c6450f",
-                "reference": "99dfe14852f459faaa30b574b7cc19a3f3c6450f",
+                "url": "https://api.github.com/repos/twitter/typeahead.js/zipball/8daea184f4be3461712c56ea5ca7436b21a66f9c",
+                "reference": "8daea184f4be3461712c56ea5ca7436b21a66f9c",
                 "shasum": ""
             },
             "type": "library",
@@ -3715,7 +3711,7 @@
                 "autocomplete",
                 "typeahead"
             ],
-            "time": "2014-07-12 00:46:03"
+            "time": "2014-07-14 03:11:47"
         },
         {
             "name": "verekia/initializr",
@@ -4232,12 +4228,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "2acad45c14e1366507853074469a262608fcfae8"
+                "reference": "148f8e0b577046c452154e44df843ae0b929d78e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2acad45c14e1366507853074469a262608fcfae8",
-                "reference": "2acad45c14e1366507853074469a262608fcfae8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/148f8e0b577046c452154e44df843ae0b929d78e",
+                "reference": "148f8e0b577046c452154e44df843ae0b929d78e",
                 "shasum": ""
             },
             "require": {
@@ -4298,7 +4294,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-07-07 11:36:51"
+            "time": "2014-07-21 02:43:09"
         },
         {
             "name": "phpunit/phpunit-mock-objects",

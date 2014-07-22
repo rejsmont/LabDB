@@ -132,7 +132,6 @@ class RackController extends CRUDController
                 $rack->setGeometry($rows, $columns);
                 $om->persist($rack);
                 $om->flush();
-                $om->createACL($rack,$this->getDefaultACL());
 
                 $this->addSessionFlash('success', 'Rack ' . $rack . ' was created.');
 

@@ -46,59 +46,55 @@ class LoadStocks extends AbstractFixture implements OrderedFixtureInterface, Con
     /**
      * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $om)
     {
-        $manager = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Stock');
+        $om = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Stock');
+        $vm = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Vial');
+        $om->disableAutoAcl();
+        $vm->disableAutoAcl();
         
-        $user_acl = array(
-            array('identity' => $this->getReference('user'),
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW)
-        );
+        $user = $this->getReference('user');
 
         $stock_1 = new Stock();
         $stock_1->setName('stock 1');
         $stock_1->setGenotype('yw');
-        $manager->persist($stock_1);
-        $manager->flush();
-        $manager->createACL($stock_1, $user_acl);
-        $manager->createACL($stock_1->getVials(), $user_acl);
+        $om->persist($stock_1);
+        $om->flush();
+        $om->createACL($stock_1, $user);
+        $vm->createACL($stock_1->getVials(), $user);
         $this->addReference('stock_1', $stock_1);
 
         $stock_2 = new Stock();
         $stock_2->setName('stock 2');
         $stock_2->setGenotype('yw;Sp/CyO');
-        $manager->persist($stock_2);
-        $manager->flush();
-        $manager->createACL($stock_2, $user_acl);
-        $manager->createACL($stock_2->getVials(), $user_acl);
+        $om->persist($stock_2);
+        $om->flush();
+        $om->createACL($stock_2, $user);
+        $vm->createACL($stock_2->getVials(), $user);
         $this->addReference('stock_2', $stock_2);
 
-        $admin_acl = array(
-            array('identity' => $this->getReference('admin'),
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW)
-        );
+        $admin = $this->getReference('admin');
 
         $stock_3 = new Stock();
         $stock_3->setName('stock 3');
         $stock_3->setGenotype('yw;;Tm2/Tm6');
-        $manager->persist($stock_3);
-        $manager->flush();
-        $manager->createACL($stock_3, $admin_acl);
-        $manager->createACL($stock_3->getVials(), $admin_acl);
+        $om->persist($stock_3);
+        $om->flush();
+        $om->createACL($stock_3, $admin);
+        $vm->createACL($stock_3->getVials(), $admin);
         $this->addReference('stock_3', $stock_3);
 
         $stock_4 = new Stock();
         $stock_4->setName('stock 4');
         $stock_4->setGenotype('yw/Fm7');
-        $manager->persist($stock_4);
-        $manager->flush();
-        $manager->createACL($stock_4, $admin_acl);
-        $manager->createACL($stock_4->getVials(), $admin_acl);
+        $om->persist($stock_4);
+        $om->flush();
+        $om->createACL($stock_4, $admin);
+        $vm->createACL($stock_4->getVials(), $admin);
         $this->addReference('stock_4', $stock_4);
+        
+        $om->enableAutoAcl();
+        $vm->enableAutoAcl();
     }
 
     /**

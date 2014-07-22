@@ -46,22 +46,20 @@ class LoadIncubators extends AbstractFixture implements OrderedFixtureInterface,
     /**
      * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $om)
     {
-        $manager = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Incubator');
+        $om = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Incubator');
+        $om->disableAutoAcl();
 
-        $user_acl = array(
-            array('identity' => $this->getReference('user'),
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW)
-        );
+        $user = $this->getReference('user');
 
         $incubator = new Incubator();
         $incubator->setName("Test incubator");
-        $manager->persist($incubator);
-        $manager->flush();
-        $manager->createACL($incubator, $user_acl);
+        $om->persist($incubator);
+        $om->flush();
+        $om->createACL($incubator, $user);
+        
+        $om->enableAutoAcl();
     }
 
     /**

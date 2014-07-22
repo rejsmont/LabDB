@@ -46,32 +46,30 @@ class LoadInjectionVials extends AbstractFixture implements OrderedFixtureInterf
     /**
      * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $vm)
     {
-        $manager = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\InjectionVial');
+        $vm = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\InjectionVial');
+        $vm->disableAutoAcl();
 
-        $user_acl = array(
-            array('identity' => $this->getReference('user'),
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW)
-        );
+        $user = $this->getReference('user');
 
         $vial_1 = new InjectionVial();
         $vial_1->setTargetStock($this->getReference('stock_4'));
         $vial_1->setConstructName('test');
         $vial_1->setEmbryoCount(100);
-        $manager->persist($vial_1);
-        $manager->flush();
-        $manager->createACL($vial_1, $user_acl);
+        $vm->persist($vial_1);
+        $vm->flush();
+        $vm->createACL($vial_1, $user);
 
         $vial_2 = new InjectionVial();
         $vial_2->setTargetStockVial($this->getReference('vial_1'));
         $vial_2->setConstructName('test');
         $vial_2->setEmbryoCount(100);
-        $manager->persist($vial_2);
-        $manager->flush();
-        $manager->createACL($vial_2, $user_acl);
+        $vm->persist($vial_2);
+        $vm->flush();
+        $vm->createACL($vial_2, $user);
+        
+        $vm->enableAutoAcl();
     }
 
     /**

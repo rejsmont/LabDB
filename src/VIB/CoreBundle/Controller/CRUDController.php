@@ -147,7 +147,6 @@ abstract class CRUDController extends AbstractController
             if ($form->isValid()) {
                 $om->persist($entity);
                 $om->flush();
-                $om->createACL($entity, $this->getDefaultACL());
                 $message = ucfirst($this->getEntityName()) . ' ' . $entity . ' was created.';
                 $this->addSessionFlash('success', $message);
                 $route = str_replace("_create", "_show", $request->attributes->get('_route'));
@@ -310,22 +309,6 @@ abstract class CRUDController extends AbstractController
         }
 
         return null;
-    }
-
-    /**
-     * Get default ACL
-     * 
-     * @param mixed $user
-     * @return array
-     */
-    protected function getDefaultACL($user = null)
-    {
-        $user = (null === $user) ? $this->getUser() : $user;
-        return array(
-            array('identity' => $user,
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW));
     }
 
     /**

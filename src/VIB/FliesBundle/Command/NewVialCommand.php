@@ -84,7 +84,9 @@ class NewVialCommand extends Command
 
         $om = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\CoreBundle\Entity\Entity');
         $vm = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Vial');
-
+        $om->disableAutoAcl();
+        $vm->disableAutoAcl();
+        
         $om->getConnection()->beginTransaction();
 
         $vials = new ArrayCollection();
@@ -114,7 +116,7 @@ class NewVialCommand extends Command
         $output->writeln("Objects imported. Flushing DB buffer.");
         $om->flush();
         $output->writeln("Creating ACLs.");
-        $vm->createACL($vials, $this->getDefaultACL($user));
+        $vm->createACL($vials, $user);
         $message = 'Everything seems to be OK. Commit?';
         if ($dialog->askConfirmation($output, '<question>' . $message . '</question>', true)) {
             $om->getConnection()->commit();
@@ -133,14 +135,7 @@ class NewVialCommand extends Command
             $om->getConnection()->rollback();
             $om->close();
         }
-    }
-
-    protected function getDefaultACL($user)
-    {
-        return array(
-            array('identity' => $user,
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW));
+        $om->enableAutoAcl();
+        $vm->enableAutoAcl();
     }
 }

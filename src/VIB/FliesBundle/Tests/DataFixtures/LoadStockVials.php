@@ -46,37 +46,35 @@ class LoadStockVials extends AbstractFixture implements OrderedFixtureInterface,
     /**
      * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $vm)
     {
-        $manager = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\StockVial');
-
-        $user_acl = array(
-            array('identity' => $this->getReference('user'),
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW)
-        );
+        $vm = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\StockVial');
+        $vm->disableAutoAcl();
+        
+        $user = $this->getReference('user');
 
         $vial_1 = new StockVial();
         $vial_1->setStock($this->getReference('stock_4'));
-        $manager->persist($vial_1);
-        $manager->flush();
-        $manager->createACL($vial_1, $user_acl);
+        $vm->persist($vial_1);
+        $vm->flush();
+        $vm->createACL($vial_1, $user);
         $this->addReference('vial_1', $vial_1);
 
         $vial_2 = new StockVial();
         $vial_2->setStock($this->getReference('stock_1'));
         $vial_2->getSetupDate()->sub(new \DateInterval('P3M'));
-        $manager->persist($vial_2);
-        $manager->flush();
-        $manager->createACL($vial_2, $user_acl);
+        $vm->persist($vial_2);
+        $vm->flush();
+        $vm->createACL($vial_2, $user);
 
         $vial_3 = new StockVial();
         $vial_3->setStock($this->getReference('stock_1'));
         $vial_3->setTrashed(true);
-        $manager->persist($vial_3);
-        $manager->flush();
-        $manager->createACL($vial_3, $user_acl);
+        $vm->persist($vial_3);
+        $vm->flush();
+        $vm->createACL($vial_3, $user);
+        
+        $vm->enableAutoAcl();
     }
 
     /**

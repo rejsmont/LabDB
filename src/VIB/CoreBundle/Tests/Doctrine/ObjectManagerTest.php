@@ -143,10 +143,8 @@ class ObjectManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->aclProvider = $this->getMock('Symfony\Component\Security\Acl\Model\MutableAclProviderInterface');
         $this->userProvider = $this->getMock('Symfony\Component\Security\Core\User\UserProviderInterface');
-        $this->aclFilter = $this->getMockBuilder('VIB\SecurityBundle\Bridge\Doctrine\AclFilter')
-                                 ->disableOriginalConstructor()->getMock();
 
-        $this->om = new ObjectManager($mr, $this->userProvider, $this->aclProvider, $this->aclFilter);
+        $this->om = new ObjectManager($mr, $this->userProvider, $this->aclProvider);
 
     }
 

@@ -46,26 +46,24 @@ class LoadRacks extends AbstractFixture implements OrderedFixtureInterface, Cont
     /**
      * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $om)
     {
-        $manager = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Rack');
+        $om = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\Rack');
+        $om->disableAutoAcl();
 
-        $user_acl = array(
-            array('identity' => $this->getReference('user'),
-                  'permission' => MaskBuilder::MASK_OWNER),
-            array('identity' => 'ROLE_USER',
-                  'permission' => MaskBuilder::MASK_VIEW)
-        );
+        $user = $this->getReference('user');
 
         $rack = new Rack(5, 5);
-        $manager->persist($rack);
-        $manager->flush();
-        $manager->createACL($rack, $user_acl);
+        $om->persist($rack);
+        $om->flush();
+        $om->createACL($rack, $user);
 
         $vial = $this->getReference('vial_1');
         $vial->setPosition($rack->getPosition(1, 1));
-        $manager->persist($vial);
-        $manager->flush();
+        $om->persist($vial);
+        $om->flush();
+        
+        $om->enableAutoAcl();
     }
 
     /**

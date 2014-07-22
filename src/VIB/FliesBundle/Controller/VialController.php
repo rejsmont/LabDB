@@ -164,7 +164,6 @@ class VialController extends CRUDController
 
                 $vials = $om->expand($vial, $number, false);
                 $om->flush();
-                $om->createACL($vials,$this->getDefaultACL());
 
                 $message = (($count = count($vials)) == 1) ?
                     ucfirst($this->getEntityName()) . ' ' . $vials[0] . ' was created.' :
@@ -240,14 +239,6 @@ class VialController extends CRUDController
 
                 $vials = $om->expand($source, $number, true, $size, $food);
                 $om->flush();
-                
-                foreach ($vials as $vial) {
-                    $sourceVial = $vial->getParent();
-                    $securityContext = $this->getSecurityContext();
-                    $acl = ($securityContext->isGranted('OPERATOR', $sourceVial)) ?
-                        $om->getACL($sourceVial) : $this->getDefaultACL();
-                    $om->createACL($vial, $acl);
-                }
 
                 $message = (($count = count($vials)) == 1) ?
                     ucfirst($this->getEntityName()) . ' ' . $source . ' was flipped.' :
@@ -304,6 +295,8 @@ class VialController extends CRUDController
                     throw new AccessDeniedException();
                 }
                 
+                $om->disableAutoAcl();
+                
                 switch($type) {
                     case 'flip':
                         $vial = $om->flip($source);
@@ -326,7 +319,7 @@ class VialController extends CRUDController
                 
                 switch($type) {
                     case 'flip':
-                        $om->createACL($vial, $this->getDefaultACL());
+                        $om->createACL($vial);
                         $vials->add($vial);
                     case 'give':
                         $om->setOwner($source, $user);
@@ -334,11 +327,13 @@ class VialController extends CRUDController
                         $given = $source;
                         break;
                     case 'flipped':
-                        $om->createACL($vial, $this->getDefaultACL($user));
+                        $om->createACL($vial, $user);
                         $vials->add($vial);
                         $given = $vial;
                         break;
                 }
+                
+                $om->enableAutoAcl();
                 
                 $message = ($type != 'give') ?
                     ucfirst($this->getEntityName()) . ' ' . $source . ' was flipped into '
@@ -544,14 +539,6 @@ class VialController extends CRUDController
         $flippedVials = $om->flip($vials, true, $trash);
         $om->flush();
         
-        foreach ($flippedVials as $flippedVial) {
-            $sourceVial = $flippedVial->getParent();
-            $securityContext = $this->getSecurityContext();
-            $acl = ($securityContext->isGranted('OPERATOR', $sourceVial)) ?
-                $om->getACL($sourceVial) : $this->getDefaultACL();
-            $om->createACL($flippedVial, $acl);
-        }
-        
         if (($count = count($flippedVials)) == 1) {
             $this->addSessionFlash('success', '1 vial was flipped.' .
                                    ($trash ? ' Source vial was trashed.' : ''));
@@ -724,7 +711,7 @@ class VialController extends CRUDController
     public function permissionsVials(Collection $vials = null)
     {
         $om = $this->getObjectManager();
-        $acl_array = $this->getDefaultACL();
+        $acl_array = $om->getDefaultACL();
         $securityContext = $this->getSecurityContext();        
         $removed = 0;
         if (null !== $vials) {

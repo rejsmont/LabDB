@@ -177,8 +177,6 @@ class StockController extends CRUDController
                 
                 $om->persist($stock);
                 $om->flush();
-                $om->createACL($stock,$this->getDefaultACL());
-                $vm->createACL($vials,$this->getDefaultACL());
 
                 $this->addSessionFlash('success', 'Stock ' . $stock . ' was created.');
 

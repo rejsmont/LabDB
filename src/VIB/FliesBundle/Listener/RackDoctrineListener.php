@@ -18,8 +18,9 @@
 
 namespace VIB\FliesBundle\Listener;
 
-use VIB\FliesBundle\Entity\Rack;
+use JMS\DiExtraBundle\Annotation as DI;
 
+use VIB\FliesBundle\Entity\Rack;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
 /**

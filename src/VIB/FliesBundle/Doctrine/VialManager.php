@@ -218,4 +218,22 @@ class VialManager extends ObjectManager
 
         return $newVials;
     }
+    
+    /**
+     * 
+     * @param type $object
+     * @return type
+     */
+    public function getDefaultACL($object = null, $user = null)
+    {
+        $acl = parent::getDefaultACL($object, $user);
+        
+        if (($vial = $object) instanceof Vial) {
+            $sourceVial = $vial->getParent();
+            $acl = ((null !== $sourceVial)&&($this->securityContext->isGranted('OPERATOR', $sourceVial))) ?
+                $this->getACL($sourceVial) : $acl;
+        }
+        
+        return $acl;
+    }
 }
