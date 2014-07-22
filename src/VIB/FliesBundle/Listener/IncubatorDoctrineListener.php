@@ -49,14 +49,14 @@ class IncubatorDoctrineListener
         
         foreach ($entities as $entity) {
             if ($entity instanceof Incubator) {
-                foreach ($this->getRacks() as $rack) {
+                foreach ($entity->getRacks() as $rack) {
                     foreach ($rack->getContents() as $vial) {
                         $em->persist($vial);
                         $md = $em->getClassMetadata(get_class($vial));
                         $uow->recomputeSingleEntityChangeSet($md, $vial);
                     }
                 }
-                foreach ($this->getLivingVials() as $vial) {
+                foreach ($entity->getLivingVials() as $vial) {
                     $em->persist($vial);
                     $md = $em->getClassMetadata(get_class($vial));
                     $uow->recomputeSingleEntityChangeSet($md, $vial);
