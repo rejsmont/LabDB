@@ -95,8 +95,13 @@ class RackController extends CRUDController
                     $this->incubateRack($rack, $data['incubator']);
                 }
             } else {
+                $this->setBatchActionRedirect();
                 $selectResponse = $this->forward('VIBFliesBundle:Vial:select');
-                if (($action == 'flip')||($action == 'label')||($selectResponse->getStatusCode() >= 400)) {
+                
+                if (($action == 'flip')||($action == 'label')||
+                    ($action == 'edit')||($action == 'permissions')||
+                    ($selectResponse->getStatusCode() >= 400)) {
+                    
                     return $selectResponse;
                 }
             }
@@ -280,4 +285,15 @@ class RackController extends CRUDController
         $this->addSessionFlash('success', 'Rack ' . $rack . ' was put in ' . $incubator . '.');
     }
 
+    
+    protected function setBatchActionRedirect($redirect = null)
+    {
+        if (null === $redirect) {
+            $request = $this->getRequest();
+            $currentRoute = $request->attributes->get('_route');
+            $routeArguments = $request->attributes->get('_route_params', null);
+            $redirect = $this->generateUrl($currentRoute, $routeArguments);
+        }
+        $this->getSession()->set('batch_action_redirect', $redirect);
+    }
 }

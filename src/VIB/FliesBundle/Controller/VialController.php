@@ -97,6 +97,7 @@ class VialController extends CRUDController
     public function listAction()
     {
         $response = parent::listAction();
+        $this->setBatchActionRedirect();
         $formResponse = $this->handleSelectForm(new SelectType($this->getEntityClass()));
 
         if ($response instanceof Response) {
@@ -365,6 +366,7 @@ class VialController extends CRUDController
     public function selectAction()
     {
         $response = array();
+        $this->setBatchActionRedirect(null);
         $formResponse = $this->handleSelectForm(new SelectType('VIB\FliesBundle\Entity\Vial'));
 
         return is_array($formResponse) ? array_merge($response, $formResponse) : $formResponse;
@@ -388,6 +390,7 @@ class VialController extends CRUDController
                 break;
             case 'print':
                 $this->printLabels($vials);
+                $response = $this->getBackBatchResponse();
                 break;
             case 'flip':
                 $this->flipVials($vials);
@@ -405,6 +408,7 @@ class VialController extends CRUDController
             case 'incubate':
                 $incubator = $data['incubator'];
                 $this->incubateVials($vials, $incubator);
+                $response = $this->getBackBatchResponse();
                 break;
             case 'edit':
                 $response = $this->editVials($vials);
@@ -683,21 +687,19 @@ class VialController extends CRUDController
                     $this->addSessionFlash('success', 'Changes to ' . $count . ' vials were saved.');
                 }
 
-                return $this->getDefaultBatchResponse();;
+                return $this->getBackBatchResponse();
             }
         } else {
             if (count($vials) == 0) {
                 $this->addSessionFlash('danger', 'There was nothing to edit.');
 
-                return $this->getDefaultBatchResponse();;
+                return $this->getBackBatchResponse();
             }
         }
         
-        $pattern = "/Controller\\\([a-zA-Z]*)Controller/";
-        $matches = array();
-        preg_match($pattern, $request->get('_controller'), $matches);
+        $controller = $this->getCurrentController();
         
-        return $this->render('VIBFliesBundle:' . $matches[1] . ':batch_edit.html.twig', array('form' => $form->createView()));
+        return $this->render('VIBFliesBundle:' . $controller . ':batch_edit.html.twig', array('form' => $form->createView()));
     }
     
     /**
@@ -778,21 +780,19 @@ class VialController extends CRUDController
                     $this->addSessionFlash('success', 'Changes to ' . $count . ' vials permissions were saved.');
                 }
                 
-                return $this->getDefaultBatchResponse();
+                return $this->getBackBatchResponse();
             }
         } else {
             if (count($vials) == 0) {
                 $this->addSessionFlash('danger', 'There was nothing to edit.');
 
-                return $this->getDefaultBatchResponse();
+                return $this->getBackBatchResponse();
             }
         }
         
-        $pattern = "/Controller\\\([a-zA-Z]*)Controller/";
-        $matches = array();
-        preg_match($pattern, $request->get('_controller'), $matches);
+        $controller = $this->getCurrentController();
         
-        return $this->render('VIBFliesBundle:' . $matches[1] . ':batch_permissions.html.twig', array('form' => $form->createView()));        
+        return $this->render('VIBFliesBundle:' . $controller . ':batch_permissions.html.twig', array('form' => $form->createView()));        
     }
     
     /**
@@ -830,28 +830,64 @@ class VialController extends CRUDController
      */
     protected function getBackBatchResponse()
     {
-        $request = $this->getRequest();
-        $currentRoute = $request->attributes->get('_route');
-        $routeArguments = $request->attributes->get('_route_params', null);
+        if (null === ($url = $this->getSession()->get('batch_action_redirect'))) {
+            $request = $this->getRequest();
+            $currentRoute = $request->attributes->get('_route');
+            $routeArguments = $request->attributes->get('_route_params', null);
 
-        if ($currentRoute == '') {
-            $url = $this->generateUrl('vib_flies_vial_list');
+            if ($currentRoute == '') {
+                $url = $this->generateUrl('vib_flies_vial_list');
 
-            return $this->redirect($url);
+                return $this->redirect($url);
+            }
+
+            $pieces = explode('_',$currentRoute);
+
+            if (in_array('select', $pieces)) {
+                $pieces[count($pieces) - 1] = 'list';
+            }
+
+            $route = ($currentRoute == 'default') ? 'default' : implode('_', $pieces);
+            $url = $this->generateUrl($route, $routeArguments);
         }
-
-        $pieces = explode('_',$currentRoute);
         
-        if (in_array('select', $pieces)) {
-            $pieces[count($pieces) - 1] = 'list';
-        }
+        $this->getSession()->set('batch_action_redirect', null);
         
-        $route = ($currentRoute == 'default') ? 'default' : implode('_', $pieces);
-        $url = $this->generateUrl($route, $routeArguments);
-
         return $this->redirect($url);
     }
 
+    protected function getCurrentController()
+    {
+        $request = $this->getRequest();
+        
+        $pattern = "/Controller\\\([a-zA-Z]*)Controller/";
+        $matches = array();
+        preg_match($pattern, $request->get('_controller'), $matches);
+        
+        if (isset($matches[1])) {
+            $controller = $matches[1];
+        } else {
+            $controller = 'Vial';
+        }
+        
+        return $controller;
+    }
+    
+    protected function setBatchActionRedirect($redirect = false)
+    {
+        if (false === $redirect) {
+            $request = $this->getRequest();
+            $currentRoute = $request->attributes->get('_route');
+            if ($currentRoute == '') {
+                return;
+            }
+            $routeArguments = $request->attributes->get('_route_params', null);
+            $redirect = $this->generateUrl($currentRoute, $routeArguments);
+        }
+        
+        $this->getSession()->set('batch_action_redirect', $redirect);
+    }
+    
     /**
      *
      * @param  \VIB\FliesBundle\Entity\Vial               $vial
