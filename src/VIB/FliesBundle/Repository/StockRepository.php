@@ -210,6 +210,9 @@ class StockRepository extends SearchableRepository
         if ($search instanceof SearchQuery ? $search->searchNotes() : false) {
             $fields[] = 'e.notes';
         }
+        if ($search instanceof SearchQuery ? $search->searchVendor() : false) {
+            $fields[] = 'e.vendorId';
+        }
         
         return $fields;
     }

@@ -77,7 +77,8 @@ class AdvancedSearchType extends AbstractType
                         'choices' => array(
                             'private' => 'Only private',
                             'dead'    => 'Include dead',
-                            'notes'   => 'Include comments'
+                            'notes'   => 'Include comments',
+                            'vendor'  => 'Include vendor ID',
                         ),
                         'expanded' => true,
                         'multiple' => true,

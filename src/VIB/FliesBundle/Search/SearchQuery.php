@@ -64,6 +64,7 @@ class SearchQuery extends ACLSearchQuery
         $options['private'] = in_array('private', $this->opts);
         $options['dead'] = in_array('dead', $this->opts);
         $options['notes'] = in_array('notes', $this->opts);
+        $options['vendor'] = in_array('vendor', $this->opts);
         
         return $options;
     }
@@ -96,6 +97,16 @@ class SearchQuery extends ACLSearchQuery
     public function searchNotes() {
         $options =  $this->getOptions();
         return $options['notes'];
+    }
+    
+    /**
+     * Search notes
+     * 
+     * @return boolean
+     */
+    public function searchVendor() {
+        $options =  $this->getOptions();
+        return $options['vendor'];
     }
     
     /**
