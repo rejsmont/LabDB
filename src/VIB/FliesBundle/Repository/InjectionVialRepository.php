@@ -38,10 +38,10 @@ class InjectionVialRepository extends SearchableVialRepository
     protected function getListQueryBuilder(ListFilterInterface $filter = null)
     {
         return parent::getListQueryBuilder($filter)
-            ->addSelect('s, sv, svs')
-            ->leftJoin('e.targetStock', 's')
-            ->leftJoin('e.targetStockVial', 'sv')
-            ->leftJoin('sv.stock', 'svs');
+            ->addSelect('ts, tsv, tsvs')
+            ->leftJoin('e.targetStock', 'ts')
+            ->leftJoin('e.targetStockVial', 'tsv')
+            ->leftJoin('tsv.stock', 'tsvs');
     }
 
     /**
@@ -50,9 +50,9 @@ class InjectionVialRepository extends SearchableVialRepository
     protected function getSearchQueryBuilder(SearchQueryInterface $search)
     {
         return parent::getSearchQueryBuilder($search)
-            ->leftJoin('e.targetStock', 's')
-            ->leftJoin('e.targetStockVial', 'sv')
-            ->leftJoin('sv.stock', 'svs');
+            ->leftJoin('e.targetStock', 'ts')
+            ->leftJoin('e.targetStockVial', 'tsv')
+            ->leftJoin('tsv.stock', 'tsvs');
     }
     
     /**
@@ -61,9 +61,9 @@ class InjectionVialRepository extends SearchableVialRepository
     protected function getSearchResultCountQueryBuilder(SearchQueryInterface $search)
     {
         return parent::getSearchResultCountQueryBuilder($search)
-            ->leftJoin('e.targetStock', 's')
-            ->leftJoin('e.targetStockVial', 'sv')
-            ->leftJoin('sv.stock', 'svs');
+            ->leftJoin('e.targetStock', 'ts')
+            ->leftJoin('e.targetStockVial', 'tsv')
+            ->leftJoin('tsv.stock', 'tsvs');
     }
     
     /**
@@ -73,10 +73,10 @@ class InjectionVialRepository extends SearchableVialRepository
     {
         $fields = array(
             'e.constructName',
-            's.name',
-            's.genotype',
-            'svs.name',
-            'svs.genotype'
+            'ts.name',
+            'ts.genotype',
+            'tsvs.name',
+            'tsvs.genotype'
         );
         if ($search instanceof SearchQuery ? $search->searchNotes() : false) {
             $fields[] = 'e.notes';

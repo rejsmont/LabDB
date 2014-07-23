@@ -4,10 +4,6 @@
     "autoload": {
         "psr-0": { "": "src/" }
     },
-    "provide": { 
-        "twitter/bootstrap": "*",
-        "frameworks/jquery" : "*"
-    },
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "~2.3.16",
@@ -28,6 +24,7 @@
         "jms/di-extra-bundle": "~1.4.0",
         "jms/serializer-bundle": "~0.13.0",
         "mopa/bootstrap-bundle": "dev-master#0e25e59",
+        "twbs/bootstrap": "~3.2.0",
         "knplabs/knp-paginator-bundle": "~2.3.3",
         "knplabs/knp-components": "~1.2.5",
         "knplabs/knp-menu-bundle": "~1.1.2",
@@ -40,7 +37,6 @@
         "rejsmont/php-ipp": "~0.21",
         "kuleuven/shibboleth-bundle": "dev-master#67070be",
         "oyejorge/less.php": "~1.7.0.1",
-        "twbs/bootstrap": "~3.1.1",
         "twitter/typeahead.js": "~0.10.2",
         "twitter/hogan.js": "v3.0.0",
         "fortawesome/font-awesome": "~4.0.3",
@@ -80,7 +76,7 @@
             "file": "app/config/parameters.yml"
         },
         "branch-alias": {
-            "dev-master": "2.3-dev"
+            "dev-master": "2.3"
         }
     },
     "minimum-stability": "dev",
