@@ -19,6 +19,7 @@
 namespace VIB\FliesBundle\Repository;
 
 use VIB\CoreBundle\Filter\ListFilterInterface;
+use VIB\CoreBundle\Filter\SecureFilterInterface;
 use VIB\SearchBundle\Repository\SearchableRepository;
 use VIB\SearchBundle\Search\SearchQueryInterface;
 use VIB\SearchBundle\Search\ACLSearchQueryInterface;
@@ -37,7 +38,7 @@ class StockRepository extends SearchableRepository
      */
     public function getListQuery(ListFilterInterface $filter = null)
     {
-        $access = ($filter instanceof StockFilter) ? $filter->getAccess() : null;
+        $access = ($filter instanceof SecureFilterInterface) ? $filter->getAccess() : null;
         $user = ($filter instanceof SecureFilterInterface) ? $filter->getUser() : null;
         
         if ($access == 'mtnt') {

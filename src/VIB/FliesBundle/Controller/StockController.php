@@ -204,6 +204,34 @@ class StockController extends CRUDController
     }
 
     /**
+     * Edit entity
+     *
+     * @Route("/edit/{id}")
+     * @Template()
+     *
+     * @param  mixed                                     $id
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction($id)
+    {
+        $response = parent::editAction($id);
+        
+        if (is_array($response)) {
+            $om = $this->getObjectManager();
+            $filter = new VialFilter(null, $this->getSecurityContext());
+            $filter->setAccess('insecure');
+            $stock = isset($response['form']) ? $response['form']->vars['value'] : $this->getEntity($id);
+            $used = $om->getRepository('VIB\FliesBundle\Entity\StockVial')
+                        ->getUsedVialCountByStock($stock, $filter);
+            $canDelete = $this->getSecurityContext()->isGranted('ROLE_ADMIN') || ($used == 0);
+            
+            return array_merge($response, array('can_delete' => $canDelete));
+        }
+        
+        return $response;
+    }
+    
+    /**
      * Submit print job
      *
      * @param  VIB\FliesBundle\Utils\PDFLabel $pdf

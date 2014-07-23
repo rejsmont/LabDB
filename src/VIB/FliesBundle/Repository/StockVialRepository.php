@@ -19,6 +19,7 @@
 namespace VIB\FliesBundle\Repository;
 
 use VIB\CoreBundle\Filter\ListFilterInterface;
+use VIB\CoreBundle\Filter\SecureFilterInterface;
 use VIB\FliesBundle\Entity\Stock;
 
 /**
@@ -60,5 +61,33 @@ class StockVialRepository extends VialRepository
 
         return (false === $permissions) ? $qb->getQuery()->getResult() :
             $this->getAclFilter()->apply($qb, $permissions, $user)->getResult();
+    }
+    
+    /**
+     *
+     * @param  VIB\FliesBundle\Entity\Stock              $stock
+     * @param  VIB\CoreBundle\Filter\ListFilterInterface $filter
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getUsedVialCountByStock(Stock $stock, ListFilterInterface $filter = null)
+    {
+        $qb = $this->getCountQueryBuilder($filter)
+                   ->andWhere('e.stock = :stock')
+                   ->andWhere('e.id IN (SELECT sv.id FROM VIB\FliesBundle\Entity\StockVial sv '
+                           . 'WHERE sv.children IS NOT EMPTY '
+                           . 'OR sv.virginCrosses IS NOT EMPTY '
+                           . 'OR sv.maleCrosses IS NOT EMPTY)')
+                   ->setParameter('stock', $stock);
+        
+        if ($filter instanceof SecureFilterInterface) {
+            $permissions = $filter->getPermissions();
+            $user = $filter->getUser();
+        } else {
+            $permissions = array();
+            $user = null;
+        }
+
+        return (false === $permissions) ? $qb->getQuery()->getSingleScalarResult() :
+            $this->getAclFilter()->apply($qb, $permissions, $user)->getSingleScalarResult();
     }
 }

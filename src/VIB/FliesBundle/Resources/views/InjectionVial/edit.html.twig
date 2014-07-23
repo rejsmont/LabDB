@@ -7,5 +7,5 @@
 {% endblock modal_header %}
 
 {% block modal_footer %}
-  {{ f.buttons(form.vars.value,'vib_flies_injectionvial') }}
+  {{ f.buttons(form.vars.value, 'vib_flies_injectionvial',is_granted('ROLE_ADMIN') or not form.vars.value.wasUsed) }}
 {% endblock modal_footer %}

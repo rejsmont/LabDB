@@ -69,6 +69,8 @@ class SecureListFilter implements ListFilterInterface, SecureFilterInterface {
             return array('OWNER');
         } elseif ($this->access == 'shared') {
             return array('OPERATOR');
+        } elseif ($this->access == 'insecure') {
+            return false;
         } else {
             if (null !== $this->securityContext) {
                 return $this->securityContext->isGranted('ROLE_ADMIN') ? false : array('VIEW');
