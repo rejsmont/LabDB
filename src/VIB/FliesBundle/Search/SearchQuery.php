@@ -128,10 +128,10 @@ class SearchQuery extends ACLSearchQuery
         if (empty($this->filter)) {
             $term = implode(' ', $this->getTerms());
 
-            if (preg_match("/^R\d+$/",$term) === 1) {
+            if ((preg_match("/^R\d+$/",$term) === 1)&&(! $this->searchVendor())) {
                 
                 return 'rack';
-            } elseif (is_numeric($term)) {
+            } elseif ((is_numeric($term))&&(! $this->searchVendor())) {
                 
                 return 'vial';
             } else {
