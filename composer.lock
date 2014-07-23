@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0f3933f470fd20be95583cd45ad367df",
+    "hash": "e50b196eddeabc4ae9f0267e831c1d6d",
     "packages": [
         {
             "name": "components/bootstrap",
@@ -3359,12 +3359,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "0b5348ea3a4b3a035a96eee88d14177062f525a8"
+                "reference": "4dbe0e1c349c30b6ecb6254f61966d72a53357d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/0b5348ea3a4b3a035a96eee88d14177062f525a8",
-                "reference": "0b5348ea3a4b3a035a96eee88d14177062f525a8",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/4dbe0e1c349c30b6ecb6254f61966d72a53357d8",
+                "reference": "4dbe0e1c349c30b6ecb6254f61966d72a53357d8",
                 "shasum": ""
             },
             "require": {
@@ -3459,7 +3459,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2014-07-23 07:58:41"
+            "time": "2014-07-23 15:11:31"
         },
         {
             "name": "tecnick.com/tcpdf",

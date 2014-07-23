@@ -875,14 +875,19 @@ class VialController extends CRUDController
     
     protected function setBatchActionRedirect($redirect = false)
     {
+        $request = $this->getRequest();
+        
         if (false === $redirect) {
-            $request = $this->getRequest();
             $currentRoute = $request->attributes->get('_route');
             if ($currentRoute == '') {
                 return;
             }
             $routeArguments = $request->attributes->get('_route_params', null);
             $redirect = $this->generateUrl($currentRoute, $routeArguments);
+        }
+        
+        if ((null == $redirect)&&($request->attributes->get('_route') == '')) {
+            return;
         }
         
         $this->getSession()->set('batch_action_redirect', $redirect);
