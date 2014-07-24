@@ -20,7 +20,6 @@ namespace VIB\FliesBundle\Filter;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-
 use VIB\CoreBundle\Filter\SecureListFilter;
 use VIB\CoreBundle\Filter\SortFilterInterface;
 use VIB\CoreBundle\Filter\RedirectFilterInterface;
@@ -31,25 +30,21 @@ use VIB\CoreBundle\Filter\RedirectFilterInterface;
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class VialFilter extends SecureListFilter implements SortFilterInterface, RedirectFilterInterface {
-    
+
     protected $health;
-    
     protected $living;
-    
     protected $dead;
-    
     protected $sort;
-    
+    protected $order;
     protected $redirect;
-    
+
     /**
      * Construct VialFilter
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
-    public function __construct(Request $request = null, SecurityContextInterface $securityContext = null)
-    {
+    public function __construct(Request $request = null, SecurityContextInterface $securityContext = null) {
         parent::__construct($request, $securityContext);
 
         if (null !== $request) {
@@ -62,12 +57,14 @@ class VialFilter extends SecureListFilter implements SortFilterInterface, Redire
                 $this->setFilter($request->get('filter', 'living'));
                 $this->redirect = false;
             }
+            $this->setOrder($request->get('order', 'desc'));
+            $this->setSort($request->get('sort', 'setup'));
         } else {
             $this->setFilter('living');
+            $this->setSort('setup');
+            $this->setOrder('desc');
             $this->redirect = false;
         }
-        
-        $this->sort = 'setup';
     }
 
     /**
@@ -85,7 +82,7 @@ class VialFilter extends SecureListFilter implements SortFilterInterface, Redire
     public function setHealth($health) {
         $this->health = $health;
     }
-    
+
     /**
      * 
      * @return string
@@ -101,7 +98,7 @@ class VialFilter extends SecureListFilter implements SortFilterInterface, Redire
     public function setLiving($living) {
         $this->living = $living;
     }
-    
+
     /**
      * 
      * @return string
@@ -117,7 +114,7 @@ class VialFilter extends SecureListFilter implements SortFilterInterface, Redire
     public function setDead($dead) {
         $this->dead = $dead;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -130,6 +127,28 @@ class VialFilter extends SecureListFilter implements SortFilterInterface, Redire
      */
     public function setSort($sort) {
         $this->sort = $sort;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getOrder() {
+        return $this->order;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOrder($order) {
+        $this->order = $order;
+    }
+
+    /**
+     * 
+     * @param booleas $desc
+     */
+    public function setDesc($desc) {
+        $this->order = $desc ? 'desc' : 'asc';
     }
     
     /**
@@ -202,12 +221,12 @@ class VialFilter extends SecureListFilter implements SortFilterInterface, Redire
                 break;
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function needRedirect()
-    {
+    public function needRedirect() {
         return $this->redirect;
     }
+
 }

@@ -37,4 +37,18 @@ interface SortFilterInterface {
      * @param string $sort
      */
     public function setSort($sort);
+    
+    /**
+     * Get order
+     *  
+     * @return string
+     */
+    public function getOrder();
+
+    /**
+     * Set order;
+     * 
+     * @param string $order
+     */
+    public function setOrder($order);
 }

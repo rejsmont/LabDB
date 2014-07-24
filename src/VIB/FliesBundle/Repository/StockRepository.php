@@ -20,6 +20,7 @@ namespace VIB\FliesBundle\Repository;
 
 use VIB\CoreBundle\Filter\ListFilterInterface;
 use VIB\CoreBundle\Filter\SecureFilterInterface;
+use VIB\CoreBundle\Filter\SortFilterInterface;
 use VIB\SearchBundle\Repository\SearchableRepository;
 use VIB\SearchBundle\Search\SearchQueryInterface;
 use VIB\SearchBundle\Search\ACLSearchQueryInterface;
@@ -57,20 +58,41 @@ class StockRepository extends SearchableRepository
      */
     protected function getListQueryBuilder(ListFilterInterface $filter = null)
     {
-        $qb = $this->createQueryBuilder('e')
-                   ->orderBy('e.name');
+        $qb = $this->createQueryBuilder('e');
+        
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P2M'));
+        
+        if ($filter instanceof SortFilterInterface) {
+            $order = ($filter->getOrder() == 'desc') ? 'DESC' : 'ASC';
+            switch ($filter->getSort()) {
+                case 'name':
+                    $qb->orderBy('e.name', $order);
+                    break;
+                case 'gen':
+                    $qb->orderBy('e.genotype', $order);
+                    break;
+                case 'vial':
+                    $qb->addSelect('count(cntv) AS HIDDEN vialcount')
+                       ->leftJoin('e.vials','cntv')
+                       ->andWhere('cntv.setupDate > :date')
+                       ->andWhere('cntv.trashed = false')
+                       ->setParameter('date', $date->format('Y-m-d'))
+                       ->groupBy('e.id')
+                       ->orderBy('vialcount', $order);
+                    break;
+            }
+        }
         
         $access = ($filter instanceof StockFilter) ? $filter->getAccess() : null;
         
         if ($access == 'mtnt') {
-            $date = new \DateTime();
-            $date->sub(new \DateInterval('P2M'));
 
-            return $qb->distinct()
-                      ->join('e.vials','v')
-                      ->andWhere('v.setupDate > :date')
-                      ->andWhere('v.trashed = false')
-                      ->setParameter('date', $date->format('Y-m-d'));
+            $qb->distinct()
+               ->join('e.vials','v')
+               ->andWhere('v.setupDate > :date')
+               ->andWhere('v.trashed = false')
+               ->setParameter('date', $date->format('Y-m-d'));
         }
 
         return $qb;

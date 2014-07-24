@@ -23,6 +23,7 @@ use VIB\CoreBundle\Doctrine\ObjectManager;
 use VIB\CoreBundle\Filter\ListFilterInterface;
 use VIB\CoreBundle\Filter\EntityFilterInterface;
 use VIB\CoreBundle\Filter\SecureFilterInterface;
+use VIB\CoreBundle\Filter\SortFilterInterface;
 use VIB\CoreBundle\Repository\EntityRepository;
 use VIB\FliesBundle\Filter\VialFilter;
 
@@ -40,13 +41,21 @@ class VialRepository extends EntityRepository
     {
         $builder = $this->createQueryBuilder('e')
                         ->addSelect('o')
-                        ->leftJoin('e.position', 'o')
-                        ->orderBy('e.setupDate','DESC')
-                        ->addOrderBy('e.id','DESC');
-
+                        ->leftJoin('e.position', 'o');
+        
+        if ($filter instanceof SortFilterInterface) {
+            $order = ($filter->getOrder() == 'desc') ? 'DESC' : 'ASC';
+            if ($filter->getSort() == 'setup') {
+                $builder->orderBy('e.setupDate', $order);
+            } elseif ($filter->getSort() == 'flip') {
+                $builder->orderBy('e.flipDate', $order);
+            }
+            $builder->addOrderBy('e.id', $order);
+        }
+        
         return $this->applyQueryBuilderFilter($builder, $filter);
     }
-
+    
     /**
      * {@inheritdoc}
      */

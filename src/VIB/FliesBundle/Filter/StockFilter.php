@@ -34,6 +34,8 @@ class StockFilter extends SecureListFilter implements SortFilterInterface, Redir
     
     protected $sort;
     
+    protected $order;
+    
     protected $redirect;
     
     /**
@@ -47,14 +49,16 @@ class StockFilter extends SecureListFilter implements SortFilterInterface, Redir
         parent::__construct($request, $securityContext);
 
         if (null !== $request) {
-            $this->access = $request->get('access', 'mtnt');
+            $this->setAccess($request->get('access', 'mtnt'));
+            $this->setOrder($request->get('order', 'asc'));
+            $this->setSort($request->get('sort', 'name'));
             $this->redirect = ($request->get('resolver', 'off') == 'on');
         } else {
             $this->access = 'mtnt';
+            $this->sort = 'name';
+            $this->order = 'asc';
             $this->redirect = false;
         }
-        
-        $this->sort = 'name';
     }
     
     /**
@@ -69,6 +73,20 @@ class StockFilter extends SecureListFilter implements SortFilterInterface, Redir
      */
     public function setSort($sort) {
         $this->sort = $sort;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getOrder() {
+        return $this->order;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOrder($order) {
+        $this->order = $order;
     }
     
     /**

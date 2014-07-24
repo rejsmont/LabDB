@@ -15,28 +15,28 @@
       <ul>
         <li>
           <label>
-            <input class="toggle-children" type="radio" name="access" id="access_mtnt" value="mtnt"
+            <input type="radio" name="access" id="access_mtnt" value="mtnt"
               {{ (filter is  defined and filter.access == 'mtnt') ? 'checked' }} >
             Maintained stocks
           </label>
         </li>
         <li>
           <label>
-            <input class="toggle-children" type="radio" name="access" id="access_private" value="private"
+            <input type="radio" name="access" id="access_private" value="private"
               {{ (filter is  defined and filter.access == 'private') ? 'checked' }} >
             Private stocks
           </label>
         </li>
         <li>
           <label>
-            <input class="toggle-children" type="radio" name="access" id="access_shared" value="shared"
+            <input type="radio" name="access" id="access_shared" value="shared"
               {{ (filter is defined and filter.access == 'shared') ? 'checked' }} >
             Shared stocks
           </label>
         </li>
         <li>
           <label>
-            <input class="toggle-children" type="radio" name="access" id="access_public" value="public"
+            <input type="radio" name="access" id="access_public" value="public"
               {{ (filter is defined and filter.access == 'public') ? 'checked' }} >
             Public stocks
           </label>
@@ -44,6 +44,41 @@
       </ul>
     </li>
     {% endblock sidebar_display_access %}
+    {% block sidebar_display_sort %}
+    <li class="list-group-item">
+      <h5>Sort by</h5>
+      <ul>
+        <li>
+          <label>
+            <input type="radio" name="sort" id="sort_name" value="name"
+              {{ (filter is not defined or filter.sort == 'name') ? 'checked' }} >
+            Name
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="radio" name="sort" id="sort_gen" value="gen"
+              {{ (filter is defined and filter.sort == 'gen') ? 'checked' }} >
+            Genotype
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="radio" name="sort" id="sort_vial" value="vial"
+              {{ (filter is defined and filter.sort == 'vial') ? 'checked' }} >
+            Vial number
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="order" id="order" value="desc"
+              {{ (filter is defined and filter.order == 'desc') ? 'checked' }} >
+            Descending
+          </label>
+        </li>
+      </ul>
+    </li>
+    {% endblock sidebar_display_sort %}
     <li class="panel-footer">
       <input type="hidden" name="resolver" value="on">
       <button type="submit" class="btn btn-primary btn-sm btn-block">

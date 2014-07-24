@@ -79,7 +79,7 @@ class StockController extends CRUDController
      *
      * @Route("/")
      * @Route("/list/{access}", defaults={"access" = "owned"})
-     * @Route("/list/{access}/sort/{sorting}", defaults={"access" = "mtnt", "sorting" = "name"})
+     * @Route("/list/{access}/sort/{sort}/{order}", defaults={"access" = "mtnt", "sort" = "name", "order" = "asc"})
      * @Template()
      * @SatisfiesParentSecurityPolicy
      *
@@ -280,7 +280,8 @@ class StockController extends CRUDController
         $routeParameters = ($filter instanceof StockFilter) ?
             array(
                 'access' => $filter->getAccess(),
-                'sorting' => $filter->getSort()) :
+                'sort' => $filter->getSort(),
+                'order' => $filter->getOrder()) :
             array();
         
         $url = $this->generateUrl($route, $routeParameters);

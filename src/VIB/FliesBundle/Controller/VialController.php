@@ -88,7 +88,7 @@ class VialController extends CRUDController
      *
      * @Route("/")
      * @Route("/list/{access}/{filter}", defaults={"access" = "private", "filter" = "living"})
-     * @Route("/list/{access}/{filter}/sort/{sorting}", defaults={"access" = "private", "filter" = "living", "sorting" = "setup"})
+     * @Route("/list/{access}/{filter}/sort/{sort}/{order}", defaults={"access" = "private", "filter" = "living", "sort" = "setup", "order" = "asc"})
      * @Template()
      * @SatisfiesParentSecurityPolicy
      *
@@ -929,7 +929,8 @@ class VialController extends CRUDController
             array(
                 'access' => $filter->getAccess(),
                 'filter' => $filter->getFilter(),
-                'sorting' => $filter->getSort()) :
+                'sort' => $filter->getSort(),
+                'order' => $filter->getOrder()) :
             array();
         
         $url = $this->generateUrl($route, $routeParameters);
