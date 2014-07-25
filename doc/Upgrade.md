@@ -26,10 +26,11 @@ see if an update is necessary:
 $ app/console doctrine:schema:update --env=prod --dump-sql
 ```
 
-And if you are happy with the SQL you see, run the update:
+And if you are happy with the SQL you see, run the update and clear memcached cache:
 
 ```
 $ app/console doctrine:schema:update --env=prod --force
+$ echo 'flush_all' | nc localhost 11211
 ```
 
 **Now you are up to date**
