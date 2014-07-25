@@ -23,5 +23,5 @@ You can support development of the LabDB in several ways!
 
 * By [reporting bugs and requesting features] (https://github.com/rejsmont/LabDB/issues/new)
 * By [contributing your code to the LabDB] (https://github.com/rejsmont/LabDB/fork)
-* By spreading the good word about the database
+* By spreading a good word about the database
 * By [making a donation] (https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=NE9FDRKWEUYPN)

@@ -1,6 +1,6 @@
 # Upgrading LabDB
 
-** Always backup your database before upgrading **
+**Always backup your database before upgrading**
 
 Most upgrades require simply pulling the latest version from GitHub and updating the vendors:
 
@@ -29,4 +29,4 @@ And if you are happy with the SQL you see, run the update:
 $ app/console doctrine:schema:update --env=prod --force
 ```
 
-** Now you are up to date **
+**Now you are up to date**
