@@ -7,7 +7,10 @@ Most upgrades require simply pulling the latest version from GitHub and updating
 ```
 $ cd LabDB
 $ git pull
-$ composer install 
+$ composer install
+$ app/console cache:clear --env=prod
+$ app/console assets:install --env=prod
+$ app/console assetic:dump --env=prod
 ```
 
 Verify upgrade by running builtin tests (the **test database** will be wiped when tests are run):
