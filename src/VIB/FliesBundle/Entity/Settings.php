@@ -21,6 +21,8 @@ namespace VIB\FliesBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
+
+use VIB\CoreBundle\Entity\Entity;
 use VIB\UserBundle\Entity\SettingsInterface;
 use VIB\UserBundle\Entity\User;
 
@@ -32,7 +34,7 @@ use VIB\UserBundle\Entity\User;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class Settings implements SettingsInterface
+class Settings extends Entity implements SettingsInterface
 {
     /**
      * @ORM\OneToOne(targetEntity="User")
