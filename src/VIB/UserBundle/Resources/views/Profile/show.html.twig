@@ -1,0 +1,31 @@
+{% extends "VIBUserBundle::layout.html.twig" %}
+{% use "VIBSiteTemplateBundle:Show:modal.html.twig" %}
+{% import "VIBSiteTemplateBundle:Macros:show.html.twig" as s %}
+
+{% block headline %}User profile{% endblock headline %}
+
+{% block fos_user_content %}
+{% include "FOSUserBundle:Profile:show_content.html.twig" %}
+{% endblock fos_user_content %}
+
+{% block modal_header %}
+  {{ user.fullName }} ({{ user.username }})
+{% endblock modal_header %}
+
+{% block modal_body %}
+  {{ s.row("Email", user.email) }}
+  {{ s.row("Last login", user.lastLogin | date("d F Y")) }}
+  {{ s.list("Groups", user.groups) }}
+  {{ s.list("Roles", user.roles) }}
+{% endblock modal_body %}
+
+{% block modal_footer %}
+  {% spaceless %}
+  {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', user) %}
+    <a href="{{ path('vib_user_user_edit', { 'username': user.username }) }}" class="btn btn-primary">Edit</a>
+  {% endif %}
+  {% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('vib_user_user_list') }}" class="btn btn-default">List</a>
+  {% endif %}
+  {% endspaceless %}
+{% endblock modal_footer %}

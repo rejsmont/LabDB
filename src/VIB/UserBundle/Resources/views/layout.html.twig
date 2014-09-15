@@ -1,0 +1,32 @@
+{% extends "VIBSiteTemplateBundle::layout.html.twig" %}
+
+{% block navbar %}
+  {% include 'VIBUserBundle::navbar.html.twig' %}
+{% endblock navbar %}
+
+{% block content_sidebar %}
+<div class="panel panel-default panel-condensed">
+  <div class="panel-heading">
+    <h3 class="panel-title"><a data-toggle="collapse" href="#profile">My profile</a></h3>
+  </div>
+  <ul id="profile" class="list-group collapse mobile-collapsed in">
+    <a class="list-group-item" href="{{ path('vib_antibody_antibody_create') }}">Show profile</a>
+    <a class="list-group-item" href="{{ path('vib_antibody_search_advanced') }}">Edit profile</a>
+    <a class="list-group-item" href="{{ path('vib_antibody_search_advanced') }}">Settings</a>
+    <a class="list-group-item" href="{{ path('vib_antibody_search_advanced') }}">Default permissions</a>
+  </ul>
+</div>
+{% if is_granted('ROLE_ADMIN') or is_granted('EDIT', user) %}
+<div class="panel panel-default panel-condensed">
+  <div class="panel-heading">
+    <h3 class="panel-title"><a data-toggle="collapse" href="#admin">Manage users</a></h3>
+  </div>
+  <ul id="admin" class="list-group collapse mobile-collapsed in">
+    <a class="list-group-item" href="{{ path('vib_antibody_antibody_list') }}">List users</a>
+    <a class="list-group-item" href="{{ path('vib_antibody_antibody_list') }}">Create user</a>
+    <a class="list-group-item" href="{{ path('vib_antibody_antibody_list') }}">List groups</a>
+    <a class="list-group-item" href="{{ path('vib_antibody_antibody_list') }}">Create group</a>
+  </ul>
+</div>
+{% endif %}
+{% endblock content_sidebar %}

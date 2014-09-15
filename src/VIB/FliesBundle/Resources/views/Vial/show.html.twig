@@ -38,8 +38,5 @@
 {% endblock modal_body %}
 
 {% block modal_footer %}
-  {% if is_granted('ROLE_ADMIN') or is_granted('EDIT',entity) %}
-  <a href="{{ path('vib_flies_vial_edit', { 'id': entity.id }) }}" class="btn btn-primary">Edit</a>
-  {% endif %}
-  <a href="{{ path('vib_flies_vial_list') }}" class="btn">List</a>
+  {{ s.buttons(entity, 'vib_flies_vial') }}
 {% endblock modal_footer %}

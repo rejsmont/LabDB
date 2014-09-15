@@ -12,11 +12,6 @@ vib_forms:
     type:     annotation
     prefix:   /_ajax
 
-vib_user:
-    resource: "@VIBUserBundle/Controller/"
-    type:     annotation
-    prefix:   /_ajax
-
 vib_flies:
     resource: "@VIBFliesBundle/Controller/"
     type:     annotation
@@ -31,6 +26,15 @@ vib_calendar:
     resource: "@VIBCalendarBundle/Controller/"
     type:     annotation
     prefix:   /calendar
+    
+vib_users:
+    resource: "@VIBUserBundle/Controller/"
+    type:     annotation
+    prefix:   /users
+
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix:   /profile
 
 login:
     pattern:   /login

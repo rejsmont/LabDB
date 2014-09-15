@@ -16,19 +16,31 @@
  * limitations under the License.
  */
 
-namespace VIB\UserBundle;
+namespace VIB\UserBundle\Form;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * VIBSecurityBundle
+ * SettingsType class
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class VIBUserBundle extends Bundle
+class SettingsType extends AbstractType
 {
-    public function getParent()
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
     {
-        return 'FOSUserBundle';
+        return "user_settings";
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        
     }
 }

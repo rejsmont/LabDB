@@ -120,10 +120,13 @@ class User extends BaseUser
      */
     public function getShortName()
     {
-        if (($this->getSurname() != "")&&($this->getInitials() != "")) {
+        if (($surname = $this->getSurname() != "")&&($this->getInitials() != "")) {
+            if (strlen($surname) > 12) {
+                $surname = substr($surname, 0, 12) . "…";
+            }
             return (string) $this->getInitials() . " " . $this->getSurname();
         } else {
-            return $this->getUsername();;
+            return $this->getUsername();
         }
     }
 

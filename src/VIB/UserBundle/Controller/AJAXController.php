@@ -30,6 +30,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
 /**
  * This controller generates choices list for EntityTypeaheadType
  *
+ * @Route("/_ajax")
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
 class AJAXController extends Controller
