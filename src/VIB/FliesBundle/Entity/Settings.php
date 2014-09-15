@@ -37,7 +37,7 @@ use VIB\UserBundle\Entity\User;
 class Settings extends Entity implements SettingsInterface
 {
     /**
-     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\OneToOne(targetEntity="VIB\UserBundle\Entity\User")
      * @Serializer\Expose
      *
      * @var \VIB\UserBundle\Entity\User
