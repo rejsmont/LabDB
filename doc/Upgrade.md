@@ -34,3 +34,14 @@ $ echo 'flush_all' | nc localhost 11211
 ```
 
 **Now you are up to date**
+
+## If something goes wrong
+
+Sometimes, especially when you have skipped some upgrades cache contants may prevent upgrade from succeeding. If you get an error during your upgrade, try manually clearing cache:
+
+```
+$ rm -rf app/cache/*
+$ echo 'flush_all' | nc localhost 11211
+```
+
+After these steps, repeat the whole upgrade procedure and you should be all set.
