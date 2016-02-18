@@ -7,8 +7,8 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException,
     Symfony\Component\Security\Core\User\UserInterface,
     Symfony\Component\Security\Core\User\UserProviderInterface;
 
-use VIB\ImapUserBundle\Manager\LdapManagerUserInterface,
-    VIB\ImapUserBundle\User\LdapUserInterface;
+use VIB\ImapUserBundle\Manager\ImapUserManagerInterface,
+    VIB\ImapUserBundle\User\ImapUserInterface;
 
 /**
  * LDAP User Provider
@@ -16,12 +16,12 @@ use VIB\ImapUserBundle\Manager\LdapManagerUserInterface,
  * @author Boris Morel
  * @author Juti Noppornpitak <jnopporn@shiroyuki.com>
  */
-class LdapUserProvider implements UserProviderInterface
+class ImapUserProvider implements UserProviderInterface
 {
     /**
-     * @var \VIB\ImapUserBundle\Manager\LdapManagerUserInterface
+     * @var \VIB\ImapUserBundle\Manager\ImapUserManagerInterface
      */
-    private $ldapManager;
+    private $imapManager;
 
     /**
      * @var string
@@ -37,13 +37,16 @@ class LdapUserProvider implements UserProviderInterface
     /**
      * Constructor
      *
-     * @param \VIB\ImapUserBundle\Manager\LdapManagerUserInterface $ldapManager
+     * @param \VIB\ImapUserBundle\Manager\ImapUserManagerInterface $imapManager
      * @param bool|string                                       $bindUsernameBefore
      * @param string                                            $userClass
      */
-    public function __construct(LdapManagerUserInterface $ldapManager, $bindUsernameBefore = false, $userClass)
+    public function __construct(
+            ImapUserManagerInterface $imapManager,
+            $bindUsernameBefore = false,
+            $userClass = 'VIB\ImapUserBundle\User\ImapUser')
     {
-        $this->ldapManager = $ldapManager;
+        $this->imapManager = $imapManager;
         $this->bindUsernameBefore = $bindUsernameBefore;
         $this->userClass = $userClass;
     }
@@ -59,12 +62,12 @@ class LdapUserProvider implements UserProviderInterface
         }
 
         if (true === $this->bindUsernameBefore) {
-            $ldapUser = $this->simpleUser($username);
+            $imapUser = $this->simpleUser($username);
         } else {
-            $ldapUser = $this->anonymousSearch($username);
+            $imapUser = $this->anonymousSearch($username);
         }
 
-        return $ldapUser;
+        return $imapUser;
     }
 
     /**
@@ -72,7 +75,7 @@ class LdapUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!$user instanceof LdapUserInterface) {
+        if (!$user instanceof ImapUserInterface) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
@@ -88,40 +91,40 @@ class LdapUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return is_subclass_of($class, '\VIB\ImapUserBundle\User\LdapUserInterface');
+        return is_subclass_of($class, '\VIB\ImapUserBundle\User\ImapUserInterface');
     }
 
     private function simpleUser($username)
     {
-        $ldapUser = new $this->userClass;
-        $ldapUser->setUsername($username);
+        $imapUser = new $this->userClass;
+        $imapUser->setUsername($username);
 
-        return $ldapUser;
+        return $imapUser;
     }
 
     private function anonymousSearch($username)
     {
-        $this->ldapManager->exists($username);
+        $this->imapManager->exists($username);
 
-        $lm = $this->ldapManager
+        $im = $this->imapManager
             ->setUsername($username)
             ->doPass();
 
-        $ldapUser = new $this->userClass;
+        $imapUser = new $this->userClass;
 
-        $ldapUser
-            ->setUsername($lm->getUsername())
-            ->setEmail($lm->getEmail())
-            ->setRoles($lm->getRoles())
-            ->setDn($lm->getDn())
-            ->setCn($lm->getCn())
-            ->setAttributes($lm->getAttributes())
-            ->setGivenName($lm->getGivenName())
-            ->setSurname($lm->getSurname())
-            ->setDisplayName($lm->getDisplayName())
+        $imapUser
+            ->setUsername($im->getUsername())
+            ->setEmail($im->getEmail())
+            ->setRoles($im->getRoles())
+            ->setDn($im->getDn())
+            ->setCn($im->getCn())
+            ->setAttributes($im->getAttributes())
+            ->setGivenName($im->getGivenName())
+            ->setSurname($im->getSurname())
+            ->setDisplayName($im->getDisplayName())
             ;
 
-        return $ldapUser;
+        return $imapUser;
     }
 
     private function bindedSearch($username)

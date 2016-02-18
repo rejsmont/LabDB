@@ -4,7 +4,7 @@ namespace VIB\ImapUserBundle\Manager;
 
 use Monolog\Logger;
 
-interface LdapConnectionInterface
+interface ImapConnectionInterface
 {
     function __construct(array $params, Logger $logger);
     function search(array $params);

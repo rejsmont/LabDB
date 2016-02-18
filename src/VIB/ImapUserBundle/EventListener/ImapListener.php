@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface,
     Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface
 ;
 
-class LdapListener extends AbstractAuthenticationListener
+class ImapListener extends AbstractAuthenticationListener
 {
     public function __construct(SecurityContextInterface $securityContext,
                                 AuthenticationManagerInterface $authenticationManager,
@@ -43,7 +43,7 @@ class LdapListener extends AbstractAuthenticationListener
                 'username_parameter' => '_username',
                 'password_parameter' => '_password',
                 'csrf_parameter'     => '_csrf_token',
-                'intention'          => 'ldap_authenticate',
+                'intention'          => 'imap_authenticate',
                 'post_only'          => true,
             ), $options),
             $logger,

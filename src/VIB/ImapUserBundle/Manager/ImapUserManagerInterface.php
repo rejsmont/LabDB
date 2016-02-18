@@ -2,9 +2,9 @@
 
 namespace VIB\ImapUserBundle\Manager;
 
-interface LdapManagerUserInterface
+interface ImapUserManagerInterface
 {
-  function __construct(LdapConnectionInterface $conn);
+  function __construct(ImapConnectionInterface $conn);
   function exists($username);
   function auth();
   function doPass();

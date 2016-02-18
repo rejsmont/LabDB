@@ -20,7 +20,7 @@ class DefaultController extends Controller
     {
         $error = $this->getAuthenticationError();
 
-        return $this->render('IMAGLdapBundle:Default:login.html.twig', array(
+        return $this->render('VIBImapUserBundle:Default:login.html.twig', array(
             'last_username' => $this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
             'error'         => $error,
             'token'         => $this->generateToken(),

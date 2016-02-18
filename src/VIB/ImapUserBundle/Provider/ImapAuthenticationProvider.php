@@ -13,16 +13,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-use VIB\ImapUserBundle\Manager\LdapManagerUserInterface;
-use VIB\ImapUserBundle\Event\LdapUserEvent;
-use VIB\ImapUserBundle\Event\LdapEvents;
-use VIB\ImapUserBundle\User\LdapUserInterface;
+use VIB\ImapUserBundle\Manager\ImapUserManagerInterface;
+use VIB\ImapUserBundle\Event\ImapUserEvent;
+use VIB\ImapUserBundle\Event\ImapEvents;
+use VIB\ImapUserBundle\User\ImapUserInterface;
 
-class LdapAuthenticationProvider implements AuthenticationProviderInterface
+class ImapAuthenticationProvider implements AuthenticationProviderInterface
 {
     private
         $userProvider,
-        $ldapManager,
+        $imapManager,
         $dispatcher,
         $providerKey,
         $hideUserNotFoundExceptions
@@ -35,23 +35,24 @@ class LdapAuthenticationProvider implements AuthenticationProviderInterface
      * to prevent a possible brute-force attack.
      *
      * @param UserProviderInterface    $userProvider
-     * @param LdapManagerUserInterface $ldapManager
+     * @param AuthenticationProviderInterface $daoAuthenticationProvider
+     * @param ImapUserManagerInterface $imapManager
      * @param EventDispatcherInterface $dispatcher
      * @param string                   $providerKey
      * @param Boolean                  $hideUserNotFoundExceptions
      */
     public function __construct(
-        UserProviderInterface $userProvider,
-        AuthenticationProviderInterface $daoAuthenticationProvider,
-        LdapManagerUserInterface $ldapManager,
-        EventDispatcherInterface $dispatcher = null,
-        $providerKey,
-        $hideUserNotFoundExceptions = true
+            UserProviderInterface $userProvider,
+            AuthenticationProviderInterface $daoAuthenticationProvider,
+            ImapUserManagerInterface $imapManager,
+            EventDispatcherInterface $dispatcher = null,
+            $providerKey = 'vib-imap',
+            $hideUserNotFoundExceptions = true
     )
     {
         $this->userProvider = $userProvider;
         $this->daoAuthenticationProvider = $daoAuthenticationProvider;
-        $this->ldapManager = $ldapManager;
+        $this->imapManager = $imapManager;
         $this->dispatcher = $dispatcher;
         $this->providerKey = $providerKey;
         $this->hideUserNotFoundExceptions = $hideUserNotFoundExceptions;
@@ -70,8 +71,8 @@ class LdapAuthenticationProvider implements AuthenticationProviderInterface
             $user = $this->userProvider
                 ->loadUserByUsername($token->getUsername());
 
-            if ($user instanceof LdapUserInterface) {
-                return $this->ldapAuthenticate($user, $token);
+            if ($user instanceof ImapUserInterface) {
+                return $this->imapAuthenticate($user, $token);
             }
             
         } catch (\Exception $e) {
@@ -90,19 +91,19 @@ class LdapAuthenticationProvider implements AuthenticationProviderInterface
     }
 
     /**
-     * Authentication logic to allow Ldap user
+     * Authentication logic to allow Imap user
      *
-     * @param \VIB\ImapUserBundle\User\LdapUserInterface  $user
+     * @param \VIB\ImapUserBundle\User\ImapUserInterface  $user
      * @param TokenInterface $token
      *
      * @return \Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken $token
      */
-    private function ldapAuthenticate(LdapUserInterface $user, TokenInterface $token)
+    private function imapAuthenticate(ImapUserInterface $user, TokenInterface $token)
     {
-        $userEvent = new LdapUserEvent($user);
+        $userEvent = new ImapUserEvent($user);
         if (null !== $this->dispatcher) {
             try {
-                $this->dispatcher->dispatch(LdapEvents::PRE_BIND, $userEvent);
+                $this->dispatcher->dispatch(ImapEvents::PRE_BIND, $userEvent);
             } catch (AuthenticationException $expt) {
                 if ($this->hideUserNotFoundExceptions) {
                     throw new BadCredentialsException('Bad credentials', 0, $expt);
@@ -119,9 +120,9 @@ class LdapAuthenticationProvider implements AuthenticationProviderInterface
         }
         
         if (null !== $this->dispatcher) {
-            $userEvent = new LdapUserEvent($user);
+            $userEvent = new ImapUserEvent($user);
             try {
-                $this->dispatcher->dispatch(LdapEvents::POST_BIND, $userEvent);
+                $this->dispatcher->dispatch(ImapEvents::POST_BIND, $userEvent);
             } catch (AuthenticationException $authenticationException) {
                 if ($this->hideUserNotFoundExceptions) {
                     throw new BadCredentialsException('Bad credentials', 0, $authenticationException);
@@ -137,20 +138,20 @@ class LdapAuthenticationProvider implements AuthenticationProviderInterface
     }
 
     /**
-     * Authenticate the user with LDAP bind.
+     * Authenticate the user with IMAP login.
      *
-     * @param \VIB\ImapUserBundle\User\LdapUserInterface  $user
+     * @param \VIB\ImapUserBundle\User\ImapUserInterface  $user
      * @param TokenInterface $token
      *
      * @return true
      */
-    private function bind(LdapUserInterface $user, TokenInterface $token)
+    private function bind(ImapUserInterface $user, TokenInterface $token)
     {
-        $this->ldapManager
+        $this->imapManager
             ->setUsername($user->getUsername())
             ->setPassword($token->getCredentials());
         
-        $this->ldapManager->auth();
+        $this->imapManager->auth();
 
         return true;
     }
@@ -158,10 +159,10 @@ class LdapAuthenticationProvider implements AuthenticationProviderInterface
     /**
      * Reload user with the username
      *
-     * @param \VIB\ImapUserBundle\User\LdapUserInterface $user
-     * @return \VIB\ImapUserBundle\User\LdapUserInterface $user
+     * @param \VIB\ImapUserBundle\User\ImapUserInterface $user
+     * @return \VIB\ImapUserBundle\User\ImapUserInterface $user
      */
-    private function reloadUser(LdapUserInterface $user)
+    private function reloadUser(ImapUserInterface $user)
     {
         try {
             $user = $this->userProvider->refreshUser($user);

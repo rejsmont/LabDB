@@ -10,14 +10,14 @@ class Configuration implements ConfigurationInterface
   public function getConfigTreeBuilder()
   {
     $treeBuilder = new TreeBuilder();
-    $rootNode = $treeBuilder->root('imag_ldap');
+    $rootNode = $treeBuilder->root('vib_imap');
     $rootNode
         ->children()
             ->append($this->addClientNode())
             ->append($this->addUserNode())
             ->append($this->addRoleNode())
             ->scalarNode('user_class')
-              ->defaultValue("VIB\ImapUserBundle\User\LdapUser")
+              ->defaultValue("VIB\ImapUserBundle\User\ImapUser")
             ->end()
         ->end()
         ;

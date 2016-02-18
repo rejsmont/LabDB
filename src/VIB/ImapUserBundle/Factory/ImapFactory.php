@@ -8,7 +8,7 @@ use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractF
     Symfony\Component\DependencyInjection\DefinitionDecorator,
     Symfony\Component\DependencyInjection\Reference;
 
-class LdapFactory extends AbstractFactory
+class ImapFactory extends AbstractFactory
 {
     public function __construct()
     {

@@ -6,7 +6,7 @@ use Monolog\Logger;
 
 use VIB\ImapUserBundle\Exception\ConnectionException;
 
-class LdapConnection implements LdapConnectionInterface
+class ImapConnection implements ImapConnectionInterface
 {
     private $params;
     private $logger;

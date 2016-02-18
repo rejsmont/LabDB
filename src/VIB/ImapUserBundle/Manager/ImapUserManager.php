@@ -6,7 +6,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use VIB\ImapUserBundle\Exception\ConnectionException;
 
-class LdapManagerUser implements LdapManagerUserInterface
+class ImapUserManager implements ImapUserManagerInterface
 {
     private
         $ldapConnection,
@@ -16,7 +16,7 @@ class LdapManagerUser implements LdapManagerUserInterface
         $ldapUser
         ;
 
-    public function __construct(LdapConnectionInterface $conn)
+    public function __construct(ImapConnectionInterface $conn)
     {
         $this->ldapConnection = $conn;
         $this->params = $this->ldapConnection->getParameters();
