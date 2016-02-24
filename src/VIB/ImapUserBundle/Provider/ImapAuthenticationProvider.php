@@ -20,13 +20,11 @@ use VIB\ImapUserBundle\User\ImapUserInterface;
 
 class ImapAuthenticationProvider implements AuthenticationProviderInterface
 {
-    private
-        $userProvider,
-        $imapManager,
-        $dispatcher,
-        $providerKey,
-        $hideUserNotFoundExceptions
-        ;
+    private $userProvider;
+    private $imapManager;
+    private $dispatcher;
+    private $providerKey;
+    private $hideUserNotFoundExceptions;
 
     /**
      * Constructor
@@ -68,8 +66,7 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
         }
 
         try {
-            $user = $this->userProvider
-                ->loadUserByUsername($token->getUsername());
+            $user = $this->userProvider->loadUserByUsername($token->getUsername());
 
             if ($user instanceof ImapUserInterface) {
                 return $this->imapAuthenticate($user, $token);
@@ -91,7 +88,7 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
     }
 
     /**
-     * Authentication logic to allow Imap user
+     * Authentication logic to allow IMAP user
      *
      * @param \VIB\ImapUserBundle\User\ImapUserInterface  $user
      * @param TokenInterface $token
@@ -115,7 +112,7 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
 
         $this->bind($user, $token);
 
-        if (null === $user->getDn()) {
+        if (null === $user->getUsername()) {
             $user = $this->reloadUser($user);
         }
         

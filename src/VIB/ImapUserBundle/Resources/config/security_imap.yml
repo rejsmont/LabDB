@@ -16,7 +16,6 @@ services:
         class: '%vib_imap.security.user.provider.class%'
         arguments:
             - '@vib_imap.imap_manager'
-            - '%vib_imap.authentication.bind_username_before%'
             - '%vib_imap.model.user_class%'
     vib_imap.imap_connection:
         public: false

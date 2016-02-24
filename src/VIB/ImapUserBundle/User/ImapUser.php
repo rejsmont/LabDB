@@ -4,23 +4,18 @@ namespace VIB\ImapUserBundle\User;
 
 class ImapUser implements ImapUserInterface
 {
-    protected $email;
+    protected $username;
     protected $roles;
-
+    
     public function getUsername()
     {
-        $parts = explode("@", $this->email);
-        return $parts[0];
+        return $this->username;
     }
-
-    public function getEmail()
+    
+    public function setUsername($username)
     {
-        return $this->email;
-    }
-
-    public function setEmail($email)
-    {
-        $this->email = $email;
+        $this->username = $username;
+        
         return $this;
     }
     
