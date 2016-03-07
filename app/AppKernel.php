@@ -40,7 +40,10 @@ class AppKernel extends Kernel
             new VIB\StorageBundle\VIBStorageBundle(),
             new VIB\AntibodyBundle\VIBAntibodyBundle(),
             new VIB\SearchBundle\VIBSearchBundle(),
-#            new VIB\ImapUserBundle\VIBImapUserBundle(),
+            new VIB\ImapAuthenticationBundle\VIBImapAuthenticationBundle(),
+            new VIB\KULeuvenShibbolethUserBundle\VIBKULeuvenShibbolethUserBundle(),
+            new VIB\KULeuvenImapUserBundle\VIBKULeuvenImapUserBundle(),
+            new VIB\IcmImapUserBundle\VIBIcmImapUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test', 'debug'))) {

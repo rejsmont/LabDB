@@ -1,0 +1,42 @@
+parameters:
+    vib_imap.imap_connection.class: VIB\ImapAuthenticationBundle\Manager\ImapConnection
+    vib_imap.imap_manager.class: VIB\ImapAuthenticationBundle\Manager\ImapUserManager
+    vib_imap.security.authentication.provider.class: VIB\ImapAuthenticationBundle\Provider\ImapAuthenticationProvider
+    vib_imap.security.authentication.listener.class: VIB\ImapAuthenticationBundle\EventListener\ImapListener
+    vib_imap.security.authentication.form_entry_point.class: Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint
+                    
+services:
+    vib_imap.security.authentication.form_entry_point:
+        public: false
+        abstract: true
+        class: '%vib_imap.security.authentication.form_entry_point.class%'
+        arguments: ['@http_kernel']
+    vib_imap.imap_connection:
+        public: false
+        class: '%vib_imap.imap_connection.class%'
+        arguments:
+            - '%vib_imap.imap_connection.params%'
+            - '@logger'
+        tags:
+            -  { name: monolog.logger, channel: imap_connection }
+    vib_imap.imap_manager:
+        class: '%vib_imap.imap_manager.class%'
+        arguments: ['@vib_imap.imap_connection']
+    vib_imap.security.authentication.listener:
+        public: false
+        class: '%vib_imap.security.authentication.listener.class%'
+        arguments:
+            - '@security.context'
+            - '@security.authentication.manager'
+            - '@security.authentication.session_strategy'
+            - '@security.http_utils'
+            - ''
+            - '@?imap.authentication.success_handler'
+            - '@?imap.authentication.failure_handler'
+            - {}
+            - '@?logger'
+            - '@?event_dispatcher'
+    imap.authentication.success_handler:
+        parent: security.authentication.success_handler
+    imap.authentication.failure_handler:
+        parent: security.authentication.failure_handler

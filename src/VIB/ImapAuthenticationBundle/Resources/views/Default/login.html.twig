@@ -1,0 +1,41 @@
+{% extends "VIBSiteTemplateBundle::layout.html.twig" %}
+{% use "VIBSiteTemplateBundle:Form:modal.html.twig" %}
+
+{% block page_header %}{% endblock page_header %}
+{% block main_row %}
+<div class="col-md-6 col-md-offset-3">
+  {% block content_row %}
+  <div class="row no-header">
+      {% if error %}
+      <div class="alert alert-danger" role="alert">{{ error.message }}</div>
+      {% endif %}
+      {{ block('content') }}
+  </div>
+  {% endblock content_row %}
+</div>
+{% endblock main_row %}
+
+{% block modal_header %}Please log in{% endblock modal_header %}
+
+{% block modal_body %}
+<div class="form-group">
+    <label for="username" class="control-label col-lg-3 required">Username:</label>
+    <div class="col-lg-9">
+        <input type="text" id="username" name="_username"
+               value="{{ last_username }}" required="required" class="form-control not-removable" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="password" class="control-label col-lg-3 required">Password:</label>
+    <div class="col-lg-9">
+        <input type="password" id="password" name="_password" required="required" class="form-control not-removable" />
+    </div>
+</div>
+<input type="hidden" name="_target_path" value="/" />
+<input type="hidden" name="_csrf_token" value="{{ token }}" />
+{% endblock modal_body %}
+
+{% block modal_footer %}
+<button type="submit" class="btn btn-primary">Login</button>
+<button type="reset" class="btn btn-default">Cancel</button>
+{% endblock modal_footer %}

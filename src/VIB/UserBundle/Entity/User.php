@@ -20,17 +20,18 @@ namespace VIB\UserBundle\Entity;
 
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Security\Core\User\UserInterface;
+use VIB\ImapAuthenticationBundle\User\ImapUserInterface;
 
 /**
  * User entity
  *
  * @ORM\Entity(repositoryClass="VIB\UserBundle\Repository\UserRepository")
- * @ORM\Table(name="kuleuven_user")
+ * @ORM\Table(name="user")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class User extends BaseUser
+class User extends BaseUser implements ImapUserInterface
 {
     /**
      * @ORM\Id
@@ -152,5 +153,17 @@ class User extends BaseUser
         } else {
             return (string) $this->getShortName();
         }
+    }
+    
+    public function isEqualTo(UserInterface $user)
+    {
+        if (!$user instanceof User
+            || $user->getUsername() !== $this->username
+            || count(array_diff($user->getRoles(), $this->getRoles())) > 0) {
+            
+            return false;
+        }
+
+        return true;
     }
 }

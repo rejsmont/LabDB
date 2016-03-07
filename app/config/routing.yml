@@ -38,7 +38,8 @@ fos_user_profile:
 
 login:
     pattern:   /login
-    defaults:  { _controller: VIBSecurityBundle:Security:login }
+    defaults:  { _controller: VIBImapAuthenticationBundle:Default:login }
+
 login_check:
     pattern:   /login_check
 logout:

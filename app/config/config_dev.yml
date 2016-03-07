@@ -1,6 +1,6 @@
 imports:
     - { resource: config.yml }
-    - { resource: security.form.yml }
+    - { resource: security.imap.yml }
 
 framework:
     router:   { resource: "%kernel.root_dir%/config/routing_dev.yml" }
@@ -29,13 +29,13 @@ services:
         class: Twig_Extensions_Extension_Debug
         tags: [{ name: 'twig.extension' }]
 
-doctrine:
-    dbal:
-        driver:   pdo_sqlite
-        host:     ~
-        port:     ~
-        dbname:   test.db
-        user:     ~
-        password: ~
-        charset:  UTF8
-        path:     %kernel.root_dir%/Resources/db/test.db
+#doctrine:
+#    dbal:
+#        driver:   pdo_sqlite
+#        host:     ~
+#        port:     ~
+#        dbname:   test.db
+#        user:     ~
+#        password: ~
+#        charset:  UTF8
+#        path:     %kernel.root_dir%/Resources/db/test.db

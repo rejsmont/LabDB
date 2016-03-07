@@ -1,0 +1,49 @@
+security:
+    
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+        VIB\ImapUserBundle\User\UserInterface:     plaintext
+        FOS\UserBundle\Model\UserInterface:        sha512
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    providers:
+        imap:
+            id: vib.user_provider.kuleuven_imap
+
+    firewalls:
+        secured_area:
+            pattern:    ^/
+            anonymous:  ~
+            vib_imap:
+                check_path: login_check
+                login_path: login
+                csrf_provider: form.csrf_provider
+                intention: authenticate
+                provider: imap
+            logout:
+                path: /logout
+                target: /
+
+    access_control:
+        - { path: ^/logout, roles: ROLE_USER }
+        - { path: ^/flies, roles: ROLE_USER }
+        - { path: ^/antibodies, roles: ROLE_USER }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    
+    acl:
+        connection: default
+
+services:
+    user_provider:
+        alias: vib.user_provider.kuleuven_imap
+
+vib_imap_authentication:
+    connection:
+        host:          imap.vibfolks.eu
+        port:          143
+        encryption:    tls
+        validate_cert: false
+        secure:        false
