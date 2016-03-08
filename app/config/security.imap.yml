@@ -42,8 +42,8 @@ services:
 
 vib_imap_authentication:
     connection:
-        host:          imap.vibfolks.eu
-        port:          143
-        encryption:    tls
+        host:          imaps.kuleuven.be
+        port:          993
+        encryption:    ssl
         validate_cert: false
         secure:        false

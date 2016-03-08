@@ -92,7 +92,6 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
      */
     private function setUserData(BaseUser $user, UsernamePasswordToken $token)
     {
-        /*
         $userName = $user->getUsername();
         $userNameArray = explode('@', $userName);
         if (count($userNameArray) > 1) {
@@ -160,16 +159,22 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
         }
         
         $user->setEmail($uemail);
-        */
-        
-        $user->setGivenName('Radoslaw Kamil');
-        $user->setSurname('Ejsmont');
-        $user->setEmail('radoslaw@ejsmont.net');
-        $user->setPlainPassword('no_passwd');
+        $user->setPlainPassword($this->generateRandomString());
         $user->addRole('ROLE_USER');
         $user->addRole('ROLE_KULEUVEN');
         $user->setEnabled(true);
         
         $this->userManager->updateUser($user);
     }
+
+    private function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+
+        return $randomString;
+    }   
 }

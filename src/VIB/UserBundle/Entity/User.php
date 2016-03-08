@@ -157,13 +157,21 @@ class User extends BaseUser implements ImapUserInterface
     
     public function isEqualTo(UserInterface $user)
     {
-        if (!$user instanceof User
-            || $user->getUsername() !== $this->username
+        /*if (!$user instanceof User
+            || $user->getUsername() !== $this->getUsername()
             || count(array_diff($user->getRoles(), $this->getRoles())) > 0) {
             
             return false;
-        }
-
+        }*/
+        
+        echo "<pre>";
+        echo "\n\n\n\n";
+        print_r($this);
+        echo "\n";
+        print_r($user);
+        echo "\n---\n";
+        echo "</pre>";
+        
         return true;
     }
 }

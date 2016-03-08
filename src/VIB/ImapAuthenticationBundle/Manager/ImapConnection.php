@@ -25,7 +25,7 @@ class ImapConnection implements ImapConnectionInterface
     public function bind($user, $password = '')
     {
         if ($this->ress === null) {
-            //$this->connect($user, $password);
+            $this->connect($user, $password);
         }
 
         return true;

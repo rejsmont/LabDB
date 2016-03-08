@@ -85,7 +85,13 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
         if (! $this->supports($token)) {
             throw new AuthenticationException('Unsupported token');
         }
+        
         try {
+            if ($token->isAuthenticated()) {
+                $this->logger->debug(sprintf('Token %s is pre-authenticated.', $token->getUsername()));
+            } else {
+                $this->logger->debug(sprintf('Token %s is NOT pre-authenticated.', $token->getUsername()));
+            }
             $this->logger->debug(sprintf('Attempting to retrieve user from token %s.', $token->getUsername()));
             $user = $this->retrieveUser($token);
             $this->logger->debug(sprintf('Retrieved user %s.', $user->getUsername()));
