@@ -25,7 +25,7 @@ class ImapConnection implements ImapConnectionInterface
     public function bind($user, $password = '')
     {
         if ($this->ress === null) {
-        //    $this->connect($user, $password);
+            //$this->connect($user, $password);
         }
 
         return true;
@@ -107,16 +107,11 @@ class ImapConnection implements ImapConnectionInterface
         }
         
         if (empty($password) || ! is_string($password)) {
-            //throw new \Exception('You must uncomment password key');
+            throw new \Exception('You must uncomment password key');
         }
         imap_errors();
         
-        try {
-            //$ress = @imap_open($this->getImapString(), $user, $password, OP_HALFOPEN, $this->getNretries());
-        } catch (\Exception $e) {
-            
-        }
-        
+        $ress = @imap_open($this->getImapString(), $user, $password, OP_HALFOPEN, $this->getNretries());
         $this->checkImapError($ress);
         $this->ress = $ress;
 
@@ -149,7 +144,7 @@ class ImapConnection implements ImapConnectionInterface
         if ($errors) {
             $message = $errors[0];
             $this->err('IMAP returned an error :' . $message);
-            //throw new ConnectionException($message);
+            throw new ConnectionException($message);
         }
     }
 }

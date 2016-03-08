@@ -58,7 +58,7 @@ class ImapFactory extends AbstractFactory
         $container
             ->setDefinition($provider, new DefinitionDecorator('vib_imap.security.authentication.provider'))
             ->replaceArgument(0, new Reference($userProviderId))
-            ->replaceArgument(5, $id)
+            ->replaceArgument(4, $id)
             ;
 
         return $provider;

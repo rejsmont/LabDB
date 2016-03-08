@@ -14,14 +14,11 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-use Psr\Log\LoggerInterface;
-
 use JMS\DiExtraBundle\Annotation as DI;
 
 use VIB\ImapAuthenticationBundle\Manager\ImapUserManagerInterface;
 use VIB\ImapAuthenticationBundle\Event\ImapUserEvent;
 use VIB\ImapAuthenticationBundle\Event\ImapEvents;
-use VIB\ImapAuthenticationBundle\User\ImapUserInterface;
 
 /**
  * KU Leuven IMAP UserProvider
@@ -38,8 +35,10 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
     private $dispatcher;
     private $providerKey;
     private $hideUserNotFoundExceptions;
-    private $logger;
 
+    /** @DI\Inject("logger") */
+    public $logger;
+    
     /**
      * Constructor
      *
@@ -51,7 +50,6 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
      *      "userChecker" = @DI\Inject("security.user_checker"),
      *      "imapManager" = @DI\Inject("vib_imap.imap_manager"),
      *      "dispatcher" = @DI\Inject("event_dispatcher", required = false),
-     *      "logger" = @DI\Inject("logger", required = false),
      *      "providerKey" = @DI\Inject("%%"),
      *      "hideUserNotFoundExceptions" = @DI\Inject("%security.authentication.hide_user_not_found%")
      * })
@@ -68,7 +66,6 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
             UserCheckerInterface $userChecker,
             ImapUserManagerInterface $imapManager,
             EventDispatcherInterface $dispatcher = null,
-            LoggerInterface $logger = null,
             $providerKey = 'vib-imap',
             $hideUserNotFoundExceptions = true )
     {
@@ -78,7 +75,6 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
         $this->dispatcher = $dispatcher;
         $this->providerKey = $providerKey;
         $this->hideUserNotFoundExceptions = $hideUserNotFoundExceptions;
-        $this->logger = $logger;
     }
 
     /**
@@ -86,32 +82,31 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
      */
     public function authenticate(TokenInterface $token)
     {
-
         if (! $this->supports($token)) {
             throw new AuthenticationException('Unsupported token');
         }
-
-        try {          
+        try {
+            $this->logger->debug(sprintf('Attempting to retrieve user from token %s.', $token->getUsername()));
             $user = $this->retrieveUser($token);
+            $this->logger->debug(sprintf('Retrieved user %s.', $user->getUsername()));
             $authenticatedToken = $this->imapAuthenticate($user, $token);
-            
+            if ($authenticatedToken->isAuthenticated()) {
+                $this->logger->debug(sprintf('Token %s is authenticated.', $token->getUsername()));
+            } else {
+                $this->logger->debug(sprintf('Token %s is NOT authenticated.', $token->getUsername()));
+            }
             if ($user instanceof UserInterface) {
                 $this->userChecker->checkPostAuth($user);
             }
             
             return $authenticatedToken;
 
-        } catch (\Exception $e) {
-            if (($e instanceof ConnectionException ||
-                    $e instanceof UsernameNotFoundException) &&
-                        $this->hideUserNotFoundExceptions) {
-                
-                throw $e;
-                
-                //throw new BadCredentialsException('Bad credentials', 0, $e);
+        } catch (\Exception $exception) {
+            if (($exception instanceof ConnectionException ||
+                    $exception instanceof UsernameNotFoundException)) {
+                $this->throwBadCredentialsException($exception);
             }
-
-            throw $e;
+            throw $exception;
         }
     }
 
@@ -127,35 +122,17 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
     {
         try {
             $user = $this->userProvider->loadUserByUsername($token->getUsername());
-            
-            if (null !== $this->logger) {
-                $this->logger->debug(sprintf(
-                        'ImapAuthProvider: userProvider returned: %s',
-                            $user->getUsername()));
-            }
-
             if (!$user instanceof UserInterface) {
-                
                 throw new AuthenticationServiceException(
                         'The user provider must return a UserInterface object.');
             }
-
         } catch (UsernameNotFoundException $notFound) {
-            
             if ($this->userProvider instanceof ImapUserProviderInterface) {
-                
                 $user = $this->userProvider->createUser($token);
-                
-                $this->logger->debug(sprintf(
-                        'Created USER has roles: %s',
-                            print_r($user->getRoles(), true)));
-                
                 if ($user === null) {
-                        $user = $token->getUsername();
+                    $user = $token->getUsername();
                 }
-                
             } else {
-                
                 throw $notFound;
             }
         }
@@ -178,14 +155,8 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
         if (null !== $this->dispatcher) {
             try {
                 $this->dispatcher->dispatch(ImapEvents::PRE_BIND, $userEvent);
-                
-            } catch (AuthenticationException $expt) {
-                if ($this->hideUserNotFoundExceptions) {
-                    
-                    throw new BadCredentialsException('Bad credentials', 0, $expt);
-                }
-                
-                throw $expt;
+            } catch (AuthenticationException $exception) {
+                $this->throwBadCredentialsException($exception);
             }
         }
         
@@ -197,30 +168,16 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
         
         if (null !== $this->dispatcher) {
             $userEvent = new ImapUserEvent($user);
-            
             try {
                 $this->dispatcher->dispatch(ImapEvents::POST_BIND, $userEvent);
-                
-            } catch (AuthenticationException $authenticationException) {
-                if ($this->hideUserNotFoundExceptions) {
-                    throw new BadCredentialsException('Bad credentials', 0, $authenticationException);
-                }
-                throw $authenticationException;
+            } catch (AuthenticationException $exception) {
+                $this->throwBadCredentialsException($exception);
             }
         }
         
         $authenticatedToken = new UsernamePasswordToken($userEvent->getUser(), 
                 null, $this->providerKey, $userEvent->getUser()->getRoles());
         $authenticatedToken->setAttributes($token->getAttributes());
-        
-        if (null !== $this->logger) {
-            if ($authenticatedToken->isAuthenticated()) {
-                $this->logger->debug(sprintf('Token has been authenticated.'));
-            } else {
-                $this->logger->debug(sprintf('WTF? Token is NOT authenticated.'));
-            }
-            
-        }
         
         return $authenticatedToken;
     }
@@ -238,7 +195,6 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
         $this->imapManager
             ->setUsername($user->getUsername())
             ->setPassword($token->getCredentials());
-
         $this->imapManager->auth();
 
         return true;
@@ -254,14 +210,8 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
     {
         try {
             $user = $this->userProvider->refreshUser($user);
-            
-        } catch (UsernameNotFoundException $userNotFoundException) {
-            
-            if ($this->hideUserNotFoundExceptions) {
-                throw new BadCredentialsException('Bad credentials', 0, $userNotFoundException);
-            }
-
-            throw $userNotFoundException;
+        } catch (UsernameNotFoundException $exception) {
+            $this->throwBadCredentialsException($exception);
         }
 
         return $user;
@@ -280,5 +230,13 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
         return (($token instanceof UsernamePasswordToken) &&
                 ($token->getProviderKey() === $this->providerKey) &&
                 ($this->imapManager->supports($token->getUsername())));
+    }
+    
+    private function throwBadCredentialsException($exception)
+    {
+        if ($this->hideUserNotFoundExceptions) {
+            throw new BadCredentialsException('Bad credentials', 0, $userNotFoundException);
+        }
+        throw $userNotFoundException;
     }
 }

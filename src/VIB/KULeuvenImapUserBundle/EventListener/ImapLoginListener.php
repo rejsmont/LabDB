@@ -42,32 +42,26 @@ use VIB\KULeuvenImapUserBundle\Security\ImapUserProvider;
 class ImapLoginListener implements EventSubscriberInterface
 {
     /**
-     * @var VIB\UserBundle\Security\ShibbolethUserProvider
+     * @var Symfony\Component\Security\Core\User\UserProviderInterface
      */
     private $userProvider;
-    private $logger;
 
     /**
      * Construct ShibbolethLoginListener
      *
      * @DI\InjectParams({
      *     "userProvider" = @DI\Inject("user_provider"),
-     *     "logger" = @DI\Inject("logger", required = false)
      * })
      * 
      * @param Symfony\Component\Security\Core\User\UserProviderInterface $userProvider
      */
-    public function __construct(
-            UserProviderInterface $userProvider,
-            LoggerInterface $logger = null)
+    public function __construct(UserProviderInterface $userProvider)
     {        
         if ($userProvider instanceof ImapUserProvider) {
             $this->userProvider = $userProvider;
         } else {
             $this->userProvider = null;
         }
-        
-        $this->logger = $logger;
     }
 
     /**
@@ -87,22 +81,10 @@ class ImapLoginListener implements EventSubscriberInterface
      */
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
-        if (null !== $this->logger) {
-            $this->logger->debug(sprintf('InteractiveLoginEvent triggered'));
-        }
         $token = $event->getAuthenticationToken();
-        
-        if (null !== $this->logger) {
-            $this->logger->debug(sprintf('Token is: %s', get_class($token)));
-        }
-        
-        if ((null !== $this->userProvider)&&($token instanceof UsernamePasswordToken)) {
-            
+        if ((null !== $this->userProvider)
+                &&($token instanceof UsernamePasswordToken)) {
             $this->userProvider->updateUser($token);
-            
-            if (null !== $this->logger) {
-                $this->logger->debug(sprintf('User created!'));
-            }
         }
     }
 }

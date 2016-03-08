@@ -24,10 +24,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Security\UserProvider as BaseUserProvider;
 use FOS\UserBundle\Model\UserManagerInterface;
 
-use Psr\Log\LoggerInterface;
-
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use VIB\UserBundle\Entity\User;
 use VIB\ImapAuthenticationBundle\Provider\ImapUserProviderInterface;
 
 /**
@@ -39,33 +36,21 @@ use VIB\ImapAuthenticationBundle\Provider\ImapUserProviderInterface;
  */
 class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInterface
 {
-    private $logger;
-    
     /**
      * @DI\InjectParams({
-     *     "userManager" = @DI\Inject("fos_user.user_manager"),
-     *     "logger" = @DI\Inject("logger", required = false)
+     *     "userManager" = @DI\Inject("fos_user.user_manager")
      * })
      * 
      * {@inheritDoc}
      */
-    public function __construct(
-            UserManagerInterface $userManager,
-            LoggerInterface $logger = null )
+    public function __construct(UserManagerInterface $userManager)
     {
         parent::__construct($userManager);
-        $this->logger = $logger;
     }
     
     public function loadUserByUsername($username)
     {
         $user = parent::loadUserByUsername($username);
-        
-        if (null !== $this->logger) {
-            $this->logger->debug(sprintf(
-                        'Fetched USER has roles: %s',
-                               print_r($user->getRoles(), true)));
-        }
         
         return $user;
     }
@@ -78,10 +63,6 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
      */
     public function createUser(UsernamePasswordToken $token)
     {
-        if (null !== $this->logger) {
-            $this->logger->debug(sprintf('Creating user: %s.', $token->getUsername()));
-        }
-        
         $user = $this->userManager->createUser();
         $user->setUsername($token->getUsername());
         $this->setUserData($user, $token);
@@ -97,10 +78,6 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
      */
     public function updateUser(UsernamePasswordToken $token)
     {
-        if (null !== $this->logger) {
-            $this->logger->debug(sprintf('Updating user: %s.', $token->getUsername()));
-        }
-        
         $user = $this->loadUserByUsername($token->getUsername());
         $this->setUserData($user, $token);
 
@@ -115,7 +92,8 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
      */
     private function setUserData(BaseUser $user, UsernamePasswordToken $token)
     {
-        /*$userName = $user->getUsername();
+        /*
+        $userName = $user->getUsername();
         $userNameArray = explode('@', $userName);
         if (count($userNameArray) > 1) {
             $userName = $userNameArray[0];
@@ -182,7 +160,6 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
         }
         
         $user->setEmail($uemail);
-
         */
         
         $user->setGivenName('Radoslaw Kamil');

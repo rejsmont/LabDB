@@ -85,12 +85,12 @@ class ImapListener extends AbstractAuthenticationListener
 
         $username = trim($request->get($this->options['username_parameter'], null, true));
         $password = $request->get($this->options['password_parameter'], null, true);
-
         $request->getSession()->set(SecurityContextInterface::LAST_USERNAME, $username);
-
         $token = new UsernamePasswordToken($username, $password, $this->providerKey);
-        $value = $this->authenticationManager->authenticate($token);
         
-        return $value;
+        $this->logger->debug(sprintf('Attempting to authenticate user: %s.', $token->getUsername()));
+        $this->logger->debug(sprintf('Requested path is: %s.', $request->getUri()));
+        
+        return $this->authenticationManager->authenticate($token);
     }
 }
