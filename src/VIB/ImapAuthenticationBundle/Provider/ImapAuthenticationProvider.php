@@ -241,8 +241,8 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
     private function throwBadCredentialsException($exception)
     {
         if ($this->hideUserNotFoundExceptions) {
-            throw new BadCredentialsException('Bad credentials', 0, $userNotFoundException);
+            throw new BadCredentialsException('Bad credentials', 0, $exception);
         }
-        throw $userNotFoundException;
+        throw $exception;
     }
 }

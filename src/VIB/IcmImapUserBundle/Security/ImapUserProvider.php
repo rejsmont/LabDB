@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace VIB\KULeuvenImapUserBundle\Security;
+namespace VIB\IcmImapUserBundle\Security;
 
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -31,7 +31,7 @@ use VIB\ImapAuthenticationBundle\Provider\ImapUserProviderInterface;
 /**
  * KU Leuven IMAP UserProvider
  *
- * @DI\Service("vib.user_provider.kuleuven_imap")
+ * @DI\Service("vib.user_provider.icm_imap")
  * 
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
@@ -94,75 +94,19 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
     private function setUserData(BaseUser $user, UsernamePasswordToken $token)
     {
         $userName = $user->getUsername();
-        $userNameArray = explode('@', $userName);
-        if (count($userNameArray) > 1) {
-            $userName = $userNameArray[0];
-        }
-        
-        $unumber = str_replace('u', '', $userName);
-        
-        $url = "http://www.kuleuven.be/wieiswie/en/person/" . $unumber;
-        $ch = curl_init();
-        $timeout = 5;
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        $html = curl_exec($ch);
-        curl_close($ch);
-
-        $dom = new \DOMDocument();
-        @$dom->loadHTML($html);
-        
-        $uname = "";
-        foreach($dom->getElementsByTagName('h1') as $h1) {
-            $uname = $h1->nodeValue;
-        }
-        
-        $uemail = "";
-        foreach($dom->getElementsByTagName('script') as $script) {
-            $emailPre = trim($script->nodeValue);
-            if (!empty($emailPre)) {
-                $emailPre = str_replace('document.write(String.fromCharCode(', '', $emailPre);
-                $emailPre = str_replace('))', '', $emailPre);
-                $emailArray = explode(',', $emailPre);
-
-                $emailLink = "";
-                    foreach ($emailArray as $element) {
-                    $emailLink .= chr(eval('return '.$element.';'));
-                }
-
-                $domInner = new \DOMDocument();
-                @$domInner->loadHTML($emailLink);
-
-                foreach($domInner->getElementsByTagName('a') as $a) {
-                    $uemail = $a->nodeValue;
-                }
-            }
-        }
-
-        $names = explode(" ", $uname);
-        $mailparts = explode("@", $uemail);
-        $mailuname = $mailparts[0];
-        $mailnames = explode(".", $mailuname);
-        
-        $surnameIndex = 0;
-        foreach ($names as $index => $name) {
-            if (strtolower(substr($mailnames[1], 0, strlen($name))) === strtolower($name)) {
-                $surnameIndex = $index;
-            }
-        }
+        $userNameArray = explode('.', $userName);
         
         if ($user instanceof User) {
-            $givenName = implode(" ", array_slice($names, 0, $surnameIndex));
+            $givenName = ucfirst($userNameArray[0]);
             $user->setGivenName($givenName);
-            $lastName = implode(" ", array_slice($names, $surnameIndex));
+            $lastName = ucfirst($userNameArray[1]);
             $user->setSurname($lastName);
         }
         
-        $user->setEmail($uemail);
+        $user->setEmail($userName . '@icm-institute.org');
         $user->setPlainPassword($this->generateRandomString());
         $user->addRole('ROLE_USER');
-        $user->addRole('ROLE_KULEUVEN');
+        $user->addRole('ROLE_ICM');
         $user->setEnabled(true);
         
         $this->userManager->updateUser($user);

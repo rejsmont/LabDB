@@ -111,7 +111,11 @@ class ImapConnection implements ImapConnectionInterface
         }
         imap_errors();
         
-        $ress = @imap_open($this->getImapString(), $user, $password, OP_HALFOPEN, $this->getNretries());
+        echo "<pre>";
+        echo $this->getImapString() . "\n" . $user . "\n" . $password;
+        echo "</pre>";
+        
+        $ress = imap_open($this->getImapString(), $user, $password, OP_HALFOPEN, $this->getNretries(), array('DISABLE_AUTHENTICATOR' => 'GSSAPI'));
         $this->checkImapError($ress);
         $this->ress = $ress;
 

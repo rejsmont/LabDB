@@ -105,4 +105,5 @@ jms_di_extra:
             - VIBUserBundle
             - VIBImapAuthenticationBundle
             - VIBKULeuvenImapUserBundle
+            - VIBIcmImapUserBundle
             
