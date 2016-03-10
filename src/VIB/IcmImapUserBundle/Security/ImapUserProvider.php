@@ -27,6 +27,9 @@ use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Security\UserProvider as BaseUserProvider;
 use FOS\UserBundle\Model\UserManagerInterface;
 
+use Egulias\EmailValidator\EmailParser;
+use Egulias\EmailValidator\EmailLexer;
+
 use VIB\UserBundle\Entity\User;
 use VIB\ImapAuthenticationBundle\Provider\ImapUserProviderInterface;
 
@@ -51,13 +54,14 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
     public function __construct(UserManagerInterface $userManager)
     {
         parent::__construct($userManager);
+        $this->emailParser = new EmailParser(new EmailLexer());
     }
     
     public function loadUserByUsername($username)
     {
-        $user = parent::loadUserByUsername($username);
-        $parts = $this->emailParser->parse($user->getUsername());
+        $parts = $this->emailParser->parse($username);
         $this->verifyDomain($parts['domain']);
+        $user = parent::loadUserByUsername($username);
         
         return $user;
     }

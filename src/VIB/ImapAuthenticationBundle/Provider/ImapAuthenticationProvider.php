@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\ChainUserProvider;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -123,12 +124,23 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
                         'The user provider must return a UserInterface object.');
             }
         } catch (UsernameNotFoundException $notFound) {
+            $user = null;
             if ($this->userProvider instanceof ImapUserProviderInterface) {
                 $user = $this->userProvider->createUser($token);
                 if ($user === null) {
                     $user = $token->getUsername();
                 }
-            } else {
+            } elseif ($this->userProvider instanceof ChainUserProvider) {
+                foreach ($this->userProvider->getProviders() as $provider) {
+                    if ($provider instanceof ImapUserProviderInterface) {
+                        try {
+                            $user = (null === $user) ? $provider->createUser($token) : $user;
+                        } catch (UsernameNotFoundException $e) {}
+                    }
+                }
+                
+            }
+            if ($user === null) {
                 throw $notFound;
             }
         }

@@ -10,8 +10,13 @@ security:
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
-        imap:
+        chain_provider:
+            chain:
+                providers: [imap_icm, imap_kuleuven]
+        imap_icm:
             id: vib.user_provider.icm_imap
+        imap_kuleuven:
+            id: vib.user_provider.kuleuven_imap
 
     firewalls:
         secured_area:
@@ -22,7 +27,7 @@ security:
                 login_path: login
                 csrf_provider: form.csrf_provider
                 intention: authenticate
-                provider: imap
+                provider: chain_provider
             logout:
                 path: /logout
                 target: /
@@ -38,7 +43,7 @@ security:
 
 services:
     user_provider:
-        alias: vib.user_provider.icm_imap
+        alias: security.user.provider.concrete.chain_provider
 
 vib_imap_authentication:
     connections:
@@ -51,9 +56,8 @@ vib_imap_authentication:
             domains:       ['icm-institute.org']
         -
             host:          imaps.kuleuven.be
-            port:          143
-            encryption:    tls
+            port:          993
+            encryption:    ssl
             validate_cert: false
             secure:        false
             domains:       ['kuleuven.be']
-            

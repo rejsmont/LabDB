@@ -59,9 +59,9 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
     
     public function loadUserByUsername($username)
     {
+        $parts = $this->emailParser->parse($username);
+        $this->verifyDomain($parts['domain']);        
         $user = parent::loadUserByUsername($username);
-        $parts = $this->emailParser->parse($user->getUsername());
-        $this->verifyDomain($parts['domain']);
         
         return $user;
     }
