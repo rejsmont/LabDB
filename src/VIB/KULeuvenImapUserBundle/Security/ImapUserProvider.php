@@ -21,9 +21,14 @@ namespace VIB\KULeuvenImapUserBundle\Security;
 use JMS\DiExtraBundle\Annotation as DI;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Security\UserProvider as BaseUserProvider;
 use FOS\UserBundle\Model\UserManagerInterface;
+
+use Egulias\EmailValidator\EmailParser;
+use Egulias\EmailValidator\EmailLexer;
 
 use VIB\UserBundle\Entity\User;
 use VIB\ImapAuthenticationBundle\Provider\ImapUserProviderInterface;
@@ -37,6 +42,8 @@ use VIB\ImapAuthenticationBundle\Provider\ImapUserProviderInterface;
  */
 class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInterface
 {
+    private $emailParser;
+    
     /**
      * @DI\InjectParams({
      *     "userManager" = @DI\Inject("fos_user.user_manager")
@@ -47,11 +54,14 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
     public function __construct(UserManagerInterface $userManager)
     {
         parent::__construct($userManager);
+        $this->emailParser = new EmailParser(new EmailLexer());
     }
     
     public function loadUserByUsername($username)
     {
         $user = parent::loadUserByUsername($username);
+        $parts = $this->emailParser->parse($user->getUsername());
+        $this->verifyDomain($parts['domain']);
         
         return $user;
     }
@@ -93,13 +103,11 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
      */
     private function setUserData(BaseUser $user, UsernamePasswordToken $token)
     {
-        $userName = $user->getUsername();
-        $userNameArray = explode('@', $userName);
-        if (count($userNameArray) > 1) {
-            $userName = $userNameArray[0];
-        }
+        $parts = $this->emailParser->parse($user->getUsername());
+        $this->verifyDomain($parts['domain']);
         
-        $unumber = str_replace('u', '', $userName);
+        $localPart = $parts['local'];
+        $unumber = str_replace('u', '', $localPart);
         
         $url = "http://www.kuleuven.be/wieiswie/en/person/" . $unumber;
         $ch = curl_init();
@@ -141,8 +149,8 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
         }
 
         $names = explode(" ", $uname);
-        $mailparts = explode("@", $uemail);
-        $mailuname = $mailparts[0];
+        $mailparts = $this->emailParser->parse($uemail);
+        $mailuname = $mailparts['local'];
         $mailnames = explode(".", $mailuname);
         
         $surnameIndex = 0;
@@ -177,5 +185,12 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
         }
 
         return $randomString;
-    }   
+    }
+    
+    private function verifyDomain($domain)
+    {
+        if ($domain != 'kuleuven.be') {
+            throw new UsernameNotFoundException();
+        }
+    }
 }

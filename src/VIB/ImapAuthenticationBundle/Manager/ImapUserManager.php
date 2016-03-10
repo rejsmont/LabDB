@@ -21,19 +21,10 @@ class ImapUserManager implements ImapUserManagerInterface
         $this->params = $this->imapConnection->getParameters();
     }
 
-    /**
-     * @throws inherit
-     */
-    public function exists($username)
-    {
-        $this->setUsername($username);
-    }
-
-    
     public function auth()
     {
         if (strlen($this->password) === 0) {
-            //throw new ConnectionException('Password can\'t be empty');
+            throw new ConnectionException('Password can\'t be empty');
         }
         $this->bind();
         
@@ -70,12 +61,11 @@ class ImapUserManager implements ImapUserManagerInterface
     
     public function supports($username)
     {
-        return true;
+        return $this->imapConnection->supports($username);
     }
     
     private function bind()
     {
-        return $this->imapConnection
-            ->bind($this->username, $this->password);
+        return $this->imapConnection->bind($this->username, $this->password);
     }
 }

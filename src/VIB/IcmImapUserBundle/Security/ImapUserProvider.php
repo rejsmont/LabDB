@@ -21,6 +21,8 @@ namespace VIB\IcmImapUserBundle\Security;
 use JMS\DiExtraBundle\Annotation as DI;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Security\UserProvider as BaseUserProvider;
 use FOS\UserBundle\Model\UserManagerInterface;
@@ -37,6 +39,8 @@ use VIB\ImapAuthenticationBundle\Provider\ImapUserProviderInterface;
  */
 class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInterface
 {
+    private $emailParser;
+    
     /**
      * @DI\InjectParams({
      *     "userManager" = @DI\Inject("fos_user.user_manager")
@@ -52,6 +56,8 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
     public function loadUserByUsername($username)
     {
         $user = parent::loadUserByUsername($username);
+        $parts = $this->emailParser->parse($user->getUsername());
+        $this->verifyDomain($parts['domain']);
         
         return $user;
     }
@@ -93,8 +99,11 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
      */
     private function setUserData(BaseUser $user, UsernamePasswordToken $token)
     {
-        $userName = $user->getUsername();
-        $userNameArray = explode('.', $userName);
+        $email = $user->getUsername();
+        $parts = $this->emailParser->parse($email);
+        $this->verifyDomain($parts['domain']);
+        
+        $userNameArray = explode('.', $parts['local']);
         
         if ($user instanceof User) {
             $givenName = ucfirst($userNameArray[0]);
@@ -103,7 +112,7 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
             $user->setSurname($lastName);
         }
         
-        $user->setEmail($userName . '@icm-institute.org');
+        $user->setEmail($email);
         $user->setPlainPassword($this->generateRandomString());
         $user->addRole('ROLE_USER');
         $user->addRole('ROLE_ICM');
@@ -121,5 +130,12 @@ class ImapUserProvider extends BaseUserProvider implements ImapUserProviderInter
         }
 
         return $randomString;
-    }   
+    }
+    
+    private function verifyDomain($domain)
+    {
+        if ($domain != 'icm-institute.org') {
+            throw new UsernameNotFoundException();
+        }
+    }
 }

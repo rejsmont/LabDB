@@ -16,4 +16,5 @@ interface ImapConnectionInterface
     function getEncryption();
     function getValidateCert();
     function getNretries();
+    function supports($user);
 }

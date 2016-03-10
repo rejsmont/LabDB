@@ -5,7 +5,6 @@ namespace VIB\ImapAuthenticationBundle\Manager;
 interface ImapUserManagerInterface
 {
   function __construct(ImapConnectionInterface $conn);
-  function exists($username);
   function auth();
   function getUsername();
   function getRoles();

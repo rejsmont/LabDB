@@ -3,12 +3,16 @@
 namespace VIB\ImapAuthenticationBundle\Manager;
 
 use Monolog\Logger;
+use Egulias\EmailValidator\EmailParser;
+use Egulias\EmailValidator\EmailLexer;
+
 use VIB\ImapAuthenticationBundle\Exception\ConnectionException;
 
 class ImapConnection implements ImapConnectionInterface
 {
     private $params;
     private $logger;
+    private $emailParser;
 
     protected $ress;
 
@@ -16,6 +20,7 @@ class ImapConnection implements ImapConnectionInterface
     {
         $this->params = $params;
         $this->logger = $logger;
+        $this->emailParser = new EmailParser(new EmailLexer());
     }
 
     /**
@@ -36,16 +41,16 @@ class ImapConnection implements ImapConnectionInterface
         return $this->params;
     }
 
-    public function getHost()
+    public function getHost($connection = 0)
     {
-        return isset($this->params['connection']['host']) ?
-            $this->params['connection']['host'] : 'localhost';
+        return isset($this->params['connections'][$connection]['host']) ?
+            $this->params['connections'][$connection]['host'] : 'localhost';
     }
 
-    public function getPort()
+    public function getPort($connection = 0)
     {
-        if (isset($this->params['connection']['port'])) {
-            $port = $this->params['connection']['port'];
+        if (isset($this->params['connections'][$connection]['port'])) {
+            $port = $this->params['connections'][$connection]['port'];
         } else {
             $port = $this->getEncryption() == 'ssl' ? '993' : '143';
         }
@@ -53,46 +58,93 @@ class ImapConnection implements ImapConnectionInterface
         return $port;
     }
 
-    public function isSecure()
+    public function isSecure($connection = 0)
     {
-        return isset($this->params['connection']['secure']) ?
-            $this->params['connection']['secure'] : TRUE;
+        return isset($this->params['connections'][$connection]['secure']) ?
+            $this->params['connections'][$connection]['secure'] : true;
     }
 
-    public function isEncrypted()
+    public function isEncrypted($connection = 0)
     {
-        return $this->getEncryption() == 'ssl' || $this->getEncryption() == 'tls';
+        return $this->getEncryption($connection) == 'ssl' ||
+                $this->getEncryption($connection) == 'tls';
     }
     
-    public function getEncryption()
+    public function getEncryption($connection = 0)
     {
-        return isset($this->params['connection']['encryption']) ?
-            strtolower($this->params['connection']['encryption']) : 'none';
+        return isset($this->params['connections'][$connection]['encryption']) ?
+            strtolower($this->params['connections'][$connection]['encryption']) : 'none';
     }
 
-    public function getValidateCert()
+    public function getValidateCert($connection = 0)
     {
-        return isset($this->params['connection']['validate_cert']) ?
-            $this->params['connection']['validate_cert'] : TRUE;
+        return isset($this->params['connections'][$connection]['validate_cert']) ?
+            $this->params['connections'][$connection]['validate_cert'] : true;
     }
     
-    public function getNretries()
+    public function getNretries($connection = 0)
     {
-        return isset($this->params['connection']['n_retries']) ?
-            $this->params['connection']['n_retries'] : 0;
+        return isset($this->params['connections'][$connection]['n_retries']) ?
+            $this->params['connections'][$connection]['n_retries'] : 0;
     }
 
-    private function getImapString()
+    public function isEmailLogin($connection = 0)
+    {
+        return isset($this->params['connections'][$connection]['email_login']) ?
+            $this->params['connections'][$connection]['email_login'] : false;
+    }
+    
+    public function supports($user)
+    {
+        return ($this->getConnection($user) !== null);
+    }
+    
+    private function getCannonicalUser($user, $connection = 0)
     {        
-        $host = $this->getHost();
-        $port = $this->getPort();
+        if ($this->isEmailLogin($connection)) {
+            
+            return $user;
+        } else {
+            $parts = $this->emailParser->parse($user);
+            
+            return $parts['local'];
+        }
+    }
+    
+    private function getCannonicalHost($user)
+    {
+        $parts = $this->emailParser->parse($user);
+
+        return $parts['domain'];
+    }
+    
+    private function getConnection($user)
+    {
+        $userDomain = $this->getCannonicalHost($user);
+        
+        foreach ($this->params['connections'] as $index => $connection) {
+            foreach ($connection['domains'] as $domain) {
+                if (strtolower($domain) == strtolower($userDomain)) {
+                    
+                    return $index;
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    private function getImapString($connection = 0)
+    {        
+        $host = $this->getHost($connection);
+        $port = $this->getPort($connection);
         
         $string = "{" . $host . ':' . $port . '/imap';
-        $string .= $this->isSecure() ? '/secure' : '';
+        $string .= $this->isSecure($connection) ? '/secure' : '';
  
-        if ($this->isEncrypted()) {
-            $string .= '/' . $this->getEncryption();
-            $string .= $this->getValidateCert() ? '/validate-cert' : '/novalidate-cert';
+        if ($this->isEncrypted($connection)) {
+            $string .= '/' . $this->getEncryption($connection);
+            $string .= $this->getValidateCert($connection) ? '/validate-cert' : '/novalidate-cert';
         }
         
         $string .= "}";
@@ -109,13 +161,19 @@ class ImapConnection implements ImapConnectionInterface
         if (empty($password) || ! is_string($password)) {
             throw new \Exception('You must uncomment password key');
         }
+        
+        $connection = $this->getConnection($user);
+        if (null === $connection) {
+            throw new ConnectionException("No valid connection for specified user found.");
+        }
+        
         imap_errors();
         
-        echo "<pre>";
-        echo $this->getImapString() . "\n" . $user . "\n" . $password;
-        echo "</pre>";
+        $ress = @imap_open($this->getImapString($connection),
+                $this->getCannonicalUser($user, $connection), $password,
+                OP_HALFOPEN, $this->getNretries($connection),
+                array('DISABLE_AUTHENTICATOR' => 'GSSAPI'));
         
-        $ress = imap_open($this->getImapString(), $user, $password, OP_HALFOPEN, $this->getNretries(), array('DISABLE_AUTHENTICATOR' => 'GSSAPI'));
         $this->checkImapError($ress);
         $this->ress = $ress;
 

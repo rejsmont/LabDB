@@ -20,6 +20,9 @@ use VIB\ImapAuthenticationBundle\Manager\ImapUserManagerInterface;
 use VIB\ImapAuthenticationBundle\Event\ImapUserEvent;
 use VIB\ImapAuthenticationBundle\Event\ImapEvents;
 
+use Egulias\EmailValidator\EmailValidator;
+
+
 /**
  * KU Leuven IMAP UserProvider
  *
@@ -35,9 +38,7 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
     private $dispatcher;
     private $providerKey;
     private $hideUserNotFoundExceptions;
-
-    /** @DI\Inject("logger") */
-    public $logger;
+    private $emailValidator;
     
     /**
      * Constructor
@@ -75,6 +76,7 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
         $this->dispatcher = $dispatcher;
         $this->providerKey = $providerKey;
         $this->hideUserNotFoundExceptions = $hideUserNotFoundExceptions;
+        $this->emailValidator = new EmailValidator();
     }
 
     /**
@@ -87,20 +89,8 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
         }
         
         try {
-            if ($token->isAuthenticated()) {
-                $this->logger->debug(sprintf('Token %s is pre-authenticated.', $token->getUsername()));
-            } else {
-                $this->logger->debug(sprintf('Token %s is NOT pre-authenticated.', $token->getUsername()));
-            }
-            $this->logger->debug(sprintf('Attempting to retrieve user from token %s.', $token->getUsername()));
             $user = $this->retrieveUser($token);
-            $this->logger->debug(sprintf('Retrieved user %s.', $user->getUsername()));
             $authenticatedToken = $this->imapAuthenticate($user, $token);
-            if ($authenticatedToken->isAuthenticated()) {
-                $this->logger->debug(sprintf('Token %s is authenticated.', $token->getUsername()));
-            } else {
-                $this->logger->debug(sprintf('Token %s is NOT authenticated.', $token->getUsername()));
-            }
             if ($user instanceof UserInterface) {
                 $this->userChecker->checkPostAuth($user);
             }
@@ -232,9 +222,9 @@ class ImapAuthenticationProvider implements AuthenticationProviderInterface
      */
     public function supports(TokenInterface $token)
     {
-        
         return (($token instanceof UsernamePasswordToken) &&
                 ($token->getProviderKey() === $this->providerKey) &&
+                ($this->emailValidator->isValid($token->getUsername()))&&
                 ($this->imapManager->supports($token->getUsername())));
     }
     

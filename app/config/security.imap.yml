@@ -41,9 +41,19 @@ services:
         alias: vib.user_provider.icm_imap
 
 vib_imap_authentication:
-    connection:
-        host:          mail.icm-institute.org
-        port:          143
-        encryption:    tls
-        validate_cert: false
-        secure:        false
+    connections:
+        -
+            host:          mail.icm-institute.org
+            port:          143
+            encryption:    tls
+            validate_cert: false
+            secure:        false
+            domains:       ['icm-institute.org']
+        -
+            host:          imaps.kuleuven.be
+            port:          143
+            encryption:    tls
+            validate_cert: false
+            secure:        false
+            domains:       ['kuleuven.be']
+            

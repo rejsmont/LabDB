@@ -13,7 +13,7 @@ class Configuration implements ConfigurationInterface
     $rootNode = $treeBuilder->root('vib_imap_authentication');
     $rootNode
         ->children()
-            ->append($this->addConnectionNode())
+            ->append($this->addConnectionsNode())
             ->scalarNode('user_class')
               ->defaultValue("VIB\ImapAuthenticationBundle\User\ImapUser")
             ->end()
@@ -23,20 +23,24 @@ class Configuration implements ConfigurationInterface
     return $treeBuilder;
   }
 
-  private function addConnectionNode()
+  private function addConnectionsNode()
   {
       $treeBuilder = new TreeBuilder();
-      $node = $treeBuilder->root('connection');
+      $node = $treeBuilder->root('connections');
 
       $node
           ->isRequired()
+          ->requiresAtLeastOneElement()
+          ->prototype('array')
           ->children()
               ->scalarNode('host')->isRequired()->cannotBeEmpty()->end()
               ->scalarNode('port')->defaultValue(143)->end()
               ->booleanNode('secure')->defaultTrue()->end()
+              ->booleanNode('email_login')->defaultFalse()->end()
               ->enumNode('encryption')->values(array('none', 'ssl', 'tls'))->end()
               ->booleanNode('validate_cert')->defaultTrue()->end()
               ->integerNode('n_retries')->defaultValue(0)->end()
+              ->arrayNode('domains')->prototype('scalar')->end()
            ->end()
           ;
 
