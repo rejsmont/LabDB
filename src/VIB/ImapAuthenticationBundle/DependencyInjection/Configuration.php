@@ -29,8 +29,6 @@ class Configuration implements ConfigurationInterface
       $node = $treeBuilder->root('connections');
 
       $node
-          ->isRequired()
-          ->requiresAtLeastOneElement()
           ->prototype('array')
           ->children()
               ->scalarNode('host')->isRequired()->cannotBeEmpty()->end()
