@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+/*
 namespace VIB\UserBundle\Tests\EventListener;
 
 use Symfony\Component\Security\Http\SecurityEvents;

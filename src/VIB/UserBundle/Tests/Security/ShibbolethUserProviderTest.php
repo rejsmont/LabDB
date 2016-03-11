@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+/*
 namespace VIB\UserBundle\Tests\Security;
 
 use VIB\UserBundle\Security\ShibbolethUserProvider;
