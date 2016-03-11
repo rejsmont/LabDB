@@ -12,11 +12,9 @@ security:
     providers:
         chain_provider:
             chain:
-                providers: [imap_icm, imap_kuleuven]
+                providers: [imap_icm]
         imap_icm:
             id: vib.user_provider.icm_imap
-        imap_kuleuven:
-            id: vib.user_provider.kuleuven_imap
 
     firewalls:
         secured_area:
@@ -48,16 +46,9 @@ services:
 vib_imap_authentication:
     connections:
         -
-            host:          mail.icm-institute.org
+            host:          imap.example.com
             port:          143
             encryption:    tls
             validate_cert: false
             secure:        false
-            domains:       ['icm-institute.org']
-        -
-            host:          imaps.kuleuven.be
-            port:          993
-            encryption:    ssl
-            validate_cert: false
-            secure:        false
-            domains:       ['kuleuven.be']
+            domains:       ['example.com']

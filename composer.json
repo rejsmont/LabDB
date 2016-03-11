@@ -69,7 +69,8 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "secure-http": false
     },
     "extra": {
         "symfony-app-dir": "app",
