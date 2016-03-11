@@ -66,3 +66,4 @@ class ShibbolethLoginListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener = new ShibbolethLoginListener($this->userProvider);
     }
 }
+*/

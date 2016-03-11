@@ -61,3 +61,4 @@ class ShibbolethUserProviderTest extends \PHPUnit_Framework_TestCase
         $this->userProvider = new ShibbolethUserProvider($this->userManager);
     }
 }
+*/
