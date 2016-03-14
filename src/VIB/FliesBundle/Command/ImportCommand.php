@@ -242,7 +242,7 @@ class ImportCommand extends Command
             $connection->commit();
         } else {
             $connection->rollback();
-            $om->close();
+            $connection->close();
         }
         
         $om->enableAutoAcl();
