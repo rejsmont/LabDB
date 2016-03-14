@@ -16,14 +16,6 @@
  * limitations under the License.
  */
 
-if (false !== getenv('BOOTSTRAP_LINK_SECURITY')) {
-    passthru(sprintf(
-        'if [ ! -f %s/config/security.yml ]; then ln -s security.form.yml %s/config/security.yml; fi',
-        __DIR__,
-        __DIR__
-    ));
-}
-
 if (false !== ($env = getenv('BOOTSTRAP_CLEAR_CACHE_ENV'))) {
     passthru(sprintf(
         'php "%s/console" cache:clear --env=%s --no-warmup',
