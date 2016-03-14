@@ -92,6 +92,7 @@ class ImportCommand extends Command
         $dialog = $this->getHelperSet()->get('dialog');
         $this->container = $this->getApplication()->getKernel()->getContainer();
 
+        $connection = $this->container->get('database_connection');
         $om = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\CoreBundle\Entity\Entity');
         $vm = $this->container->get('vib.doctrine.registry')->getManagerForClass('VIB\FliesBundle\Entity\StockVial');
 
@@ -166,7 +167,7 @@ class ImportCommand extends Command
             }
         }
         
-        $om->getConnection()->beginTransaction();
+        $connection->beginTransaction();
         
         foreach ($stocks as $user_name => $user_stocks) {
             
@@ -238,9 +239,9 @@ class ImportCommand extends Command
         
         $message = 'Stocks and vials have been created. Commit?';
         if ($dialog->askConfirmation($output, '<question>' . $message . '</question>', true)) {
-            $om->getConnection()->commit();
+            $connection->commit();
         } else {
-            $om->getConnection()->rollback();
+            $connection->rollback();
             $om->close();
         }
         
