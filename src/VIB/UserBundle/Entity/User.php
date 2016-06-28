@@ -36,7 +36,7 @@ use VIB\ImapAuthenticationBundle\User\ImapUserInterface;
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
-class User extends BaseUser
+class User extends BaseUser implements ImapUserInterface
 {
     /**
      * @ORM\Id
