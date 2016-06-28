@@ -27,12 +27,12 @@ use VIB\ImapAuthenticationBundle\User\ImapUserInterface;
  * User entity
  *
  * @ORM\Entity(repositoryClass="VIB\UserBundle\Repository\UserRepository")
+ * @ORM\Table(name="user")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *     "user" = "\VIB\UserBundle\Entity\User",
  *     "imapuser" = "\VIB\ImapAuthenticationBundle\Entity\ImapUser"})
- * @ORM\Table(name="user")
  *
  * @author Radoslaw Kamil Ejsmont <radoslaw@ejsmont.net>
  */
